@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <!--SCRIPT_PLACEHOLDER-->
+    <link rel="import" href="../top/top-zendesk.html?__inline">
+</head>
+
+<body>
+<link rel="import" href="../top/top.html?__inline">
+<div class="user-container">
+    <div class="bg_fff fr">
+        <div class="trade-container order-container b_e bg_fff tradeDetail-container">
+            <div class="titleWrap wp100 over-hide b_e_b">
+                <div class="">
+                    <ul class="titleStatus over-hide">
+                        <li class="end on" data-status="end" data-order="end"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="trade-list-wrap userSelect_none">
+                <div class="trade-wrap wp100" style="padding-right: 10px;">
+                    <table class="wp100 trade-form" cellpadding="0" cellspacing="0">
+                        <thead>
+                        <tr class="b_e_b">
+                            <td class="nickname" style="border-left:1px solid #eee;"></td>
+                            <td class="code"></td>
+                            <td class="type"></td>
+                            <td class="amount"></td>
+                            <td class="quantity" style="width: 115px;"></td>
+                            <td class="createDatetime"></td>
+                            <td class="status"></td>
+                            <td class="operation"></td>
+                            <td class="goDetail"></td>
+                        </tr>
+                        </thead>
+                        <tbody id="content-order" class="k-order-list">
+
+                        </tbody>
+                    </table>
+                    <div class="no-data b_e_t hidden">
+                        <img src="../../images/no-detail.png" />
+                        <p class="fy_zwdd"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!--申請仲裁弹窗-->
+            <div class="am-modal-wrap dialog submit-dialog arbitration-dialog hidden" id="arbitrationDialog">
+                <div class="am-modal-mask"></div>
+                <div class="am-modal">
+                    <div class="am-modal-content">
+                        <div class="am-modal-header">
+                            <p class="iconWrap"><i class="icon icon-order"></i></p>
+                            <p class="fy_sqzc"></p>
+                        </div>
+                        <div class="am-modal-body">
+                            <div class="arbitration-content">
+                                <form class="form-wrapper form-wrapper-noIcon" id="form-wrapper">
+                                    <div class="form-item form-item-textarea b_e">
+                                        <textarea style="resize: none;" class="textarea-item fy_reason" name="reason" placeholder="请填写您申请仲裁的理由"></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="am-modal-footer">
+                            <div class="am-button am-button-gray mr40 closeBtn"></div>
+                            <div class="am-button am-button-red subBtn"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--评价弹窗-->
+        <div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p class="fy_jypj"></p>
+                    </div>
+                    <div class="am-modal-body">
+                        <p class="title fy_jyyx"></p>
+                        <div class="comment-Wrap">
+                            <div class="item on" data-value="2">
+                                <div class="icon icon-good"></div>
+                                <p class="fy_hp"></p>
+                            </div>
+                            <div class="item ml20" data-value="0">
+                                <div class="icon icon-bad"></div>
+                                <p class="fy_cp"></p>
+                            </div>
+                        </div>
+                        <div class="com-content">
+                            <textarea name="" id="pjText" placeholder=""></textarea>
+                        </div>
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="am-button am-button-red subBtn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="import" href="../footer.html?__inline">
+<script>
+  require(['domReady!'], function (doc) {
+    require(['app/controller/order/hisOrderList']);
+  });
+</script>
+</body>
+
+</html>

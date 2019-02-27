@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <!--SCRIPT_PLACEHOLDER-->
+    <link rel="import" href="../top/top-zendesk.html?__inline">
+</head>
+
+<body>
+    <link rel="import" href="../top/top.html?__inline">
+    <div class="user-container">
+        <div class="left-wrap b_e bg_fff fl" id="left-wrap">
+            <link rel="import" href="./user-left.html?__inline">
+        </div>
+        <div class="right-wrap b_e bg_fff fr minheight">
+            <div class="head-tit">
+                <p class="sec-en_aq"></p>
+            </div>
+            <div class="security-wrap wp100">
+                <div class="security-item">
+                    <div class="icon icon-zijnmima"></div>
+                    <p class="sec-en_zj"></p>
+                    <samp class="sec-en_tx"></samp>
+                    <div class="btn setTradPwd">
+                        <div class="am-button am-button-ghost goHref hidden edit sec-en_xg" data-href="./setTradePwd.html?type=1"></div>
+                        <div class="am-button am-button-red goHref hidden set fy_ljsz" data-href="./setTradePwd.html?type=0"></div>
+                    </div>
+                </div>
+                <div class="security-item">
+                    <div class="icon icon-email"></div>
+                    <p class="sec-en_em"></p>
+                    <samp></samp>
+                    <div class="btn setEmail">
+                        <div class="am-button am-button-ghost hidden edit fy_ybd"></div>
+                        <div class="am-button am-button-red hidden set goHref fy_ljsz" data-href="./setEmail.html?type=0"></div>
+                    </div>
+                </div>
+                <div class="security-item">
+                        <div class="icon icon-iphone"></div>
+                        <p class="sec-en_sj"></p>
+                        <samp></samp>
+                        <div class="btn setPhone">
+                                <div class="am-button am-button-ghost hidden b_phone fy_ybd"></div>
+                            <div class="am-button am-button-red set hidden goHref o_phone fy_ljsz" data-href="./setPhone.html?type=0"></div>
+                        </div>
+                    </div>
+                <div class="security-item">
+                    <div class="icon icon-mima"></div>
+                    <p class="sec-en_dlmm"></p>
+                    <samp class="sec-en_dlsr"></samp>
+                    <div class="btn setPwd">
+                        <div class="am-button am-button-ghost goHref edit sec-en_xg" data-href="./setPwd.html"></div>
+                    </div>
+                </div>
+                <div class="security-item">
+                    <div class="icon icon-google"></div>
+                    <p class="sec-en_gg"></p>
+                    <samp class="sec-en_bd"><span class="sec-en_dl"></span>、<span class="sec-en_ecyz"></span></samp>
+                    <div class="btn setGoogle">
+                        <div class="am-button am-button-ghost hidden goHref close" data-href="./setGoogle.html?type=1"></div>
+                        <div class="am-button am-button-red hidden goHref open" data-href="./setGoogle.html?type=0"></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['domReady!'], function (doc) {
+            require(['app/controller/user/Security']);
+        });
+    </script>
+</body>
+
+</html>

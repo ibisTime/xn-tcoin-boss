@@ -1,0 +1,34 @@
+<link rel="import" href="../public/deal-left.html?__inline">
+<div class="right-wrap b_e bg_fff fr minheight">
+    <div class="trust-wrap over-hide wp100">
+        <div class="k-list">
+            <div class="fl">
+                <ul class="k-trustStatus">
+                    <li class="wait goHref en_wait" data-c="m_xr" data-href="../user/trust.html?type=1&go=m_xr&mod=xr"></li>
+                    <li class="already goHref en_waitme" data-c="xr_m" data-href="../user/trust.html?type=2&go=xr_m&mod=xr"></li>
+                    <li class="already goHref en_nowait" data-c="m_pb" data-href="../user/trust.html?type=0&go=m_pb&mod=xr"></li>
+                </ul>
+            </div>
+        </div>
+        <table id="content" class="wp100 trust-form" cellpadding="0" cellspacing="0">
+
+        </table>
+    </div>
+    <div id="pagination" class="wp100 pagination-wrap tc">
+        <p class="pagination"></p>
+    </div>
+    <div class="no-data hidden">
+        <img src="../../images/no-detail.png" />
+        <p>暂无广告</p>
+    </div>
+</div>
+</div>
+<link rel="import" href="../footer.html?__inline">
+<script>
+    require(['domReady!'], function (doc) {
+        require(['app/controller/user/Trust']);
+    });
+</script>
+</body>
+
+</html>

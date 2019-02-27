@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <!--SCRIPT_PLACEHOLDER-->
+    <link rel="import" href="../top/top-zendesk.html?__inline">
+</head>
+
+<body class="bg_fff">
+    <link rel="import" href="../top/top.html?__inline">
+
+    <div class="advertise-container detail-container">
+        <div class="advertise-warn wp100">
+            <div class="titleWrap">
+                <i class="icon icon-advwarn"></i>
+                <samp class="en_fbgg"></samp>
+            </div>
+            <div class="content wp100" id="tradeWarn"></div>
+        </div>
+        <div class="trade-type-wrap b_e_b">
+            <div class="advTitWrap"><samp class="jylx"></samp></div>
+            <div class="explain">
+                <i>*</i>
+                <samp class="txt xzgglx"></samp>
+                <samp class="xzgglxsm"></samp>
+            </div>
+            <div class="trade-type over-hide userSelect_none">
+                <div class="item fl type on mr60">
+                    <i class="icon icon-check"></i>
+                    <samp class="zxcs"></samp>
+                </div>
+                <div class="item fl type">
+                    <i class="icon icon-check"></i>
+                    <samp class="zxgm"></samp>
+                </div>
+            </div>
+        </div>
+
+        <div class="advertise-info b_e_b">
+            <div class="advTitWrap mt20 mb10"><samp class="fy_gdxz"></samp></div>
+            <form class="form-wrapper form-wrapper-noIcon" id="form-wrapper">
+                <div class="explain">
+                    <i>*</i>
+                    <samp class="txt hb"></samp>
+                    <samp class="hbsm"></samp>
+                </div>
+                <div class="form-wrapper userSelect_none">
+                    <div class="form-item form-item-select b_e">
+                        <select id="tradeCurrency" name="tradeCurrency">
+                            <option value="CNY">CNY人民币</option>
+                            <option value="USD">USD美元</option>
+						</select>
+                        <i class="icon icon-down"></i>
+                    </div>
+                </div>
+                <div class="explain premiumRateExp-wrap">
+                    <i>*</i>
+                    <samp class="txt yj"></samp>
+                    <samp id="premiumRateExp"></samp>
+                </div>
+                <div class="form-item number-item-wrap premiumRateExp-wrap go-box" ondragstart="return false">
+                    <span>-50</span>
+                    <div class="huadtiao-box">
+                        <div class="num-huadtiao">
+                            <i class="num-go"></i>
+                            <span class="num-center"></span>
+                        </div>
+                    </div>
+                    <span>50</span>
+                    <span class="yj-bfb"><input type="text" class="yj-num" value="0.00" style="width: 100%;"><i class="item-unit">%</i></span>
+                </div>
+                <div class="explain">
+                    <i>*</i>
+                    <samp class="txt fy_jg"></samp>
+                    <samp id="priceExp"></samp>
+                </div>
+                <div class="form-item b_e">
+                    <i class="item-unit m-type">CNY</i>
+                    <input type="text" class="input-item" id="price" name="truePrice" disabled/>
+                </div>
+                <div class="explain  premiumRateExp-wrap">
+                    <i>*</i>
+                    <samp class="txt fy_zdjxt"></samp>
+                    <samp id="protectPriceExp"></samp>
+                </div>
+                <div class="form-item b_e  premiumRateExp-wrap">
+                    <i class="item-unit m-type">CNY</i>
+                    <input type="text" class="input-item" id="protectPrice" name="protectPrice" placeholder="广告最高可成交的价格" />
+                </div>
+                <div class="explain">
+                    <i>*</i>
+                    <samp class="txt fy_zxxe"></samp>
+                    <samp id="minTradeExp"></samp>
+                </div>
+                <div class="form-item b_e">
+                    <i class="item-unit m-type">CNY</i>
+                    <input type="text" class="input-item" id="minTrade" name="minTrade" placeholder="请输入最小限额" />
+                </div>
+                <div class="explain">
+                    <i>*</i>
+                    <samp class="txt fy_zdxe"></samp>
+                    <samp id="maxTradeExp"></samp>
+                </div>
+                <div class="form-item b_e">
+                    <i class="item-unit m-type">CNY</i>
+                    <input type="text" class="input-item" id="maxTrade" name="maxTrade" placeholder="请输入最大限额" />
+                </div>
+                <div class="explain">
+                    <i>*</i>
+                    <samp class="txt fy_gmzl"></samp>
+                    <samp id="totalCountExp"></samp>
+                </div>
+                <div class="accountCount">
+                    <samp><span class="fy_zhkyye"></span>：<i class="accountLeftCountString"></i></samp>
+                </div>
+                <div class="form-item b_e">
+                    <i class="item-unit" id="coin"></i>
+                    <input type="text" class="input-item" id="totalCount" name="totalCount" placeholder="请输入购买币的总量" />
+                </div>
+                <div class="explain">
+                    <i>*</i>
+                    <samp class="txt fy_fkfs"></samp>
+                    <samp id="payTypeExp"></samp>
+                </div>
+                <div class="form-item form-item-select b_e">
+                    <select id="payType" name="payType">
+							<!-- <option value="0">支付宝</option>
+							<option value="1">微信</option>
+							<option value="2">银行卡</option> -->
+						</select>
+                    <i class="icon icon-down"></i>
+                </div>
+                <!-- <div class="explain">
+                    <i>*</i>
+                    <samp class="txt">付款期限：</samp>
+                    <samp id="payLimitExp"></samp>
+                </div>
+                <div class="form-item form-item-select b_e">
+                    <select id="payLimit" name="payLimit">
+						</select>
+                    <i class="icon icon-down"></i>
+                </div> -->
+                <div class="explain">
+                    <i>*</i>
+                    <samp class="txt fy_ggly"></samp>
+                </div>
+                <div class="form-item form-item-textarea b_e">
+                    <textarea style="resize: none;" class="textarea-item" id="leaveMessage" name="leaveMessage" placeholder="付款备注里不得出现 BTC/ETH、数字货币、区块链等字眼。"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="advertise-set">
+            <div class="set-wrap hidden">
+                <div class="advTitWrap mt20 mb10"><samp class="tc_red fy_gjsz"></samp></div>
+                <!-- <div class="set-item">
+                    <p>仅限实名认证的交易者：<samp id="trustExp"></samp></p>
+                    <div class="check-wrap over-hide">
+                        <div class="item fl type all">
+                            <i class="icon icon-check userDefined" data-type='1'></i>
+                            <samp>启用</samp>
+                        </div>
+                        <div class="item fl type ml60 on">
+                            <i class="icon icon-check usersel" data-type='0'></i>
+                            <samp>不启用</samp>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="set-item">
+                    <p class="fy_jxsxrdjyz"></p>
+                    <div class="check-wrap over-hide">
+                        <div class="icon icon-only" id="onlyTrust" style="margin-right: 10px;"></div><span class="fy_qy"></span>
+                    </div>
+                </div>
+                <div class="set-item time-type">
+                    <p class="fy_kfsj"></p>
+                    <div class="check-wrap over-hide">
+                        <div class="item fl type all on">
+                            <i class="icon icon-check"></i>
+                            <samp class="fy_rhsh"></samp>
+                        </div>
+                        <div class="item fl type ml60 userDefined">
+                            <i class="icon icon-check"></i>
+                            <samp class="fy_zdy"></samp>
+                        </div>
+                    </div>
+                </div>
+                <div class="time-wrap b_e_b hide" id="timeWrap">
+                    <div class="time-item over-hide">
+                        <samp class="fl fy_xq1"></samp>
+                        <div class="selectWrap fl">
+                            <select class="startTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                        <div class="selectWrap fl">
+                            <select class="endTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                    </div>
+                    <div class="time-item over-hide">
+                        <samp class="fl fy_xq2"></samp>
+                        <div class="selectWrap fl">
+                            <select class="startTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                        <div class="selectWrap fl">
+                            <select class="endTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                    </div>
+                    <div class="time-item over-hide">
+                        <samp class="fl fy_xq3"></samp>
+                        <div class="selectWrap fl">
+                            <select class="startTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                        <div class="selectWrap fl">
+                            <select class="endTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                    </div>
+                    <div class="time-item over-hide">
+                        <samp class="fl fy_xq4"></samp>
+                        <div class="selectWrap fl">
+                            <select class="startTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                        <div class="selectWrap fl">
+                            <select class="endTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                    </div>
+                    <div class="time-item over-hide">
+                        <samp class="fl fy_xq5"></samp>
+                        <div class="selectWrap fl">
+                            <select class="startTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                        <div class="selectWrap fl">
+                            <select class="endTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                    </div>
+                    <div class="time-item over-hide">
+                        <samp class="fl fy_xq6"></samp>
+                        <div class="selectWrap fl">
+                            <select class="startTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                        <div class="selectWrap fl">
+                            <select class="endTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                    </div>
+                    <div class="time-item over-hide">
+                        <samp class="fl fy_xq7"></samp>
+                        <div class="selectWrap fl">
+                            <select class="startTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                        <div class="selectWrap fl">
+                            <select class="endTime"></select>
+                            <i class="icon icon-select"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="advertise-hidden cur-pointer hide fy_xsgjsz"></div>
+        </div>
+
+        <div class="btnWrap">
+             <div class="am-button am-button-ghost" id="draftBtn"></div>
+            <div class="am-button am-button-red" id="submitBtn"></div>
+            <div class="am-button am-button-ghost hidden" id=""></div>
+        </div>
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['domReady!'], function (doc) {
+            require(['app/controller/trade/Advertising']);
+        });
+    </script>
+</body>
+
+</html>

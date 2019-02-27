@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <!--SCRIPT_PLACEHOLDER-->
+    <link rel="import" href="../top/top-zendesk.html?__inline">
+</head>
+
+<body>
+    <link rel="import" href="../top/top.html?__inline">
+    <div class="article-con">
+        <div class="article-left fl">
+            <ul>
+                <li class="art-tit aboutUs"></li>
+                <li class="article-item introduce" data-key="1"></li>
+                <li class="article-item contact" data-key="2"></li>
+                <li class="article-item notice" data-key="3"></li>
+            </ul>
+        </div>
+        <div class="article-right fr">
+            <h4 class="hmoney-tit"></h4>
+            <div class="article-wrap wp100 articleHeight" id="content">
+
+            </div>
+        </div>
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['domReady!'], function (doc) {
+            require(['app/controller/public/Article']);
+        });
+    </script>
+</body>
+
+</html>

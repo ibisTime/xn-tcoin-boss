@@ -1,0 +1,50 @@
+Searching 9066 files for "in-en_jq"
+
+/Users/apple/Documents/chengdai/0218-T/code/xn-tyche-web/dist/static/js/app/controller/Index_6530f1d.js:
+   39          }
+   40          $(".head-nav-wrap .index").addClass("active");
+   41:         $('.in-en_jq').text(base.getText('尽情游戏 无尽精彩', langType));
+   42          $('.in-en_xss').text(base.getText('驯兽师', langType));
+   43          $('.in-en_jxhm').text(base.getText('精彩画面, 任你游', langType));
+
+/Users/apple/Documents/chengdai/0218-T/code/xn-tyche-web/static/js/app/controller/Index.js:
+   44          }
+   45          $(".head-nav-wrap .index").addClass("active");
+   46:         $('.in-en_jq').text(base.getText('尽情游戏 无尽精彩', langType));
+   47          $('.in-en_xss').text(base.getText('驯兽师', langType));
+   48          $('.in-en_jxhm').text(base.getText('精彩画面, 任你游', langType));
+
+2 matches across 2 files
+
+
+Searching 9066 files for "购买BTC"
+
+/Users/apple/Documents/chengdai/0218-T/code/xn-tyche-web/dist/html/trade/buy-list.html:
+  276                              <td class="price">100541.15CNY</td>
+  277                              <td class="operation">
+  278:                                 <div class="am-button am-button-ghost goHref" data-href="../trade/buy-detail.html">购买BTC</div>
+  279                              </td> -->
+  280                          <!-- </tr> -->
+
+/Users/apple/Documents/chengdai/0218-T/code/xn-tyche-web/dist/static/js/app/controller/Top_c7a8a36.js:
+   15      function init() {
+   16          //中英文切换  先头部切换
+   17:         $('.en_page').text(base.getText('购买BTC1111'));
+   18          $('.en_store').text(base.getText('出售BTC'));
+   19          $('.en_deal').text(base.getText('发布广告'));
+
+/Users/apple/Documents/chengdai/0218-T/code/xn-tyche-web/static/html/trade/buy-list.html:
+   75                              <td class="price">100541.15CNY</td>
+   76                              <td class="operation">
+   77:                                 <div class="am-button am-button-ghost goHref" data-href="../trade/buy-detail.html">购买BTC</div>
+   78                              </td> -->
+   79                          <!-- </tr> -->
+
+/Users/apple/Documents/chengdai/0218-T/code/xn-tyche-web/static/js/app/controller/Top.js:
+   19      function init() {
+   20          //中英文切换  先头部切换
+   21:         $('.en_page').text(base.getText('购买BTC1111'));
+   22          $('.en_store').text(base.getText('出售BTC'));
+   23          $('.en_deal').text(base.getText('发布广告'));
+
+4 matches across 4 files

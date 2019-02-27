@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <!--SCRIPT_PLACEHOLDER-->
+    <link rel="import" href="../top/top-zendesk.html?__inline">
+</head>
+
+<body>
+    <link rel="import" href="../top/top.html?__inline">
+    <div class="user-container">
+        <div class="left-wrap b_e bg_fff fl" id="left-wrap">
+            <link rel="import" href="./user-left.html?__inline">
+        </div>
+        <div class="right-wrap fr">
+            <div class="position">
+                <samp class="goHref ph-en_yh" data-href="./user.html"></samp>
+                <samp class="goHref ph-en_aq" data-href="./security.html"></samp> <span class="ph-en_sj"></span>
+            </div>
+            <div class="setSecurity-wrap tradePwd-wrap b_e bg_fff minheight p30">
+                <div class="title"></div>
+                <div class="setSecurity-from-wrap">
+                    <form class="form-wrapper wp100" id="form-wrapper">
+                        <div class="form-item b_e">
+                            <i class="item-icon icon-phone"></i>
+                            <input type="text" class="input-item" id="mobile" name="mobile" placeholder="" />
+                        </div>
+                        <div class="form-item-sms wp100">
+                            <div class="form-item b_e">
+                                <i class="item-icon icon-sms"></i>
+                                <input type="text" class="input-item" id="captcha" name="captcha" placeholder="" />
+                            </div>
+                            <button class="sms-button am-button am-button-red" id="getVerification"></button>
+                        </div>
+                        <div class="form-btn-item">
+                            <div class="am-button am-button-red" id="subBtn"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['domReady!'], function (doc) {
+            require(['app/controller/user/SetPhone']);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <!--SCRIPT_PLACEHOLDER-->
+</head>
+
+<body>
+    <link rel="import" href="../top/top.html?__inline">
+    <div class="wallet-container public-container wallet-container-sc">
+        <div class="tradeRecord-wrap mb80">
+            <div class="tradeRecord-wrap-title b_e"></div>
+            <div class="tradeRecord-top b_e_b x-order">
+                <ul>
+                    <li class="wajl-en_lx"></li>
+                    <li class="wajl-en_bz"></li>
+                    <li class="wajl-en_zje"></li>
+                    <li class="date_n"></li>
+                    <li class="date_li"></li>
+                    <li class="wajl-en_zt"></li>
+                    <li class="wajl-en_cz"></li>
+                </ul>
+            </div>
+            <div class="tradeRecord-list-wrap">
+                <div class="x-order_warp">
+                    <ul>
+
+                    </ul>
+                </div>
+                <div class="no-data hidden">
+                    <img src="../../images/no-detail.png" />
+                    <p>暂无明细</p>
+                </div>
+                <div id="pagination" class="wp100 pagination-wrap tc">
+                    <p class="pagination"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+    <script src="../../js/lib/qrcode.js"></script>
+    <script>
+        require(['domReady!'], function (doc) {
+            require(['app/controller/wallet/wallet_jilu']);
+        });
+    </script>
+</body>
+
+</html>

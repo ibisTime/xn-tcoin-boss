@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <!--SCRIPT_PLACEHOLDER-->
+    <link rel="import" href="../top/top-zendesk.html?__inline">
+</head>
+
+<body class="bg_fff">
+    <link rel="import" href="../top/top.html?__inline">
+
+    <div class="detail-container tradeDetail-container minheight">
+        <div class="detail-container-wrap">
+            <div class="userInfo-wrap b_e_b">
+                <div class="top over-hide">
+                    <div class="photoWrap fl">
+                        <div class="photo" id="photo"></div>
+                    </div>
+                    <div class="name fl" style="padding-top: 3px;">
+                        <samp id="nickname"></samp>
+                        <span class="rz sp-wrz"></span>
+                        <samp class="am-button am-button-red am-button-small hidden" id="doDownBtn">下架</samp>
+                    </div>
+                    <div class="statistics fl mb20" style="width: 1200px;">
+                        <div class="item">
+                            <p id="jiaoYiCount"></p>
+                            <samp class="en-buy_jy"></samp>
+                        </div>
+                        <div class="item">
+                            <p id="beiXinRenCount"></p>
+                            <samp class="en-buy_xr"></samp>
+                        </div>
+                        <div class="item topj">
+                            <p id="beiHaoPingCount"></p>
+                            <samp class="en-buy_hp"></samp>
+                        </div>
+                        <div class="item">
+                            <p id="totalTradeCount"></p>
+                            <samp class="en-buy_ls"></samp>
+                        </div>
+                        <div class="name fr det-lx">
+                            <i class="icon icon-chat hidden" id="chatBtn"></i>
+                            <span class="sp-lx"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="price-wrap">
+                <div class="item">
+                    <samp class="tit en-buy_bj"></samp><samp id="truePrice"></samp>
+                    <!-- <p class="fr" style="margin-right:110px;"><i class="icon jbicon"></i> -->
+                    <!-- <span style="cursor: pointer;">举报这条广告</span> -->
+                    </p>
+                </div>
+                <div class="item">
+                    <samp class="tit en-buy_xe"></samp><samp id="limit"></samp><samp class="ml5"></samp>
+                </div>
+                <div class="item">
+                    <samp class="tit en-buy_sl"></samp><samp id="countString"></samp><samp class="ml5"></samp>
+                </div>
+                <div class="item">
+                    <samp class="tit en-buy_fk"></samp><samp id="payType"></samp>
+                </div>
+                <div class="item">
+                    <samp class="tit en-buy_fkqx"></samp><samp id="payLimit"></samp><samp class="en-buy_fz"></samp>
+                </div>
+                <div class="item">
+                    <samp class="tit en-sell_mjly"></samp><samp id="leaveMessage"></samp>
+                </div>
+            </div>
+            <div class="buy-wrap hidden">
+                <div class="titleWrap">
+                    <i class="icon icon-buy"></i><samp class="en-buy_csds"></samp>
+                    <samp class="small en-buy_kyyy"><span></span><i class="accountLeftCountString accountLeftCountStringETH"></i></samp>
+                </div>
+                <form class="form-wrapper wp100 form-wrapper-noIcon over-hide" id="form-wrapper">
+                    <div class="form-item b_e fl">
+                        <i class="item-unit"></i>
+                        <input type="text" class="input-item" id="buyAmount" name="buyAmount" placeholder="" />
+                    </div>
+                    <div class="icon icon-change fl"></div>
+                    <div class="form-item b_e fl">
+                        <i class="item-unit" id="coin"></i>
+                        <input type="text" class="input-item" id="buyEth" name="buyEth" placeholder="" />
+                    </div>
+                </form>
+                <div class="am-button am-button-red fy_ljcs" id="buyBtn" style="width: 200px;"></div>
+            </div>
+            <div class="tradeWarn-wrap">
+                <div class="titleWrap"><i class="icon icon-warn"></i><samp class="en-buy_tx"></samp></div>
+                <div class="content" id="tradeWarn"></div>
+            </div>
+        </div>
+
+        <!-- 确认交易密码 -->
+        <div class="am-modal-wrap dialog submit-dialog hidden" id="submitMon">
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p>交易密码</p>
+                    </div>
+                    <div class="am-modal-body">
+                        <div class="submit-content">
+                            <input type="password" id="moneyPow" placeholder="请输入交易密码">
+                        </div>
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="am-button am-button-red mr40 subBtn">确认</div>
+                        <div class="am-button am-button-gray closeBtn">取消</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--下单确认弹窗-->
+        <div class="am-modal-wrap dialog submit-dialog hidden" id="submitDialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p class="iconWrap"><i class="icon icon-order"></i></p>
+                        <p>下单确认</p>
+                    </div>
+                    <div class="am-modal-body">
+                        <div class="submit-content">
+                            <div class="item">
+                                <samp class="fl">出售价格</samp>
+                                <samp class="fr tradePrice"></samp>
+                            </div>
+                            <div class="item">
+                                <samp class="fl">出售金额</samp>
+                                <samp class="fr tradeAmount"></samp>
+                            </div>
+                            <div class="item">
+                                <samp class="fl">出售数量</samp>
+                                <samp class="fr count"></samp>
+                            </div>
+                            <div class="warnWrap">
+                                <i class="icon icon-warn fl"></i>
+                                <samp class="fr"><span class="warn-txt1"></span> <span class="bb-m"></span> <span class="warn-txt2"></span></samp>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="am-button am-button-red mr40 subBtn">确认出售</div>
+                        <div class="am-button am-button-gray closeBtn">放弃出售</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+
+    <script>
+        require(['domReady!'], function (doc) {
+            require(['app/controller/trade/SellDetail']);
+        });
+    </script>
+</body>
+
+</html>
