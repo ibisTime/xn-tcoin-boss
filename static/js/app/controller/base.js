@@ -460,7 +460,7 @@ define([
         gohref: function(href, toType) {
             var timestamp = new Date().getTime();
             //判断链接后是否有带参数
-            if (href.split("?")[1]) {debugger;
+            if (href.split("?")[1]) {
                 //判断是否有带v的参数，有则替换v的参数
                 if (Base.getUrlParam("v", href) != "" && Base.getUrlParam("v", href)) {
                     if(toType) {
