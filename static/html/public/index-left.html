@@ -23,18 +23,17 @@
     </div>
     <div class="public-container">
         <div class="search-wrap mt20">
-            <div class="searchType-wrap userSelect_none" id="searchTypeWrap">
-                <div class="show-wrap b_e" data-type="adver">
-                    <samp class="en_sgg"></samp>
-                    <!--<i class="icon icon-down"></i>-->
-                </div>
-                <!--<ul class="select-ul bg_fff">-->
-                    <!--<li class="en_sgg" data-type="adver"></li>-->
-                    <!--<li class="user" data-type="user"></li>-->
-                <!--</ul>-->
-            </div>
             <div class="search-con bg_fff b_e_b b_e_t" id="searchConWrap">
+                <div class="buy_sell fl">
+                    <div class="buy">购买比特币</div>
+                    <div class="sell">出售比特币</div>
+                </div>
                 <div class="advertisement-wrap adver">
+                    <div class="item fl">
+                        <samp class="amount">输入数额</samp>
+                        <select class="payTypeAmount ml5" name="payTypeAmount"></select>
+                        <i class="icon icon-down"></i>
+                    </div>
                     <div class="item fl">
                         <samp class="hb"></samp>
                         <select class="payTypeMoney ml5" name="payTypeMoney"></select>
@@ -50,42 +49,80 @@
                 <div class="user-wrap user hidden">
                     <input type="text" class="nickname" placeholder="请输入完整用户名" />
                 </div>
-            </div>
-            <div class="search-btn">
-                <div class="am-button am-button-red am-button-noradius" id="searchBtn">
+                <div class="search-btn fr">
+                <!-- <div class="am-button am-button-red am-button-noradius" id="searchBtn">
                     <i class="icon icon-search"></i><span class="search-txt"></span>
                 </div>
+                <div class="am-button am-button-red am-button-noradius" id="bestSearchBtn">
+                    <i class="icon icon-search"></i><span class="search-txt"></span>
+                </div> -->
+                <div class="fr" id="bestSearchBtn">
+                    <span class="search-txt">请给我最好的</span>
+                </div>
+                <div class="fr" id="searchBtn">
+                    <span class="search-txt">搜索</span>
+                </div>
+            </div>
             </div>
         </div>
     </div>
     <div class="left-wrap bg_fff fl" id="left-wrap">
         <div class="left-title en_cwai"></div>
-        <div class="left-item">
-            <div class="nav-item goHref sell-eth gm en_zf01" data-value="0"></div>
-        </div>
-        <div class="left-item">
-            <div class="nav-item goHref buy-eth cs en_zf02" data-value="1"></div>
-        </div>
-        <div class="left-item">
-            <div class="nav-item goHref sell-eth dd en_zf03" data-value="2"></div>
-        </div>
-        <!--11111111111111111111111111-->
-        <div class="left-item">
-            <div class="nav-item goHref sell-eth q1 en_zf04" data-value="3"></div>
-        </div>
-        <div class="left-item">
-            <div class="nav-item goHref buy-eth q2 en_zf05" data-value="4"></div>
-        </div>
-        <div class="left-item">
-            <div class="nav-item goHref sell-eth q3 en_zf06" data-value="5"></div>
-        </div>
-        <div class="left-item">
-            <div class="nav-item goHref sell-eth q4 en_zf07" data-value="6"></div>
-        </div>
-        <div class="left-item">
-            <div class="nav-item goHref buy-eth q5 en_zf08" data-value="7"></div>
-        </div>
-        <div class="left-item">
-            <div class="nav-item goHref buy-eth q6 en_zf09" data-value="8"></div>
+        <div class="left-item-group">
+            <div class="left-item">
+                <div class="nav-item goHref sell-eth gm" data-value="0">
+                    <span class="nav-item-type en_zf01"></span>
+                    <span class="num">1234</span>
+                </div>
+            </div>
+            <div class="left-item">
+                <div class="nav-item goHref buy-eth cs" data-value="1">
+                    <span class="nav-item-type en_zf02"></span>
+                    <span class="num">123</span>
+                </div>
+            </div>
+            <div class="left-item">
+                <div class="nav-item goHref sell-eth dd" data-value="2">
+                    <span class="nav-item-type en_zf03"></span>
+                    <span class="num">123</span>
+                </div>
+        
+            </div>
+            <div class="left-item">
+                <div class="nav-item goHref sell-eth q1" data-value="3">
+                    <span class="nav-item-type en_zf04"></span>
+                    <span class="num">123</span>
+                </div>
+            </div>
+            <div class="left-item">
+                <div class="nav-item goHref buy-eth q2" data-value="4">
+                    <span class="nav-item-type en_zf05"></span>
+                    <span class="num">123</span>
+                </div>
+            </div>
+            <div class="left-item">
+                <div class="nav-item goHref sell-eth q3" data-value="5">
+                    <span class="nav-item-type en_zf06"></span>
+                    <span class="num">123</span>
+                </div>
+            </div>
+            <div class="left-item">
+                <div class="nav-item goHref sell-eth q4" data-value="6">
+                    <span class="nav-item-type en_zf07"></span>
+                    <span class="num">123</span>
+                </div>
+            </div>
+            <div class="left-item">
+                <div class="nav-item goHref buy-eth q5" data-value="7">
+                    <span class="nav-item-type en_zf08"></span>
+                    <span class="num">123</span>
+                </div>
+            </div>
+            <div class="left-item">
+                <div class="nav-item goHref buy-eth q6" data-value="8">
+                    <span class="nav-item-type en_zf09"></span>
+                    <span class="num">123</span>
+                </div>
+            </div>
         </div>
     </div>

@@ -15,7 +15,7 @@ define([
         coin: coin.toUpperCase()
     };
   var bizTypeList = {
-    "0": base.getText('支付宝'),
+    "0": base.getText('支付宝  '),
     "1": base.getText('微信'),
     "2": base.getText('银联转账'),
     "3": base.getText('苹果礼品卡'),
@@ -76,17 +76,18 @@ define([
     function setHtml() {
         base.getDealLeftText();
         $('.head-nav-wrap .index').addClass('active');
-        $('.en_nick').text(base.getText('昵称'));
-        $('.en_pay').text(base.getText('付款方式'));
-        $('.en_count').text(base.getText('Avaliable'));
-        $('.en_xe').text(base.getText('限额'));
-        $('.en_price').text(base.getText('价格'));
+        $('.en_buyer').text(base.getText('买家'));
+        $('.en_pay').text(base.getText('支付方法'));
+        $('.en_min_max').text(base.getText('最低-最高金额'));
+        // $('.en_xe').text(base.getText('限额'));
+        $('.en_price').text(base.getText('每个比特币的价格'));
         $('.show-search').text(base.getText('全部货币，全部付款方式'));
-        $('.searchType-wrap .en_sgg').text(base.getText('搜广告'));
-        $('.searchType-wrap .user').text(base.getText('搜用户'));
+        $('buy_sell .buy').text(base.getText('购买比特币'));
+        $('buy_sell .sell').text(base.getText('出售比特币'));
         $('.advertisement-wrap .hb').text(base.getText('货币'));
         $('.advertisement-wrap .fkfs').text(base.getText('货币'));
-        $('.search-btn .search-txt').text(base.getText('搜索'));
+        $('#search-btn .search-txt').text(base.getText('搜索'));
+        $('#bestSearch-btn .search-txt').text(base.getText('请给我最好的'));
         if(langType === 'EN'){
             $('.search-wrap .searchType-wrap').css('width', '200px');
             $('.search-wrap .search-con').css('width', '562px');
@@ -108,6 +109,7 @@ define([
     function getCoinList() {
         var coinList = base.getCoinArray();
         var listHtml = '';
+        console.log(coinList);
         coinList.map(item => {
             listHtml += `<li class="${item.coin.toLowerCase()}" data-coin="${item.coin}">${item.coin}</li>`;
         });
@@ -154,7 +156,8 @@ define([
                 lists.forEach((item, i) => {
                     html += buildHtml(item);
                 });
-                $("#content").html(html);
+                console.log(html);
+                $("#content").append(html);
                 $(".trade-list-wrap .no-data").addClass("hidden")
 
                 $("#content .operation .goHref").off("click").click(function() {
@@ -185,15 +188,6 @@ define([
     }
 
     function buildHtml(item) {
-        //头像
-        var photoHtml = ""
-        if (item.user.photo) {
-            photoHtml = `<div class="photo" style="background-image:url('${base.getAvatar(item.user.photo)}')"></div>`
-        } else {
-            var tmpl = item.user.nickname.substring(0, 1).toUpperCase();
-            photoHtml = `<div class="photo"><div class="noPhoto">${tmpl}</div></div>`
-        }
-
         //登录状态
         var loginStatus = '';
         var time = base.calculateDays(item.user.lastLogin, new Date())
@@ -210,7 +204,7 @@ define([
         if (item.userId == base.getUserId()) {
             operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/advertise.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
         } else {
-            operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/buy-detail.html?code=${item.code}">${base.getText('购买', langType)}${item.tradeCoin}</div>`;
+            operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/buy-detail.html?code=${item.code}">${base.getText('购买', langType)}</div>`;
         }
         let hpCount = 0;
         if (item.userStatistics.beiPingJiaCount != 0) {
@@ -221,29 +215,38 @@ define([
             '1': '/static/images/pay-weChat.png',
             '2': '/static/images/pay-bankcard.png',
         };
-
         let payTypeHtml = ``;
         if (payTypeList[item.payType]) {
             payTypeHtml = `<i class="icon" style="background-image: url('${payTypeList[item.payType]}')"></i>`;
         } else {
             payTypeHtml = bizTypeList[item.payType];
         }
+
+        let country = '/static/images/China.png';
+        let countryHtml = ``;
+        countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
+
         return `<tr>
 					<td class="nickname" style="padding-left: 20px;">
-						<div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${item.userId}&adsCode=${item.code}" style="margin-right: 10px;">
-							${photoHtml}
-							<div class="dot ${loginStatus}"></div>
-						</div>
-                        <samp class="name">${item.user.nickname ? item.user.nickname : '-'}</samp>
-                        <p class="n-dist"><samp>${base.getText('Trades', langType)}<i>${item.userStatistics.jiaoYiCount}</i></samp> ·
-                            <samp>${base.getText('好评度', langType)}<i>${hpCount}</i></samp> ·
-                            <samp>${base.getText('信任', langType)}<i>${item.userStatistics.beiXinRenCount}</i></samp>
+                        <p class="pfirst">
+                            ${countryHtml}
+                            <span class="dot ${loginStatus}"></span>
+                            <span class="name">${item.user.nickname ? item.user.nickname : '-'}</span>
+                            <span class="num">+100</span>
                         </p>
+                        <p class="n-dist"><samp><i>2小时以前查看过</i></samp></p>
 					</td>
-					<td class="avaliable">${base.formatMoney(item.leftCountString, '', item.tradeCoin)}</td>
-					<td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
-					<td class="price">${item.truePrice.toFixed(2)} ${item.tradeCurrency}</td>
-					<td class="payType">${payTypeHtml}</td>
+                    <td class="payType">
+                        <p class="payType_pfirst">
+                            ${payTypeHtml}
+                        </p>
+                        <p class="payType_psecond">
+                            <span>无需身份证件</span>
+                            <span>仅限实体卡</span>
+                        </p>
+                    </td>
+                    <td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
+                    <td class="price">${item.truePrice.toFixed(2)} ${item.tradeCurrency}</td>
 					<td class="operation">
 						${operationHtml}
 					</td>
@@ -261,7 +264,7 @@ define([
                         html += buildHtml(item);
                     }
                 });
-                $("#content").html(html);
+                $("#content").append(html);
                 $(".trade-list-wrap .no-data").addClass("hidden")
 
                 $("#content .operation .goHref").off("click").click(function() {

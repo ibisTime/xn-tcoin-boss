@@ -862,9 +862,8 @@ button[disabled] {
 }
 
 .am-button-ghost {
-  color: $red-color;
-  background-color: transparent;
-  border: 1px solid $red-color;
+  background-color: $red-color;
+  color: #fff;
 }
 
 .am-button-grad {

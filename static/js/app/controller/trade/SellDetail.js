@@ -82,7 +82,7 @@ define([
         $('.fy_ljcs').html(base.getText('立即出售'));
         $('#buyAmount').attr('placeholder', base.getText('请输入您出售的金额'));
         $('#buyEth').attr('placeholder', base.getText('请输入您出售的数量'));
-        $('#buyBtn').html(base.getText('立即出售'));
+        // $('#buyBtn').html(base.getText('立即出售'));
 
         $('.warnWrap .warn-txt1').html(base.getText('提醒：请确认价格再下单,下单彼此交易的'));
         $('.warnWrap .warn-txt2').html(base.getText('将被托管锁定，请放心购买。'));

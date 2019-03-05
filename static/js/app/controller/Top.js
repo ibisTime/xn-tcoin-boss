@@ -18,8 +18,8 @@ define([
     // 初始化页面
     function init() {
         //中英文切换  先头部切换
-        $('.en_page').text(base.getText('购买BTC'));
-        $('.en_store').text(base.getText('出售BTC'));
+        $('.en_page').text(base.getText('购买比特币'));
+        $('.en_store').text(base.getText('出售比特币'));
         $('.en_deal').text(base.getText('发布广告'));
         $('.nav-cwjy').text(base.getText('场外交易'));
         $('.nav-bbjy').text(base.getText('币币交易'));

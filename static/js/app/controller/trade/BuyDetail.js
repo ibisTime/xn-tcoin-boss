@@ -72,8 +72,8 @@ define([
         $('.en-buy_fk').text(base.getText('付款方式', langType) + ':');
         $('.en-buy_fkqx').text(base.getText('付款期限', langType) + ':');
         $('.en-buy_mjly').text(base.getText('卖家留言', langType) + ':');
-        $('.en-buy_mmds').text(base.getText('你想买卖多少', langType) + '?');
-        $('.en-buy_ggsy').text(base.getText('广告剩余可交易量', langType) + ':');
+        $('.en-buy_mmds').text(base.getText('您想购买多少', langType) + '?');
+        $('.en-buy_ggsy').text(base.getText('点击此处获得帮助', langType));
         $('.en-buy_fz').text(base.getText('分钟', langType));
         $('.en-buy_tx').text(base.getText('交易提醒', langType));
         $('.en-buy_tx').text(base.getText('交易提醒', langType));
@@ -135,7 +135,7 @@ define([
 
             $("#truePrice").html(Math.floor(data.truePrice * 100) / 100 + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             $("#submitDialog .tradePrice").html(config.tradePrice + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
-            $("#leftCountString").html(base.formatMoney(data.leftCountString, '', tradeCoin))
+            // $("#leftCountString").html(base.formatMoney(data.leftCountString, '', tradeCoin))
             $("#coin").text(tradeCoin)
 
             $.when(

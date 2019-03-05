@@ -409,6 +409,23 @@ table {
         .icon-user {
             background-image: url('../images/wd.png');
         }
+        .icon-message {
+            background-image: url('../images/message.png');
+            width: 18px;
+            height: 16.4px;
+            background-size: 100% 100%;
+        }
+        .msg_num {
+            background: $red-color;
+            color: #fff;
+            font-size: 10px;
+            padding: 3px;
+            border-radius: 100%;
+            position: absolute;
+            right: 2px;
+            top: -5px;
+            transform: scale(0.5);
+        }
         .head-triangle {
             width: 18px;
             height: 11px;
@@ -435,6 +452,30 @@ table {
             -moz-transition: opacity, width, height .4s;
             -webkit-transition: opacity, width, height .4s;
             line-height: 1;
+        }
+        .down-wrap-message {
+            width: 0;
+            height: 0;
+            opacity: 1;
+            overflow: hidden;
+            position: absolute;
+            top: 116px;
+            left: 50%;
+            z-index: 98;
+            transition: opacity, width, height .4s;
+            -ms-transition: opacity, width, height .4s;
+            -moz-transition: opacity, width, height .4s;
+            -webkit-transition: opacity, width, height .4s;
+            line-height: 1;
+            .message-text {
+                font-size: 12px;
+                .message-title {
+                    color: #999;
+                }
+                .message-content {
+                    color: #333;
+                }
+            }
         }
         .dd-hov {
             position: absolute;
@@ -624,6 +665,11 @@ table {
                 padding: 34px 3px 3px;
                 opacity: 1;
             }
+            .down-wrap-message {
+                border: 1px solid red;
+                padding: 34px 3px 3px;
+                opacity: 1;
+            }
             &.user .down-wrap {
                 width: 126px;
                 height: 210px;
@@ -652,7 +698,7 @@ table {
     z-index: 990;
     height: 81px;
     padding: 16px 0;
-    background-color: #233661 !important;
+    background-color: #333 !important;
     .logo {
         // width: 129px;
         margin-right: 4.2%;
@@ -785,7 +831,7 @@ table {
     min-height: 300px;
     padding: 2.1% 0 2.3% 0;
     box-sizing: border-box;
-    background-color: #233661;
+    background-color: #333;
     position: relative;
     z-index: 990;
     display: flex;
@@ -1589,82 +1635,95 @@ table {
         .left-title {
             width: 214px;
             height: 44px;
-            text-align: center;
-            line-height: 44px;
+            text-align: left;
             background-color: #D53D3D;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-            position: relative;
-            left: -1px;
             color: #fff;
             font-size: 16px;
+            padding: 11px 20px;
         }
-        .left-item {
-            width: 100%;
-            padding: 12px 0;
-            .title-item {
+        .left-item-group {
+            padding: 10px 0;
+            .left-item {
                 width: 100%;
-                text-align: center;
-                padding: 12px 0;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-                padding-right: 28px;
-                samp {
-                    font-size: 16px;
-                    color: #333;
+                // padding: 12px 20px;
+                .title-item {
+                    width: 100%;
+                    text-align: center;
+                    padding: 12px 0;
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    -khtml-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                    padding-right: 28px;
+                    samp {
+                        font-size: 16px;
+                        color: #333;
+                    }
+                    .icon {
+                        width: 18px;
+                        height: 18px;
+                        margin-right: 10px;
+                        position: relative;
+                        top: 3px;
+                    }
+                    .icon-ziliao {
+                        background-image: url('../images/wdzl.png');
+                        background-size: auto 17px;
+                    }
+                    .icon-anquan {
+                        background-image: url('../images/zhaq.png');
+                        background-size: 17px;
+                    }
+                    .icon-xinren {
+                        background-image: url('../images/sxr.png');
+                        background-size: auto 17px;
+                    }
                 }
-                .icon {
-                    width: 18px;
-                    height: 18px;
-                    margin-right: 10px;
+                .nav-item {
+                    padding: 12px 20px;
+                    width: 100%;
                     position: relative;
-                    top: 3px;
+                    left: -1px;
+                    text-align: left;
+                    font-size: 14px;
+                    color: #808080;
+                    transition: color, background-color .4s;
+                    -ms-transition: color, background-color .4s;
+                    -moz-transition: color, background-color .4s;
+                    -webkit-transition: color, background-color .4s;
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    -khtml-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                    display: flex;
+                    align-items: center;
+                    &.on,
+                    &:hover {
+                        background-color: #fdf5f5;
+                        color: $primary-color;
+                    }
+                    .nav-item-type {
+                        flex: 1;
+                    }
+                    .num {
+                        background: #4d4d4d;
+                        border-radius: 100px;
+                        color: #fff;
+                        font-size: 12px;
+                        padding: 5px;
+                    }
                 }
-                .icon-ziliao {
-                    background-image: url('../images/wdzl.png');
-                    background-size: auto 17px;
-                }
-                .icon-anquan {
-                    background-image: url('../images/zhaq.png');
-                    background-size: 17px;
-                }
-                .icon-xinren {
-                    background-image: url('../images/sxr.png');
-                    background-size: auto 17px;
-                }
-            }
-            .nav-item {
-                width: 214px;
-                position: relative;
-                left: -1px;
-                text-align: center;
-                padding: 12px 0;
-                font-size: 14px;
-                color: #808080;
-                transition: color, background-color .4s;
-                -ms-transition: color, background-color .4s;
-                -moz-transition: color, background-color .4s;
-                -webkit-transition: color, background-color .4s;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-                &.on,
-                &:hover {
+                .sel-nav_item {
                     background-color: #fdf5f5;
                     color: $primary-color;
                 }
-            }
-            .sel-nav_item {
-                background-color: #fdf5f5;
-                color: $primary-color;
             }
         }
     }
@@ -1686,6 +1745,21 @@ table {
     .right-wrap {
         width: 980px;
         min-height: 225px;
+        .big-title {
+            height: 90px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            .title-name {
+                flex: 1;
+                font-size: 24px;
+                color: #333;
+            }
+            .market-price {
+                font-size: 18px;
+                color: #999;
+            }
+        }
     }
     .huz-from,
     .sf-from {
@@ -1814,6 +1888,17 @@ table {
         }
         .am-modal-footer .am-button {
             width: 120px;
+        }
+    }
+    .public-container {
+        .search-wrap {
+            .buy_sell {
+                width: 100px;
+                background: #fff;
+                border: 1px solid $border-color;
+                border-right: none;
+                color: $red-color;
+            }
         }
     }
 }
@@ -3352,9 +3437,20 @@ table {
 .public-container {
     .search-wrap {
         width: 100%;
-        height: 58px;
+        height: 88px;
         margin: 30px auto 40px;
         display: flex;
+        .buy_sell {
+            padding: 18px 0;
+            background: #fff;
+            border: 1px solid $border-color;
+            border-right: none;
+            color: $red-color;
+            margin-right: 67px;
+            .buy {
+                margin-bottom: 8px;
+            }
+        }
         .icon-down {
             width: 16px;
             height: 16px;
@@ -3408,12 +3504,12 @@ table {
             }
         }
         .search-con {
-            width: 100%;
-            height: 58px;
-            padding: 0 20px;
+            flex: 1;
+            height: 88px;
+            padding: 0 46px;
             .advertisement-wrap {
                 .item {
-                    padding: 0 20px 0 20px;
+                    padding: 14px 20px 0 20px;
                     position: relative;
                     samp {
                         font-size: 12px;
@@ -3423,13 +3519,15 @@ table {
                     }
                     .icon {
                         position: absolute;
-                        top: 20px;
-                        right: 15px;
+                        top: 34px;
+                        right: 22px;
                     }
                     select {
+                        border: 1px solid $border-color;
                         width: 121px;
                         line-height: 40px;
                         margin-top: 9px;
+                        border-radius: 2px;
                     }
                     .text {
                         width: 90px;
@@ -3462,21 +3560,23 @@ table {
             }
         }
         .search-btn {
-            width: 120px;
-            height: 58px;
-            .am-button {
-                height: 58px;
-                line-height: 58px;
-                font-size: 16px;
+            padding: 27px 0;
+            color: $red-color;
+            font-size: 0;
+            .search-txt {
+                display: block;
+                height: 100%;
+                line-height: 38px;
             }
-            .icon-search {
-                width: 18px;
-                height: 18px;
-                background-image: url('../images/scicon.png');
-                background-size: contain;
-                margin-right: 8px;
-                position: relative;
-                top: 3px;
+            #searchBtn,#bestSearchBtn {
+                border: 1px solid $red-color;
+                border-radius: 2px;
+                padding: 0 25px;
+                font-size: 14px;
+                height: 38px;
+            }
+            #bestSearchBtn {
+                margin-left: 40px;
             }
         }
     }
@@ -3548,9 +3648,7 @@ table {
                 height: 13px;
                 border-radius: 50%;
                 border: 1.5px solid #fff;
-                position: absolute;
-                bottom: 0;
-                right: 0;
+                margin-right: 5px;
                 &.green {
                     background-color: #74c758;
                 }
@@ -3562,15 +3660,16 @@ table {
                 }
             }
             .am-button {
-                width: 90px;
-                height: 36px;
+                width: 58px;
+                height: 28px;
                 font-size: 14px;
+                border-radius: 2px;
                 transition: color, background .4s;
                 -ms-transition: color, background .4s;
                 -moz-transition: color, background .4s;
                 -webkit-transition: color, background .4s;
                 &.am-button-ghost {
-                    line-height: 34px !important;
+                    line-height: 28px !important;
                 }
                 &:hover {
                     color: #fff;
@@ -3588,14 +3687,22 @@ table {
             .nickname {
                 width: 300px;
                 overflow: hidden;
+                .pfirst {
+                    display: flex;
+                    align-items: center;
+                    .num {
+                        color: #4FB71A;
+                        font-size: 14px;
+                    }
+                    .name {
+                        margin-right: 5px;
+                    }
+                }
                 .name {
-                    margin-left: 15px;
-                    display: block;
                     color: #333;
                     font-size: 14px;
                 }
                 .n-dist {
-                    margin-left: 48px;
                     margin-top: 6px;
                     samp {
                         font-size: 12px;
@@ -3608,6 +3715,15 @@ table {
             }
             .payType {
                 width: 180px;
+                .payType_psecond {
+                    span {
+                        font-size: 12px;
+                        padding: 2px;
+                        color: #F19348;
+                        border: 1px solid #F19348;
+                        border-radius: 2px;
+                    }
+                }
             }
             .limit {
                 width: 200px;
@@ -3633,6 +3749,16 @@ table {
     .trade-list-wrap .trade-wrap {
         .nickname{
             width: 270px;
+            p: first-child {
+                display: flex;
+                align-items: center;
+            }
+            .country {
+                width: 30px;
+                height: 20px;
+                background-size: 100%;
+                margin-right: 8px;
+            }
         }
         .payType{
             width: 100px;
@@ -3651,44 +3777,243 @@ table {
     }
 }
 
-.detail-container {
-    width: 1200px;
-    margin: 20px auto;
-    .titleWrap {
-        margin-bottom: 38px;
-        .icon {
-            width: 18px;
-            height: 18px;
-            background-size: contain;
-            position: relative;
-            top: 3px;
-            margin-right: 12px;
+.buy-detail-container, .sell-detail-container {
+    background: #f4f4f4;
+    padding: 20px 0;
+    .detail-container {
+        width: 1200px;
+        margin: 0 auto;
+        padding: 26px 137px 48px 68px;
+        background: #fff;
+        display: flex;
+        .buy-title {
+                color: #333;
+                font-size: 18px;
+                line-height: 25px;
+                font-family: PingFangSC-Semibold;
+                margin-bottom: 20px;
+            }
+        .detail-container-left {
+            flex: 1;
+            .titleWrap {
+                margin-bottom: 38px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .titleWrap-left {
+
+                }
+                .titleWrap-right {
+
+                }
+                .icon-buy {
+                    background-image: url('../images/csds.png');
+                }
+                .icon-warn {
+                    background-image: url('../images/tx.png');
+                }
+                .icon-advwarn {
+                    background-image: url('../images/fbgg.png');
+                    width: 30px;
+                    height: 30px;
+                }
+                samp {
+                    font-size: 16px;
+                }
+                .small {
+                    font-size: 12px;
+                    color: $red-color;
+                    i {
+                        font-style: normal;
+                    }
+                }
+            }
+            .form-wrapper {
+                display: flex;
+                justify-content: space-between;
+                .form-item {
+                    width: 274px;
+                }
+            }
+            .am-button {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                border-radius: 2px;
+                padding: 13px;
+                height: 70px;
+                .buy-now {
+                    font-size: 16px;
+                    line-height: 22px
+                }
+                .buy-talk {
+                    font-size: 12px;
+                    line-height: 17px;
+                }
+            }
+            .buy-check-email {
+                margin-top: 20px;
+                background: #Fcf4ed;
+                padding: 26px 30px;
+                .check-email-tips {
+                    font-size: 16px;
+                    color: #333;
+                    line-height: 22px;
+                }
+                .check-email-btn {
+                    background: #F19348;
+                    border-radius: 2px;
+                    font-size: 14px;
+                    color: #fff;
+                    line-height: 20px;
+                    padding: 8px 31px;
+                    margin-top: 13px;
+                    display: inline-block;
+                }
+            }
+            .buy-info {
+                font-size: 14px;
+                line-height: 20px;
+                color: #666;
+                padding: 13px 0;
+                margin-bottom: 30px;
+                p {
+                    margin-bottom: 8px;
+                    .buy-info-weighter {
+                        color: #151515;
+                        font-family: PingFangSC-Semibold;
+                    }
+                }
+            }
+            .buy-quick-condition {
+                color: #999;
+                font-size: 14px;
+                line-height: 20px;
+                margin-bottom: 30px;
+                span {
+                    margin-right: 40px;
+                    display: inline-flex;
+                    align-items: center;
+                    .icon {
+                    width: 20px;
+                    height: 15px;
+                    background: 100% 100%;
+                    margin-right: 4px;
+                    }
+                    .icon-photo {
+                        background-image: url('../images/photo-auth.png');
+                    }
+                    .icon-online-pay {
+                        background-image: url('../images/online-pay.png');
+                    }
+                }
+            }
+            .buy-cjtk {
+                .buy-quick-title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                span {
+                    color: #7d7d7d;
+                }
+            }
         }
-        .icon-buy {
-            background-image: url('../images/csds.png');
-        }
-        .icon-warn {
-            background-image: url('../images/tx.png');
-        }
-        .icon-advwarn {
-            background-image: url('../images/fbgg.png');
-            width: 30px;
-            height: 30px;
-        }
-        samp {
-            font-size: 28px;
-        }
-        .small {
-            font-size: 13px;
-            color: $red-color;
-            i {
-                font-style: normal;
+        .detail-container-right {
+            width: 310px;
+            margin-left: 38px;
+            .buy-user-info {
+                border: 1px solid #ccc;
+                border-radius: 2px;
+                text-align: center;
+                margin-top: 30px;
+                font-size: 14px;
+                line-height: 20px;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                margin-bottom: 20px;
+                .icon-user-avatar {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 100%;
+                    background-image: url('../images/default-avatar.png');
+                }
+                .buy-user-nickname {
+                    color: #eaab76;
+                    margin-bottom: 10px;
+                    margin-top: 18px;
+                }
+                .buy-user-online {
+                    margin-bottom: 10px;
+                }
+                .buy-user-sy {
+                    .buy-user-sy-plus {
+                        color: #79c545;
+                    }
+                    .buy-user-sy-negative {
+                        color: #dc918e;
+                    }
+                }
+                > * {
+                    position: relative;
+                    top: -30px;
+                }
+            }
+            .buy-share {
+                text-align: center;
+                margin-bottom: 60px;
+                .buy-share-title {
+                    color: #999;
+                    font-size: 14px;
+                    line-height: 20px;
+                    margin-bottom: 12px;
+                }
+                .share-icons {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+                    .icon {
+                        width: 54px;
+                        height: 40px;
+                    }
+                    .icon-share-twitter {
+                        background-image: url('../images/twitter.png');
+                    }
+                    .icon-share-facebook {
+                        background-image: url('../images/facebook.png');
+                    }
+                    .icon-share-email {
+                        background-image: url('../images/email.png');
+                    }
+                }
+            }
+            .buy-feedback {
+                text-align: center;
+                .buy-feedback-item {
+                    text-align: left;
+                    color: #3f3f3f;
+                    font-size: 14px;
+                    line-height: 20px;
+                    padding: 10px 24px;
+                    border-bottom: 1px solid #d8d8d8;
+                    .buy-feedback-who {
+                        .buy-feedback-who-name {
+                            color: #e59759;
+                        }
+                    }
+                    .buy-feedback-when {
+                        .buy-feedback-when-positive {
+                            color: #79c545;
+                        }
+                    }
+                    > * {
+                        margin-bottom: 8px;
+                    }
+                }
             }
         }
     }
-    // .detail-container-wrap {
-    //     width: 760px;
-    // }
 }
 
 .tradeDetail-container {
@@ -4200,7 +4525,7 @@ table {
                 padding: 0 20px;
                 option {
                     font-size: 16px;
-                    color: #333;
+                    color: $border-color;
                     line-height: 1.8;
                     padding: 10px 0;
                 }
@@ -5264,7 +5589,7 @@ table {
         color: #fff;
         border-radius: 8px;
         color: #fff;
-        background-color: #233661;
+        background-color: #333;
         height: 28px;
         line-height: 26px;
         font-size: 14px;
@@ -6518,6 +6843,16 @@ html {
 .jy-con-left .fy_ky1{
   margin-right: 5px;
 }
+
+// index-left.html
+
+.buy_sell {
+        width: 100px;
+        background: #fff;
+        border: 1px solid $border-color;
+        border-right: none;
+        color: $red-color;
+    }
 
 // 媒体查询
 @media screen and (max-width: 1600px) {
