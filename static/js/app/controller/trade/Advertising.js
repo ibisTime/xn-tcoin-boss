@@ -129,7 +129,7 @@ define([
         $('.fy_zhkyye').html(base.getText('账户可用余额'));
         $('.fy_fkfs').html(base.getText('收款方式') + '：');
         $('.fy_ggly').html(base.getText('广告留言') + '：');
-        $('.fy_gjsz').html(base.getText('显示高级设置'));
+        $('.fy_gjsz').html(base.getText('高级选项'));
         $('.fy_jxsxrdjyz').html(base.getText('仅限受信任的交易者') + `：<samp id="trustExp"></samp>`);
         $('.fy_qy').html(base.getText('启用'));
         $('.fy_kfsj').html(base.getText('开放时间') + `：<samp id="displayTimeExp"></samp>`);
@@ -142,7 +142,7 @@ define([
         $('.fy_xq5').html(base.getText('星期五') + '：');
         $('.fy_xq6').html(base.getText('星期六') + '：');
         $('.fy_xq7').html(base.getText('星期日') + '：');
-        $('.fy_xsgjsz').html(base.getText('显示高级设置') + '...');
+        $('.fy_xsgjsz').html(base.getText('高级选项') + '...');
         $('#draftBtn').html(base.getText('保存草稿'));
         $('#submitBtn').html(base.getText('立即发布'));
         $('#doDownBtn').html(base.getText('下架'));
@@ -561,7 +561,12 @@ define([
             }, base.emptyFun)
         })
 
-
+        $('.advertise-step1-btn').on('click', () => {
+          base.gohref('../trade/advertise-step2.html');
+        });
+        $('.advertise-step2-btn').on('click', () => {
+          base.gohref('../trade/advertise-step3.html');
+        });
         // 选择实名
         // $('.check-wrap').on("click", function(e) {
         //     let target = e.target,

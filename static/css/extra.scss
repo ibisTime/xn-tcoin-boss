@@ -4348,43 +4348,275 @@ table {
     }
 }
 
-.advertise-container {
-    .advertise-warn {
-        .content {
-            font-size: 14px;
-            color: #002200;
-            line-height: 2;
-            padding: 10px 0 20px;
+.advertise-out-container {
+    background: #f7f7f7;
+    .advertise-container {
+      background: #fff;
+      width: 1200px;
+      margin: 0 auto;
+      padding: 52px 100px;
+      .step1-title,.step2-title,.step3-title {
+        color: #327BCA;
+        font-size: 24px;
+        line-height: 33px;
+        margin-bottom: 30px;
+        margin-top: 40px;
+        display: inline-block;
+      }
+      .step2-border {
+        border: 1px solid #ccc;
+        padding: 30px 37px;
+        margin-bottom: 24px;
+      }
+      .advertise-step1-bigTitle,.advertise-step2-bigTitle,.advertise-step3-bigTitle {
+        text-align: center;
+        margin-bottom: 54px;
+        p {
+          font-size: 32px;
+          line-height: 45px;
+          .step1,.step2,.step3 {
+            color: $red-color;
+          }
         }
-        .fb-type {
-            width: 100%;
-            padding: 26px 20px 20px;
-            border-bottom: 1px solid #dedede;
-            margin-bottom: 44px;
-            li {
-                display: inline-block;
-                width: 80px;
-                height: 40px;
-                text-align: center;
-                line-height: 40px;
-                border-radius: 21px;
-                font-size: 16px;
-                color: #333;
-                margin-right: 50px;
-                transition: all .3s;
-                cursor: pointer;
-                border: 1px solid transparent;
-                &:hover {
-                    border: 1px solid #d53d3d;
-                    color: #D53D3D;
-                }
-            }
-            .fb-sel {
-                border: 1px solid #d53d3d;
-                color: #D53D3D;
-            }
+      }
+      .advertise-step1-tabs,.advertise-step2-tabs {
+          display: flex;
+          align-items: center;
+          border:1px solid #ccc;
+          border-radius: 2px;
+          margin-bottom: 80px;
+          .tab-item {
+              width: 200px;
+              height: 108px;
+              font-size: 20px;
+              line-height: 108px;
+              text-align: center;
+              color: #333;
+              border-right:1px solid #ccc;
+              &:last-child {
+                  border: none;
+              }
+          }
+      }
+      .advertise-step1-payType-search {
+          #tradeCurrency {
+              height: 60px;
+              padding: 10px
+          }
+          input::-webkit-input-placeholder {
+              font-size: 16px;
+              color: #666;
+          }
+          .icon-search {
+              width: 25px;
+              height: 25px;
+              background-size: 100% 100%;
+              background-image: url('../images/search.png');
+              position: absolute;
+              right: 10px;
+              top: 15px;
+          }
+      }
+      .advertise-step1-payType {
+          margin-bottom: 40px;
+          .advertise-payType-items {
+              border: 1px solid #ccc;
+              > * {
+                  padding: 19px 23px;
+                  border-bottom: 1px solid #ccc;
+                  font-size: 16px;
+                  line-height: 22px;
+              }
+              .advertise-payType-title {
+                  background: #f0f0f0;
+                  color: #999;
+              }
+              .advertise-payType-item {
+                  background: #fff;
+                  color: #333;
+                  &:last-child {
+                      border: none;
+                  }
+                  .icon-step1-unselected {
+
+                  }
+              }
+          }
+      }
+      .advertise-step1-my-trade-coin {
+          margin-bottom: 98px;
+          .form-wrapper {
+              margin-bottom:23px;
+              select {
+                  font-size: 20px;
+                  height: 70px;
+              }
+              .icon-down {
+                  width: 92px;
+                  height: 68px;
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                  background-color: #ebf1f8;
+                  background-image: url('../images/down.png');
+                  background-size: 15px;
+              }
+          }
+          .step1-my-trade-coin-tips {
+              color: #999;
+              font-size: 18px;
+              line-height: 25px;
+          }
+      }
+      .advertise-step1-btn,.advertise-step2-btn {
+        font-size: 18px;
+        display: inline-block;
+        width: 286px;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+      }
+      .step2-input {
+        position: relative;
+        width: 250px;
+        height: 50px;
+        display: inline-block;
+        input {
+          height: 100%;
+          width: 100%;
+          border: 1px solid $border-color;
         }
-    }
+        span {
+          position: absolute;
+          right: 1px;
+          top: 1px;
+          display: inline-block;
+          width: 70px;
+          height: 48px;
+          background-color: #ebf1f8;
+          line-height: 50px;
+          text-align: center;
+          border-left: 1px solid $border-color;
+        }
+      }
+      .step2-input-tip {
+        font-size: 20px;
+        line-height: 28px;
+        color: #666;
+        margin-left: 18px;
+      }
+      .step2-tip,.step3-tip {
+        font-size: 18px;
+        line-height: 25px;
+        color: #666;
+        margin-top: 24px;
+      }
+      .advertise-step2-zq {
+        margin-bottom: 24px;
+        .step2-zq-num {
+          margin-bottom: 32px;
+          > * {
+            border-bottom: none;
+          }
+        }
+        .step2-zq-tips {
+          .step2-zq-tip-weighter {
+            font-family: PingFangSC-Semibold;
+            color: #151515;
+          }
+          .step2-za-tip-my-price {
+            margin-bottom: 24px;
+          }
+        }
+      }
+      .advertise-step2-jyxe {
+        .jzxe {
+          margin-left: 16px;
+          color: #e59759;
+          font-size: 20px;
+          line-height: 28px;
+        }
+        .step2-min,.step2-max {
+          display: inline-flex;
+          align-items: start;
+          flex-direction: column;
+          margin-bottom: 30px;
+          margin-right: 100px;
+          .min,.max {
+            color: #999;
+            font-size: 20px;
+            line-height: 28px;
+            margin-bottom: 18px;
+          }
+        }
+        .jyxe-tips {
+          width: 670px;
+          > * {
+            margin-bottom: 20px;
+          }
+        }
+      }
+      .advertise-setp2-cancel-transcation {
+        .step2-cancel-time {
+          margin-bottom: 30px;
+        }
+        .step2-cencel-transcation-tips {
+          width: 670px;
+        }
+      }
+      .min-price {
+        .step2-cancel-time {
+          margin-bottom: 30px;
+        }
+        .step2-min-price-tips {
+          width: 670px;
+        }
+      }
+      .step3-input {
+        display: inline-block;
+        width: 100%;
+        height: 60px;
+        border: 1px solid #ccc;
+      }
+      .step3-textarea {
+        width: 100%;
+        height: 254px;
+        border: 1px solid #ccc;
+      }
+      .advertise-step3-tags {
+        .advertise-tags-content {
+          .step3-tag-num {
+            margin-bottom: 24px;
+          }
+          .step3-tags-tips {
+            color: #999;
+            font-size: 20px;
+            line-height: 28px;
+          }
+        }
+      }
+      .advertise-step3-clause {
+        .advertise-clause-content {
+          .step3-clause-num {
+            textarea {
+              width: 100%;
+              height: 254px;
+              border: 1px solid #ccc;
+            }
+          }
+        }
+      }
+      .advertise-set {
+        .set-wrap {
+          .advertise-step3-target-area {
+            .advertise-target-area-content {
+              step3-target-area-select {
+                height: 60px;
+              }
+            }
+          }
+        }
+      }
     .advTitWrap {
         width: 100%;
         padding: 20px 0;
@@ -4445,12 +4677,6 @@ table {
     .type {
         &.on .icon-check {
             background-image: url('../images/chose.png');
-        }
-    }
-    .form-wrapper {
-        .form-item {
-            width: 600px;
-            margin: 20px 0 35px;
         }
     }
     .set-item {
@@ -4562,6 +4788,7 @@ table {
         right: 30px !important;
         margin: 0;
     }
+    }   
 }
 
 .userDetail-container {

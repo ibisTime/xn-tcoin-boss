@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <!--SCRIPT_PLACEHOLDER-->
+    <link rel="import" href="../top/top-zendesk.html?__inline">
+</head>
+
+<body class="bg_fff">
+    <link rel="import" href="../top/top.html?__inline">
+    <div class="advertise-out-container">
+       <div class="advertise-container detail-container">
+        <!-- <div class="advertise-warn wp100">
+            <div class="titleWrap">
+                <i class="icon icon-advwarn"></i>
+                <samp class="en_fbgg"></samp>
+            </div>
+            <div class="content wp100" id="tradeWarn"></div>
+        </div> -->
+        <div class="advertise-step2-bigTitle">
+            <p><span class="step2">Step2：</span>您想赚取多少利润？</p>
+        </div>
+        <div class="advertise-step2-zq">
+            <p class="step2-title advertise-step2-title">我想要赚取</p>
+            <div class="step2-border advertise-payType-items">
+                <div class="step2-zq-num">
+                    <div class="step2-input step2-zq-num-input">
+                        <input type="text">
+                        <span class="step2-input-tip">%</span>
+                    </div>
+                    <span class="step2-input-tip">每笔销售</span>
+                </div>
+                <div class="step2-zq-tips">
+                    <p class="step2-tip step2-za-tip-market-price">比特币的当前市场为<span class="step2-zq-tip-weighter">3960,90 USD</span>。</p>
+                    <p class="step2-tip step2-za-tip-my-price">我正在以每个比特币<span class="step2-zq-tip-weighter">4163,16 USD</span>的价格出售。</p>
+                    <p class="step2-tip step2-za-tip-rate">我将获得Uita礼品卡价值的<span class="step2-zq-tip-weighter"> 105%</span></p>
+                    <p class="step2-tip step2-za-tip-amount">每出售一个比特币，我将赚的<span class="step2-zq-tip-weighter">198,25 USD</span>。</p>
+                </div>
+            </div>
+        </div>
+       <div class="advertise-step2-jyxe">
+           <p><span class="step2-title step2-jyxe-title">我的交易限额</span><span class="jzxe">使用精准限额</span></p>
+           <div class="step2-border">
+               <div class="step2-min">
+                   <span class="min">最低交易金额</span>
+                   <div class="step2-input step2-zq-num-input">
+                       <input type="text">
+                       <span class="step2-input-tip">USD</span>
+                   </div>
+               </div>
+               <div class="step2-max">
+                   <span class="max">最高交易金额</span>
+                   <div class="step2-input step2-zq-num-input">
+                       <input type="text">
+                       <span class="step2-input-tip">USD</span>
+                   </div>
+               </div>
+               <div class="jyxe-tips">
+                   <p class="step2-tip jyxe-tip1">借助这些限额，人们可以在最低交易金额到最高交易金额范围内与您交易。</p>
+                   <p class="step2-tip jyxe-tip2">当交易开始时，等额的比特币将转到托管中。例如，当50USD的交易开始时，相应金额的比特币（0，0126063）将转入托管。</p>
+                   <p class="step2-tip jyxe-tip3">出价当前未公开显示。若要使其可见，请执行一下操作：
+                       出价不可见，因为需要0.1 BTC 保证金，或者请获得验证</p>
+               </div>
+           </div>
+       </div>
+       <div class="advertise-setp2-cancel-transcation">
+           <p class="step2-title advertise-step2-title">如果买家不使用支付方式</p>
+           <div class="step2-border advertise-step2-cancel-time">
+               <div class="step2-cancel-time">
+                   <div class="step2-input step2-cencel-time-input">
+                       <input type="text">
+                       <span class="step2-input-tip">分钟</span>
+                   </div>
+                   <span class="step2-input-tip">交易将被取消</span>
+               </div>
+               <div class="step2-cencel-transcation-tips">
+                   <p class="step2-tip step2-cencel-tip">对您的出价感兴趣的人有多少时间来实际支付，如果买家未在付款窗口过
+                       期前点击“标记为已付款”，则交易将自动取消</p>
+               </div>
+           </div>
+       </div>
+       <div class="min-price">
+           <p class="step2-title advertise-step2-min-price">最低价</p>
+           <div class="step2-border advertise-step2-min-price-content">
+               <div class="step2-cancel-time">
+                   <div class="step2-input step2-cencel-time-input">
+                       <input type="text">
+                       <span class="step2-input-tip">USD</span>
+                   </div>
+               </div>
+               <div class="step2-min-price-tips">
+                   <p class="step2-tip step2-min-price-tip">广告最低可成交的价格，可帮助您在价格剧烈波动时保持稳定的盈利，比
+                       如最低价为12000，市场价低于12000以下时，您的广告依旧以12000的
+                       价格展示出来。</p>
+               </div>
+           </div>
+       </div>
+       <div class="advertise-step2-btn am-button-red">下一步</div>
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['domReady!'], function (doc) {
+            require(['app/controller/trade/Advertising']);
+        });
+    </script>
+</body>
+
+</html>
