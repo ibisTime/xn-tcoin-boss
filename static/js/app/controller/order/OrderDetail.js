@@ -79,7 +79,7 @@ define([
         $('.fy_sjhm').html(base.getText('手机号码') + '：');
         $('.fy_smrz').html(base.getText('实名认证') + '：');
         $('.fy_yhcjsj').html(base.getText('用户创建时间') + '：');
-        $('.payBtn').html(base.getText('标记付款'));
+        $('.payBtn').html(base.getText('已支付'));
         $('.cancelBtn').html(base.getText('取消交易'));
         $('.commentBtn').html(base.getText('交易评价'));
         $('.releaseBtn').html(base.getText('解冻货币'));
@@ -116,6 +116,9 @@ define([
         $('#commentDialog .fy_cp').html(base.getText('差评'));
         $('#commentDialog #pjText').attr('placeholder', base.getText('快來评价吧'));
         $('#commentDialog .subBtn').html(base.getText('提交'));
+
+      $('#paidDialog .fy_qryzf').html(base.getText('确认已支付'));
+      $('#paidDialog .fy_content').html(base.getText('注意：如以付款，请及时跟商家联系，让商家及时放行比特币；如商家未放行比特币请及时申请仲裁'));
 
     }
     function getTencunLogin() {
@@ -1146,15 +1149,10 @@ define([
 
         //标记打款按钮 点击
         $(".payBtn").on("click", function() {
-            base.confirm(base.getText('确认标记打款？'), base.getText('取消'), base.getText('确定')).then(() => {
-                base.showLoadingSpin()
-                TradeCtr.payOrder(code).then(() => {
-                    base.hideLoadingSpin();
-
-                    base.showMsg(base.getText('操作成功'));
-                    auSx();
-                }, base.hideLoadingSpin)
-            }, base.emptyFun)
+          // var orderCode = $(this).attr("data-ocode");
+          // $('#pjText').val('');
+          // $("#commentDialog .subBtn").attr("data-ocode", orderCode)
+          $("#paidDialog").removeClass("hidden")
         })
 
         //申請仲裁按钮 点击
