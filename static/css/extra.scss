@@ -1890,17 +1890,6 @@ table {
             width: 120px;
         }
     }
-    .public-container {
-        .search-wrap {
-            .buy_sell {
-                width: 100px;
-                background: #fff;
-                border: 1px solid $border-color;
-                border-right: none;
-                color: $red-color;
-            }
-        }
-    }
 }
 
 .userInfo-wrap {
@@ -3441,15 +3430,29 @@ table {
         margin: 30px auto 40px;
         display: flex;
         .buy_sell {
-            padding: 18px 0;
-            background: #fff;
-            border: 1px solid $border-color;
-            border-right: none;
+          padding: 18px 0;
+          margin-right: 67px;
+          color: #ccc;
+          &:hover {
+            cursor: pointer;
+          }
+          .icon-check {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-image: url("../images/wxz.png");
+            background-size: 100% 100%;
+            margin-right: 3px;
+          }
+          > .on {
             color: $red-color;
-            margin-right: 67px;
-            .buy {
-                margin-bottom: 8px;
+            .icon-check {
+              background-image: url('../images/chose.png');
             }
+          }
+          .buy {
+            margin-bottom: 8px;
+          }
         }
         .icon-down {
             width: 16px;
@@ -4379,24 +4382,41 @@ table {
           }
         }
       }
-      .advertise-step1-tabs,.advertise-step2-tabs {
-          display: flex;
-          align-items: center;
-          border:1px solid #ccc;
-          border-radius: 2px;
-          margin-bottom: 80px;
-          .tab-item {
-              width: 200px;
-              height: 108px;
-              font-size: 20px;
-              line-height: 108px;
-              text-align: center;
-              color: #333;
-              border-right:1px solid #ccc;
-              &:last-child {
-                  border: none;
-              }
+      .advertise-step1-tabs {
+        display: flex;
+        align-items: center;
+        border:1px solid #ccc;
+        border-radius: 2px;
+        margin-bottom: 80px;
+        .tab-item {
+          width: 200px;
+          height: 108px;
+          font-size: 20px;
+          line-height: 108px;
+          text-align: center;
+          color: #333;
+          border-right:1px solid #ccc;
+          &:last-child {
+              border: none;
           }
+        }
+        .tab-item.active {
+          background: #327bca;
+          color: #fff;
+          position: relative;
+          .active-triangle {
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-top-color: #327BCA;
+            position: absolute;
+            bottom: -20px;
+            left: 90px;
+          }
+        }
+        &:hover {
+          cursor: pointer;
+        }
       }
       .advertise-step1-payType-search {
           #tradeCurrency {
@@ -4432,14 +4452,23 @@ table {
                   color: #999;
               }
               .advertise-payType-item {
-                  background: #fff;
-                  color: #333;
-                  &:last-child {
-                      border: none;
-                  }
-                  .icon-step1-unselected {
-
-                  }
+                background: #fff;
+                color: #333;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                &:hover {
+                  cursor: pointer;
+                  background: #f0f0f0;
+                }
+                &:last-child {
+                    border: none;
+                }
+                .icon-step1-unselected {
+                  width: 32px;
+                  height: 32px;
+                  background-image: url("../images/step1-unchecked.png");
+                }
               }
           }
       }
@@ -4475,6 +4504,10 @@ table {
         height: 60px;
         line-height: 60px;
         text-align: center;
+        border-radius: 2px;
+        &:hover {
+          cursor: pointer;
+        }
       }
       .step2-input {
         position: relative;
@@ -4547,6 +4580,9 @@ table {
           color: #e59759;
           font-size: 20px;
           line-height: 28px;
+          &:hover {
+            cursor: pointer;
+          }
         }
         .step2-min,.step2-max {
           display: inline-flex;
@@ -4635,9 +4671,15 @@ table {
         }
       }
       .advertise-set {
+        .step2-cencel-transcation-tips {
+          margin-bottom: 21px;
+        }
         .set-wrap {
           .advertise-step3-target-area {
             .advertise-target-area-content {
+              .step3-target-area-tips {
+                margin-bottom: 30px;
+              }
               step3-target-area-select {
                 height: 60px;
               }
@@ -4649,6 +4691,25 @@ table {
 
               }
             }
+          }
+          .advertise-step3-area-limit {
+            .advertise-step3-area-limit-title {
+              margin-bottom: 17px;
+            }
+          }
+          .icon-step3-checked {
+            width: 32px;
+            height: 32px;
+            background-image: url("../images/step3-checkbox-unchecked.png");
+            background-size: 100% 100%;
+            margin-right: 12px;
+          }
+          .icon-step3-checked.on {
+            width: 32px;
+            height: 32px;
+            background-image: url("../images/step3-checked.png");
+            background-size: 100% 100%;
+            margin-right: 12px;
           }
         }
       }
@@ -5110,6 +5171,9 @@ table {
               text-align: center;
               line-height: 30px;
               margin-right: 22px;
+              &:hover {
+                cursor: pointer;
+              }
             }
             .tips {
               text-align: left;
@@ -5196,7 +5260,77 @@ table {
             }
           }
         }
+        .orderDetail-left-arbitrate {
+          font-size: 14px;
+          line-height: 20px;
+          text-align: center;
+          .arbitrate-title {
+            color: $red-color;
+            margin-bottom: 10px;
+          }
+          .arbitrate-tips {
+            color: #999;
+            margin-bottom: 25px;
+          }
+          .arbitrate-btn {
+            display: inline-block;
+            background: $red-color;
+            color: #fff;
+            padding: 10px 20px;
+            margin-bottom: 43px;
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+        .orderDetail-left-release {
+          margin-top: 77px;
+          text-align: center;
+          .release-btn {
+            display: inline-block;
+            background: #f19348;
+            color: #fff;
+            padding: 10px 20px;
+            margin-bottom: 16px;
+            &:hover {
+              cursor: pointer;
+            }
+          }
+          .release-warning {
+            color: #2a2a2a;
+            margin-bottom: 44px;
+            .warning {
+              color: $red-color;
+            }
+          }
+        }
       }
+      .finished-top {
+        border-bottom: 1px solid $border-color;
+        margin: 20px;
+        text-align: center;
+        .finished-top-icon {
+          display: inline-block;
+          width: 66px;
+          height: 66px;
+          background-image: url("../images/finished.png");
+          background-size: 100% 100%;
+          margin-top: 38px;
+          margin-bottom: 21px;
+        }
+        .finished-top-status {
+          color: #333;
+          font-size: 14px;
+          line-height: 20px;
+          margin-bottom: 38px;
+        }
+        .finished-top-btn {
+
+        }
+      }
+    }
+    .orderDetail-left.finished {
+      border: 1px solid $border-color;
     }
     .orderDetail-right {
       width: 562px;
@@ -5452,7 +5586,7 @@ table {
         }
         .chat-wrap {
           .msgflow {
-            height: 100%;
+            height: 94%;
           }
           .btnWrap {
             border-top: 1px solid $border-color;
@@ -5635,6 +5769,116 @@ table {
             color: #333;
         }
     }
+}
+
+.paid-dialog {
+  .am-modal-header {
+    padding: 30px 0 10px;
+  }
+  .am-modal-body {
+    margin-bottom: 28px;
+    padding-bottom: 0;
+    .title {
+      font-size: 14px;
+      color: #484848;
+      text-align: center;
+      width: 361px;
+    }
+  }
+  .am-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 76px;
+    margin-bottom: 48px;
+    > * {
+      border-radius: 2px;
+      background: #fff;
+      padding: 10px 30px;
+      border: 1px solid $border-color;
+      font-size: 18px;
+    }
+    .paid-subBtn {
+      color: $red-color;
+    }
+    .paid-canBtn {
+      color: #999;
+    }
+  }
+}
+
+.release-paid-dialog {
+  .am-modal-header {
+    padding: 30px 0 10px;
+    font-size: 24px;
+    line-height: 33px;
+    color: #333;
+  }
+  .am-modal-body {
+    margin-bottom: 28px;
+    padding-bottom: 0;
+    .title {
+      font-size: 18px;
+      line-height: 25px;
+      color: #999;
+      text-align: center;
+      width: 361px;
+    }
+  }
+  .am-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 76px;
+    margin-bottom: 48px;
+    > * {
+      border-radius: 2px;
+      background: #fff;
+      padding: 10px 30px;
+      border: 1px solid $border-color;
+      font-size: 18px;
+    }
+    .subBtn {
+      color: $red-color;
+      border-color: $red-color;
+    }
+    .canBtn {
+      color: #999;
+    }
+  }
+}
+
+.release-unpaid-dialog {
+  .am-modal-header {
+    padding: 60px 0 0;
+    color: $red-color;
+    font-size: 24px;
+  }
+  .am-modal-body {
+    margin-bottom: 53px;
+    padding-bottom: 0;
+    .title {
+      font-size: 18px;
+      line-height: 25px;
+      text-align: center;
+      width: 361px;
+      color: #999;
+    }
+  }
+  .am-modal-footer {
+    align-items: center;
+    padding: 0 76px;
+    margin-bottom: 48px;
+    .subBtn {
+      display: inline;
+      color: $red-color;
+      border-radius: 2px;
+      background: #fff;
+      padding: 10px 30px;
+      border: 1px solid $red-color;
+      font-size: 18px;
+    }
+  }
 }
 
 .chat-container {
@@ -7335,16 +7579,6 @@ html {
 .jy-con-left .fy_ky1{
   margin-right: 5px;
 }
-
-// index-left.html
-
-.buy_sell {
-        width: 100px;
-        background: #fff;
-        border: 1px solid $border-color;
-        border-right: none;
-        color: $red-color;
-    }
 
 // 媒体查询
 @media screen and (max-width: 1600px) {

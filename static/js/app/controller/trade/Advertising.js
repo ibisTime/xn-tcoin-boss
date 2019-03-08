@@ -61,7 +61,7 @@ define([
 
             // 支付方式
             let payHtml = '';
-            console.log('123:', data4);
+            // console.log('123:', data4);
             data4.forEach(item => {
                 payType[item.dkey] = item.dvalue;
                 payHtml += `<option value="${item.dkey}">${item.dvalue}</option>`
@@ -517,7 +517,7 @@ define([
                     endTime: $("#timeWrap .time-item:nth-of-type(7) .endTime").val()
                 }]
             }
-            base.showLoadingSpin()
+            base.showLoadingSpin();
             return TradeCtr.submitAdvertise(params).then(() => {
                 base.showMsg(base.getText('操作成功', langType));
                 base.showLoadingSpin();
@@ -529,7 +529,6 @@ define([
                         } else {
                             base.gohref('..//order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
                         }
-
                     } else {
                         if (params.tradeType == '0') {
                             base.gohref('../trade/sell-list.html?coin=' + coin + '&mod=cs');
@@ -550,7 +549,7 @@ define([
                 return;
             }
             base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确认', langType)).then(() => {
-                base.showLoadingSpin()
+                base.showLoadingSpin();
                 TradeCtr.downAdvertise(code).then(() => {
                     base.hideLoadingSpin();
                     base.showMsg(base.getText('操作成功', langType));
@@ -648,7 +647,18 @@ define([
                     advertiseData('USD');
                     break;
             }
-        })
+        });
+        $('.advertise-step1-tabs .tab-item').on('click', (e) => {
+          let target = e.target;
+          // console.log($(target).attr('data-index'));
+          $(target).addClass('active').siblings().removeClass('active');
+        });
+        $('.step3-vpn-checkbox .vpn-checkbox-item i').on('click', (e) => {
+          let target = e.target;
+
+          $(target).addClass('on');
+        });
+
 
         base.hideLoadingSpin();
     }

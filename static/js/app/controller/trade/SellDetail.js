@@ -198,16 +198,17 @@ define([
 
     //出售
     function sellETH() {
-        config.tradeAmount = $("#buyAmount").val();
-        config.count = base.formatMoneyParse($("#buyEth").val(), '', tradeCoin);
-        config.tradePwd = $('#moneyPow').val();
-        return TradeCtr.sellETH(config).then((data) => {
-            base.showMsg(base.getText('下单成功', langType));
-            setTimeout(function() {
-                base.gohref("../order/order-list.html?mod=dd");
-            }, 2000)
-            base.hideLoadingSpin();
-        }, base.hideLoadingSpin)
+      config.tradeAmount = $("#buyAmount").val();
+      config.count = base.formatMoneyParse($("#buyEth").val(), '', tradeCoin);
+      config.tradePwd = $('#moneyPow').val();
+      return TradeCtr.sellETH(config).then((data) => {
+        console.log(data);
+        base.showMsg(base.getText('下单成功', langType));
+        setTimeout(function() {
+            base.gohref("../order/order-list.html?mod=dd");
+        }, 2000)
+        base.hideLoadingSpin();
+      }, base.hideLoadingSpin)
 
     }
 

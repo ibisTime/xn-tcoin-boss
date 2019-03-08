@@ -109,7 +109,7 @@ define([
     function getCoinList() {
         var coinList = base.getCoinArray();
         var listHtml = '';
-        console.log(coinList);
+        // console.log(coinList);
         coinList.map(item => {
             listHtml += `<li class="${item.coin.toLowerCase()}" data-coin="${item.coin}">${item.coin}</li>`;
         });
@@ -156,7 +156,6 @@ define([
                 lists.forEach((item, i) => {
                     html += buildHtml(item);
                 });
-                console.log(html);
                 $("#content").append(html);
                 $(".trade-list-wrap .no-data").addClass("hidden")
 
@@ -440,5 +439,15 @@ define([
                 $('.search-wrap').addClass('none');
             }
         })
+      // 切换购买比特币/出售比特币
+
+      $('.buy_sell div').on('click', (e) => {
+        let target = e.target;
+        if (!$(target).hasClass("on")) {
+          $(target).addClass('on').siblings().removeClass('on');
+        } else {
+          $(target).removeClass('on').siblings().addClass('on');
+        }
+      })
     }
 });

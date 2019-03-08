@@ -119,6 +119,17 @@ define([
 
       $('#paidDialog .fy_qryzf').html(base.getText('确认已支付'));
       $('#paidDialog .fy_content').html(base.getText('注意：如以付款，请及时跟商家联系，让商家及时放行比特币；如商家未放行比特币请及时申请仲裁'));
+      $('#paidDialog .paid-subBtn').html(base.getText('确认'));
+      $('#paidDialog .paid-canBtn').html(base.getText('取消'));
+
+      $('#releasePaidDialog .fy_release-paid-title').html(base.getText('买家已付款，是否确认放行比特币'));
+      $('#releasePaidDialog .fy_release-paid-content').html(base.getText('注意：请仔细核实，如发生交易失误、诈骗，交易资金不会撤回，平台不会给予退款，请谨慎交易'));
+      $('#releasePaidDialog .subBtn').html(base.getText('确认'));
+      $('#releasePaidDialog .canBtn').html(base.getText('取消'));
+
+      $('#releaseUnpaidDialog .fy_release-unpaid-title').html(base.getText('买家未付款，不能放行比特币'));
+      $('#releaseUnpaidDialog .fy_release-unpaid-content').html(base.getText('注意：如发生交易失误、诈骗，交易资金不会撤回，平台不会给予退款，请谨慎交易'));
+      $('#releaseUnpaidDialog .subBtn').html(base.getText('确认'));
 
     }
     function getTencunLogin() {
@@ -1154,6 +1165,16 @@ define([
           // $("#commentDialog .subBtn").attr("data-ocode", orderCode)
           $("#paidDialog").removeClass("hidden")
         })
+      // 放行比特币按钮 点击
+      $(".release-btn").on("click", function() {
+        if(1 === 1) {
+          // 买家已付款
+          $("#releasePaidDialog").removeClass("hidden");
+        } else {
+          // 买家未付款
+          $("#releaseUnpaidDialog").removeClass("hidden")
+        }
+      });
 
         //申請仲裁按钮 点击
         $(".arbitrationBtn").on("click", function() {
