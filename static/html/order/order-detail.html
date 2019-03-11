@@ -167,7 +167,42 @@
                 <div class="finished-top">
                     <i class="finished-top-icon"></i>
                     <div class="finished-top-status">交易已完成</div>
-                    <div class="am-button-red finished-top-btn"></div>
+                    <span class="am-button-red comment-btn">去评价</span>
+                </div>
+                <div class="finished-bottom">
+                    <p class="finished-bottom-title">订单信息</p>
+                    <div class="finished-bottom-item code-payType">
+                        <div class="code">
+                            <span class="finished-bottom-item-title">订单编号</span>
+                            <span class="finished-bottom-item-content">5198960</span>
+                        </div>
+                        <div class="payType">
+                            <span class="finished-bottom-item-title">付款方式</span>
+                            <span class="finished-bottom-item-content">支付宝</span>
+                        </div>
+                        <div class="space">
+                        </div>
+                    </div>
+                    <div class="finished-bottom-item price-quantity-amount">
+                        <div class="price">
+                            <span class="finished-bottom-item-title">交易价格</span>
+                            <span class="finished-bottom-item-content">25826.588 CNY</span>
+                        </div>
+                        <div class="quantity">
+                            <span class="finished-bottom-item-title">交易数量</span>
+                            <span class="finished-bottom-item-content">25826.588 CNY</span>
+                        </div>
+                        <div class="amount">
+                            <span class="finished-bottom-item-title">交易金额</span>
+                            <span class="finished-bottom-item-content">10 CNY</span>
+                        </div>
+                    </div>
+                    <div class="finished-bottom-item message">
+                        <div class="price">
+                            <span class="finished-bottom-item-title">广告留言</span>
+                            <span class="finished-bottom-item-content">交易速度很快</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="orderDetail-right">
@@ -240,6 +275,36 @@
     </div>
 
     <!--评价弹窗-->
+    <!--<div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">-->
+        <!--<div class="am-modal-mask"></div>-->
+        <!--<div class="am-modal">-->
+            <!--<div class="am-modal-content">-->
+                <!--<div class="am-modal-header">-->
+                    <!--<p class="fy_jypj"></p>-->
+                <!--</div>-->
+                <!--<div class="am-modal-body">-->
+                    <!--<p class="title fy_jyyx"></p>-->
+                    <!--<div class="comment-Wrap">-->
+                        <!--<div class="item on" data-value="2">-->
+                            <!--<div class="icon icon-good"></div>-->
+                            <!--<p class="fy_hp"></p>-->
+                        <!--</div>-->
+                        <!--<div class="item ml20" data-value="0">-->
+                            <!--<div class="icon icon-bad"></div>-->
+                            <!--<p class="fy_cp"></p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="com-content">-->
+                        <!--<textarea name="" id="pjText" placeholder=""></textarea>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="am-modal-footer">-->
+                    <!--<div class="am-button am-button-red subBtn"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--评价弹窗-->
     <div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">
         <div class="am-modal-mask"></div>
         <div class="am-modal">
@@ -253,6 +318,10 @@
                         <div class="item on" data-value="2">
                             <div class="icon icon-good"></div>
                             <p class="fy_hp"></p>
+                        </div>
+                        <div class="item ml20" data-value="0">
+                            <div class="icon icon-middle"></div>
+                            <p class="fy_zp"></p>
                         </div>
                         <div class="item ml20" data-value="0">
                             <div class="icon icon-bad"></div>

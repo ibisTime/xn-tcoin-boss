@@ -179,7 +179,15 @@ define([
                 start: '1',
                 limit: '10'
             }, true);
-        }
+        },
+      // 列表查付款方式
+      getPayTypeList(data) {
+        return Ajax.post("625350", data, true);
+      },
+      // 列表查交易货币
+      getPayCoinList(name) {
+        return Ajax.post("625370", name, true);
+      }
 
     };
 })

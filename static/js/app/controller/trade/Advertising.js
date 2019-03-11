@@ -23,15 +23,18 @@ define([
     if (langType === 'EN') {
         langText = '_en';
     }
+    let payBigType = '';
+    let paySubType = '';
+    let paySearch = '';
 
-      if(!base.isLogin()){
-        base.goLogin()
-      }else {
-        init();
-      }
-
+      // if(!base.isLogin()){
+      //   base.goLogin()
+      // }else {
+      //   init();
+      // }
+  init();
     function init() {
-        setHtml();
+        // setHtml();
         base.showLoadingSpin();
       $('.head-nav-wrap .advertise').addClass('active');
         if (code != "") {
@@ -41,74 +44,95 @@ define([
         $("#tradeCoin").val(coin.toUpperCase());
 
         $("#price").attr("disabled", true);
-        $.when(
-            GeneralCtr.getSysConfig("trade_remind"),
-            GeneralCtr.getDictList({ "parentKey": "trade_time_out" }),
-            getAdvertisePrice(),
-            GeneralCtr.getDictList({ "parentKey": "pay_type" }),
-            getExplain('sell'),
-            getAccount(coin.toUpperCase())
-        ).then((data1, data2, data3, data4) => {
-            //说明
-            $("#tradeWarn").html(data1.cvalue.replace(/\n/g, '<br>'));
-
-            //付款时限
-            var html = '';
-            data2.reverse().forEach((item) => {
-                html += `<option value="${item.dvalue}">${item.dvalue}</option>`
-            });
-            $("#payLimit").html(html);
-
-            // 支付方式
-            let payHtml = '';
-            // console.log('123:', data4);
-            data4.forEach(item => {
-                payType[item.dkey] = item.dvalue;
-                payHtml += `<option value="${item.dkey}">${item.dvalue}</option>`
-            })
-            $('#payType').html(payHtml);
-
-            //价格
-            $("#price").attr("data-coin", coin.toUpperCase());
-
-            if (code == ""){
-                $("#price").val(data3.mid);
-                mid = data3.mid;
-            }
-
-            if (code != "") {
-                getAdvertiseDetail(); // 正式
-            } else {
-                base.hideLoadingSpin()
-            }
-        }, base.hideLoadingSpin)
-
-        // 高级设置-开放时间
-        var htmlStart = '<option value="24">'+base.getText('关闭', langType)+'</option>';
-        var htmlEnd = '<option value="24">'+base.getText('关闭', langType)+'</option>';
-
-        for (var i = 0; i <= 23; i++) {
-            if (i < 10) {
-                htmlStart += `<option value="${i}">0${i}:00</option>`
-            } else {
-                htmlStart += `<option value="${i}">${i}:00</option>`
-            }
-        }
-
-        for (var i = 1; i <= 23; i++) {
-            if (i < 10) {
-                htmlEnd += `<option value="${i}">0${i}:00</option>`
-            } else {
-                htmlEnd += `<option value="${i}">${i}:00</option>`
-            }
-        }
-        htmlEnd += `<option value="24">23:59</option>`
-        $(".selectWrap select.startTime").html(htmlStart)
-        $(".selectWrap select.endTime").html(htmlEnd);
+        // $.when(
+        //     GeneralCtr.getSysConfig("trade_remind"),
+        //     GeneralCtr.getDictList({ "parentKey": "trade_time_out" }),
+        //     getAdvertisePrice(),
+        //     GeneralCtr.getDictList({ "parentKey": "pay_type" }),
+        //     getExplain('sell'),
+        //     getAccount(coin.toUpperCase())
+        // ).then((data1, data2, data3, data4) => {
+        //     //说明
+        //     $("#tradeWarn").html(data1.cvalue.replace(/\n/g, '<br>'));
+        //
+        //     //付款时限
+        //     var html = '';
+        //     data2.reverse().forEach((item) => {
+        //         html += `<option value="${item.dvalue}">${item.dvalue}</option>`
+        //     });
+        //     $("#payLimit").html(html);
+        //
+        //     // 支付方式
+        //     let payHtml = '';
+        //     // console.log('123:', data4);
+        //     data4.forEach(item => {
+        //         payType[item.dkey] = item.dvalue;
+        //         payHtml += `<option value="${item.dkey}">${item.dvalue}</option>`
+        //     })
+        //     $('#payType').html(payHtml);
+        //
+        //     //价格
+        //     $("#price").attr("data-coin", coin.toUpperCase());
+        //
+        //     if (code == ""){
+        //         $("#price").val(data3.mid);
+        //         mid = data3.mid;
+        //     }
+        //
+        //     if (code != "") {
+        //         getAdvertiseDetail(); // 正式
+        //     } else {
+        //         base.hideLoadingSpin()
+        //     }
+        // }, base.hideLoadingSpin)
+      $.when(
+        GeneralCtr.getDictList({ "parentKey": "payment_method" }),
+        TradeCtr.getPayCoinList()
+      ).then((data1, data2) => {
+        console.log(data2);
+        let tabHtml = '';
+        data1.forEach((item, i) => {
+          tabHtml += buildTabHtml(item, i)
+        });
+        $(".advertise-step1-tabs").append(tabHtml);
+        getPayTypeList(data1[0].dkey);
+      }, base.hideLoadingSpin);
 
         addListener();
     }
+  // 构建顶部tab的dom结构
+  function buildTabHtml(data, i) {
+      let classHtml;
+      if(i === 0) {
+        classHtml = 'tab-item active';
+      } else {
+        classHtml = 'tab-item'
+      }
+    return `<span class="${classHtml}" data-index=${i} data-dkey=${data.dkey}>${data.dvalue}<i class="active-triangle"></i></span>`
+  }
+  // 构建list的dom结构
+  function buildListHtml(data, i) {
+    return `<div class="advertise-payType-item" data-code=${data.code}>
+                    <span>${data.name}</span><i class="icon icon-step1-unselected"></i>
+                </div>`
+  }
 
+  // 列表查付款方式
+  function getPayTypeList(dkey) {
+      let config;
+      if(dkey) {
+        config = {type: dkey, status: 1};
+      } else {
+        config = {type: payBigType, name: paySearch, status: 1}
+      }
+    return TradeCtr.getPayTypeList(config).then((res) => {
+      let listHtml = '';
+      res.forEach((item, i) => {
+        listHtml += buildListHtml(item, i)
+      });
+      $(".advertise-payType-item-container").html(listHtml);
+    })
+  }
     function setHtml() {
         $('title').text(base.getText('发布广告') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
         $('.en_fbgg').html(`${base.getText('发布')}<span class="bb-name"></span>${base.getText('交易广告')}`);
@@ -543,139 +567,54 @@ define([
         }
 
         //下架
-        $("#doDownBtn").on("click", function() {
-            if (!base.isLogin()) {
-                base.goLogin();
-                return;
-            }
-            base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确认', langType)).then(() => {
-                base.showLoadingSpin();
-                TradeCtr.downAdvertise(code).then(() => {
-                    base.hideLoadingSpin();
-                    base.showMsg(base.getText('操作成功', langType));
-                    setTimeout(function() {
-                        history.go(-1)
-                    }, 1500)
-                }, base.hideLoadingSpin)
-            }, base.emptyFun)
-        })
+      $("#doDownBtn").on("click", function() {
+          if (!base.isLogin()) {
+              base.goLogin();
+              return;
+          }
+          base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确认', langType)).then(() => {
+              base.showLoadingSpin();
+              TradeCtr.downAdvertise(code).then(() => {
+                  base.hideLoadingSpin();
+                  base.showMsg(base.getText('操作成功', langType));
+                  setTimeout(function() {
+                      history.go(-1)
+                  }, 1500)
+              }, base.hideLoadingSpin)
+          }, base.emptyFun)
+      })
 
-        $('.advertise-step1-btn').on('click', () => {
-          base.gohref('../trade/advertise-step2.html');
-        });
-        $('.advertise-step2-btn').on('click', () => {
-          base.gohref('../trade/advertise-step3.html');
-        });
-        // 选择实名
-        // $('.check-wrap').on("click", function(e) {
-        //     let target = e.target,
-        //         reg = /userDefined|usersel/g;
-        //     if (reg.test($(target).attr('class'))) {
-        //         $(target).parent('.item').addClass('on').siblings().removeClass('on');
-        //         selOnlyCert = $(target).attr('data-type');
-        //     }
-        // })
-
-        // 进度条实现
-        let i = 0,
-            goX = 0,
-            goLeft = '';
-        $('.num-go').mousedown(function(e) {
-            if (i == 0) {
-                goX = e.pageX - jdLeft;
-                goLeft = parseInt($(this).css('left')) - jdLeft;
-            }
-            i++;
-            let parWidth = $('.num-huadtiao').width();
-            let left = (goLeft / parWidth).toFixed(1) * 100;
-            $('.go-box').mousemove(e => {
-                let mlen = (((e.pageX - goX) / parWidth) * 100).toFixed(2);
-                if (mlen >= 50) {
-                    mlen = 50;
-                }
-                if (mlen <= -50) {
-                    mlen = -50;
-                }
-                $('.num-go').css({
-                    left: (left + Number(mlen)) + '%'
-                })
-                $('.yj-num').val(mlen);
-                //溢价
-                if ($(".yj-num").val() == '0' || !$(".yj-num").val()) {
-                    $("#price").val(mid);
-                } else {
-                    $("#price").val((mid + mid * ($(".yj-num").val() / 100)).toFixed(2));
-                }
-            }).mouseup(() => {
-                $('.go-box').unbind('mousemove');
-            })
-        })
-
-        // 金钱选择
-
-        function advertiseData(mType) {
-            var m_type = mType;
-            let protectPrice = $('#protectPrice').val() || 0;
-            let minTrade = $('#minTrade').val() || 0;
-            let maxTrade = $('#maxTrade').val() || 0;
-            getAdvertisePrice(coin, m_type).then(data => {
-                mid = data.mid;
-                let bblv = midBlv / mid;
-                $("#price").val(mid);
-                if(bblv < 0){
-                    $('#protectPrice').val((bblv * parseFloat(protectPrice)).toFixed(2));
-                    $('#minTrade').val((bblv * parseFloat(minTrade)).toFixed(2));
-                    $('#maxTrade').val((bblv * parseFloat(maxTrade)).toFixed(2));
-                }else{
-                    $('#protectPrice').val((parseFloat(protectPrice) / bblv).toFixed(2));
-                    $('#minTrade').val((parseFloat(minTrade) / bblv).toFixed(2));
-                    $('#maxTrade').val((parseFloat(maxTrade) / bblv).toFixed(2));
-                }
-            });
-        }
-
-        $('#tradeCurrency').change(function() {
-            midBlv = $('#price').val() || 0;
-            let receiveType = $(this).find("option:selected").val();
-            switch (receiveType) {
-                case 'CNY':
-                    $('.m-type').text('CNY');
-                    advertiseData('CNY');
-                    break;
-                case 'USD':
-                    $('.m-type').text('USD');
-                    advertiseData('USD');
-                    break;
-            }
-        });
-        $('.advertise-step1-tabs .tab-item').on('click', (e) => {
-          let target = e.target;
-          // console.log($(target).attr('data-index'));
-          $(target).addClass('active').siblings().removeClass('active');
-        });
-        $('.step3-vpn-checkbox .vpn-checkbox-item i').on('click', (e) => {
-          let target = e.target;
-
-          $(target).addClass('on');
-        });
+      $('.advertise-step1-btn').on('click', () => {
+        base.gohref('../trade/advertise-step2.html');
+      });
+      $('.advertise-step2-btn').on('click', () => {
+        base.gohref('../trade/advertise-step3.html');
+      });
+      // step1搜索框
+      $("#tradeCurrency").bind('input propertychange',function(){
+        paySearch = $('#tradeCurrency').val();
+        getPayTypeList()
+      });
+      // step1-tab点击切换事件
+      $(".advertise-step1-tabs").on("click", ".tab-item", function (e){
+        let target = e.target;
+        $(target).addClass('active').siblings().removeClass('active');
+        payBigType = $(target).attr('data-dkey');
+        getPayTypeList($(target).attr('data-dkey'));
+      });
+      // step1-list点击事件
+      $('.advertise-payType-item-container').on('click', '.advertise-payType-item', (e) => {
+        let target = e.target;
+        paySubType = $(target).attr('data-code');
+        $(target).addClass('on').siblings().removeClass('on');
+      });
+      // vpn
+      $('.step3-vpn-checkbox .vpn-checkbox-item i').on('click', (e) => {
+        let target = e.target;
+        $(target).addClass('on');
+      });
 
 
         base.hideLoadingSpin();
     }
-
-    //交易币种 change
-    // function tradeCoinChange(type) {
-    //     if (type == '0') {
-    //         return $.when(
-    //             TradeCtr.getAdvertisePrice($("#tradeCoin").val()),
-    //             getAccount($("#tradeCoin").val())
-    //         ).then()
-    //     } else if (type == '1') {
-    //         return $.when(
-    //             getAccount($("#tradeCoin").val())
-    //         ).then()
-    //     }
-
-    // }
-
 });
