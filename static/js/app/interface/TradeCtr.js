@@ -25,24 +25,6 @@ define([
         getListAdvertiseNickname(nickName, refresh) {
             return Ajax.get("625228", { nickName }, refresh);
         },
-        /**
-         * 发布/编辑广告
-         * @param adsCode
-         */
-        submitAdvertise(config, refresh) {
-            if (config.publishType == '3' || config.publishType == '2') {
-                return Ajax.get("625221", {
-                    operator: base.getUserId(),
-                    userId: base.getUserId(),
-                    ...config
-                }, true);
-            }
-            return Ajax.get("625220", {
-                operator: base.getUserId(),
-                userId: base.getUserId(),
-                ...config
-            }, true);
-        },
         //下架广告
         downAdvertise(adsCode) {
             return Ajax.get("625224", {
@@ -187,7 +169,33 @@ define([
       // 列表查交易货币
       getPayCoinList(name) {
         return Ajax.post("625370", name, true);
-      }
+      },
+      // 获取币种行情
+      getMarket(ex_type) {
+        return Ajax.post('650101', {
+          referCurrency: ex_type,
+          symbol: 'BTC'
+        },true);
+      },
+      // 列表查标签
+      getTagsList(config) {
+        return Ajax.post('625330', config, true);
+      },
+      // 列表查国家
+      getCountryList(config) {
+        return Ajax.post('625310', config, true);
+      },
+      /**
+       * 发布广告
+       * @param adsCode
+       */
+      submitAdvertise(config) {
+        return Ajax.get("625220", {
+          userId: base.getUserId(),
+          tradeCoin: 'BTC',
+          ...config
+        }, true);
+      },
 
     };
 })

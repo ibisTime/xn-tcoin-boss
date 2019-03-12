@@ -50,12 +50,12 @@ define([
         if (!isDetail) {
             $(".buy-wrap").removeClass("hidden");
         }
-        $.when(
-            GeneralCtr.getSysConfig("trade_remind")
-        ).then((data) => {
-            $("#tradeWarn").html(data.cvalue.replace(/\n/g, '<br>'))
+        // $.when(
+        //     GeneralCtr.getSysConfig("trade_remind")
+        // ).then((data) => {
+        //     $("#tradeWarn").html(data.cvalue.replace(/\n/g, '<br>'))
             getAdvertiseDetail()
-        })
+        // })
         addListener();
 
     }

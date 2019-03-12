@@ -34,34 +34,36 @@ define([
         value: base.getText('USD美元')
     }];
     // 付款类型下拉
-  var payTypeList = [{
-    key: '0',
-    value: base.getText('支付宝', langType)
-  }, {
-    key: '1',
-    value: base.getText('微信', langType)
-  }, {
-    key: '2',
-    value: base.getText('银联转账', langType)
-  }, {
-    key: '3',
-    value: base.getText('苹果礼品卡', langType)
-  }, {
-    key: '4',
-    value: base.getText('steam礼品卡', langType)
-  }, {
-    key: '5',
-    value: base.getText('银行转账', langType)
-  },{
-    key: '6',
-    value: base.getText('尼日利亚银行转账', langType)
-  }, {
-    key: '5',
-    value: base.getText('Paypal 贝宝', langType)
-  },{
-    key: '6',
-    value: base.getText('西联', langType)
-  }];
+  // var payTypeList = [{
+  //   key: '0',
+  //   value: base.getText('支付宝', langType)
+  // }, {
+  //   key: '1',
+  //   value: base.getText('微信', langType)
+  // }, {
+  //   key: '2',
+  //   value: base.getText('银联转账', langType)
+  // }, {
+  //   key: '3',
+  //   value: base.getText('苹果礼品卡', langType)
+  // }, {
+  //   key: '4',
+  //   value: base.getText('steam礼品卡', langType)
+  // }, {
+  //   key: '5',
+  //   value: base.getText('银行转账', langType)
+  // },{
+  //   key: '6',
+  //   value: base.getText('尼日利亚银行转账', langType)
+  // }, {
+  //   key: '5',
+  //   value: base.getText('Paypal 贝宝', langType)
+  // },{
+  //   key: '6',
+  //   value: base.getText('西联', langType)
+  // }];
+  let payTypeList = [];
+  let platTagList = [];
 
     init();
 
@@ -70,9 +72,30 @@ define([
         getCoinList();
         setHtml();
         getPageAdvertise(config);
+        getPayTypeList();
+        getplatTagList();
         addListener();
     }
-
+    // 支付方式
+    function getPayTypeList() {
+      return TradeCtr.getPayTypeList({ status: 1 }).then((res) => {
+        base.hideLoadingSpin();
+        res.map((item) => {
+          payTypeList[item.code] = item.name;
+        });
+      }, base.hideLoadingSpin);
+    }
+    // 标签列表
+    function getplatTagList() {
+      return TradeCtr.getTagsList({ status: 1 }).then((res) => {
+        base.hideLoadingSpin();
+        console.log(res);
+        res.map((item) => {
+          platTagList[item.id] = item.name;
+        });
+        console.log(platTagList);
+      }, base.hideLoadingSpin);
+    }
     function setHtml() {
         base.getDealLeftText();
         $('.head-nav-wrap .index').addClass('active');
@@ -109,7 +132,6 @@ define([
     function getCoinList() {
         var coinList = base.getCoinArray();
         var listHtml = '';
-        // console.log(coinList);
         coinList.map(item => {
             listHtml += `<li class="${item.coin.toLowerCase()}" data-coin="${item.coin}">${item.coin}</li>`;
         });
@@ -209,19 +231,21 @@ define([
         if (item.userStatistics.beiPingJiaCount != 0) {
             hpCount = base.getPercentum(item.userStatistics.beiHaoPingCount, item.userStatistics.beiPingJiaCount);
         }
-        let payTypeList = {
-            '0': '/static/images/pay-zfb.png',
-            '1': '/static/images/pay-weChat.png',
-            '2': '/static/images/pay-bankcard.png',
-        };
-        let payTypeHtml = ``;
+      let payTypeHtml = ``;
         if (payTypeList[item.payType]) {
-            payTypeHtml = `<i class="icon" style="background-image: url('${payTypeList[item.payType]}')"></i>`;
+            payTypeHtml = `<i>${payTypeList[item.payType]}</i>`;
         } else {
             payTypeHtml = bizTypeList[item.payType];
         }
-
-        let country = '/static/images/China.png';
+        let paySecondHtml = ``;
+      console.log(platTagList);
+      if(item.platTag) {
+          item.platTag.split('||').map((item) => {
+            paySecondHtml += `<span>${platTagList[item]}</span>`;
+          });
+        }
+      console.log(paySecondHtml);
+      let country = '/static/images/China.png';
         let countryHtml = ``;
         countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
 
@@ -240,8 +264,7 @@ define([
                             ${payTypeHtml}
                         </p>
                         <p class="payType_psecond">
-                            <span>无需身份证件</span>
-                            <span>仅限实体卡</span>
+                            ${paySecondHtml}
                         </p>
                     </td>
                     <td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
@@ -306,6 +329,7 @@ define([
         })
 
         $("#searchBtn").click(function() {
+          debugger;
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type");
             //搜广告
             if (_searchType == "adver") {
@@ -361,6 +385,7 @@ define([
 
                 config.start = 1;
                 base.showLoadingSpin();
+                debugger;
 
                 getPageAdvertise(config);
                 //搜用户
