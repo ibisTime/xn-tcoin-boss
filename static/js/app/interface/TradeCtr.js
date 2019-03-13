@@ -162,6 +162,10 @@ define([
                 limit: '10'
             }, true);
         },
+        //阅读消息
+        readNews(config) {
+            return Ajax.post("805310",config);
+        },
       // 列表查付款方式
       getPayTypeList(data) {
         return Ajax.post("625350", data, true);
@@ -195,7 +199,6 @@ define([
           tradeCoin: 'BTC',
           ...config
         }, true);
-      },
-
+      }
     };
 })

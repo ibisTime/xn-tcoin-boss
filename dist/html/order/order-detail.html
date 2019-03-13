@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="/static/images/favicon.ico" />
+<!--<script src="../js/lib/validate/jquery.validate.js"></script>-->
+    <title></title>
+    <script data-loader src="/static/js/app/config.js"></script>
+<script id="lang" data-loader src="/static/js/app/language_1c0f31e.js"></script>
+<script src="/static/js/require_3e0e07b.js"></script>
+<script>/*resourcemap*/
+require.config({paths:{
+  "js/lib/domReady": "/static/js/lib/domReady_f89a6ca",
+  "js/app/util/cookie": "/static/js/app/util/cookie_7fb7465",
+  "js/app/util/dialog": "/static/js/app/util/dialog_ffb4af5",
+  "js/app/module/loading/index": "/static/js/app/module/loading/index_4bbaf7f",
+  "js/lib/bigDecimal/BigDecimal-all-last.min": "/static/js/lib/bigDecimal/BigDecimal-all-last.min_2314b83",
+  "js/app/util/ajax": "/static/js/app/util/ajax_4c84684",
+  "js/app/interface/BaseCtr": "/static/js/app/interface/BaseCtr_0b0aa00",
+  "js/app/controller/base": "/static/js/app/controller/base_28479ae",
+  "js/lib/validate/jquery.validate": "/static/js/lib/validate/jquery.validate_97e857f",
+  "js/app/module/validate/validate": "/static/js/app/module/validate/validate_309826a",
+  "js/app/interface/GeneralCtr": "/static/js/app/interface/GeneralCtr_25b918b",
+  "js/app/interface/UserCtr": "/static/js/app/interface/UserCtr_cfd0439",
+  "js/app/interface/TradeCtr": "/static/js/app/interface/TradeCtr_299f0fd",
+  "js/app/interface/AccountCtr": "/static/js/app/interface/AccountCtr_9b6614a",
+  "js/app/module/tencentCloudLogin/index": "/static/js/app/module/tencentCloudLogin/index_8cc2f34",
+  "js/app/controller/Top": "/static/js/app/controller/Top_62ee0d9",
+  "js/app/controller/foo": "/static/js/app/controller/foo_830d4d7",
+  "js/app/controller/order/OrderDetail": "/static/js/app/controller/order/OrderDetail_a51b30a"
+}});</script>
+<script src="/static/js/lib/jquery_7477303.js"></script>
+<script src="/static/js/lib/webim/spark-md5_28b89f7.js"></script>
+<script src="/static/js/lib/webim/json2_5eecb00.js"></script>
+<script src="/static/js/lib/webim/webim.min_55717e4.js"></script>
+<script src="/static/js/lib/qrcode_663ef62.js"></script>
+<script>
+        require(['js/lib/domReady!'], function (doc) {
+            require(['js/app/controller/order/OrderDetail']);
+        });
+    </script>
+    <!-- Start of beicoin Zendesk Widget script -->
+<!-- <script>
+	window.zEmbed || function(e, t) {
+		var n, o, d, i, s, a = [],
+			r = document.createElement("iframe");
+		window.zEmbed = function() {
+			a.push(arguments)
+		}, window.zE = window.zE || window.zEmbed, r.src = "javascript:false", r.title = "", r.role = "presentation", (r.frameElement || r).style.cssText = "display: none", d = document.getElementsByTagName("script"), d = d[d.length - 1], d.parentNode.insertBefore(r, d), i = r.contentWindow, s = i.document;
+		try {
+			o = s
+		} catch(e) {
+			n = document.domain, r.src = 'javascript:var d=document.open();d.domain="' + n + '";void(0);', o = s
+		}
+		o.open()._l = function() {
+			var e = this.createElement("script");
+			n && (this.domain = n), e.id = "js-iframe-async", e.src = "https://assets.zendesk.com/embeddable_framework/main.js", this.t = +new Date, this.zendeskHost = "funmvp.zendesk.com", this.zEQueue = a, this.body.appendChild(e)
+        }, o.write('<body onload="document._l();">'), o.close();
+        var time = setInterval(() => {
+            if(window.frames['launcher']){
+                window.frames['launcher'].style.display = 'none';
+                clearInterval(time);
+            }
+        }, 500);
+	}(); 
+</script> -->
+<!-- <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=7d9fab1b-1c8a-43b2-8ded-d046477533f7"></script> -->
+<!-- End of beicoin Zendesk Widget script -->
+<!-- <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=d0ca9f45-54e2-4e0e-a7ac-fca254486217"> </script> -->
+
+<!-- <script type="text/javascript">
+    zE(function() {
+        zE.setHelpCenterSuggestions({
+            labels: [ZENDESK_LABEL]
+        })
+    });
+    window.zESettings = {
+        webWidget: {
+            contactOptions: {
+                enabled: true,
+                contactButton: {
+                    '*': '联系我们'
+                },
+                chatLabelOnline: {
+                    '*': '在线聊天'
+                },
+                chatLabelOffline: {
+                    '*': '在线聊天'
+                },
+                contactFormLabel: {
+                    '*': '联系我们'
+                }
+            }
+        }
+    };
+</script> -->
+
+
+    <link rel="stylesheet" href="/static/css/index.css" />
+</head>
+
+<body class="bg_fff">
+    <!--加载动画-->
+<div id="loadingSpin" class="ant-spin-nested-loading fixed_i">
+    <div class="ant-spin-blur ant-spin-container">
+        <span class="ant-spin-dot"><i></i><i></i><i></i><i></i></span>
+    </div>
+</div>
+<div id="head" class="index-head">
+    <div class="head-wrap container">
+        <div class="logo fl goHref" data-href="../index.html">
+            <img class="fl" src="/static/images/logo.png"/>
+        </div>
+        <div class="fl head-nav-wrap">
+            <div class="goHref head-nav index" data-href="../index.html"><samp class="en_page"></samp></div>
+            <div class="goHref head-nav sell" data-href="../trade/sell-list.html"><samp class="en_store"></samp></div>
+            <div class="goHref head-nav advertise" data-href="../trade/advertise.html"><samp class="en_deal"></samp></div>
+            <!--<div class="head-nav trade"><samp class="en_deal"></samp>-->
+                <!--<ul class="yj-ul">-->
+                    <!--<li class="goHref nav-cwjy" data-href="../trade/buy-list.html?type=sell&mod=gm"></li>-->
+                    <!--<li class="goHref nav-bbjy" data-href="../bbdeal/bbdeal.html"></li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <div class="head-nav invitation"><samp class="goHref en_yqhy" style="display: block;" data-href="../public/invitation.html"></samp></div>
+            <div class="head-nav help"><samp class="goHref en_bzzx" style="display: block;" data-href="../public/articleMore.html"></samp></div>
+        </div>
+        <div class="head-button-wrap hidden" id="head-button-wrap">
+            <div class="goHref fl am-button-small head-button button-login" data-href="../user/login.html"></div>
+            <div class="goHref fl am-button-small head-button button-register" data-href="../user/register.html"></div>
+            <!-- <div class="goHref fl head-lang">
+                <select class="lang_select" name="lang-select">
+                    <option value="zh">简体中文</option>
+                    <option value="en" class="l-en">English</option>
+                </select>
+                <i class="icon-lang"></i>
+            </div> -->
+        </div>
+        <div class="fr head-user-wrap hidden" id="head-user-wrap">
+            <div class="fl head-user order mr40 goHref" data-href="../order/order-list.html?mod=dd">
+                <i class="icon icon-order"></i><samp class="fy_top_dd"></samp>
+                <div class="dd-hov"></div>
+            </div>
+            <div class="fl head-user wallet mr40 goHref" data-href="../wallet/wallet.html">
+                <i class="icon icon-wallet"></i><samp class="fy_top_zc"></samp>
+            </div>
+            <div class="fl head-user user" style="margin-right: 32px;">
+                <i class="icon icon-user"></i><samp class="nickname goHref" data-href="../user/user.html"></samp>
+                <div class="icon head-triangle"></div>
+                <div class="down-wrap">
+                    <ul>
+                        <li class="goHref" data-href="../user/user.html"><i
+                                class="icon icon-downUser"></i><samp class="fy_top_yyzx"></samp></li>
+                        <li id="headLogout"><i class="icon icon-lgout"></i><samp class="fy_top_tcdl"></samp></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="fl head-user message">
+                <i class="icon icon-message"></i><samp class="msg_num"></samp>
+                <div class="icon head-triangle"></div>
+                <audio src="/static/images/audio-message1.mp3" id="audio-message1"></audio>
+                <audio src="/static/images/audio-message2.mp3" id="audio-message2"></audio>
+                <div class="down-wrap-message">
+                    <ul>
+                        <!--<li class="goHref" data-href="../user/user.html">-->
+                            <!--<img src="../../images/system-msg.png">-->
+                            <!--<div class="message-text">-->
+                                <!--<p class="message-title">系统消息</p>-->
+                                <!--<span class="message-content">系统将于明日9时更新</span>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<img src="../../images/order-msg.png">-->
+                            <!--<div class="message-text">-->
+                                <!--<p class="message-title">订单消息</p>-->
+                                <!--<span class="message-content">有人购买了您的订单，快…</span>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<img src="../../images/order-msg.png">-->
+                            <!--<div class="message-text">-->
+                                <!--<p class="message-title">订单消息</p>-->
+                                <!--<span class="message-content">有人购买了您的订单，快…</span>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<img src="../../images/order-msg.png">-->
+                            <!--<div class="message-text">-->
+                                <!--<p class="message-title">订单消息</p>-->
+                                <!--<span class="message-content">有人购买了您的订单，快…</span>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="active-news">
+        <p>您有活跃消息</p>
+        <ul>
+            <!--<li>-->
+                <!--<span> <button>聊天</button></span>-->
+                <!--<span>dcdfdffsd</span>-->
+                <!--<span>50.00USD</span>-->
+                <!--<span>0.00003BTC</span>-->
+                <!--<span>出售</span>-->
+            <!--</li>-->
+        </ul>
+    </div>
+</div>
+    <!--不同状态  卖家 买家展示不同-->
+    <div class="orderDetail-out-container">
+        <div class="orderDetail-container chat-container">
+
+            <div class="orderDetail-left hidden">
+                <div class="orderDetail-left-tips">
+                    <p class="orderDetail-left-tips-content">注意！这位卖家的声誉反馈较低。在分享您的礼品卡信息前，请确保卖家在线并回复了您。请确保卖家在线并回复了您。如果您已经给了他信息，而他要求您取消交易，请点击已支付完成按钮。版主将会介入来确保卖家服从规则。</p>
+                    <p style="height: 26px;"><span class="orderDetail-left-tips-button fr">我理解</span></p>
+                </div>
+                <div class="orderDetail-left-status">交易已开始</div>
+                <div class="orderDetail-left-infos orderDetail-border">
+                    <div class="orderDetail-left-todo">
+                        <p class="todo">请通过ITUENS GIGT CARD（S）发送 10US DOLLAR</p>
+                        <p class="todo-tips">6.74 US Dollar 将加载至您的比特币钱包</p>
+                    </div>
+                    <div class="orderDetail-left-operations">
+                        <div class="paid operation-item">
+                            <span class="btn payBtn">已支付</span>
+                            <span class="tips">在您完成支付后，请务必点击“我已支付”按钮。否则，交易将超时，比特币将退回给卖家。</span>
+                        </div>
+                        <div class="cancel operation-item">
+                            <span class="btn canBtn">取消</span>
+                            <span class="tips">如果错误的发起了交易，或者您不满足交易说明中提出的要求，您随时可以取消交易。</span>
+                        </div>
+                    </div>
+                    <div class="orderDetail-left-zs">
+                        <div class="zs-title">请按照 Type some 的指示操作</div>
+                        <div class="zs-tags">
+                            <span>无需身份证件</span>
+                            <span>仅限实体卡</span>
+                        </div>
+                        <div class="zs-introduction">Newsgd.com is the premier online source of Guangdong news and information, fully displaying Guangdong through channels including Guangdong News, Guangdong</div>
+                    </div>
+                    <div class="orderDetail-left-time">
+                        <i class="icon-clock"></i>
+                        <div class="text">
+                            <span>30分钟</span>
+                            <span>支付剩余时间</span>
+                        </div>
+                    </div>
+                    <div class="orderDetail-left-message">
+                        <p class="message-title">信息</p>
+                        <p class="message-tips">0.00171391 BTC 被安全的保存在托管处</p>
+                    </div>
+                    <div class="orderDetail-left-more-info">
+                        <div class="more-info-item frate">
+                            <span class="more-info-title">费率</span>
+                            <span class="more-info-value">5834.60 USD/BTC</span>
+                        </div>
+                        <div class="more-info-item trade-id">
+                            <span class="more-info-title">交易ID</span>
+                            <span class="more-info-value">wjoazvDY2md</span>
+                        </div>
+                        <div class="more-info-item time">
+                            <span class="more-info-title">已开始</span>
+                            <span class="more-info-value">几秒前</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="orderDetail-left hidden wait-release-btc">
+                <div class="orderDetail-left-status">交易已开始</div>
+                <div class="orderDetail-left-infos orderDetail-border">
+                    <div class="orderDetail-left-todo">
+                        <p class="todo">请通过ITUENS GIGT CARD（S）发送 10US DOLLAR</p>
+                        <p class="todo-tips">6.74 US Dollar 将加载至您的比特币钱包</p>
+                    </div>
+                    <div class="orderDetail-left-time">
+                        <i class="icon-clock"></i>
+                        <div class="text">
+                            <span>30分钟</span>
+                            <span>支付剩余时间</span>
+                        </div>
+                    </div>
+                    <div class="orderDetail-left-arbitrate">
+                        <p class="arbitrate-title">已支付，等待卖家放行比特币</p>
+                        <p class="arbitrate-tips">如卖家在指定时间未放行比特币，请及时申请仲裁</p>
+                        <span class="arbitrate-btn">申请仲裁</span>
+                    </div>
+                    <div class="orderDetail-left-zs">
+                        <div class="zs-title">请按照 Type some 的指示操作</div>
+                        <div class="zs-tags">
+                            <span>无需身份证件</span>
+                            <span>仅限实体卡</span>
+                        </div>
+                        <div class="zs-introduction">Newsgd.com is the premier online source of Guangdong news and information, fully displaying Guangdong through channels including Guangdong News, Guangdong</div>
+                    </div>
+                    <div class="orderDetail-left-message">
+                        <p class="message-title">信息</p>
+                        <p class="message-tips">0.00171391 BTC 被安全的保存在托管处</p>
+                    </div>
+                    <div class="orderDetail-left-more-info">
+                        <div class="more-info-item frate">
+                            <span class="more-info-title">费率</span>
+                            <span class="more-info-value">5834.60 USD/BTC</span>
+                        </div>
+                        <div class="more-info-item trade-id">
+                            <span class="more-info-title">交易ID</span>
+                            <span class="more-info-value">wjoazvDY2md</span>
+                        </div>
+                        <div class="more-info-item time">
+                            <span class="more-info-title">已开始</span>
+                            <span class="more-info-value">几秒前</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="orderDetail-left hidden before-release-btc">
+                <div class="orderDetail-left-status">交易已开始</div>
+                <div class="orderDetail-left-infos orderDetail-border">
+                    <div class="orderDetail-left-todo">
+                        <p class="todo">请通过ITUENS GIGT CARD（S）发送 10US DOLLAR</p>
+                        <p class="todo-tips">6.74 US Dollar 将加载至您的比特币钱包</p>
+                    </div>
+                    <div class="orderDetail-left-release">
+                        <span class="release-btn">放行比特币</span>
+                        <p class="release-warning"><span class="warning">警告：</span>买家未支付</p>
+                    </div>
+                    <div class="orderDetail-left-zs">
+                        <div class="zs-title">请按照 Type some 的指示操作</div>
+                        <div class="zs-tags">
+                            <span>无需身份证件</span>
+                            <span>仅限实体卡</span>
+                        </div>
+                        <div class="zs-introduction">Newsgd.com is the premier online source of Guangdong news and information, fully displaying Guangdong through channels including Guangdong News, Guangdong</div>
+                    </div>
+                    <div class="orderDetail-left-time">
+                        <i class="icon-clock"></i>
+                        <div class="text">
+                            <span>30分钟</span>
+                            <span>支付剩余时间</span>
+                        </div>
+                    </div>
+                    <div class="orderDetail-left-message">
+                        <p class="message-title">信息</p>
+                        <p class="message-tips">0.00171391 BTC 被安全的保存在托管处</p>
+                    </div>
+                    <div class="orderDetail-left-more-info">
+                        <div class="more-info-item frate">
+                            <span class="more-info-title">费率</span>
+                            <span class="more-info-value">5834.60 USD/BTC</span>
+                        </div>
+                        <div class="more-info-item trade-id">
+                            <span class="more-info-title">交易ID</span>
+                            <span class="more-info-value">wjoazvDY2md</span>
+                        </div>
+                        <div class="more-info-item time">
+                            <span class="more-info-title">已开始</span>
+                            <span class="more-info-value">几秒前</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="orderDetail-left finished">
+                <div class="finished-top">
+                    <i class="finished-top-icon"></i>
+                    <div class="finished-top-status">交易已完成</div>
+                    <span class="am-button-red comment-btn">去评价</span>
+                </div>
+                <div class="finished-bottom">
+                    <p class="finished-bottom-title">订单信息</p>
+                    <div class="finished-bottom-item code-payType">
+                        <div class="code">
+                            <span class="finished-bottom-item-title">订单编号</span>
+                            <span class="finished-bottom-item-content">5198960</span>
+                        </div>
+                        <div class="payType">
+                            <span class="finished-bottom-item-title">付款方式</span>
+                            <span class="finished-bottom-item-content">支付宝</span>
+                        </div>
+                        <div class="space">
+                        </div>
+                    </div>
+                    <div class="finished-bottom-item price-quantity-amount">
+                        <div class="price">
+                            <span class="finished-bottom-item-title">交易价格</span>
+                            <span class="finished-bottom-item-content">25826.588 CNY</span>
+                        </div>
+                        <div class="quantity">
+                            <span class="finished-bottom-item-title">交易数量</span>
+                            <span class="finished-bottom-item-content">25826.588 CNY</span>
+                        </div>
+                        <div class="amount">
+                            <span class="finished-bottom-item-title">交易金额</span>
+                            <span class="finished-bottom-item-content">10 CNY</span>
+                        </div>
+                    </div>
+                    <div class="finished-bottom-item message">
+                        <div class="price">
+                            <span class="finished-bottom-item-title">广告留言</span>
+                            <span class="finished-bottom-item-content">交易速度很快</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="orderDetail-right">
+                <div class="orderDetail-middle b_e ">
+                    <!--<div class="title wp100 b_e_b">-->
+                        <!--<div class="item on en-o_lt"></div>-->
+                        <!--&lt;!&ndash; 注意区分 卖家买家 &ndash;&gt;-->
+                        <!--<div class="item" id="user"></div>-->
+                    <!--</div>-->
+                    <div class="orderDetail-right-user-info">
+                        <i class="icon-user-avatar"></i>
+                        <div class="user-info">
+                            <span class="name">Type some</span>
+                            <span class="num"><span class="plus">+306</span>/<span class="negative">-3</span></span>
+                            <span class="time">已查看4分钟前</span>
+                        </div>
+                        <div class="yz">
+                            <span><span>电子邮件已验证</span><i class="icon-checked"></i></span>
+                            <span><span>电话已验证</span><i class="icon-checked"></i></span>
+                        </div>
+                        <div class="trade">
+                            <span>256 交易伙伴</span>
+                            <span>256 交易</span>
+                        </div>
+                        <div class="more-info">更多信息></div>
+                    </div>
+                    <div class="content-wrap wp100">
+                        <div class="wrap chat-wrap hp100 wp100">
+                            <div class="msgflow" id="msgflow"></div>
+                            <div class="btnWrap">
+                                <textarea type="text" id="msgedit" class="msgedit" placeholder=""></textarea>
+                                <button id="msgImg" class="msgImg"></button>
+                                <button id="openPic" class="openPic"></button>
+                                <button id="send" class="am-button am-button-red send"></button>
+                                <div class="emotionUL-wrap hidden">
+                                    <ul id="emotionUL" class="wp100"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wrap userInfo-wrap over-hide hp100 hidden">
+                            <div class="photoWrap fl" id="photoWrap">
+                            </div>
+                            <div class="info-wrap fl ml20">
+                                <div class="nickname" id="nickname"></div>
+                                <div class="txt">
+                                    <!--<p><samp>交易量：</samp><samp id="user">30+ETH</samp></p>-->
+                                    <p><samp class="fy_dzyx"></samp><samp id="email"></samp></p>
+                                </div>
+                                <div class="txt">
+                                    <!--<p><samp>已確認的交易次数：</samp><samp id="jiaoyi">30+ETH</samp></p>-->
+                                    <p><samp class="fy_sjhm"></samp><samp id="mobile"></samp></p>
+                                </div>
+                                <div class="txt">
+                                    <!--<p><samp>好评度：</samp><samp>90%</samp></p>-->
+                                    <p><samp class="fy_smrz"></samp><samp id="identity"></samp></p>
+                                </div>
+                                <!--<div class="txt">
+                                                <p><samp>第一次购买：</samp><samp id="firstBuyDatatime"></samp></p>
+                                                <p><samp>信任：</samp><samp id="trust">237</samp></p>
+                                            </div>-->
+                                <div class="txt">
+                                    <p><samp class="fy_yhcjsj"></samp><samp id="createDatetime"></samp></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--评价弹窗-->
+    <!--<div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">-->
+        <!--<div class="am-modal-mask"></div>-->
+        <!--<div class="am-modal">-->
+            <!--<div class="am-modal-content">-->
+                <!--<div class="am-modal-header">-->
+                    <!--<p class="fy_jypj"></p>-->
+                <!--</div>-->
+                <!--<div class="am-modal-body">-->
+                    <!--<p class="title fy_jyyx"></p>-->
+                    <!--<div class="comment-Wrap">-->
+                        <!--<div class="item on" data-value="2">-->
+                            <!--<div class="icon icon-good"></div>-->
+                            <!--<p class="fy_hp"></p>-->
+                        <!--</div>-->
+                        <!--<div class="item ml20" data-value="0">-->
+                            <!--<div class="icon icon-bad"></div>-->
+                            <!--<p class="fy_cp"></p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="com-content">-->
+                        <!--<textarea name="" id="pjText" placeholder=""></textarea>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="am-modal-footer">-->
+                    <!--<div class="am-button am-button-red subBtn"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--评价弹窗-->
+    <div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">
+        <div class="am-modal-mask"></div>
+        <div class="am-modal">
+            <div class="am-modal-content">
+                <div class="am-modal-header">
+                    <p class="fy_jypj"></p>
+                </div>
+                <div class="am-modal-body">
+                    <p class="title fy_jyyx"></p>
+                    <div class="comment-Wrap">
+                        <div class="item on" data-value="2">
+                            <div class="icon icon-good"></div>
+                            <p class="fy_hp"></p>
+                        </div>
+                        <div class="item ml20" data-value="0">
+                            <div class="icon icon-middle"></div>
+                            <p class="fy_zp"></p>
+                        </div>
+                        <div class="item ml20" data-value="0">
+                            <div class="icon icon-bad"></div>
+                            <p class="fy_cp"></p>
+                        </div>
+                    </div>
+                    <div class="com-content">
+                        <textarea name="" id="pjText" placeholder=""></textarea>
+                    </div>
+                </div>
+                <div class="am-modal-footer">
+                    <div class="am-button am-button-red subBtn"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--已支付弹窗-->
+    <div class="am-modal-wrap dialog paid-dialog hidden" id="paidDialog">
+        <div class="am-modal-mask"></div>
+        <div class="am-modal">
+            <div class="am-modal-content">
+                <div class="am-modal-header">
+                    <p class="fy_qryzf"></p>
+                </div>
+                <div class="am-modal-body">
+                    <p class="title fy_content"></p>
+                </div>
+                <div class="am-modal-footer">
+                    <div class="paid-subBtn"></div>
+                    <div class="paid-canBtn"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--释放比特币-已支付弹窗-->
+    <div class="am-modal-wrap dialog release-paid-dialog hidden" id="releasePaidDialog">
+        <div class="am-modal-mask"></div>
+        <div class="am-modal">
+            <div class="am-modal-content">
+                <div class="am-modal-header">
+                    <p class="fy_release-paid-title"></p>
+                </div>
+                <div class="am-modal-body">
+                    <p class="title fy_release-paid-content"></p>
+                </div>
+                <div class="am-modal-footer">
+                    <div class="subBtn"></div>
+                    <div class="canBtn"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--释放比特币-未支付弹窗-->
+    <div class="am-modal-wrap dialog release-unpaid-dialog hidden" id="releaseUnpaidDialog">
+        <div class="am-modal-mask"></div>
+        <div class="am-modal">
+            <div class="am-modal-content">
+                <div class="am-modal-header">
+                    <p class="fy_release-unpaid-title"></p>
+                </div>
+                <div class="am-modal-body">
+                    <p class="title fy_release-unpaid-content"></p>
+                </div>
+                <div class="am-modal-footer">
+                    <div class="subBtn"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer" class="allfooter">
+    <div class="container hp100 foo-con-flex">
+        <div class="foot-text hidden">
+            <div class="foo-erwm">
+                <div class="wp100" id="qrcodeF" style="width: 100%; height: 100%">
+                    <img src="" alt="" width="100%" height="100%">
+                </div>
+            </div>
+            <p>funmvp</p>
+        </div>
+        <div class="contact-info-wrap hidden">
+        </div>
+        <div class="contact-txt">
+            <ul class="foo-right">
+                <li class="foo-li">
+                    <h2 class="foo-en_gj"></h2>
+                    <ul>
+                        <li class="help en-help goHref" data-href="../public/articleMore.html"></li>
+                    </ul>
+                </li>
+                <li class="foo-li">
+                    <h2 class="foo-en_gywm"></h2>
+                    <ul>
+                        <li class="goHref foo-en_pt" data-href="../public/articleMore.html?key=1"></li>
+                        <li class="goHref foo-en_lx" data-href="../public/articleMore.html?key=2"></li>
+                        <li class="goHref foo-en_gg" data-href="../public/articleMore.html?key=3"></li>
+                    </ul>
+                </li>
+                <li class="foo-li">
+                    <h2 class="foo-en_tk"></h2>
+                    <ul>
+                        <li class="goHref foo-en_yhxy" data-href="../public/articleMore.html?key=5"></li>
+                        <li class="goHref foo-en_ystk" data-href="../public/articleMore.html?key=6"></li>
+                        <li class="goHref foo-en_flsm" data-href="../public/articleMore.html?key=7"></li>
+                        <li class="goHref foo-en_fvsm" data-href="../public/articleMore.html?key=8"></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div></body>
+
+</html>
