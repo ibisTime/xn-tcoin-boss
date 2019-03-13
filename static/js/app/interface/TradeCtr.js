@@ -179,6 +179,10 @@ define([
                 start: '1',
                 limit: '10'
             }, true);
+        },
+        //阅读消息
+        readNews(config) {
+            return Ajax.post("805310",config);
         }
 
     };

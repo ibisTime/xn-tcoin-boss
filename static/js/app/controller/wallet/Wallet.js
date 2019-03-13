@@ -107,8 +107,8 @@ define([
     }
 
     function setHtml() {
-        $('title').text(base.getText('钱包-FUNMVP区块链技术应用实验平台'));
-        $('.wall-en_zzc').text(base.getText('总资产折合', langType));
+        // $('title').text(base.getText('钱包-FUNMVP区块链技术应用实验平台'));
+        $('.wall-en_zzc').text(base.getText('当前余额', langType));
         $('.wall-en_bz').text(base.getText('币种', langType));
         $('.wall-en_ky').text(base.getText('可用', langType));
         $('.wall-en_dj').text(base.getText('冻结', langType));
@@ -884,4 +884,10 @@ define([
         })
 
     }
+    /**
+     *发送比特币
+     */
+    $(".send-btc").click(function () {
+        $("#sendBtcDialog").removeClass("hidden")
+    })
 });

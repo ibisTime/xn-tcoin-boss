@@ -3,8 +3,9 @@ define([
     'app/interface/GeneralCtr',
     'app/interface/AccountCtr',
     'app/interface/UserCtr',
-    'app/module/tencentCloudLogin'
-], function (base, GeneralCtr, AccountCtr, UserCtr, TencentCloudLogin) {
+    'app/module/tencentCloudLogin',
+    'app/interface/TradeCtr'
+], function (base, GeneralCtr, AccountCtr, UserCtr, TencentCloudLogin,TradeCtr) {
     let langType = localStorage.getItem('langType') || 'ZH';
     var firstLoad = true;
     // langPackage 配置文件
@@ -83,7 +84,88 @@ define([
         }
 
         addListener();
+        initSocket();
     }
+
+    /**
+     * 初始化Socket链接
+     */
+    function initSocket() {
+        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId=123133');
+        ws.onopen = function (event) {
+            console.log('链接成功');
+            // ws.send('你好啊')
+        }
+
+        ws.onmessage = function(event) {
+            let data =event.data;
+            data = data.replace(/\"\{/, '{').replace(/\}\"/, '}').replace(/\'/g, '"');
+            data = JSON.parse(data);
+            let audio_type = data.type;
+            if(audio_type == 1){
+                document.getElementById('audio-message2').play();
+            }else{
+                document.getElementById('audio-message1').play();
+            }
+            let taget = $('#head-user-wrap .head-user .msg_num');
+            let msg_num = +taget.text()
+            taget.text(msg_num + 1);
+            let messageHtml = '';
+            let activeNewsHtml = '';
+            messageHtml =`<li class="goMessageHref" data-href="../user/user.html" data-refNo="${data.refNo}" data-readId="${data.readId}">
+                            <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
+                            <div class="message-text">
+                                <p class="message-title">${data.title}</p>
+                                <span class="message-content">${data.content}</span>
+                            </div>
+                        </li>`;
+            $('.down-wrap-message ul').append(messageHtml);
+            if(audio_type == 1){
+                TradeCtr.getOrderDetail(data.refNo).then((data) => {
+                    console.log(data)
+                    activeNewsHtml =`<li class="goHref" data-href="../user/user.html" >
+                                <span> <button>聊天</button></span>
+                                <span>${data.buyUserInfo.realName}</span>
+                                <span>${data.tradeAmount}  ${data.tradeCurrency}</span>
+                                <span>${data.countString}  ${data.tradeCoin}</span>
+                                <span>${data.nickname}</span>
+                                <span>${data.payment}</span>
+                                <span>出售</span>
+                            </li>`;
+                    $('.active-news').show();
+                    $('.active-news ul').append(activeNewsHtml);
+                });
+            }
+
+        };
+
+        ws.onclose = function() {
+            console.log('链接断开，尝试重连')
+            initSocket()
+        }
+
+        console.log(ws)
+    }
+
+    /**
+     * 消息查看
+     */
+    // $(".head-user.message").mouseleave(function () {
+    //     var length =$('.down-wrap-message li').length
+    //     let taget = $('#head-user-wrap .head-user .msg_num')
+    //     taget.text(taget.text() - length);
+    //     $(".down-wrap-message ul").html('');
+    //     $(".active-news ul").html('');
+    //     $('.active-news').hide();
+    // })
+    $(".head-user.message").mouseenter(function () {
+        var length = $('.down-wrap-message li').length
+        if(length == 0){
+            $(".head-user.message .head-triangle").hide();
+        }else{
+            $(".head-user.message .head-triangle").show();
+        }
+    })
 
     function changeLanguageFn(nodeObj){
         if (nodeObj.children().length > 0){
@@ -214,6 +296,23 @@ define([
                 }
             }, base.hideLoadingSpin)
         })
-    }
+        /**
+         * 消息阅读
+         */
+        $("body").on('click', '.down-wrap-message ul li',function () {
+            var readId = $(this).attr('data-readId');
+            console.log(readId);
+            var params ={"id":readId}
+            TradeCtr.readNews(params).then((data) => {
+                if (!base.isLogin()) {
+                    base.goLogin();
+                    return false;
+                } else {
+                    var thishref = $(this).attr("data-href");
+                    base.gohref(thishref)
+                }
 
+            });
+        })
+    }
 });
