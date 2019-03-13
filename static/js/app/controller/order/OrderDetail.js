@@ -113,6 +113,7 @@ define([
         $('#commentDialog .fy_jypj').html(base.getText('交易评价'));
         $('#commentDialog .fy_jyyx').html(base.getText('交易有何印象？快來评价吧'));
         $('#commentDialog .fy_hp').html(base.getText('好评'));
+        $('#commentDialog .fy_zp').html(base.getText('中评'));
         $('#commentDialog .fy_cp').html(base.getText('差评'));
         $('#commentDialog #pjText').attr('placeholder', base.getText('快來评价吧'));
         $('#commentDialog .subBtn').html(base.getText('提交'));
@@ -1176,16 +1177,26 @@ define([
         }
       });
 
-        //申請仲裁按钮 点击
-        $(".arbitrationBtn").on("click", function() {
-            $("#arbitrationDialog").removeClass("hidden");
-        })
+      //申請仲裁按钮 点击
+      $(".arbitrationBtn").on("click", function() {
+          $("#arbitrationDialog").removeClass("hidden");
+      });
+      //评价按钮 点击
+      $(".comment-btn").on("click", function() {
+        $("#commentDialog").removeClass("hidden");
+      });
 
         //彈窗-放棄
         $("#arbitrationDialog .closeBtn").click(function() {
             $("#arbitrationDialog").addClass("hidden");
             $("#form-wrapper .textarea-item").val("")
         })
+
+      //彈窗-放棄
+      $("#arbitrationDialog .closeBtn").click(function() {
+        $("#arbitrationDialog").addClass("hidden");
+        $("#form-wrapper .textarea-item").val("")
+      })
 
         var _formWrapper = $("#form-wrapper");
         _formWrapper.validate({

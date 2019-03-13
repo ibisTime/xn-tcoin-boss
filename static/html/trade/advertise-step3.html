@@ -6,6 +6,9 @@
     <title></title>
     <!--SCRIPT_PLACEHOLDER-->
     <link rel="import" href="../top/top-zendesk.html?__inline">
+
+    <link href="./select2/dist/css/select2.css" rel="stylesheet" />
+
 </head>
 
 <body class="bg_fff">
@@ -19,7 +22,7 @@
             <p class="step3-title advertise-step3-tags-title">选择最能描述您的出价的标签</p>
             <div class="advertise-tags-content">
                 <div class="step3-tag-num">
-                    <input type="text" class="step3-input step3-tags">
+                    <select id="step3Tags" multiple="multiple" type="text" class="step3-input step3-tags"></select>
                 </div>
                 <div class="step3-tags-tips">
                     <p class="step3-tip step3-tip-tags">添加描述您的出价条款的简要标签，例如“无需ID”、“无需收据”，最多3个标签。</p>
@@ -30,7 +33,7 @@
            <p class="step3-title advertise-step3-my-tag-title">您的出价标签</p>
            <div class="advertise-my-tag-content">
                <div class="step3-tag-num">
-                   <input type="text" class="step3-input step3-my-tag">
+                   <input type="text" class="step3-input step3-my-tag" id="myTagInput">
                </div>
                <div class="step3-my-tag-tips">
                    <p class="step3-tip step3-tip-my-tag">任何如“立即放行”或“无需收据”等推广内容将显示在支付方式后面。最多支持25个字符，并且只能为字母和数字。</p>
@@ -41,7 +44,7 @@
            <p class="step3-title advertise-step3-clause-title">为买家编写您的条款</p>
            <div class="advertise-clause-content">
                <div class="step3-clause-num">
-                   <textarea class="step3-textarea"></textarea>
+                   <textarea class="step3-textarea" id="clauseTextarea"></textarea>
                </div>
                <div class="step3-clause-tips">
                    <p class="step3-tip step3-tip-clause">在您的出价列表中公开显示。出价条款必须向用户说明一些信息，如：接受现金或亲自到银行分行，或访问一个外部网站等。这些信息并不足以完成交易，只是可以让他们知道会发生什么情况。</p>
@@ -52,7 +55,7 @@
            <p class="step3-title advertise-step3-explain-title">确切的交易说明</p>
            <div class="advertise-explain-content">
                <div class="step3-explain-num">
-                   <textarea class="step3-textarea"></textarea>
+                   <textarea class="step3-textarea" id="explainTextarea"></textarea>
                </div>
                <div class="step3-explain-tips">
                    <p class="step3-tip step3-tip-explain">一旦交易开始即显示。交易说明必须简短、情绪，并尽可能以列表形式组织。需要清晰的分布说明。较长的文本请放至底部。</p>
@@ -85,9 +88,9 @@
                            <div class="step3-target-area-select">
                                <div class="form-wrapper userSelect_none">
                                    <div class="form-item form-item-select b_e">
-                                       <select id="tradeCurrency" name="tradeCurrency">
-                                           <option value="CNY">CNY人民币</option>
-                                           <option value="USD">USD美元</option>
+                                       <select id="targetArea" name="targetArea">
+                                           <!--<option value="CNY">CNY人民币</option>-->
+                                           <!--<option value="USD">USD美元</option>-->
                                        </select>
                                        <i class="icon icon-down"></i>
                                    </div>
@@ -100,9 +103,9 @@
                        <p class="step3-title advertise-step3-condition-title">验证</p>
                        <div class="advertise-condition-content">
                            <div class="step3-condition-checkbox">
-                               <div class="step3-checkbox-item condition-checkbox-item"><i class="icon-step3-checked"></i>需要交易伙伴验证过他们的电子邮件</div>
-                               <div class="step3-checkbox-item condition-checkbox-item"><i class="icon-step3-checked"></i>需要交易伙伴验证过他们的电话</div>
-                               <div class="step3-checkbox-item condition-checkbox-item"><i class="icon-step3-checked"></i>需要交易伙伴验证过他们的身份</div>
+                               <div class="step3-checkbox-item condition-checkbox-item"><i class="icon-step3-checked" data-code="email"></i>需要交易伙伴验证过他们的电子邮件</div>
+                               <div class="step3-checkbox-item condition-checkbox-item"><i class="icon-step3-checked" data-code="mobile"></i>需要交易伙伴验证过他们的电话</div>
+                               <div class="step3-checkbox-item condition-checkbox-item"><i class="icon-step3-checked" data-code="id"></i>需要交易伙伴验证过他们的身份</div>
                            </div>
 <i class="icon-step3-checked"></i>
                        </div>
@@ -136,9 +139,9 @@
                        </div>
                        <div class="advertise-area-limit-content">
                            <div class="step3-area-limit-checkbox">
-                               <div class="step3-checkbox-item area-limit-checkbox-item"><i class="icon-step3-checked"></i>None</div>
-                               <div class="step3-checkbox-item area-limit-checkbox-item"><i class="icon-step3-checked"></i>不允许的国家/地区</div>
-                               <div class="step3-checkbox-item area-limit-checkbox-item"><i class="icon-step3-checked"></i>允许的国家/地区</div>
+                               <div class="step3-checkbox-item area-limit-checkbox-item"><i class="icon-step3-checked" data-code="none"></i>None</div>
+                               <div class="step3-checkbox-item area-limit-checkbox-item"><i class="icon-step3-checked" data-code="notAllow"></i>不允许的国家/地区</div>
+                               <div class="step3-checkbox-item area-limit-checkbox-item"><i class="icon-step3-checked" data-code="allow"></i>允许的国家/地区</div>
                            </div>
 
                        </div>
@@ -147,8 +150,8 @@
                        <p class="step3-title advertise-step3-vpn-title">代理/VPN 限制</p>
                        <div class="advertise-vpn-content">
                            <div class="step3-vpn-checkbox">
-                               <div class="step3-checkbox-item vpn-checkbox-item"><i class="icon-step3-checked"></i>None</div>
-                               <div class="step3-checkbox-item vpn-checkbox-item"><i class="icon-step3-checked"></i>禁止VPN、Tor、代理和其他匿名用户</div>
+                               <div class="step3-checkbox-item vpn-checkbox-item"><i class="icon-step3-checked" data-code="1"></i>None</div>
+                               <div class="step3-checkbox-item vpn-checkbox-item"><i class="icon-step3-checked" data-code="0"></i>禁止VPN、Tor、代理和其他匿名用户</div>
                            </div>
 
                        </div>
@@ -157,18 +160,19 @@
                <div class="advertise-hidden cur-pointer hide fy_xsgjsz"></div>
         <div class="btnWrap">
              <!--<div class="am-button am-button-ghost" id="draftBtn"></div>-->
-            <div class="am-button am-button-red" id="submitBtn"></div>
-            <div class="am-button am-button-ghost hidden" id=""></div>
+            <div class="am-button am-button-red advertise-step3-btn"></div>
+            <!--<div class="am-button am-button-ghost hidden" id=""></div>-->
         </div>
     </div> 
     </div>
 
     <link rel="import" href="../footer.html?__inline">
-    <script>
-        require(['domReady!'], function (doc) {
-            require(['app/controller/trade/Advertising']);
-        });
-    </script>
+
+        <script>
+            require(['domReady!'], function (doc) {
+                require(['app/controller/trade/Advertising', 'select2/dist/js/select2_full']);
+            });
+        </script>
 </body>
 
 </html>

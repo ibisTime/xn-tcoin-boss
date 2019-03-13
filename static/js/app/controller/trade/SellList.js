@@ -151,7 +151,8 @@ define([
 
     //分页查询广告
     function getPageAdvertise(config) {
-        return TradeCtr.getPageAdvertise(config, true).then((data) => {
+      console.log(config);
+      return TradeCtr.getPageAdvertise(config, true).then((data) => {
             var lists = data.list;
             if (data.list.length) {
                 var html = "";
@@ -309,9 +310,11 @@ define([
         })
 
         $("#searchBtn").click(function() {
+        //   debugger;
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type")
                 //搜广告
             if (_searchType == "adver") {
+              debugger;
                 if ($("#searchConWrap .minPrice").val()) {
                     config.minPrice = $("#searchConWrap .minPrice").val();
                 } else {
@@ -361,6 +364,7 @@ define([
                 } else {
                     delete config.tradeCurrency
                 }
+                config.price = $('#payTypeMoney').val() * 1000;
                 config.start = 1;
                 base.showLoadingSpin();
 

@@ -1,5 +1,5 @@
-var SYSTEM_CODE = "CD-HPMN000024"; //
-var COMPANY_CODE = "CD-HPMN000024";
+var SYSTEM_CODE = "CD-OGC000020"; //
+var COMPANY_CODE = "CD-OGC000020";
 var PIC_PREFIX = 'http://image.hp.hichengdai.com/'; // 七牛云
 var PHOTO_SUFFIX = '?imageMogr2/auto-orient/thumbnail/!150x150r';
 var THUMBNAIL_SUFFIX = "";

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="/static/images/favicon.ico" />
+<!--<script src="../js/lib/validate/jquery.validate.js"></script>-->
+    <title></title>
+    <script data-loader src="/static/js/app/config.js"></script>
+<script id="lang" data-loader src="/static/js/app/language_1c0f31e.js"></script>
+<script src="/static/js/require_3e0e07b.js"></script>
+<script>/*resourcemap*/
+require.config({paths:{
+  "js/lib/domReady": "/static/js/lib/domReady_f89a6ca",
+  "js/app/util/cookie": "/static/js/app/util/cookie_7fb7465",
+  "js/app/util/dialog": "/static/js/app/util/dialog_ffb4af5",
+  "js/app/module/loading/index": "/static/js/app/module/loading/index_4bbaf7f",
+  "js/lib/bigDecimal/BigDecimal-all-last.min": "/static/js/lib/bigDecimal/BigDecimal-all-last.min_2314b83",
+  "js/app/util/ajax": "/static/js/app/util/ajax_4c84684",
+  "js/app/interface/BaseCtr": "/static/js/app/interface/BaseCtr_0b0aa00",
+  "js/app/controller/base": "/static/js/app/controller/base_28479ae",
+  "js/lib/pagination/jquery.pagination": "/static/js/lib/pagination/jquery.pagination_cdc69bc",
+  "js/app/interface/TradeCtr": "/static/js/app/interface/TradeCtr_299f0fd",
+  "js/app/interface/GeneralCtr": "/static/js/app/interface/GeneralCtr_25b918b",
+  "js/app/interface/AccountCtr": "/static/js/app/interface/AccountCtr_9b6614a",
+  "js/app/interface/UserCtr": "/static/js/app/interface/UserCtr_cfd0439",
+  "js/app/module/tencentCloudLogin/index": "/static/js/app/module/tencentCloudLogin/index_8cc2f34",
+  "js/app/controller/Top": "/static/js/app/controller/Top_62ee0d9",
+  "js/app/controller/foo": "/static/js/app/controller/foo_830d4d7",
+  "js/app/controller/user/userPj": "/static/js/app/controller/user/userPj_c448488"
+}});</script>
+<script src="/static/js/lib/jquery_7477303.js"></script>
+<script src="/static/js/lib/webim/spark-md5_28b89f7.js"></script>
+<script src="/static/js/lib/webim/json2_5eecb00.js"></script>
+<script src="/static/js/lib/webim/webim.min_55717e4.js"></script>
+<script src="/static/js/lib/qrcode_663ef62.js"></script>
+<script>
+        require(['js/lib/domReady!'], function (doc) {
+            require(['js/app/controller/user/userPj']);
+        });
+    </script>
+    <!-- Start of beicoin Zendesk Widget script -->
+<!-- <script>
+	window.zEmbed || function(e, t) {
+		var n, o, d, i, s, a = [],
+			r = document.createElement("iframe");
+		window.zEmbed = function() {
+			a.push(arguments)
+		}, window.zE = window.zE || window.zEmbed, r.src = "javascript:false", r.title = "", r.role = "presentation", (r.frameElement || r).style.cssText = "display: none", d = document.getElementsByTagName("script"), d = d[d.length - 1], d.parentNode.insertBefore(r, d), i = r.contentWindow, s = i.document;
+		try {
+			o = s
+		} catch(e) {
+			n = document.domain, r.src = 'javascript:var d=document.open();d.domain="' + n + '";void(0);', o = s
+		}
+		o.open()._l = function() {
+			var e = this.createElement("script");
+			n && (this.domain = n), e.id = "js-iframe-async", e.src = "https://assets.zendesk.com/embeddable_framework/main.js", this.t = +new Date, this.zendeskHost = "funmvp.zendesk.com", this.zEQueue = a, this.body.appendChild(e)
+        }, o.write('<body onload="document._l();">'), o.close();
+        var time = setInterval(() => {
+            if(window.frames['launcher']){
+                window.frames['launcher'].style.display = 'none';
+                clearInterval(time);
+            }
+        }, 500);
+	}(); 
+</script> -->
+<!-- <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=7d9fab1b-1c8a-43b2-8ded-d046477533f7"></script> -->
+<!-- End of beicoin Zendesk Widget script -->
+<!-- <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=d0ca9f45-54e2-4e0e-a7ac-fca254486217"> </script> -->
+
+<!-- <script type="text/javascript">
+    zE(function() {
+        zE.setHelpCenterSuggestions({
+            labels: [ZENDESK_LABEL]
+        })
+    });
+    window.zESettings = {
+        webWidget: {
+            contactOptions: {
+                enabled: true,
+                contactButton: {
+                    '*': '联系我们'
+                },
+                chatLabelOnline: {
+                    '*': '在线聊天'
+                },
+                chatLabelOffline: {
+                    '*': '在线聊天'
+                },
+                contactFormLabel: {
+                    '*': '联系我们'
+                }
+            }
+        }
+    };
+</script> -->
+
+
+    <link rel="stylesheet" href="/static/css/index.css" />
+</head>
+
+<body>
+    <!--加载动画-->
+<div id="loadingSpin" class="ant-spin-nested-loading fixed_i">
+    <div class="ant-spin-blur ant-spin-container">
+        <span class="ant-spin-dot"><i></i><i></i><i></i><i></i></span>
+    </div>
+</div>
+<div id="head" class="index-head">
+    <div class="head-wrap container">
+        <div class="logo fl goHref" data-href="../index.html">
+            <img class="fl" src="/static/images/logo.png"/>
+        </div>
+        <div class="fl head-nav-wrap">
+            <div class="goHref head-nav index" data-href="../index.html"><samp class="en_page"></samp></div>
+            <div class="goHref head-nav sell" data-href="../trade/sell-list.html"><samp class="en_store"></samp></div>
+            <div class="goHref head-nav advertise" data-href="../trade/advertise.html"><samp class="en_deal"></samp></div>
+            <!--<div class="head-nav trade"><samp class="en_deal"></samp>-->
+                <!--<ul class="yj-ul">-->
+                    <!--<li class="goHref nav-cwjy" data-href="../trade/buy-list.html?type=sell&mod=gm"></li>-->
+                    <!--<li class="goHref nav-bbjy" data-href="../bbdeal/bbdeal.html"></li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <div class="head-nav invitation"><samp class="goHref en_yqhy" style="display: block;" data-href="../public/invitation.html"></samp></div>
+            <div class="head-nav help"><samp class="goHref en_bzzx" style="display: block;" data-href="../public/articleMore.html"></samp></div>
+        </div>
+        <div class="head-button-wrap hidden" id="head-button-wrap">
+            <div class="goHref fl am-button-small head-button button-login" data-href="../user/login.html"></div>
+            <div class="goHref fl am-button-small head-button button-register" data-href="../user/register.html"></div>
+            <!-- <div class="goHref fl head-lang">
+                <select class="lang_select" name="lang-select">
+                    <option value="zh">简体中文</option>
+                    <option value="en" class="l-en">English</option>
+                </select>
+                <i class="icon-lang"></i>
+            </div> -->
+        </div>
+        <div class="fr head-user-wrap hidden" id="head-user-wrap">
+            <div class="fl head-user order mr40 goHref" data-href="../order/order-list.html?mod=dd">
+                <i class="icon icon-order"></i><samp class="fy_top_dd"></samp>
+                <div class="dd-hov"></div>
+            </div>
+            <div class="fl head-user wallet mr40 goHref" data-href="../wallet/wallet.html">
+                <i class="icon icon-wallet"></i><samp class="fy_top_zc"></samp>
+            </div>
+            <div class="fl head-user user" style="margin-right: 32px;">
+                <i class="icon icon-user"></i><samp class="nickname goHref" data-href="../user/user.html"></samp>
+                <div class="icon head-triangle"></div>
+                <div class="down-wrap">
+                    <ul>
+                        <li class="goHref" data-href="../user/user.html"><i
+                                class="icon icon-downUser"></i><samp class="fy_top_yyzx"></samp></li>
+                        <li id="headLogout"><i class="icon icon-lgout"></i><samp class="fy_top_tcdl"></samp></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="fl head-user message">
+                <i class="icon icon-message"></i><samp class="msg_num"></samp>
+                <div class="icon head-triangle"></div>
+                <audio src="/static/images/audio-message1.mp3" id="audio-message1"></audio>
+                <audio src="/static/images/audio-message2.mp3" id="audio-message2"></audio>
+                <div class="down-wrap-message">
+                    <ul>
+                        <!--<li class="goHref" data-href="../user/user.html">-->
+                            <!--<img src="../../images/system-msg.png">-->
+                            <!--<div class="message-text">-->
+                                <!--<p class="message-title">系统消息</p>-->
+                                <!--<span class="message-content">系统将于明日9时更新</span>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<img src="../../images/order-msg.png">-->
+                            <!--<div class="message-text">-->
+                                <!--<p class="message-title">订单消息</p>-->
+                                <!--<span class="message-content">有人购买了您的订单，快…</span>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<img src="../../images/order-msg.png">-->
+                            <!--<div class="message-text">-->
+                                <!--<p class="message-title">订单消息</p>-->
+                                <!--<span class="message-content">有人购买了您的订单，快…</span>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<img src="../../images/order-msg.png">-->
+                            <!--<div class="message-text">-->
+                                <!--<p class="message-title">订单消息</p>-->
+                                <!--<span class="message-content">有人购买了您的订单，快…</span>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="active-news">
+        <p>您有活跃消息</p>
+        <ul>
+            <!--<li>-->
+                <!--<span> <button>聊天</button></span>-->
+                <!--<span>dcdfdffsd</span>-->
+                <!--<span>50.00USD</span>-->
+                <!--<span>0.00003BTC</span>-->
+                <!--<span>出售</span>-->
+            <!--</li>-->
+        </ul>
+    </div>
+</div>
+
+    <div class="userDetail-container">
+        <div class="public-container trade-container order-container b_e bg_fff" style="margin-top: 40px;margin-bottom: 50px;">
+            <div class="titleWrap wp100 over-hide b_e_b">
+                <div class="fl wrap p-zh">
+                    <samp class="fl k-fb pj-en_d">对</samp><samp class="fl tc_red_i userName"></samp><samp class="fl k-fb pj-en_dpj">的评价</samp>
+                </div>
+                <div class="fl wrap p-en none">
+                    <samp class="fl k-fb">Comment on&nbsp;</samp><samp class="fl tc_red_i userName"></samp>
+                </div>
+            </div>
+            <div class="trade-list-wrap userSelect_none">
+                <div class="trade-wrap wp100">
+                    <table class="wp100 trade-form b_e_b" cellpadding="0" cellspacing="0" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <td class="currency pj-en_pr"></td>
+                                <td class="oayType pj-en_sfhp"></td>
+                                <td class="currency pj-en_nr" colspan="2"></td>
+                                <td class="oayType pj-en_sj"></td>
+                            </tr>
+                        </thead>
+                        <tbody id="content">
+
+                        </tbody>
+                    </table>
+                    <div class="no-data b_e_t hidden">
+                        <img src="/static/images/no-detail.png" />
+                        <p>暂无评论</p>
+                    </div>
+                </div>
+                <div id="pagination" class="wp100 pagination-wrap tc">
+                    <p class="pagination"></p>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div id="footer" class="allfooter">
+    <div class="container hp100 foo-con-flex">
+        <div class="foot-text hidden">
+            <div class="foo-erwm">
+                <div class="wp100" id="qrcodeF" style="width: 100%; height: 100%">
+                    <img src="" alt="" width="100%" height="100%">
+                </div>
+            </div>
+            <p>funmvp</p>
+        </div>
+        <div class="contact-info-wrap hidden">
+        </div>
+        <div class="contact-txt">
+            <ul class="foo-right">
+                <li class="foo-li">
+                    <h2 class="foo-en_gj"></h2>
+                    <ul>
+                        <li class="help en-help goHref" data-href="../public/articleMore.html"></li>
+                    </ul>
+                </li>
+                <li class="foo-li">
+                    <h2 class="foo-en_gywm"></h2>
+                    <ul>
+                        <li class="goHref foo-en_pt" data-href="../public/articleMore.html?key=1"></li>
+                        <li class="goHref foo-en_lx" data-href="../public/articleMore.html?key=2"></li>
+                        <li class="goHref foo-en_gg" data-href="../public/articleMore.html?key=3"></li>
+                    </ul>
+                </li>
+                <li class="foo-li">
+                    <h2 class="foo-en_tk"></h2>
+                    <ul>
+                        <li class="goHref foo-en_yhxy" data-href="../public/articleMore.html?key=5"></li>
+                        <li class="goHref foo-en_ystk" data-href="../public/articleMore.html?key=6"></li>
+                        <li class="goHref foo-en_flsm" data-href="../public/articleMore.html?key=7"></li>
+                        <li class="goHref foo-en_fvsm" data-href="../public/articleMore.html?key=8"></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div></body>
+
+</html>
