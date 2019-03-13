@@ -14,55 +14,52 @@ define([
         tradeType: 0,
         coin: coin.toUpperCase()
     };
-  var bizTypeList = {
-    "0": base.getText('支付宝', langType),
-    "1": base.getText('微信', langType),
-    "2": base.getText('银联转账', langType),
-    "3": base.getText('苹果礼品卡', langType),
-    "4": base.getText('steam礼品卡', langType),
-    "5": base.getText('银行转账', langType),
-    "6": base.getText('尼日利亚银行转账', langType),
-    "7": base.getText('Paypal 贝宝', langType),
-    "8": base.getText('西联', langType)
-  };
+  // var bizTypeList = {
+  //   "0": base.getText('支付宝', langType),
+  //   "1": base.getText('微信', langType),
+  //   "2": base.getText('银联转账', langType),
+  //   "3": base.getText('苹果礼品卡', langType),
+  //   "4": base.getText('steam礼品卡', langType),
+  //   "5": base.getText('银行转账', langType),
+  //   "6": base.getText('尼日利亚银行转账', langType),
+  //   "7": base.getText('Paypal 贝宝', langType),
+  //   "8": base.getText('西联', langType)
+  // };
     // 货币下拉
-    var payTypeMoneyList = [{
-        key: 'CNY',
-        value: base.getText('CNY人民币')
-    }, {
-        key: 'USD',
-        value: base.getText('USD美元')
-    }];
+    var payTypeMoneyList = [];
 
     // 付款类型下拉
-    var payTypeList = [{
-        key: '0',
-        value: base.getText('支付宝', langType)
-    }, {
-        key: '1',
-        value: base.getText('微信', langType)
-    }, {
-        key: '2',
-        value: base.getText('银联转账', langType)
-    }, {
-      key: '3',
-      value: base.getText('苹果礼品卡', langType)
-    }, {
-      key: '4',
-      value: base.getText('steam礼品卡', langType)
-    }, {
-      key: '5',
-      value: base.getText('银行转账', langType)
-    },{
-      key: '6',
-      value: base.getText('尼日利亚银行转账', langType)
-    }, {
-      key: '7',
-      value: base.getText('Paypal 贝宝', langType)
-    },{
-      key: '8',
-      value: base.getText('西联', langType)
-    }];
+    // var payTypeList = [{
+    //     key: '0',
+    //     value: base.getText('支付宝', langType)
+    // }, {
+    //     key: '1',
+    //     value: base.getText('微信', langType)
+    // }, {
+    //     key: '2',
+    //     value: base.getText('银联转账', langType)
+    // }, {
+    //   key: '3',
+    //   value: base.getText('苹果礼品卡', langType)
+    // }, {
+    //   key: '4',
+    //   value: base.getText('steam礼品卡', langType)
+    // }, {
+    //   key: '5',
+    //   value: base.getText('银行转账', langType)
+    // },{
+    //   key: '6',
+    //   value: base.getText('尼日利亚银行转账', langType)
+    // }, {
+    //   key: '7',
+    //   value: base.getText('Paypal 贝宝', langType)
+    // },{
+    //   key: '8',
+    //   value: base.getText('西联', langType)
+    // }];
+    let payTypeList = [];
+    let platTagList = [];
+    let tradeType = 'buy';
 
     init();
 
@@ -71,8 +68,54 @@ define([
         getCoinList();
         setHtml();
         getPageAdvertise(config);
+        getPayTypeList();
+        getplatTagList();
+        getPayTypeMoneyList();
         addListener();
+        $('.buy_sell .buy').removeClass('on').siblings().addClass('on');
     }
+
+  // 支付方式
+  function getPayTypeList() {
+    return TradeCtr.getPayTypeList({ status: 1 }).then((res) => {
+      base.hideLoadingSpin();
+      res.map((item) => {
+        payTypeList.push({
+          key: item.code,
+          value: item.name
+        });
+      });
+      setHtml();
+      let payTypeHtml = '';
+      payTypeList.map((item, index) => {
+        payTypeHtml += buildPayTypeHtml(item, index);
+      });
+      $('.left-item-group').html(payTypeHtml);
+    }, base.hideLoadingSpin);
+  }
+    // 标签列表
+    function getplatTagList() {
+      return TradeCtr.getTagsList({ status: 1 }).then((res) => {
+        base.hideLoadingSpin();
+        res.map((item) => {
+          platTagList[item.id] = item.name;
+        });
+      }, base.hideLoadingSpin);
+    }
+    // 货币列表
+    function getPayTypeMoneyList() {
+      return TradeCtr.getPayCoinList().then((res) => {
+        base.hideLoadingSpin();
+        res.map((item) => {
+          payTypeMoneyList.push({
+            key: item.simpleName,
+            value: item.name
+          });
+        });
+        setHtml();
+      }, base.hideLoadingSpin);
+    }
+
     function setHtml() {
         base.getDealLeftText();
         $('.head-nav-wrap .sell').addClass('active');
@@ -85,7 +128,7 @@ define([
         $('.searchType-wrap .en_sgg').text(base.getText('搜广告'));
         $('.searchType-wrap .user').text(base.getText('搜用户'));
         $('.advertisement-wrap .hb').text(base.getText('货币'));
-        $('.advertisement-wrap .fkfs').text(base.getText('货币'));
+        $('.advertisement-wrap .fkfs').text(base.getText('付款方式'));
         $('#buyAmount').attr('placeholder', base.getText('请输入您出售的金额'));
         $('#buyEth').attr('placeholder', base.getText('请输入您出售的数量'));
         $('#buyBtn').html(base.getText('立即出售'));
@@ -101,7 +144,7 @@ define([
 
         var payTypeHtml = `<option value="">${base.getText('请选择')}</option>`;
         payTypeList.map(item => {
-            payTypeHtml += `<option value="${item.key}">${item.value}</option>`
+          payTypeHtml += `<option value="${item.key}">${item.value}</option>`
         });
         $('.advertisement-wrap .payTypeMoney').html(payTypeMoneyHtml);
         $('.advertisement-wrap .payType').html(payTypeHtml);
@@ -151,7 +194,6 @@ define([
 
     //分页查询广告
     function getPageAdvertise(config) {
-      console.log(config);
       return TradeCtr.getPageAdvertise(config, true).then((data) => {
             var lists = data.list;
             if (data.list.length) {
@@ -190,6 +232,15 @@ define([
         }, base.hideLoadingSpin)
     }
 
+    // 构建左侧支付方式list的dom结构
+    function buildPayTypeHtml(item) {
+      return ` <div class="left-item">
+                  <div class="nav-item goHref sell-eth gm" data-value=${item.key}>
+                      <span class="nav-item-type en_zf01">${item.value}</span>
+                      <span class="num">1234</span>
+                  </div>
+              </div>`
+    }
     function buildHtml(item) {
         // 登录状态
         var loginStatus = '';
@@ -212,19 +263,21 @@ define([
         if (item.userStatistics.beiPingJiaCount != 0) {
             hpCount = base.getPercentum(item.userStatistics.beiHaoPingCount, item.userStatistics.beiPingJiaCount);
         }
-        let payTypeList = {
-            '0': '/static/images/pay-zfb.png',
-            '1': '/static/images/pay-weChat.png',
-            '2': '/static/images/pay-bankcard.png'
-        };
 
         let payTypeHtml = ``;
-        if (payTypeList[item.payType]) {
-            payTypeHtml = `<i class="icon" style="background-image: url('${payTypeList[item.payType]}')"></i>`;
-        } else {
-            payTypeHtml = bizTypeList[item.payType];
+        if(item.payType) {
+          payTypeList.map((k) => {
+            if(item.payType === k.key) {
+              payTypeHtml = `<i>${k.value}</i>`;
+            }
+          })
         }
-
+        let paySecondHtml = ``;
+        if(item.platTag) {
+          item.platTag.split('||').map((item) => {
+            paySecondHtml += `<span>${platTagList[item]}</span>`;
+          });
+        }
         let country = '/static/images/China.png';
         let countryHtml = ``;
         countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
@@ -244,8 +297,7 @@ define([
                             ${payTypeHtml}
                         </p>
                         <p class="payType_psecond">
-                            <span>无需身份证件</span>
-                            <span>仅限实体卡</span>
+                            ${paySecondHtml}
                         </p>
                     </td>
                     <td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
@@ -310,11 +362,9 @@ define([
         })
 
         $("#searchBtn").click(function() {
-        //   debugger;
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type")
                 //搜广告
             if (_searchType == "adver") {
-              debugger;
                 if ($("#searchConWrap .minPrice").val()) {
                     config.minPrice = $("#searchConWrap .minPrice").val();
                 } else {
@@ -366,6 +416,7 @@ define([
                 }
                 config.price = $('#payTypeMoney').val() * 1000;
                 config.start = 1;
+                config.tradeType = tradeType === 'buy' ? '0' : '1';
                 base.showLoadingSpin();
 
                 getPageAdvertise(config);
@@ -444,6 +495,15 @@ define([
             } else {
                 $('.search-wrap').addClass('none');
             }
-        })
+        });
+
+      // 切换购买比特币/出售比特币
+
+      $('.buy_sell div').on('click', (e) => {
+        let target = e.target;
+        if($(target).hasClass('buy')) {
+          base.gohref("../index.html");
+        }
+      })
     }
 });

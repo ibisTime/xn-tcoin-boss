@@ -31,6 +31,8 @@ define([
     var adsCode;
     var tradeCoin = ''; //交易币种
 
+  let payTypeList = [];
+
     init();
 
     function init() {
@@ -43,15 +45,22 @@ define([
         $.when(
             GeneralCtr.getDictList({ "parentKey": "pay_type" }),
             GeneralCtr.getDictList({ "parentKey": "trade_order_status" }),
-            GeneralCtr.getSysConfig('tips')
-        ).then((payTypeData, tradeOderStatusData, tipsData) => {
+            TradeCtr.getPayTypeList({ status: 1 })
+            // GeneralCtr.getSysConfig('tips')
+        ).then((payTypeData, tradeOderStatusData, res) => {
             payTypeData.forEach(function(item) {
                 payType[item.dkey] = item.dvalue;
             });
             tradeOderStatusData.forEach(function(item) {
                 tradeOrderStatus[item.dkey] = item.dvalue;
             });
-            $('.wxtip-txt').html(tipsData.cvalue.replace(/\n/g, '<br>'));
+            res.map((item) => {
+              payTypeList.push({
+                key: item.code,
+                value: item.name
+              });
+            });
+            // $('.wxtip-txt').html(tipsData.cvalue.replace(/\n/g, '<br>'));
             getOrderDetail();
         }, base.hideLoadingSpin);
         addListener();
@@ -123,6 +132,11 @@ define([
       $('#paidDialog .paid-subBtn').html(base.getText('确认'));
       $('#paidDialog .paid-canBtn').html(base.getText('取消'));
 
+      $('#cancelDialog .fy_qryzf').html(base.getText('确认取消'));
+      $('#cancelDialog .fy_content').html(base.getText('请仔细查看该商家的支付信息是否符合您的交易需求'));
+      $('#cancelDialog .paid-subBtn').html(base.getText('确认'));
+      $('#cancelDialog .paid-canBtn').html(base.getText('取消'));
+
       $('#releasePaidDialog .fy_release-paid-title').html(base.getText('买家已付款，是否确认放行比特币'));
       $('#releasePaidDialog .fy_release-paid-content').html(base.getText('注意：请仔细核实，如发生交易失误、诈骗，交易资金不会撤回，平台不会给予退款，请谨慎交易'));
       $('#releasePaidDialog .subBtn').html(base.getText('确认'));
@@ -150,6 +164,25 @@ define([
         return TradeCtr.getOrderDetail(code).then((data) => {
             adsCode = data.adsCode;
                 //待支付
+          // debugger;
+          if(data.buyUser == base.getUserId()) {
+            if(data.status == '0') {
+              $('.orderDetail-container .wait').removeClass('hidden');
+            } else if(data.status == '1') {
+              $('.orderDetail-container .wait-release-btc').removeClass('hidden');
+            }
+          } else {
+            if(data.status == '0' || data.status == '1') {
+              $('.orderDetail-container .before-release-btc').removeClass('hidden');
+            }
+          }
+          payTypeList.map((item) => {
+            if(item.key === data.payType) {
+              $('.wait .orderDetail-left-todo .todo .todo-payType').html(item.value);
+            }
+          });
+          $('.wait .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
+
             if (data.status == '0' || data.status == '1') {
                 $("#invalidDatetime samp").html(base.getText('订单將在拖管中保持至') + "<i>" + base.formatDate(data.invalidDatetime, "hh:mm:ss") + "</i>," + base.getText('逾期未支付交易將自动取消'));
                 $("#invalidDatetime").removeClass("hidden")
@@ -1145,7 +1178,7 @@ define([
         //评价
         $("#commentDialog .comment-Wrap .item").click(function() {
             $(this).addClass("on").siblings(".item").removeClass("on")
-        })
+        });
 
         //取消订单按钮 点击
         $(".cancelBtn").on("click", function() {
@@ -1155,7 +1188,7 @@ define([
                     base.hideLoadingSpin();
                     base.showMsg(base.getText('操作成功'));
                     auSx();
-                }, base.hideLoadingSpin)
+                }, base.hideLoadingSpin);
             }, base.emptyFun)
         })
 
@@ -1165,7 +1198,11 @@ define([
           // $('#pjText').val('');
           // $("#commentDialog .subBtn").attr("data-ocode", orderCode)
           $("#paidDialog").removeClass("hidden")
-        })
+        });
+      //取消 点击
+      $(".canBtn").on("click", function() {
+        $("#cancelDialog").removeClass("hidden")
+      })
       // 放行比特币按钮 点击
       $(".release-btn").on("click", function() {
         if(1 === 1) {
@@ -1276,7 +1313,38 @@ define([
             //出售 点击
         $(".goSellDetailBtn").on("click", function() {
             base.gohref("../trade/sell-detail.html?code=" + adsCode)
-        })
+        });
+
+        // 取消弹窗 - 确定
+        $('.cancel-dialog .paid-subBtn').click(() => {
+          TradeCtr.cancelOrder(code).then(() => {
+            base.hideLoadingSpin();
+            base.showMsg(base.getText('操作成功'));
+            base.gohref('./order-list.html');
+          }, base.hideLoadingSpin);
+        });
+
+        // 取消弹窗 - 取消
+        $('.cancel-dialog .paid-canBtn').click(() => {
+          $("#cancelDialog").addClass("hidden")
+        });
+
+
+      // 支付弹窗 - 确定
+      $('.paid-dialog .paid-subBtn').click(() => {
+        TradeCtr.payOrder(code).then(() => {
+          base.hideLoadingSpin();
+          base.showMsg(base.getText('操作成功'));
+          setTimeout(function() {
+            auSx();
+          }, 1500)
+        }, base.hideLoadingSpin)
+      });
+
+        // 支付弹窗 - 取消
+        $('.paid-dialog .paid-canBtn').click(() => {
+          $("#paidDialog").addClass("hidden")
+        });
 
         // 自动刷新页面
         function auSx() {

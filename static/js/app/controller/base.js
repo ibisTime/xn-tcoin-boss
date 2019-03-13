@@ -586,16 +586,16 @@ define([
             $('.en_fb').text(Base.getText('发布广告'));
 
             // index-left
-          $('.en_zf02').text(Base.getText('微信'));
-          $('.en_zf01').text(Base.getText('支付宝'));
-          $('.en_zf03').text(Base.getText('银联转账'));
-          $('.en_zf04').text(Base.getText('苹果礼品卡'));
-          $('.en_zf05').text(Base.getText('steam礼品卡'));
-          $('.en_zf06').text(Base.getText('银行转账'));
-          $('.en_zf07').text(Base.getText('尼日利亚银行转账'));
-          $('.en_zf08').text(Base.getText('Paypal 贝宝'));
-          $('.en_zf09').text(Base.getText('西联'));
-          $('.in_fkfs').text(Base.getText('支付方式'));
+          // $('.en_zf02').text(Base.getText('微信'));
+          // $('.en_zf01').text(Base.getText('支付宝'));
+          // $('.en_zf03').text(Base.getText('银联转账'));
+          // $('.en_zf04').text(Base.getText('苹果礼品卡'));
+          // $('.en_zf05').text(Base.getText('steam礼品卡'));
+          // $('.en_zf06').text(Base.getText('银行转账'));
+          // $('.en_zf07').text(Base.getText('尼日利亚银行转账'));
+          // $('.en_zf08').text(Base.getText('Paypal 贝宝'));
+          // $('.en_zf09').text(Base.getText('西联'));
+          // $('.in_fkfs').text(Base.getText('支付方式'));
         }
     };
 

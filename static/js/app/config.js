@@ -1,6 +1,7 @@
 var SYSTEM_CODE = "CD-OGC000020"; //
 var COMPANY_CODE = "CD-OGC000020";
-var PIC_PREFIX = 'http://image.hp.hichengdai.com/'; // 七牛云
+// var PIC_PREFIX = 'http://image.hp.hichengdai.com/'; // 七牛云
+var PIC_PREFIX = 'http://qn.tha.hichengdai.com/'; // 七牛云
 var PHOTO_SUFFIX = '?imageMogr2/auto-orient/thumbnail/!150x150r';
 var THUMBNAIL_SUFFIX = "";
 // web 域名 邀请好友

@@ -29,6 +29,7 @@ define([
     let paySearch = '';
     let tradeCoin = '';
 
+    let tradeType = 1;
     // step3
     let step3TagInitData = [];
     let targetArea = '';    // 目标国家
@@ -64,47 +65,6 @@ define([
         $("#tradeCoin").val(coin.toUpperCase());
 
         $("#price").attr("disabled", true);
-        // $.when(
-        //     GeneralCtr.getSysConfig("trade_remind"),
-        //     GeneralCtr.getDictList({ "parentKey": "trade_time_out" }),
-        //     getAdvertisePrice(),
-        //     GeneralCtr.getDictList({ "parentKey": "pay_type" }),
-        //     getExplain('sell'),
-        //     getAccount(coin.toUpperCase())
-        // ).then((data1, data2, data3, data4) => {
-        //     //说明
-        //     $("#tradeWarn").html(data1.cvalue.replace(/\n/g, '<br>'));
-        //
-        //     //付款时限
-        //     var html = '';
-        //     data2.reverse().forEach((item) => {
-        //         html += `<option value="${item.dvalue}">${item.dvalue}</option>`
-        //     });
-        //     $("#payLimit").html(html);
-        //
-        //     // 支付方式
-        //     let payHtml = '';
-        //     // console.log('123:', data4);
-        //     data4.forEach(item => {
-        //         payType[item.dkey] = item.dvalue;
-        //         payHtml += `<option value="${item.dkey}">${item.dvalue}</option>`
-        //     })
-        //     $('#payType').html(payHtml);
-        //
-        //     //价格
-        //     $("#price").attr("data-coin", coin.toUpperCase());
-        //
-        //     if (code == ""){
-        //         $("#price").val(data3.mid);
-        //         mid = data3.mid;
-        //     }
-        //
-        //     if (code != "") {
-        //         getAdvertiseDetail(); // 正式
-        //     } else {
-        //         base.hideLoadingSpin()
-        //     }
-        // }, base.hideLoadingSpin)
       $.when(
         GeneralCtr.getDictList({ "parentKey": "payment_method" }),
         TradeCtr.getPayCoinList()
@@ -424,7 +384,7 @@ define([
       premiumRate: sessionStorage.getItem('zq') / 100,
       targetCountry: $('#targetArea').val(),
       tradeCurrency: sessionStorage.getItem('tradeCoin'),
-      tradeType: 1,
+      tradeType: Number(sessionStorage.getItem('tradeType')),
       isAllowProxy: isAllowProxy || 1
     }).then((res) => {
       base.showMsg(base.getText('操作成功', langType));
@@ -714,6 +674,7 @@ define([
         sessionStorage.setItem('payBigType', payBigType);
         sessionStorage.setItem('paySubType', paySubType);
         sessionStorage.setItem('tradeCoin', tradeCoin);
+        sessionStorage.setItem('tradeType', tradeType);
         base.gohref('../trade/advertise-step2.html');
       });
 
@@ -818,6 +779,22 @@ define([
         let target = e.target;
         isAllowProxy = $(target).attr('data-code');
         $(target).addClass('on').siblings.removeClass('on');
+      });
+
+      // 切换买币卖币
+      $('.advertise-step1-bigbigTitle .text').on('click', '.change', (e) => {
+        let target = e.target;
+        if($(target).hasClass('buy')) {
+          $(target).removeClass('buy').addClass('sell');
+          $('.advertise-step1-bigbigTitle .title').html('卖出您的比特币以获得利润');
+          $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要获得比特币吗？<span class="change sell">创建一个出价来购买比特币</span></p>`);
+          tradeType = 1;
+        } else {
+          $(target).removeClass('sell').addClass('buy');
+          $('.advertise-step1-bigbigTitle .title').html('购买比特币');
+          $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要出售比特币吗？<span class="change buy">去出售比特币</span></p>`);
+          tradeType = 0;
+        }
       });
 
 
