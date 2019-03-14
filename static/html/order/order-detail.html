@@ -14,7 +14,7 @@
     <div class="orderDetail-out-container">
         <div class="orderDetail-container chat-container">
 
-            <div class="orderDetail-left hidden">
+            <div class="orderDetail-left hidden wait">
                 <div class="orderDetail-left-tips">
                     <p class="orderDetail-left-tips-content">注意！这位卖家的声誉反馈较低。在分享您的礼品卡信息前，请确保卖家在线并回复了您。请确保卖家在线并回复了您。如果您已经给了他信息，而他要求您取消交易，请点击已支付完成按钮。版主将会介入来确保卖家服从规则。</p>
                     <p style="height: 26px;"><span class="orderDetail-left-tips-button fr">我理解</span></p>
@@ -22,7 +22,7 @@
                 <div class="orderDetail-left-status">交易已开始</div>
                 <div class="orderDetail-left-infos orderDetail-border">
                     <div class="orderDetail-left-todo">
-                        <p class="todo">请通过ITUENS GIGT CARD（S）发送 10US DOLLAR</p>
+                        <p class="todo">请通过<span class="todo-payType"></span>发送<span class="amount"></span></p>
                         <p class="todo-tips">6.74 US Dollar 将加载至您的比特币钱包</p>
                     </div>
                     <div class="orderDetail-left-operations">
@@ -163,7 +163,7 @@
                     </div>
                 </div>
             </div>
-            <div class="orderDetail-left finished">
+            <div class="orderDetail-left hidden finished">
                 <div class="finished-top">
                     <i class="finished-top-icon"></i>
                     <div class="finished-top-status">交易已完成</div>
@@ -340,6 +340,24 @@
     </div>
     <!--已支付弹窗-->
     <div class="am-modal-wrap dialog paid-dialog hidden" id="paidDialog">
+        <div class="am-modal-mask"></div>
+        <div class="am-modal">
+            <div class="am-modal-content">
+                <div class="am-modal-header">
+                    <p class="fy_qryzf"></p>
+                </div>
+                <div class="am-modal-body">
+                    <p class="title fy_content"></p>
+                </div>
+                <div class="am-modal-footer">
+                    <div class="paid-subBtn"></div>
+                    <div class="paid-canBtn"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--取消弹窗-->
+    <div class="am-modal-wrap dialog cancel-dialog hidden" id="cancelDialog">
         <div class="am-modal-mask"></div>
         <div class="am-modal">
             <div class="am-modal-content">

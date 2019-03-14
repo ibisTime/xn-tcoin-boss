@@ -38,6 +38,8 @@ define([
     var tradeCoin = 'ETH';
     let tradeCurrency = 'CNY';
 
+    let platTagList = [];
+
     if (!base.isLogin()) {
         base.goLogin();
         return;
@@ -50,12 +52,18 @@ define([
         if (!isDetail) {
             $(".buy-wrap").removeClass("hidden");
         }
-        // $.when(
-        //     GeneralCtr.getSysConfig("trade_remind")
-        // ).then((data) => {
-        //     $("#tradeWarn").html(data.cvalue.replace(/\n/g, '<br>'))
-            getAdvertiseDetail()
-        // })
+        $.when(
+          TradeCtr.getTagsList({ status: 1 })
+        ).then((res) => {
+          base.hideLoadingSpin();
+          res.map((item) => {
+            platTagList.push({
+              key: item.id,
+              value: item.name
+            });
+          });
+          getAdvertiseDetail();
+        }, base.hideLoadingSpin);
         addListener();
 
     }
@@ -84,7 +92,8 @@ define([
     //获取详情
     function getAdvertiseDetail() {
         return TradeCtr.getAdvertiseDetail(code).then((data) => {
-            userId = data.user.userId;
+          console.log(data);
+          userId = data.user.userId;
             nickname = data.user.nickname;
             tradeCurrency = data.tradeCurrency;
             $('.item-unit').text(tradeCurrency);
@@ -136,7 +145,16 @@ define([
             $("#truePrice").html(Math.floor(data.truePrice * 100) / 100 + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             $("#submitDialog .tradePrice").html(config.tradePrice + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             // $("#leftCountString").html(base.formatMoney(data.leftCountString, '', tradeCoin))
-            $("#coin").text(tradeCoin)
+            $("#coin").text(tradeCoin);
+
+
+            $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
+            $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
+            $('.buy-info .rate').html(data.truePrice + data.tradeCurrency);
+            $('.buy-info .price').html(data.marketPrice + data.tradeCurrency);
+            $('.buy-cjtk').append(`<span>${data.item}</span>`);
+            $('.buy-user-nickname').html(data.user.nickname);
+            buildTagsHtml(data.platTag, data.customTag);
 
             $.when(
                 getAccount(data.tradeCoin),
@@ -147,6 +165,22 @@ define([
         }, base.hideLoadingSpin)
     }
 
+    // 构建tag的dom结构
+    function buildTagsHtml(tag1, tag2) {
+      let tagsHtml = ``;
+      if(tag1) {
+        tag1.split('||').map((item) => {
+          platTagList.map((k) => {
+            if(item == k.key) {
+              tagsHtml += `<span>${k.value}</span>`;
+            }
+          })
+        });
+      }
+      tagsHtml += `<span>${tag2}</span>`;
+      console.log(tagsHtml);
+      $('.buy-quick-condition').append(tagsHtml);
+    }
     //我的账户
     function getAccount(currency) {
         return AccountCtr.getAccount().then((data) => {
@@ -194,6 +228,7 @@ define([
         config.tradeAmount = $("#buyAmount").val();
         config.count = base.formatMoneyParse($("#buyEth").val(), '', tradeCoin);
         // config.交易密码 = $('#moneyPow').val();
+        base.showLoadingSpin();
         return TradeCtr.buyETH(config).then((data) => {
                 base.showMsg(base.getText('下单成功', langType))
 
@@ -265,9 +300,8 @@ define([
 
         //下单确认弹窗-确认点击
         $("#submitDialog .subBtn").click(function() {
-            buyETH();
-            base.showLoadingSpin();
-            $("#submitDialog").addClass("hidden")
+          buyETH();
+          $("#submitDialog").addClass("hidden")
         })
 
         $("#buyEth").keyup(function() {

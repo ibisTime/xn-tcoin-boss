@@ -18,32 +18,26 @@ define([
 	}
 
     function init() {
-		base.showLoadingSpin();
-        $('.left-title').text(base.getText('用户中心'));
-        $('.en_yhzl').text(base.getText('用户资料'));
-        $('.uleft_en').text(base.getText('基本信息'));
-        $('.identity').text(base.getText('身份验证'));
-        $('.security').text(base.getText('安全设置'));
-		$('.tr-en_dq').text(base.getText('当前位置', langType));
-		$('.tr-en_zx').text(base.getText('用户中心', langType));
-		$('.tr-en_sz').text(base.getText('安全设置', langType));
-		$('.tr-en_zj').text(base.getText('交易密码', langType));
-		$('#getVerification').html(base.getText('获取验证码'));
-		$('#subBtn').text(base.getText('确定', langType));
-		$('#mobile').attr('placeholder', base.getText('请输入手机号', langType));
-		$('#tradePwd').attr('placeholder', base.getText('请输入交易密码', langType));
-		$('#smsCaptcha').attr('placeholder', base.getText('验证码', langType));
+      // base.showLoadingSpin();
+      $('.left-title').text(base.getText('用户中心'));
+      $('.en_yhzl').text(base.getText('用户资料'));
+      $('.uleft_en').text(base.getText('基本信息'));
+      $('.identity').text(base.getText('身份验证'));
+      $('.security').text(base.getText('安全设置'));
+      $('.tr-en_dq').text(base.getText('当前位置', langType));
+      $('.tr-en_zx').text(base.getText('用户中心', langType));
+      $('.tr-en_sz').text(base.getText('安全设置', langType));
+      $('.tr-en_zj').text(base.getText('交易密码', langType));
+      $('#getVerification').html(base.getText('获取验证码'));
+      $('#subBtn').text(base.getText('确定', langType));
+      $('#mobile').attr('placeholder', base.getText('请输入手机号', langType));
+      $('#tradePwd').attr('placeholder', base.getText('请输入交易密码', langType));
+      $('#smsCaptcha').attr('placeholder', base.getText('验证码', langType));
 
-        $('title').text(base.getText('交易密码') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
-
-        if(base.getUserMobile()) {
-            $("#mobile").val(base.getUserMobile());
-            $("#mobile").siblings('.item-icon').addClass('icon-phone');
-        } else {
-            $("#mobile").val(base.getUserEmail());
-            $("#mobile").siblings('.item-icon').addClass('icon-email');
-        }
-        addListener();
+      $('title').text(base.getText('交易密码') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
+      $("#mobile").val(base.getUserEmail());
+      $("#mobile").siblings('.item-icon').addClass('icon-email');
+      addListener();
 	}
 
     //设置交易密码

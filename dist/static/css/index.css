@@ -5901,7 +5901,7 @@ table td {
   right: 22px;
 }
 
-.public-container .search-wrap .search-con .advertisement-wrap .item select {
+.public-container .search-wrap .search-con .advertisement-wrap .item select, .public-container .search-wrap .search-con .advertisement-wrap .item input {
   border: 1px solid #ccc;
   width: 121px;
   line-height: 40px;
@@ -5945,6 +5945,10 @@ table td {
   padding: 27px 0;
   color: #D53D3D;
   font-size: 0;
+}
+
+.public-container .search-wrap .search-btn:hover {
+  cursor: pointer;
 }
 
 .public-container .search-wrap .search-btn .search-txt {
@@ -6162,6 +6166,7 @@ table td {
   border: 1px solid #F19348;
   -webkit-border-radius: 2px;
           border-radius: 2px;
+  margin-right: 10px;
 }
 
 .public-container .trade-list-wrap .trade-wrap .limit {
@@ -6299,6 +6304,10 @@ table td {
   font-style: normal;
 }
 
+.buy-detail-container .detail-container .detail-container-left .titleWrap .small span:hover, .sell-detail-container .detail-container .detail-container-left .titleWrap .small span:hover {
+  cursor: pointer;
+}
+
 .buy-detail-container .detail-container .detail-container-left .form-wrapper, .sell-detail-container .detail-container .detail-container-left .form-wrapper {
   display: -webkit-box;
   display: -webkit-flex;
@@ -6372,6 +6381,10 @@ table td {
   padding: 8px 31px;
   margin-top: 13px;
   display: inline-block;
+}
+
+.buy-detail-container .detail-container .detail-container-left .buy-check-email .check-email-btn:hover, .sell-detail-container .detail-container .detail-container-left .buy-check-email .check-email-btn:hover {
+  cursor: pointer;
 }
 
 .buy-detail-container .detail-container .detail-container-left .buy-info, .sell-detail-container .detail-container .detail-container-left .buy-info {
@@ -6544,6 +6557,10 @@ table td {
 .buy-detail-container .detail-container .detail-container-right .buy-share .share-icons .icon, .sell-detail-container .detail-container .detail-container-right .buy-share .share-icons .icon {
   width: 54px;
   height: 40px;
+}
+
+.buy-detail-container .detail-container .detail-container-right .buy-share .share-icons .icon:hover, .sell-detail-container .detail-container .detail-container-right .buy-share .share-icons .icon:hover {
+  cursor: pointer;
 }
 
 .buy-detail-container .detail-container .detail-container-right .buy-share .share-icons .icon-share-twitter, .sell-detail-container .detail-container .detail-container-right .buy-share .share-icons .icon-share-twitter {
@@ -6978,6 +6995,32 @@ table td {
   padding: 52px 100px;
 }
 
+.advertise-out-container .advertise-container .advertise-step1-bigbigTitle {
+  text-align: center;
+  margin-bottom: 54px;
+}
+
+.advertise-out-container .advertise-container .advertise-step1-bigbigTitle .title {
+  color: #333;
+  font-size: 48px;
+  line-height: 67px;
+  margin-bottom: 20px;
+}
+
+.advertise-out-container .advertise-container .advertise-step1-bigbigTitle .text {
+  color: #999;
+  font-size: 24px;
+  line-height: 33px;
+}
+
+.advertise-out-container .advertise-container .advertise-step1-bigbigTitle .text .change {
+  color: #edb88b;
+}
+
+.advertise-out-container .advertise-container .advertise-step1-bigbigTitle .text .change:hover {
+  cursor: pointer;
+}
+
 .advertise-out-container .advertise-container .step1-title, .advertise-out-container .advertise-container .step2-title, .advertise-out-container .advertise-container .step3-title {
   color: #327BCA;
   font-size: 24px;
@@ -7027,7 +7070,7 @@ table td {
 .advertise-out-container .advertise-container .advertise-step1-tabs .tab-item {
   width: 200px;
   height: 108px;
-  font-size: 20px;
+  font-size: 17px;
   line-height: 108px;
   text-align: center;
   color: #333;
@@ -7051,7 +7094,7 @@ table td {
   border-top-color: #327BCA;
   position: absolute;
   bottom: -20px;
-  left: 90px;
+  left: 45%;
 }
 
 .advertise-out-container .advertise-container .advertise-step1-tabs:hover {
@@ -7087,19 +7130,16 @@ table td {
   border: 1px solid #ccc;
 }
 
-.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items > * {
+.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-title {
+  background: #f0f0f0;
+  color: #999;
   padding: 19px 23px;
   border-bottom: 1px solid #ccc;
   font-size: 16px;
   line-height: 22px;
 }
 
-.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-title {
-  background: #f0f0f0;
-  color: #999;
-}
-
-.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-item {
+.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-item-container .advertise-payType-item {
   background: #fff;
   color: #333;
   display: -webkit-box;
@@ -7117,21 +7157,29 @@ table td {
      -moz-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  padding: 19px 23px;
+  border-bottom: 1px solid #ccc;
+  font-size: 16px;
+  line-height: 22px;
 }
 
-.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-item:hover {
+.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-item-container .advertise-payType-item:hover {
   cursor: pointer;
   background: #f0f0f0;
 }
 
-.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-item:last-child {
+.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-item-container .advertise-payType-item:last-child {
   border: none;
 }
 
-.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-item .icon-step1-unselected {
+.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-item-container .advertise-payType-item .icon-step1-unselected {
   width: 32px;
   height: 32px;
   background-image: url("/static/images/step1-unchecked.png");
+}
+
+.advertise-out-container .advertise-container .advertise-step1-payType .advertise-payType-items .advertise-payType-item-container .advertise-payType-item.on .icon-step1-unselected {
+  background-image: url("/static/images/step1-checked.png");
 }
 
 .advertise-out-container .advertise-container .advertise-step1-my-trade-coin {
@@ -7320,7 +7368,7 @@ table td {
 .advertise-out-container .advertise-container .step3-input {
   display: inline-block;
   width: 100%;
-  height: 60px;
+  height: 60px !important;
   border: 1px solid #ccc;
   padding-left: 30px;
 }
@@ -7358,6 +7406,12 @@ table td {
 
 .advertise-out-container .advertise-container .advertise-step3-tags .advertise-tags-content .step3-tag-num {
   margin-bottom: 24px;
+}
+
+.advertise-out-container .advertise-container .advertise-step3-tags .advertise-tags-content .step3-tag-num .select2.select2-container.select2-container--default .section .select2-container--default .select2-selection--multiple {
+  height: 60px !important;
+  -webkit-border-radius: 2px !important;
+          border-radius: 2px !important;
 }
 
 .advertise-out-container .advertise-container .advertise-step3-tags .advertise-tags-content .step3-tags-tips {
@@ -8189,6 +8243,66 @@ table td {
   margin-bottom: 38px;
 }
 
+.orderDetail-out-container .orderDetail-container .orderDetail-left .finished-top .comment-btn {
+  display: inline-block;
+  padding: 5px 20px;
+  margin-bottom: 50px;
+}
+
+.orderDetail-out-container .orderDetail-container .orderDetail-left .finished-top .comment-btn:hover {
+  cursor: pointer;
+}
+
+.orderDetail-out-container .orderDetail-container .orderDetail-left .finished-bottom {
+  padding: 48px;
+}
+
+.orderDetail-out-container .orderDetail-container .orderDetail-left .finished-bottom .finished-bottom-title {
+  font-size: 18px;
+  line-height: 25px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.orderDetail-out-container .orderDetail-container .orderDetail-left .finished-bottom .finished-bottom-item {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 18px;
+}
+
+.orderDetail-out-container .orderDetail-container .orderDetail-left .finished-bottom .finished-bottom-item > * {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.orderDetail-out-container .orderDetail-container .orderDetail-left .finished-bottom .finished-bottom-item .finished-bottom-item-title {
+  color: #999;
+  margin-bottom: 10px;
+}
+
 .orderDetail-out-container .orderDetail-container .orderDetail-left.finished {
   border: 1px solid #ccc;
 }
@@ -8688,14 +8802,31 @@ table td {
   margin-left: 56px;
 }
 
-.comment-dialog .am-modal-header {
-  padding: 30px 0 10px;
+.comment-dialog .am-modal-content .am-modal-header .fy_jypj {
+  font-size: 24px;
+  line-height: 33px;
+  margin-bottom: 14px;
+  color: #D53D3D;
 }
 
-.comment-dialog .am-modal-body .title {
+.comment-dialog .am-modal-content .am-modal-body {
+  padding-top: 0;
+}
+
+.comment-dialog .am-modal-content .am-modal-body .title {
   font-size: 14px;
   color: #484848;
   text-align: center;
+  margin-bottom: 45px;
+}
+
+.comment-dialog .am-modal-content .am-modal-footer .subBtn {
+  -webkit-border-radius: 2px;
+          border-radius: 2px;
+}
+
+.comment-dialog .am-modal-content .am-modal-footer .subBtn:hover {
+  cursor: pointer;
 }
 
 .comment-dialog .comment-Wrap {
@@ -8708,7 +8839,7 @@ table td {
   -webkit-justify-content: space-around;
       -ms-flex-pack: distribute;
           justify-content: space-around;
-  padding: 10px 30px 20px;
+  padding: 0px 30px 20px;
 }
 
 .comment-dialog .comment-Wrap .item {
@@ -8725,11 +8856,15 @@ table td {
 }
 
 .comment-dialog .comment-Wrap .item .icon-good {
-  background-image: url("/static/images/hph.png");
+  background-image: url("/static/images/hp.png");
+}
+
+.comment-dialog .comment-Wrap .item .icon-middle {
+  background-image: url("/static/images/zp.png");
 }
 
 .comment-dialog .comment-Wrap .item .icon-bad {
-  background-image: url("/static/images/cph.png");
+  background-image: url("/static/images/cp.png");
 }
 
 .comment-dialog .comment-Wrap .item.on p {
@@ -8737,11 +8872,15 @@ table td {
 }
 
 .comment-dialog .comment-Wrap .item.on .icon-good {
-  background-image: url("/static/images/hph@2x.png");
+  background-image: url("/static/images/hp.png");
+}
+
+.comment-dialog .comment-Wrap .item.on .icon-middle {
+  background-image: url("/static/images/zp.png");
 }
 
 .comment-dialog .comment-Wrap .item.on .icon-bad {
-  background-image: url("/static/images/cph@2x.png");
+  background-image: url("/static/images/cp.png");
 }
 
 .comment-dialog .comment-Wrap .item:hover {
@@ -8760,25 +8899,26 @@ table td {
           border-radius: 4px;
   padding: 5px 10px;
   color: #333;
+  background: #fafafa;
 }
 
-.paid-dialog .am-modal-header {
+.paid-dialog .am-modal-header, .cancel-dialog .am-modal-header {
   padding: 30px 0 10px;
 }
 
-.paid-dialog .am-modal-body {
+.paid-dialog .am-modal-body, .cancel-dialog .am-modal-body {
   margin-bottom: 28px;
   padding-bottom: 0;
 }
 
-.paid-dialog .am-modal-body .title {
+.paid-dialog .am-modal-body .title, .cancel-dialog .am-modal-body .title {
   font-size: 14px;
   color: #484848;
   text-align: center;
   width: 361px;
 }
 
-.paid-dialog .am-modal-footer {
+.paid-dialog .am-modal-footer, .cancel-dialog .am-modal-footer {
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -8798,7 +8938,7 @@ table td {
   margin-bottom: 48px;
 }
 
-.paid-dialog .am-modal-footer > * {
+.paid-dialog .am-modal-footer > *, .cancel-dialog .am-modal-footer > * {
   -webkit-border-radius: 2px;
           border-radius: 2px;
   background: #fff;
@@ -8807,11 +8947,16 @@ table td {
   font-size: 18px;
 }
 
-.paid-dialog .am-modal-footer .paid-subBtn {
-  color: #D53D3D;
+.paid-dialog .am-modal-footer > *:hover, .cancel-dialog .am-modal-footer > *:hover {
+  cursor: pointer;
 }
 
-.paid-dialog .am-modal-footer .paid-canBtn {
+.paid-dialog .am-modal-footer .paid-subBtn, .cancel-dialog .am-modal-footer .paid-subBtn {
+  color: #D53D3D;
+  border: 1px solid #D53D3D;
+}
+
+.paid-dialog .am-modal-footer .paid-canBtn, .cancel-dialog .am-modal-footer .paid-canBtn {
   color: #999;
 }
 

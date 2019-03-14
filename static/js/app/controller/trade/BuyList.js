@@ -14,25 +14,19 @@ define([
         tradeType: 1,
         coin: coin.toUpperCase()
     };
-  var bizTypeList = {
-    "0": base.getText('支付宝  '),
-    "1": base.getText('微信'),
-    "2": base.getText('银联转账'),
-    "3": base.getText('苹果礼品卡'),
-    "4": base.getText('steam礼品卡'),
-    "5": base.getText('银行转账'),
-    "6": base.getText('尼日利亚银行转账'),
-    "7": base.getText('Paypal 贝宝'),
-    "8": base.getText('西联')
-  };
+  // var bizTypeList = {
+  //   "0": base.getText('支付宝  '),
+  //   "1": base.getText('微信'),
+  //   "2": base.getText('银联转账'),
+  //   "3": base.getText('苹果礼品卡'),
+  //   "4": base.getText('steam礼品卡'),
+  //   "5": base.getText('银行转账'),
+  //   "6": base.getText('尼日利亚银行转账'),
+  //   "7": base.getText('Paypal 贝宝'),
+  //   "8": base.getText('西联')
+  // };
     // 货币下拉
-    var payTypeMoneyList = [{
-        key: 'CNY',
-        value: base.getText('CNY人民币')
-    }, {
-        key: 'USD',
-        value: base.getText('USD美元')
-    }];
+    var payTypeMoneyList = [];
     // 付款类型下拉
   // var payTypeList = [{
   //   key: '0',
@@ -64,6 +58,7 @@ define([
   // }];
   let payTypeList = [];
   let platTagList = [];
+  let tradeType = 'buy';
 
     init();
 
@@ -74,6 +69,7 @@ define([
         getPageAdvertise(config);
         getPayTypeList();
         getplatTagList();
+        getPayTypeMoneyList();
         addListener();
     }
     // 支付方式
@@ -81,19 +77,40 @@ define([
       return TradeCtr.getPayTypeList({ status: 1 }).then((res) => {
         base.hideLoadingSpin();
         res.map((item) => {
-          payTypeList[item.code] = item.name;
+          payTypeList.push({
+            key: item.code,
+            value: item.name
+          });
         });
+        setHtml();
+        let payTypeHtml = '';
+        payTypeList.map((item, index) => {
+          payTypeHtml += buildPayTypeHtml(item, index);
+        });
+        $('.left-item-group').html(payTypeHtml);
       }, base.hideLoadingSpin);
     }
     // 标签列表
     function getplatTagList() {
       return TradeCtr.getTagsList({ status: 1 }).then((res) => {
         base.hideLoadingSpin();
-        console.log(res);
         res.map((item) => {
           platTagList[item.id] = item.name;
         });
-        console.log(platTagList);
+        setHtml();
+      }, base.hideLoadingSpin);
+    }
+    // 货币列表
+    function getPayTypeMoneyList() {
+      return TradeCtr.getPayCoinList().then((res) => {
+        base.hideLoadingSpin();
+        res.map((item) => {
+          payTypeMoneyList.push({
+            key: item.simpleName,
+            value: item.name
+          });
+        });
+        setHtml();
       }, base.hideLoadingSpin);
     }
     function setHtml() {
@@ -108,7 +125,7 @@ define([
         $('buy_sell .buy').text(base.getText('购买比特币'));
         $('buy_sell .sell').text(base.getText('出售比特币'));
         $('.advertisement-wrap .hb').text(base.getText('货币'));
-        $('.advertisement-wrap .fkfs').text(base.getText('货币'));
+        $('.advertisement-wrap .fkfs').text(base.getText('付款方式'));
         $('#search-btn .search-txt').text(base.getText('搜索'));
         $('#bestSearch-btn .search-txt').text(base.getText('请给我最好的'));
         if(langType === 'EN'){
@@ -119,10 +136,9 @@ define([
         payTypeMoneyList.map(item => {
             payTypeMoneyHtml += `<option value="${item.key}">${item.value}</option>`
         });
-
         var payTypeHtml = `<option value="">${base.getText('请选择')}</option>`;
         payTypeList.map(item => {
-            payTypeHtml += `<option value="${item.key}">${item.value}</option>`
+          payTypeHtml += `<option value="${item.key}">${item.value}</option>`
         });
         $('.advertisement-wrap .payTypeMoney').html(payTypeMoneyHtml);
         $('.advertisement-wrap .payType').html(payTypeHtml);
@@ -178,7 +194,7 @@ define([
                 lists.forEach((item, i) => {
                     html += buildHtml(item);
                 });
-                $("#content").append(html);
+                $("#content").html(html);
                 $(".trade-list-wrap .no-data").addClass("hidden")
 
                 $("#content .operation .goHref").off("click").click(function() {
@@ -208,6 +224,15 @@ define([
         }, base.hideLoadingSpin)
     }
 
+    // 构建左侧支付方式list的dom结构
+    function buildPayTypeHtml(item) {
+      return ` <div class="left-item">
+                <div class="nav-item goHref sell-eth gm" data-value=${item.key}>
+                    <span class="nav-item-type en_zf01">${item.value}</span>
+                    <span class="num">1234</span>
+                </div>
+            </div>`
+    }
     function buildHtml(item) {
         //登录状态
         var loginStatus = '';
@@ -231,21 +256,21 @@ define([
         if (item.userStatistics.beiPingJiaCount != 0) {
             hpCount = base.getPercentum(item.userStatistics.beiHaoPingCount, item.userStatistics.beiPingJiaCount);
         }
-      let payTypeHtml = ``;
-        if (payTypeList[item.payType]) {
-            payTypeHtml = `<i>${payTypeList[item.payType]}</i>`;
-        } else {
-            payTypeHtml = bizTypeList[item.payType];
+        let payTypeHtml = ``;
+        if(item.payType) {
+          payTypeList.map((k) => {
+            if(item.payType === k.key) {
+              payTypeHtml = `<i>${k.value}</i>`;
+            }
+          })
         }
         let paySecondHtml = ``;
-      console.log(platTagList);
-      if(item.platTag) {
-          item.platTag.split('||').map((item) => {
-            paySecondHtml += `<span>${platTagList[item]}</span>`;
-          });
-        }
-      console.log(paySecondHtml);
-      let country = '/static/images/China.png';
+        if(item.platTag) {
+            item.platTag.split('||').map((item) => {
+              paySecondHtml += `<span>${platTagList[item]}</span>`;
+            });
+          }
+        let country = '/static/images/China.png';
         let countryHtml = ``;
         countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
 
@@ -282,7 +307,7 @@ define([
             if (lists.length) {
                 var html = "";
                 lists.forEach((item, i) => {
-                    if (item.tradeType == '1s') {
+                    if (item.tradeType == '1') {
                         html += buildHtml(item);
                     }
                 });
@@ -329,127 +354,122 @@ define([
         })
 
         $("#searchBtn").click(function() {
-          debugger;
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type");
-            //搜广告
-            if (_searchType == "adver") {
-                if ($("#searchConWrap .minPrice").val()) {
-                    config.minPrice = $("#searchConWrap .minPrice").val();
-                } else {
-                    delete config.minPrice;
-                }
-                if ($("#searchConWrap .maxPrice").val()) {
-                    config.maxPrice = $("#searchConWrap .maxPrice").val();
-                } else {
-                    delete config.maxPrice;
-                }
-                if ($("#searchConWrap .payType").val()) {
-                    config.payType = $("#searchConWrap .payType").val();
-                  switch(config.payType) {
-                    case '0':
-                      $('#left-wrap .en_zf01').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                      break;
-                    case '1':
-                      $('#left-wrap .en_zf02').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                      break;
-                    case '2':
-                      $('#left-wrap .en_zf03').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                      break;
-                    case '3':
-                      $('#left-wrap .en_zf04').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                      break;
-                    case '4':
-                      $('#left-wrap .en_zf05').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                      break;
-                    case '5':
-                      $('#left-wrap .en_zf06').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                      break;
-                    case '6':
-                      $('#left-wrap .en_zf07').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                      break;
-                    case '7':
-                      $('#left-wrap .en_zf08').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                      break;
-                    case '8':
-                      $('#left-wrap .en_zf09').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                      break;
-                  }
-                } else {
-                    delete config.payType
-                }
-                if ($("#searchConWrap .payTypeMoney").val()) {
-                    config.tradeCurrency = $("#searchConWrap .payTypeMoney").val();
-                } else {
-                    delete config.tradeCurrency
-                }
 
-                config.start = 1;
-                base.showLoadingSpin();
-                debugger;
-
-                getPageAdvertise(config);
-                //搜用户
-            } else if (_searchType == "user") {
-                if ($("#searchConWrap .nickname").val()) {
-                    base.showLoadingSpin()
-                    getListAdvertiseNickname($("#searchConWrap .nickname").val())
-                }
+          //搜广告
+          if ($("#searchConWrap .minPrice").val()) {
+            config.minPrice = $("#searchConWrap .minPrice").val();
+          } else {
+            delete config.minPrice;
+          }
+          if ($("#searchConWrap .maxPrice").val()) {
+            config.maxPrice = $("#searchConWrap .maxPrice").val();
+          } else {
+            delete config.maxPrice;
+          }
+          if ($("#searchConWrap .payType").val()) {
+            config.payType = $("#searchConWrap .payType").val();
+            switch(config.payType) {
+              case '0':
+                $('#left-wrap .en_zf01').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '1':
+                $('#left-wrap .en_zf02').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '2':
+                $('#left-wrap .en_zf03').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '3':
+                $('#left-wrap .en_zf04').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '4':
+                $('#left-wrap .en_zf05').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '5':
+                $('#left-wrap .en_zf06').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '6':
+                $('#left-wrap .en_zf07').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '7':
+                $('#left-wrap .en_zf08').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '8':
+                $('#left-wrap .en_zf09').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
             }
+          } else {
+            delete config.payType
+          }
+          if ($("#searchConWrap .payTypeMoney").val()) {
+            config.tradeCurrency = $("#searchConWrap .payTypeMoney").val();
+          } else {
+            delete config.tradeCurrency
+          }
+
+          if($('#payTypeMoney').val()) {
+            config.price = $('#payTypeMoney').val() * 1000;
+          }
+          config.start = 1;
+          config.tradeType = tradeType === 'buy' ? '1' : '0';
+          base.showLoadingSpin();
+
+          getPageAdvertise(config);
         });
 
         // 点击付款方式筛选数据
-        $('#left-wrap').click(function(ev) {
-            ev = ev || window.event;
+        $('.left-item-group').on('click', '.left-item', (function(ev) {
+            // ev = ev || window.event;
             let target = ev.target;
             let payType = $(target).attr('data-value');
             let payConfig = {
-                start: 1,
-                limit: 10,
-                tradeType: 1,
-                payType,
-                coin: coin.toUpperCase()
-            };
-          switch(payType) {
-            case '0':
-              $("#searchConWrap .payType").val('0');
-              $('#left-wrap .en_zf01').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-              break;
-            case '1':
-              $("#searchConWrap .payType").val('1');
-              $('#left-wrap .en_zf02').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-              break;
-            case '2':
-              $("#searchConWrap .payType").val('2');
-              $('#left-wrap .en_zf03').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-              break;
-            case '3':
-              $("#searchConWrap .payType").val('3');
-              $('#left-wrap .en_zf04').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-              break;
-            case '4':
-              $("#searchConWrap .payType").val('4');
-              $('#left-wrap .en_zf05').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-              break;
-            case '5':
-              $("#searchConWrap .payType").val('5');
-              $('#left-wrap .en_zf06').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-              break;
-            case '6':
-              $("#searchConWrap .payType").val('6');
-              $('#left-wrap .en_zf07').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-              break;
-            case '7':
-              $("#searchConWrap .payType").val('7');
-              $('#left-wrap .en_zf08').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-              break;
-            case '8':
-              $("#searchConWrap .payType").val('8');
-              $('#left-wrap .en_zf09').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-              break;
-          }
-          base.showLoadingSpin();
-          getPageAdvertise(payConfig);
-        });
+                  start: 1,
+                  limit: 10,
+                  tradeType: 0,
+                  payType,
+                  coin: coin.toUpperCase()
+              };
+            switch(payType) {
+              case '0':
+                $("#searchConWrap .payType").val('0');
+                $('#left-wrap .en_zf01').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '1':
+                $("#searchConWrap .payType").val('1');
+                $('#left-wrap .en_zf02').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '2':
+                $("#searchConWrap .payType").val('2');
+                $('#left-wrap .en_zf03').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '3':
+                $("#searchConWrap .payType").val('3');
+                $('#left-wrap .en_zf04').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '4':
+                $("#searchConWrap .payType").val('4');
+                $('#left-wrap .en_zf05').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '5':
+                $("#searchConWrap .payType").val('5');
+                $('#left-wrap .en_zf06').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '6':
+                $("#searchConWrap .payType").val('6');
+                $('#left-wrap .en_zf07').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '7':
+                $("#searchConWrap .payType").val('7');
+                $('#left-wrap .en_zf08').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+              case '8':
+                $("#searchConWrap .payType").val('8');
+                $('#left-wrap .en_zf09').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+                break;
+            }
+            base.showLoadingSpin();
+            getPageAdvertise(payConfig);
+        }));
 
         //币种点击
         $("#coin-top ul li").click(function() {
@@ -466,12 +486,28 @@ define([
         })
       // 切换购买比特币/出售比特币
 
+      // $('.buy_sell div').on('click', (e) => {
+      //   let target = e.target;
+      //   if (!$(target).hasClass("on")) {
+      //     if($(target).hasClass('buy')) {
+      //       tradeType = 'buy';
+      //     } else {
+      //       tradeType = 'sell';
+      //     }
+      //     $(target).addClass('on').siblings().removeClass('on');
+      //   } else {
+      //     if($(target).hasClass('buy')) {
+      //       tradeType = 'sell';
+      //     } else {
+      //       tradeType = 'buy';
+      //     }
+      //     $(target).removeClass('on').siblings().addClass('on');
+      //   }
+      // })
       $('.buy_sell div').on('click', (e) => {
         let target = e.target;
-        if (!$(target).hasClass("on")) {
-          $(target).addClass('on').siblings().removeClass('on');
-        } else {
-          $(target).removeClass('on').siblings().addClass('on');
+        if($(target).hasClass('sell')) {
+          base.gohref("../trade/sell-list.html");
         }
       })
     }

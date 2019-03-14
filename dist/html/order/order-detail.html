@@ -22,7 +22,7 @@ require.config({paths:{
   "js/lib/bigDecimal/BigDecimal-all-last.min": "/static/js/lib/bigDecimal/BigDecimal-all-last.min_2314b83",
   "js/app/util/ajax": "/static/js/app/util/ajax_4c84684",
   "js/app/interface/BaseCtr": "/static/js/app/interface/BaseCtr_0b0aa00",
-  "js/app/controller/base": "/static/js/app/controller/base_28479ae",
+  "js/app/controller/base": "/static/js/app/controller/base_8ff1a8c",
   "js/lib/validate/jquery.validate": "/static/js/lib/validate/jquery.validate_97e857f",
   "js/app/module/validate/validate": "/static/js/app/module/validate/validate_309826a",
   "js/app/interface/GeneralCtr": "/static/js/app/interface/GeneralCtr_25b918b",
@@ -32,7 +32,7 @@ require.config({paths:{
   "js/app/module/tencentCloudLogin/index": "/static/js/app/module/tencentCloudLogin/index_8cc2f34",
   "js/app/controller/Top": "/static/js/app/controller/Top_f609afc",
   "js/app/controller/foo": "/static/js/app/controller/foo_830d4d7",
-  "js/app/controller/order/OrderDetail": "/static/js/app/controller/order/OrderDetail_a51b30a"
+  "js/app/controller/order/OrderDetail": "/static/js/app/controller/order/OrderDetail_866a1c9"
 }});</script>
 <script src="/static/js/lib/jquery_7477303.js"></script>
 <script src="/static/js/lib/webim/spark-md5_28b89f7.js"></script>
@@ -216,7 +216,7 @@ require.config({paths:{
     <div class="orderDetail-out-container">
         <div class="orderDetail-container chat-container">
 
-            <div class="orderDetail-left hidden">
+            <div class="orderDetail-left hidden wait">
                 <div class="orderDetail-left-tips">
                     <p class="orderDetail-left-tips-content">注意！这位卖家的声誉反馈较低。在分享您的礼品卡信息前，请确保卖家在线并回复了您。请确保卖家在线并回复了您。如果您已经给了他信息，而他要求您取消交易，请点击已支付完成按钮。版主将会介入来确保卖家服从规则。</p>
                     <p style="height: 26px;"><span class="orderDetail-left-tips-button fr">我理解</span></p>
@@ -224,7 +224,7 @@ require.config({paths:{
                 <div class="orderDetail-left-status">交易已开始</div>
                 <div class="orderDetail-left-infos orderDetail-border">
                     <div class="orderDetail-left-todo">
-                        <p class="todo">请通过ITUENS GIGT CARD（S）发送 10US DOLLAR</p>
+                        <p class="todo">请通过<span class="todo-payType"></span>发送<span class="amount"></span></p>
                         <p class="todo-tips">6.74 US Dollar 将加载至您的比特币钱包</p>
                     </div>
                     <div class="orderDetail-left-operations">
@@ -365,7 +365,7 @@ require.config({paths:{
                     </div>
                 </div>
             </div>
-            <div class="orderDetail-left finished">
+            <div class="orderDetail-left hidden finished">
                 <div class="finished-top">
                     <i class="finished-top-icon"></i>
                     <div class="finished-top-status">交易已完成</div>
@@ -542,6 +542,24 @@ require.config({paths:{
     </div>
     <!--已支付弹窗-->
     <div class="am-modal-wrap dialog paid-dialog hidden" id="paidDialog">
+        <div class="am-modal-mask"></div>
+        <div class="am-modal">
+            <div class="am-modal-content">
+                <div class="am-modal-header">
+                    <p class="fy_qryzf"></p>
+                </div>
+                <div class="am-modal-body">
+                    <p class="title fy_content"></p>
+                </div>
+                <div class="am-modal-footer">
+                    <div class="paid-subBtn"></div>
+                    <div class="paid-canBtn"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--取消弹窗-->
+    <div class="am-modal-wrap dialog cancel-dialog hidden" id="cancelDialog">
         <div class="am-modal-mask"></div>
         <div class="am-modal">
             <div class="am-modal-content">

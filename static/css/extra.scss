@@ -4029,6 +4029,11 @@ table {
                     i {
                         font-style: normal;
                     }
+                  span {
+                    &:hover {
+                      cursor: pointer;
+                    }
+                  }
                 }
             }
             .form-wrapper {
@@ -4064,14 +4069,17 @@ table {
                     line-height: 22px;
                 }
                 .check-email-btn {
-                    background: #F19348;
-                    border-radius: 2px;
-                    font-size: 14px;
-                    color: #fff;
-                    line-height: 20px;
-                    padding: 8px 31px;
-                    margin-top: 13px;
-                    display: inline-block;
+                  background: #F19348;
+                  border-radius: 2px;
+                  font-size: 14px;
+                  color: #fff;
+                  line-height: 20px;
+                  padding: 8px 31px;
+                  margin-top: 13px;
+                  display: inline-block;
+                  &:hover {
+                    cursor: pointer;
+                  }
                 }
             }
             .buy-info {
@@ -4177,8 +4185,11 @@ table {
                     align-items: center;
                     justify-content: space-around;
                     .icon {
-                        width: 54px;
-                        height: 40px;
+                      width: 54px;
+                      height: 40px;
+                      &:hover {
+                        cursor: pointer;
+                      }
                     }
                     .icon-share-twitter {
                         background-image: url('../images/twitter.png');
@@ -4558,6 +4569,27 @@ table {
       width: 1200px;
       margin: 0 auto;
       padding: 52px 100px;
+      .advertise-step1-bigbigTitle {
+        text-align: center;
+        margin-bottom: 54px;
+        .title {
+          color: #333;
+          font-size: 48px;
+          line-height: 67px;
+          margin-bottom: 20px;
+        }
+        .text {
+          color: #999;
+          font-size: 24px;
+          line-height: 33px;
+          .change {
+            color: #edb88b;
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+      }
       .step1-title,.step2-title,.step3-title {
         color: #327BCA;
         font-size: 24px;
@@ -5982,6 +6014,9 @@ table {
     .am-modal-footer {
       .subBtn {
         border-radius: 2px;
+        &:hover {
+          cursor: pointer;
+        }
       }
     }
   }
@@ -6042,7 +6077,7 @@ table {
   }
 }
 
-.paid-dialog {
+.paid-dialog, .cancel-dialog {
   .am-modal-header {
     padding: 30px 0 10px;
   }
@@ -6068,9 +6103,13 @@ table {
       padding: 10px 30px;
       border: 1px solid $border-color;
       font-size: 18px;
+      &:hover {
+        cursor: pointer;
+      }
     }
     .paid-subBtn {
       color: $red-color;
+      border: 1px solid $red-color;
     }
     .paid-canBtn {
       color: #999;
