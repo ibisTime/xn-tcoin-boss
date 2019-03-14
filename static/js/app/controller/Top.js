@@ -14,6 +14,9 @@ define([
 
     $(document).ready(function () {
         init();
+        if(base.isLogin()){
+            initSocket();
+        }
     });
 
     // 初始化页面
@@ -84,7 +87,7 @@ define([
         }
 
         addListener();
-        initSocket();
+        // initSocket();
     }
 
     /**
@@ -150,14 +153,6 @@ define([
     /**
      * 消息查看
      */
-    // $(".head-user.message").mouseleave(function () {
-    //     var length =$('.down-wrap-message li').length
-    //     let taget = $('#head-user-wrap .head-user .msg_num')
-    //     taget.text(taget.text() - length);
-    //     $(".down-wrap-message ul").html('');
-    //     $(".active-news ul").html('');
-    //     $('.active-news').hide();
-    // })
     $(".head-user.message").mouseenter(function () {
         var length = $('.down-wrap-message li').length
         if(length == 0){
