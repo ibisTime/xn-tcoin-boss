@@ -288,7 +288,8 @@ define([
                             ${countryHtml}
                             <span class="dot ${loginStatus}"></span>
                             <span class="name">${item.user.nickname ? item.user.nickname : '-'}</span>
-                            <span class="num">+100</span>
+                            <span class="num">+${item.userStatistics.beiHaoPingCount}</span>
+
                         </p>
                         <p class="n-dist"><samp><i>2小时以前查看过</i></samp></p>
                     </td>

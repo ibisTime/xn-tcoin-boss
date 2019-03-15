@@ -84,7 +84,6 @@ define([
         $('.en-buy_ggsy').text(base.getText('点击此处获得帮助', langType));
         $('.en-buy_fz').text(base.getText('分钟', langType));
         $('.en-buy_tx').text(base.getText('交易提醒', langType));
-        $('.en-buy_tx').text(base.getText('交易提醒', langType));
         $('.warnWrap .warn-txt1').html(base.getText('提醒：请确认价格再下单,下单彼此交易的'));
         $('.warnWrap .warn-txt2').html(base.getText('将被托管锁定，请放心购买。'));
     }
@@ -92,8 +91,7 @@ define([
     //获取详情
     function getAdvertiseDetail() {
         return TradeCtr.getAdvertiseDetail(code).then((data) => {
-          console.log(data);
-          userId = data.user.userId;
+            userId = data.user.userId;
             nickname = data.user.nickname;
             tradeCurrency = data.tradeCurrency;
             $('.item-unit').text(tradeCurrency);
@@ -153,10 +151,19 @@ define([
             $('.buy-info .rate').html(data.truePrice + data.tradeCurrency);
             $('.buy-info .price').html(data.marketPrice + data.tradeCurrency);
             $('.buy-cjtk').append(`<span>${data.item}</span>`);
+            $('.buy-cjtk .buy-quick-title .buy-title').html(data.user.nickname + '的出价条款');
             $('.buy-user-nickname').html(data.user.nickname);
-            buildTagsHtml(data.platTag, data.customTag);
 
-            $.when(
+          $('.icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.user.photo) + "')" });
+          buildTagsHtml(data.platTag, data.customTag);
+
+          let interval = base.fun(Date.parse(data.user.lastLogin), new Date());
+          $('.detail-container-right .buy-user-info .buy-user-online .interval').html(interval);
+
+          $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
+          $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
+
+          $.when(
                 getAccount(data.tradeCoin),
                 getUser()
             )
@@ -177,8 +184,12 @@ define([
           })
         });
       }
-      tagsHtml += `<span>${tag2}</span>`;
-      console.log(tagsHtml);
+      if(tag2) {
+        tagsHtml += `<span>${tag2}</span>`;
+      }
+      if(!tag1 && !tag2) {
+        tagsHtml += `<span>暂无</span>`;
+      }
       $('.buy-quick-condition').append(tagsHtml);
     }
     //我的账户

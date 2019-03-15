@@ -69,7 +69,7 @@ define([
          */
         sellETH(config) {
             return Ajax.get("625241", {
-                sellUser: base.getUserId(),
+              userId: base.getUserId(),
                 ...config
             });
         },

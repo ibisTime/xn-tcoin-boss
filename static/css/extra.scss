@@ -3722,11 +3722,12 @@ table {
                         right: 22px;
                     }
                     select,input {
-                        border: 1px solid $border-color;
-                        width: 121px;
-                        line-height: 40px;
-                        margin-top: 9px;
-                        border-radius: 2px;
+                      border: 1px solid $border-color;
+                      width: 121px;
+                      line-height: 40px;
+                      margin-top: 9px;
+                      border-radius: 2px;
+                      padding: 0 10px;
                     }
                     .text {
                         width: 90px;
@@ -4149,6 +4150,7 @@ table {
                     height: 60px;
                     border-radius: 100%;
                     background-image: url('../images/default-avatar.png');
+                  background-size: 100% 100%;
                 }
                 .buy-user-nickname {
                     color: #eaab76;
@@ -4760,6 +4762,8 @@ table {
           height: 100%;
           width: 100%;
           border: 1px solid $border-color;
+          font-size: 18px;
+          padding-left: 10px;
         }
         .step2-input-tip {
           position: absolute;
@@ -4835,7 +4839,6 @@ table {
           .min,.max {
             color: #999;
             font-size: 20px;
-            line-height: 28px;
             margin-bottom: 18px;
           }
         }
@@ -4867,7 +4870,8 @@ table {
         width: 100%;
         height: 60px !important;
         border: 1px solid #ccc;
-        padding-left: 30px;
+        font-size: 18px;
+        padding-left: 10px;
       }
       .step3-textarea {
         width: 100%;
@@ -6048,13 +6052,13 @@ table {
             color: $red-color;
           }
           .icon-good {
-            background-image: url('../images/hp.png');
+            background-image: url('../images/hp-active.png');
           }
           .icon-middle {
-            background-image: url('../images/zp.png');
+            background-image: url('../images/zp-active.png');
           }
           .icon-bad {
-            background-image: url('../images/cp.png');
+            background-image: url('../images/cp-active.png');
           }
         }
         &:hover {
@@ -6148,6 +6152,9 @@ table {
       border: 1px solid $border-color;
       font-size: 18px;
     }
+    > *:hover {
+      cursor: pointer;
+    }
     .subBtn {
       color: $red-color;
       border-color: $red-color;
@@ -6187,6 +6194,54 @@ table {
       padding: 10px 30px;
       border: 1px solid $red-color;
       font-size: 18px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.tradePwd-dialog {
+  .am-modal-header {
+    padding: 60px 0 0;
+    color: $red-color;
+    font-size: 24px;
+  }
+  .am-modal-body {
+    margin-bottom: 45px;
+    padding-bottom: 0;
+    .title {
+      font-size: 18px;
+      line-height: 25px;
+      text-align: center;
+      width: 361px;
+      height: 52px;
+      color: #999;
+      border: 1px solid $border-color;
+      border-radius: 2px;
+      background: #f5f5f5;
+    }
+  }
+  .am-modal-footer {
+    align-items: center;
+    padding: 0 76px;
+    margin-bottom: 48px;
+    display: flex;
+    justify-content: space-between;
+    > * {
+      cursor: pointer;
+      display: inline;
+      border-radius: 2px;
+      background: #fff;
+      padding: 10px 30px;
+      font-size: 18px;
+    }
+    .subBtn {
+      color: $red-color;
+      border: 1px solid $red-color;
+    }
+    .canBtn {
+      border: 1px solid $border-color;
     }
   }
 }

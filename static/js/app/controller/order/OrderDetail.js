@@ -24,7 +24,7 @@ define([
     var userName = '',
         myName = '';
     var payType = {};
-    var tradeOrderStatus = {};
+    var tradeOrderStatusObj = {};
     var firstLoad = false;
     var newMsgHtml = `<div id="newMsgWrap" class="newMsg-wrap goHref" data-href="../order/order-list.html?mod=dd">${base.getText('您有未读消息')}</div>`;
     var tradeType;
@@ -32,6 +32,8 @@ define([
     var tradeCoin = ''; //交易币种
 
   let payTypeList = [];
+  let platTagList = [];
+  let tradeOrderStatus = '';
 
     init();
 
@@ -45,23 +47,30 @@ define([
         $.when(
             GeneralCtr.getDictList({ "parentKey": "pay_type" }),
             GeneralCtr.getDictList({ "parentKey": "trade_order_status" }),
-            TradeCtr.getPayTypeList({ status: 1 })
+            TradeCtr.getPayTypeList({ status: 1 }),
+            TradeCtr.getTagsList({ status: 1 })
             // GeneralCtr.getSysConfig('tips')
-        ).then((payTypeData, tradeOderStatusData, res) => {
-            payTypeData.forEach(function(item) {
-                payType[item.dkey] = item.dvalue;
+        ).then((payTypeData, tradeOderStatusData, res, tagData) => {
+          payTypeData.forEach(function(item) {
+            payType[item.dkey] = item.dvalue;
+          });
+          tradeOderStatusData.forEach(function(item) {
+            tradeOrderStatusObj[item.dkey] = item.dvalue;
+          });
+          tagData.forEach(function(item) {
+            platTagList.push({
+              key: item.id,
+              value: item.name
+            })
+          });
+          res.map((item) => {
+            payTypeList.push({
+              key: item.code,
+              value: item.name
             });
-            tradeOderStatusData.forEach(function(item) {
-                tradeOrderStatus[item.dkey] = item.dvalue;
-            });
-            res.map((item) => {
-              payTypeList.push({
-                key: item.code,
-                value: item.name
-              });
-            });
-            // $('.wxtip-txt').html(tipsData.cvalue.replace(/\n/g, '<br>'));
-            getOrderDetail();
+          });
+          // $('.wxtip-txt').html(tipsData.cvalue.replace(/\n/g, '<br>'));
+          getOrderDetail();
         }, base.hideLoadingSpin);
         addListener();
     }
@@ -146,6 +155,11 @@ define([
       $('#releaseUnpaidDialog .fy_release-unpaid-content').html(base.getText('注意：如发生交易失误、诈骗，交易资金不会撤回，平台不会给予退款，请谨慎交易'));
       $('#releaseUnpaidDialog .subBtn').html(base.getText('确认'));
 
+      $('#tradePwdDialog .fy_tradePwd-title').html(base.getText('资金密码'));
+      $('#tradePwdDialog .fy_tradePwd-content').html(base.getText('注意：请仔细核实，如发生交易失误、诈骗，交易资金不会撤回，平台不会给予退款，请谨慎交易'));
+      $('#tradePwdDialog .subBtn').html(base.getText('确认'));
+      $('#tradePwdDialog .canBtn').html(base.getText('取消'));
+
     }
     function getTencunLogin() {
         return GeneralCtr.getTencunLogin().then((data) => {
@@ -162,33 +176,102 @@ define([
 
     function getOrderDetail() {
         return TradeCtr.getOrderDetail(code).then((data) => {
-            adsCode = data.adsCode;
-                //待支付
-          // debugger;
+          adsCode = data.adsCode;
+          tradeOrderStatus = data.status;
+          getAdvertiseDetail();
+          //待支付
           if(data.buyUser == base.getUserId()) {
+            let interval = base.fun(Date.parse(data.sellUserInfo.lastLogin), new Date());
+            $('.orderDetail-right-user-info .user-info .time .interval').html(interval);
             if(data.status == '0') {
               $('.orderDetail-container .wait').removeClass('hidden');
             } else if(data.status == '1') {
               $('.orderDetail-container .wait-release-btc').removeClass('hidden');
             }
           } else {
-            if(data.status == '0' || data.status == '1') {
+            let interval = base.fun(Date.parse(data.buyUserInfo.lastLogin), new Date());
+            $('.orderDetail-right-user-info .user-info .time .interval').html(interval);
+            if(data.status == '0') {
               $('.orderDetail-container .before-release-btc').removeClass('hidden');
+            } else if(data.status == '1') {
+              $('.orderDetail-container .before-release-btc').removeClass('hidden');
+              $('.release-warning').html('买家已支付');
+            }
+          }
+
+          if(data.status === '2' || data.status == '3') {
+            // 待评价和已完成状态
+            $('.orderDetail-container .finished').removeClass('hidden');
+          }
+          if(data.status == '2') {
+            // 待评价
+            let comment = 0;
+            // 未评价
+            if(data.buyUser == base.getUserId() && !data.bsComment) {
+              comment = 1;
+            } else if(data.buyUser != base.getUserId() && !data.sbComment) {
+              comment = 1;
+            }
+            if(comment == 1) {
+              $('.finished-top').append(`<span class="am-button-red comment-btn">去评价</span>`);
             }
           }
           payTypeList.map((item) => {
             if(item.key === data.payType) {
               $('.wait .orderDetail-left-todo .todo .todo-payType').html(item.value);
+              $('.wait-release-btc .orderDetail-left-todo .todo .todo-payType').html(item.value);
+              $('.before-release-btc .orderDetail-left-todo .todo .todo-payType').html(item.value);
+              $('.finished .finished-bottom .code-payType .payType .finished-bottom-item-content').html(item.value);
             }
           });
-          $('.wait .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
 
-            if (data.status == '0' || data.status == '1') {
-                $("#invalidDatetime samp").html(base.getText('订单將在拖管中保持至') + "<i>" + base.formatDate(data.invalidDatetime, "hh:mm:ss") + "</i>," + base.getText('逾期未支付交易將自动取消'));
-                $("#invalidDatetime").removeClass("hidden")
-                $("#statusInfo").addClass("hidden")
-            }
-            $("#statusInfo samp").html(tradeOrderStatus[data.status]);
+          $('.wait .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
+          $('.wait .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
+          $('.wait .orderDetail-left-more-info .trade-id .more-info-value').html(code);
+          $('.wait .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
+
+
+          $('.wait-release-btc .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
+          $('.wait-release-btc .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
+          $('.wait-release-btc .orderDetail-left-more-info .trade-id .more-info-value').html(code);
+          $('.wait-release-btc .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
+
+
+          $('.before-release-btc .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
+          $('.before-release-btc .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
+          $('.before-release-btc .orderDetail-left-more-info .trade-id .more-info-value').html(code);
+          $('.before-release-btc .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
+
+
+          $('.finished .finished-bottom .code .finished-bottom-item-content').html(code);
+          $('.finished .finished-bottom .price-quantity-amount .price .finished-bottom-item-content').html(data.tradePrice + data.tradeCurrency);
+          $('.finished .finished-bottom .price-quantity-amount .amount .finished-bottom-item-content').html(data.tradeAmount + data.tradeCurrency);
+          $('.finished .finished-bottom .message .price .finished-bottom-item-content').html(data.leaveMessage);
+
+          let startTime = new Date();
+          let endTime = new Date(Date.parse(data.invalidDatetime));
+
+          if(endTime > startTime) {
+            $('.orderDetail-left-time .text .left-time-minute').html(Math.floor((endTime - startTime) / 1000 / 60) + '分钟');
+          } else {
+            $('.orderDetail-left-time .text .left-time-minute').html('0分钟');
+          }
+
+          if(data.buyUser == base.getUserId()) {
+            // 对面是卖家
+            $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.buyUserInfo.photo) + "')" });
+            $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.buyUserInfo.nickname);
+          } else {
+            // 对面是买家
+            $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.sellUserInfo.photo) + "')" });
+            $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.sellUserInfo.nickname);
+          }
+            // if (data.status == '0' || data.status == '1') {
+            //     $("#invalidDatetime samp").html(base.getText('订单將在拖管中保持至') + "<i>" + base.formatDate(data.invalidDatetime, "hh:mm:ss") + "</i>," + base.getText('逾期未支付交易將自动取消'));
+            //     $("#invalidDatetime").removeClass("hidden")
+            //     $("#statusInfo").addClass("hidden")
+            // }
+            $("#statusInfo samp").html(tradeOrderStatusObj[data.status]);
             $("#tradePrice").html(data.tradePrice);
             $('.m_type').text(data.tradeCurrency);
             tradeCoin = data.tradeCoin ? data.tradeCoin : 'ETH';
@@ -270,7 +353,6 @@ define([
                 //         $(".goSellDetailBtn").removeClass("hidden");
                 //     }
                 // }
-                getAdvertiseDetail();
             } else {
                 $("title").html(base.getText('订单详情') + "-HappyMoney")
             }
@@ -309,10 +391,21 @@ define([
     //获取详情
     function getAdvertiseDetail() {
         return TradeCtr.getAdvertiseDetail(adsCode).then((data) => {
-            var limit = data.minTrade + '-' + data.maxTrade;
-            $("#truePrice").html(Math.floor(data.truePrice * 100) / 100 + '&nbsp;CNY/' + tradeCoin)
-            $("#limit").html(limit);
-            $(".info-wrap1").removeClass("hidden")
+          var limit = data.minTrade + '-' + data.maxTrade;
+          $("#truePrice").html(Math.floor(data.truePrice * 100) / 100 + '&nbsp;CNY/' + tradeCoin)
+          $("#limit").html(limit);
+          $(".info-wrap1").removeClass("hidden");
+          let tagsHtml = ``;
+          data.platTag.split('||').map((item) => {
+            platTagList.map((k) => {
+              if(item == k.key) {
+                tagsHtml += `<span>${k.value}</span>`;
+              }
+            })
+          });
+          tagsHtml += `<span>${data.customTag}</span>`;
+          $('.zs-tags').html(tagsHtml);
+          $('.zs-introduction').html(data.item);
         }, base.hideLoadingSpin)
     }
 
@@ -1172,18 +1265,17 @@ define([
                 $(this).addClass("on");
                 showEmotionDialog();
             }
-        })
-
-
-        //评价
-        $("#commentDialog .comment-Wrap .item").click(function() {
-            $(this).addClass("on").siblings(".item").removeClass("on")
         });
 
+      //评价
+      // $("#commentDialog .comment-Wrap .item .icon").click(function() {
+      //   // $(this).addClass('on').parent().addClass("on").siblings(".item").removeClass("on")
+      //   $(this).addClass('on');
+      // });
         //取消订单按钮 点击
         $(".cancelBtn").on("click", function() {
             base.confirm(base.getText('确认取消交易？'), base.getText('取消'), base.getText('确定')).then(() => {
-                base.showLoadingSpin()
+                base.showLoadingSpin();
                 TradeCtr.cancelOrder(code).then(() => {
                     base.hideLoadingSpin();
                     base.showMsg(base.getText('操作成功'));
@@ -1193,19 +1285,16 @@ define([
         })
 
         //标记打款按钮 点击
-        $(".payBtn").on("click", function() {
-          // var orderCode = $(this).attr("data-ocode");
-          // $('#pjText').val('');
-          // $("#commentDialog .subBtn").attr("data-ocode", orderCode)
+        $(".operation-item .payBtn").on("click", function() {
           $("#paidDialog").removeClass("hidden")
         });
       //取消 点击
-      $(".canBtn").on("click", function() {
+      $(".operation-item .canBtn").on("click", function() {
         $("#cancelDialog").removeClass("hidden")
       })
       // 放行比特币按钮 点击
       $(".release-btn").on("click", function() {
-        if(1 === 1) {
+        if(tradeOrderStatus == '1') {
           // 买家已付款
           $("#releasePaidDialog").removeClass("hidden");
         } else {
@@ -1219,7 +1308,7 @@ define([
           $("#arbitrationDialog").removeClass("hidden");
       });
       //评价按钮 点击
-      $(".comment-btn").on("click", function() {
+      $(".finished-top").on("click", '.comment-btn', function() {
         $("#commentDialog").removeClass("hidden");
       });
 
@@ -1264,12 +1353,12 @@ define([
         })
 
         //交易评价按钮 点击
-        $(".commentBtn").on("click", function() {
-            var orderCode = $(this).attr("data-ocode");
-            $('#pjText').val('');
-            $("#commentDialog .subBtn").attr("data-ocode", orderCode)
-            $("#commentDialog").removeClass("hidden")
-        })
+        // $(".commentBtn").on("click", function() {
+        //     var orderCode = $(this).attr("data-ocode");
+        //     $('#pjText').val('');
+        //     $("#commentDialog .subBtn").attr("data-ocode", orderCode)
+        //     $("#commentDialog").removeClass("hidden")
+        // })
 
         //解冻货币按钮 点击
         $(".releaseBtn").on("click", function() {
@@ -1345,6 +1434,41 @@ define([
         $('.paid-dialog .paid-canBtn').click(() => {
           $("#paidDialog").addClass("hidden")
         });
+
+
+      // 释放比特币（买家已支付）弹窗 - 确定
+      $('.release-paid-dialog .subBtn').click(() => {
+
+        base.showLoadingSpin();
+        TradeCtr.releaseOrder(code).then(() => {
+          base.hideLoadingSpin();
+
+          base.showMsg(base.getText('操作成功'));
+          auSx();
+        }, base.hideLoadingSpin);
+        // UserCtr.getUser().then((data) => {
+        //   console.log(data);
+        //   if (data.tradepwdFlag) {
+        //     $("#releasePaidDialog").addClass("hidden");
+        //     $("#tradePwdDialog").removeClass("hidden");
+        //   } else if (!data.tradepwdFlag) {
+        //     base.showMsg(base.getText('请先设置交易密码', langType));
+        //     setTimeout(function() {
+        //       base.gohref("../user/setTradePwd.html?type=1&mod=dd");
+        //     }, 1800)
+        //   }
+        // }, base.hideLoadingSpin);
+      });
+
+      // 释放比特币（买家已支付）弹窗 - 取消
+      $('.release-paid-dialog .canBtn').click(() => {
+        $("#releasePaidDialog").addClass("hidden")
+      });
+
+      // 释放比特币（买家未支付）弹窗 - 确定
+      $('.release-unpaid-dialog .subBtn').click(() => {
+        $("#releaseUnpaidDialog").addClass("hidden")
+      });
 
         // 自动刷新页面
         function auSx() {
