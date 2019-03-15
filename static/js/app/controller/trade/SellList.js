@@ -77,12 +77,13 @@ define([
 
   // 支付方式
   function getPayTypeList() {
-    return TradeCtr.getPayTypeList({ status: 1 }).then((res) => {
+    return TradeCtr.getPayTypeList({ status: 1, tradeType: 0 }).then((res) => {
       base.hideLoadingSpin();
       res.map((item) => {
         payTypeList.push({
           key: item.code,
-          value: item.name
+          value: item.name,
+          adsCount: item.adsCount
         });
       });
       setHtml();
@@ -237,7 +238,7 @@ define([
       return ` <div class="left-item">
                   <div class="nav-item goHref sell-eth gm" data-value=${item.key}>
                       <span class="nav-item-type en_zf01">${item.value}</span>
-                      <span class="num">1234</span>
+                      <span class="num">${item.adsCount}</span>
                   </div>
               </div>`
     }
@@ -282,6 +283,8 @@ define([
         let countryHtml = ``;
         countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
 
+        let interval = base.fun(Date.parse(item.user.lastLogin), new Date());
+
         return `<tr>
 					<td class="nickname" style="padding-left: 20px;">
                         <p class="pfirst">
@@ -291,7 +294,7 @@ define([
                             <span class="num">+${item.userStatistics.beiHaoPingCount}</span>
 
                         </p>
-                        <p class="n-dist"><samp><i>2小时以前查看过</i></samp></p>
+                        <p class="n-dist"><samp><i>${interval}前查看过</i></samp></p>
                     </td>
                     <td class="payType">
                         <p class="payType_pfirst">
@@ -442,44 +445,44 @@ define([
           payType,
           coin: coin.toUpperCase()
         };
-        switch(payType) {
-          case '0':
-              $("#searchConWrap .payType").val('0');
-            $('#left-wrap .en_zf01').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-            break;
-          case '1':
-              $("#searchConWrap .payType").val('1');
-            $('#left-wrap .en_zf02').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-            break;
-          case '2':
-              $("#searchConWrap .payType").val('2');
-            $('#left-wrap .en_zf03').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-            break;
-          case '3':
-              $("#searchConWrap .payType").val('3');
-            $('#left-wrap .en_zf04').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-            break;
-          case '4':
-              $("#searchConWrap .payType").val('4');
-            $('#left-wrap .en_zf05').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-            break;
-          case '5':
-              $("#searchConWrap .payType").val('5');
-            $('#left-wrap .en_zf06').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-            break;
-          case '6':
-              $("#searchConWrap .payType").val('6');
-            $('#left-wrap .en_zf07').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-            break;
-          case '7':
-              $("#searchConWrap .payType").val('7');
-            $('#left-wrap .en_zf08').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-            break;
-          case '8':
-              $("#searchConWrap .payType").val('8');
-            $('#left-wrap .en_zf09').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-            break;
-        }
+        // switch(payType) {
+        //   case '0':
+        //       $("#searchConWrap .payType").val('0');
+        //     $('#left-wrap .en_zf01').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+        //     break;
+        //   case '1':
+        //       $("#searchConWrap .payType").val('1');
+        //     $('#left-wrap .en_zf02').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+        //     break;
+        //   case '2':
+        //       $("#searchConWrap .payType").val('2');
+        //     $('#left-wrap .en_zf03').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+        //     break;
+        //   case '3':
+        //       $("#searchConWrap .payType").val('3');
+        //     $('#left-wrap .en_zf04').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+        //     break;
+        //   case '4':
+        //       $("#searchConWrap .payType").val('4');
+        //     $('#left-wrap .en_zf05').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+        //     break;
+        //   case '5':
+        //       $("#searchConWrap .payType").val('5');
+        //     $('#left-wrap .en_zf06').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+        //     break;
+        //   case '6':
+        //       $("#searchConWrap .payType").val('6');
+        //     $('#left-wrap .en_zf07').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+        //     break;
+        //   case '7':
+        //       $("#searchConWrap .payType").val('7');
+        //     $('#left-wrap .en_zf08').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+        //     break;
+        //   case '8':
+        //       $("#searchConWrap .payType").val('8');
+        //     $('#left-wrap .en_zf09').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
+        //     break;
+        // }
         base.showLoadingSpin();
         getPageAdvertise(payConfig);
       });

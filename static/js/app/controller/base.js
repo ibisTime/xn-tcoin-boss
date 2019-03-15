@@ -600,22 +600,26 @@ define([
         // 计算相隔时间
       fun(startTime, endTime) {
         let usedTime = endTime - startTime; // 相差的毫秒数
-        let days = Math.floor(usedTime / (24 * 3600 * 1000)); // 计算出天数
-        let leavel = usedTime % (24 * 3600 * 1000); // 计算天数后剩余的时间
-        let hours = Math.floor(leavel / (3600 * 1000)); // 计算剩余的小时数
-        let leavel2 = leavel % (3600 * 1000); // 计算剩余小时后剩余的毫秒数
-        let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
-        let result = '';
-        if(days) {
-          result += days + '天'
+        if(usedTime > 0) {
+          let days = Math.floor(usedTime / (24 * 3600 * 1000)); // 计算出天数
+          let leavel = usedTime % (24 * 3600 * 1000); // 计算天数后剩余的时间
+          let hours = Math.floor(leavel / (3600 * 1000)); // 计算剩余的小时数
+          let leavel2 = leavel % (3600 * 1000); // 计算剩余小时后剩余的毫秒数
+          let seconds = (leavel % (3600 * 1000) ) / 1000; // 计算剩余小时后剩余的毫秒数
+          let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
+          let result = '';
+          if(days) {
+            result += days + '天'
+          }
+          if(hours) {
+            result += hours + '时'
+          }
+          if(minutes) {
+            result += minutes + '分钟'
+          }
+          return result;
         }
-        if(hours) {
-          result += hours + '时'
-        }
-        if(minutes) {
-          result += minutes + '分'
-        }
-        return result;
+        return '0分钟';
       }
     };
 
