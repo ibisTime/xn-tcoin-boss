@@ -89,21 +89,25 @@ define([
                 sms: true
             }
         }
-        $.when(
-            GeneralCtr.getSysConfig('withdraw_fee'), // 提现手续费
-            getUserAllMoneyX(),
-            getAcceptRule(),
-        ).then((withdrawFeeData) => {
-            base.hideLoadingSpin();
-            withdrawFee = parseFloat(withdrawFeeData.cvalue) * 100 + '%';
-            getAccount();
-        }, () => {
-            base.hideLoadingSpin();
-        });
+        // $.when(
+        //     GeneralCtr.getSysConfig('withdraw_fee'), // 提现手续费
+        //     getUserAllMoneyX(),
+        //     getAcceptRule(),
+        // ).then((withdrawFeeData) => {
+        //     base.hideLoadingSpin();
+        //     withdrawFee = parseFloat(withdrawFeeData.cvalue) * 100 + '%';
+        //     getAccount();
+        // }, () => {
+        //     base.hideLoadingSpin();
+        // });
         // 获取银行卡
-        getBankData();
+        // getBankData();
         // 获取银行渠道
         getGmBankData();
+        /**
+         * 获取余额
+         */
+        getAmount();
     }
 
     function setHtml() {
@@ -231,7 +235,7 @@ define([
         return AccountCtr.getAccount().then((data) => {
             let ulElement = '';
             let erWm = [];
-            data.map((item, i) => {
+            data.accountList.map((item, i) => {
                 if(item.currency.toLowerCase() === 'btc') {
                     sessionStorage.setItem('accountNumber', item.accountNumber);
                   ulElement += buildHtml(item, i);
@@ -870,24 +874,70 @@ define([
             base.showMsg(text);
         }
 
-        // 发送-确定
-        $("#sendOut-form .subBtn").click(function () {
-            event.stopPropagation();
-            if (_sendOutWrapper.valid()) {
-                base.showLoadingSpin();
-                var params = _sendOutWrapper.serializeObject();
-                params.amount = base.formatMoneyParse(params.amount, '', currency);
-                params.accountNumber = accountNumber;
-                params.payCardInfo = currency
-                withDraw(params)
-            }
-        })
+    }
 
+    /**
+     * 复制
+     */
+    $(".copy-address").click(function () {
+        var content=document.getElementById("address-BTC");
+        content.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        base.showMsg(base.getText('已复制到剪贴板', langType));
+    });
+    /**
+     * 获取当前余额
+     */
+    function getAmount() {
+        AccountCtr.getAccount().then((data) => {
+            data.accountList.forEach(item => {
+                if (item.currency.toLowerCase() === 'btc') {
+                    $(".wallet-account-wrap .s-bb").text(item.amount + 'BTC');
+                    $(".wallet-account-wrap .y-amount").text(' ≈ ' + item.amountUSD + 'USD');
+                    $('.wallet-account-wrap .freez-amount span').text(item.frozenAmount);
+                    $('.sendBtc-form-wrap p span').text(item.amount)
+                    $('#address-BTC').val(item.address)
+                    var  erWn =[];
+                    erWn.push(item.address);
+                    erWn.forEach((item, i) => {
+                        var qrcode = new QRCode(`qrcode2`, item);
+                        qrcode.makeCode(item);
+                    })
+                    sessionStorage.setItem('accountNumber', item.accountNumber);
+                }
+            })
+        });
+        GeneralCtr.getSysConfigType('trade_rule', true).then(data => {
+            $(".wallet-account-wrap .accept-bail").text(data.accept_bail);
+        });
     }
     /**
      *发送比特币
      */
     $(".send-btc").click(function () {
-        $("#sendBtcDialog").removeClass("hidden")
+        $("#sendBtcDialog").removeClass("hidden");
+    })
+    /**
+     *发送-确定
+     */
+    $(document).on('click','#sendBtcDialog .sendBtn',function(e) {
+        let params = {};
+        let formData = $('#sendBtc-form').serializeArray();
+        formData.forEach(item => {
+            params[item.name] = item.value;
+        })
+        params.applyUser = base.getUserId();
+        params.applyNote = '提现';
+        params.payCardInfo = 'BTC';
+        params.accountNumber = sessionStorage.getItem('accountNumber');
+        params.amount = base.formatMoneyParse(params.amount, '', params.payCardInfo);
+        console.log(params)
+        return AccountCtr.withDraw(params).then((data) => {
+            base.hideLoadingSpin();
+            base.showMsg(base.getText('操作成功', langType));
+            base.showLoadingSpin();
+        }, function () {
+            base.hideLoadingSpin();
+        })
     })
 });

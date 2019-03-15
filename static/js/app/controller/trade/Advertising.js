@@ -75,6 +75,7 @@ define([
         });
         $(".advertise-step1-tabs").append(tabHtml);
         getPayTypeList(data1[0].dkey);
+        tradeCoin = data2[0].simpleName;
         let step1SelectHtml = '';
         data2.forEach((item, i) => {
           step1SelectHtml += buildStep1SelectHtml(item, i)
@@ -364,6 +365,22 @@ define([
 
     // 发布广告
   function publishAdvertising() {
+        if(!$('#step3Tags').val()) {
+          base.showMsg(base.getText('请选择标签'));
+          return;
+        }
+        if(!$('#myTagInput').val()) {
+          base.showMsg(base.getText('请填写自定义标签'));
+          return;
+        }
+        if(!$('#clauseTextarea').val()) {
+          base.showMsg(base.getText('请填写条款'));
+          return;
+        }
+        if(!$('#explainTextarea').val()) {
+          base.showMsg(base.getText('请填写交易说明'));
+          return;
+        }
     base.showLoadingSpin();
     let platTag = $('#step3Tags').val().join('||');
     return TradeCtr.submitAdvertise({
@@ -388,7 +405,7 @@ define([
       isAllowProxy: isAllowProxy || 1
     }).then((res) => {
       base.showMsg(base.getText('操作成功', langType));
-      if (params.tradeType == '0') {
+      if (Number(sessionStorage.getItem('tradeType')) == '0') {
         base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
       } else {
         base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
@@ -530,147 +547,12 @@ define([
             });
         })
 
-        //发布
-        $("#submitBtn").click(function() {
-            if (!base.isLogin()) {
-                base.goLogin();
-                return;
-            }
-            if (_formWrapper.valid()) {
-                var publishType = '0'; // 0
-                //草稿发布
-                if (code != "" && status != '1') {
-                    publishType = '2';
-                    //编辑发布，原广告下
-                } else if (code && status == '1') {
-                    publishType = '3';
-                    //直接发布
-                } else {
-                    publishType = '1';
-                }
-                doSubmit(publishType);
-            }
-        })
-
-        //保存草稿
-        $("#draftBtn").click(function() {
-            if (!base.isLogin()) {
-                base.goLogin();
-                return;
-            }
-            if (_formWrapper.valid()) {
-                var publishType = '0';
-                doSubmit(publishType);
-            }
-        })
-
-        //发布/保存草稿
-        function doSubmit(publishType) {
-            var params = _formWrapper.serializeObject();
-
-            if (code != "") {
-                params.adsCode = code;
-            }
-
-            // 是否实名
-            params.onlyCert = selOnlyCert;
-
-            params.premiumRate = params.premiumRate / 100;
-            //广告类型 0=买币，1=卖币
-            params.tradeType = $(".trade-type .item.on").index() == '0' ? '1' : '0';
-            params.onlyTrust = $("#onlyTrust").hasClass("on") ? '1' : '0';
-            // params.tradeCoin = $("#tradeCoin").val();
-            params.publishType = publishType;
-
-            if (base.getCoinType(params.tradeCoin) == '1') {
-                params.protectPrice = params.truePrice;
-            } else {
-                params.truePrice = '0';
-            }
-
-            // 总价
-            params.payLimit = 12;
-            params.premiumRate = parseFloat($('.yj-num').val()) / 100;
-            params.tradeCoin = coin;
-            params.minTrade = params.minTrade;
-            params.leaveMessage = params.leaveMessage.trim();
-            params.totalCount = base.formatMoneyParse(params.totalCount, '', params.tradeCoin);
-            if ($(".time-type .item.on").index() == "1") {
-                params.displayTime = [{
-                    week: '1',
-                    startTime: $("#timeWrap .time-item:nth-of-type(1) .startTime").val(),
-                    endTime: $("#timeWrap .time-item:nth-of-type(1) .endTime").val()
-                }, {
-                    week: '2',
-                    startTime: $("#timeWrap .time-item:nth-of-type(2) .startTime").val(),
-                    endTime: $("#timeWrap .time-item:nth-of-type(2) .endTime").val()
-                }, {
-                    week: '3',
-                    startTime: $("#timeWrap .time-item:nth-of-type(3) .startTime").val(),
-                    endTime: $("#timeWrap .time-item:nth-of-type(3) .endTime").val()
-                }, {
-                    week: '4',
-                    startTime: $("#timeWrap .time-item:nth-of-type(4) .startTime").val(),
-                    endTime: $("#timeWrap .time-item:nth-of-type(4) .endTime").val()
-                }, {
-                    week: '5',
-                    startTime: $("#timeWrap .time-item:nth-of-type(5) .startTime").val(),
-                    endTime: $("#timeWrap .time-item:nth-of-type(5) .endTime").val()
-                }, {
-                    week: '6',
-                    startTime: $("#timeWrap .time-item:nth-of-type(6) .startTime").val(),
-                    endTime: $("#timeWrap .time-item:nth-of-type(6) .endTime").val()
-                }, {
-                    week: '7',
-                    startTime: $("#timeWrap .time-item:nth-of-type(7) .startTime").val(),
-                    endTime: $("#timeWrap .time-item:nth-of-type(7) .endTime").val()
-                }]
-            }
-            base.showLoadingSpin();
-            return TradeCtr.submitAdvertise(params).then(() => {
-                base.showMsg(base.getText('操作成功', langType));
-                base.showLoadingSpin();
-                setTimeout(() => {
-                    // 保存草稿
-                    if(params.publishType) {
-                        if (params.tradeType == '0') {
-                            base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
-                        } else {
-                            base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
-                        }
-                    } else {
-                        if (params.tradeType == '0') {
-                            base.gohref('../trade/sell-list.html?coin=' + coin + '&mod=cs');
-                        } else {
-                            base.gohref('../trade/buy-list.html?coin=' + coin + '&mod=gm');
-                        }
-                    }
-                    base.hideLoadingSpin()
-                }, 1000)
-            }, base.hideLoadingSpin)
-
-        }
-
-        //下架
-      $("#doDownBtn").on("click", function() {
-          if (!base.isLogin()) {
-              base.goLogin();
-              return;
-          }
-          base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确认', langType)).then(() => {
-              base.showLoadingSpin();
-              TradeCtr.downAdvertise(code).then(() => {
-                  base.hideLoadingSpin();
-                  base.showMsg(base.getText('操作成功', langType));
-                  setTimeout(function() {
-                      history.go(-1)
-                  }, 1500)
-              }, base.hideLoadingSpin)
-          }, base.emptyFun)
-      });
-
       // step1 - 下一步按钮点击事件
       $('.advertise-step1-btn').on('click', () => {
+        if(!paySubType) {
+          base.showMsg(base.getText('请选择一种支付方式'));
+          return;
+        }
         sessionStorage.setItem('payBigType', payBigType);
         sessionStorage.setItem('paySubType', paySubType);
         sessionStorage.setItem('tradeCoin', tradeCoin);
@@ -680,6 +562,10 @@ define([
 
       // step2 - 下一步按钮点击事件
       $('.advertise-step2-btn').on('click', () => {
+        if(!$('#zqInput').val() || !$('#minInput').val() || !$('#maxInput').val() || !$('#cancelTimeInput').val() || !$('#minPriceInput').val()) {
+          base.showMsg(base.getText('请填写所有信息'));
+          return;
+        }
         sessionStorage.setItem('zq', $('#zqInput').val());
         sessionStorage.setItem('min', $('#minInput').val());
         sessionStorage.setItem('max', $('#maxInput').val());

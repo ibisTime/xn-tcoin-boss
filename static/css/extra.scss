@@ -2336,12 +2336,13 @@ table {
                     color: #565656;
                 }
                 .add-amount{
-                    button{
+                    a{
                         border: 1px solid #D53D3D;
                         border-radius: 2px;
                         color: #D53D3D;
                         margin: 20px 0px;
                         padding: 5px 20px;
+                        display: inline-block;
                     }
                 }
                 .tip{
@@ -2373,6 +2374,7 @@ table {
                     border-radius: 2px;
                     padding: 6px 10px;
                     margin-left: 20px;
+                    cursor: pointer;
                 }
             }
         }
@@ -2663,38 +2665,42 @@ table {
     }
     .tradeRecord-list-wrap {
         width: 100%;
-        padding-bottom: 50px;
+        border: 1px solid #EEEEEE;
         .list-item {
             width: 100%;
             overflow: hidden;
-            border-bottom: 1px solid $border-color;
-            border-left: 1px solid $border-color;
-            padding: 14px 30px;
-            background-color: #fff;
+            padding: 7px 30px;
+            background: #fff;
+            border-radius: 4px 4px 0 0;
+            font-size: 14px;
+            border-bottom: 1px solid #EEEEEE;
             div {
                 float: left;
                 font-size: 16px;
                 line-height: 2;
                 word-break: break-word;
                 &:nth-of-type(1) {
-                    width: 200px;
+                    width: 240px;
                 }
                 &:nth-of-type(2) {
-                    width: 140px;
+                    width: 400px;
                 }
                 &:nth-of-type(3) {
-                    width: 160px;
+                    width: 240px;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
                 &:nth-of-type(4) {
-                    width: 530px;
+                    width: 240px;
                 }
             }
             &.title {
                 background-color: #f8f8f8;
             }
+        }
+        .list-item:last-child{
+            border: none;
         }
         .x-order_warp {
             ul {
@@ -3722,11 +3728,12 @@ table {
                         right: 22px;
                     }
                     select,input {
-                        border: 1px solid $border-color;
-                        width: 121px;
-                        line-height: 40px;
-                        margin-top: 9px;
-                        border-radius: 2px;
+                      border: 1px solid $border-color;
+                      width: 121px;
+                      line-height: 40px;
+                      margin-top: 9px;
+                      border-radius: 2px;
+                      padding: 0 10px;
                     }
                     .text {
                         width: 90px;
@@ -4149,6 +4156,7 @@ table {
                     height: 60px;
                     border-radius: 100%;
                     background-image: url('../images/default-avatar.png');
+                  background-size: 100% 100%;
                 }
                 .buy-user-nickname {
                     color: #eaab76;
@@ -4760,6 +4768,8 @@ table {
           height: 100%;
           width: 100%;
           border: 1px solid $border-color;
+          font-size: 18px;
+          padding-left: 10px;
         }
         .step2-input-tip {
           position: absolute;
@@ -4835,7 +4845,6 @@ table {
           .min,.max {
             color: #999;
             font-size: 20px;
-            line-height: 28px;
             margin-bottom: 18px;
           }
         }
@@ -4867,7 +4876,8 @@ table {
         width: 100%;
         height: 60px !important;
         border: 1px solid #ccc;
-        padding-left: 30px;
+        font-size: 18px;
+        padding-left: 10px;
       }
       .step3-textarea {
         width: 100%;
@@ -6048,13 +6058,13 @@ table {
             color: $red-color;
           }
           .icon-good {
-            background-image: url('../images/hp.png');
+            background-image: url('../images/hp-active.png');
           }
           .icon-middle {
-            background-image: url('../images/zp.png');
+            background-image: url('../images/zp-active.png');
           }
           .icon-bad {
-            background-image: url('../images/cp.png');
+            background-image: url('../images/cp-active.png');
           }
         }
         &:hover {
@@ -6148,6 +6158,9 @@ table {
       border: 1px solid $border-color;
       font-size: 18px;
     }
+    > *:hover {
+      cursor: pointer;
+    }
     .subBtn {
       color: $red-color;
       border-color: $red-color;
@@ -6187,6 +6200,54 @@ table {
       padding: 10px 30px;
       border: 1px solid $red-color;
       font-size: 18px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.tradePwd-dialog {
+  .am-modal-header {
+    padding: 60px 0 0;
+    color: $red-color;
+    font-size: 24px;
+  }
+  .am-modal-body {
+    margin-bottom: 45px;
+    padding-bottom: 0;
+    .title {
+      font-size: 18px;
+      line-height: 25px;
+      text-align: center;
+      width: 361px;
+      height: 52px;
+      color: #999;
+      border: 1px solid $border-color;
+      border-radius: 2px;
+      background: #f5f5f5;
+    }
+  }
+  .am-modal-footer {
+    align-items: center;
+    padding: 0 76px;
+    margin-bottom: 48px;
+    display: flex;
+    justify-content: space-between;
+    > * {
+      cursor: pointer;
+      display: inline;
+      border-radius: 2px;
+      background: #fff;
+      padding: 10px 30px;
+      font-size: 18px;
+    }
+    .subBtn {
+      color: $red-color;
+      border: 1px solid $red-color;
+    }
+    .canBtn {
+      border: 1px solid $border-color;
     }
   }
 }
