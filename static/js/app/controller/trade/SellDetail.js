@@ -39,6 +39,8 @@ define([
     var tradeCoin = 'ETH';
     let tradeCurrency = 'CNY';
 
+    let platTagList = [];
+
     if (!base.isLogin()) {
         base.goLogin();
         return;
@@ -47,19 +49,28 @@ define([
     init();
 
     function init() {
-        base.showLoadingSpin();
-        setHtml();
+      base.showLoadingSpin();
+      if(location.href.indexOf('sell') !== -1) {
+        $('.buy-check-email').remove();
+      }
+      setHtml();
 
-        if (!isDetail) {
-            $(".buy-wrap").removeClass("hidden")
-        }
-        $.when(
-            GeneralCtr.getSysConfig("trade_remind")  // 测试
-        ).then((data) => {
-            $("#tradeWarn").html(data.cvalue.replace(/\n/g, '<br>'))
-            getAdvertiseDetail()   // 正式
-        }, base.hideLoadingSpin)
-        addListener();
+      if (!isDetail) {
+          $(".buy-wrap").removeClass("hidden")
+      }
+      $.when(
+        TradeCtr.getTagsList({ status: 1 })
+      ).then((res) => {
+        base.hideLoadingSpin();
+        res.map((item) => {
+          platTagList.push({
+            key: item.id,
+            value: item.name
+          });
+        });
+        getAdvertiseDetail();
+      }, base.hideLoadingSpin);
+      addListener();
 
     }
     function setHtml() {
@@ -92,6 +103,9 @@ define([
         return TradeCtr.getAdvertiseDetail(code).then((data) => {
             userId = data.user.userId;
             nickname = data.user.nickname;
+            tradeCurrency = data.tradeCurrency;
+            $('.item-unit').text(tradeCurrency);
+            $('#limit').next().text(tradeCurrency);
             var user = data.user;
             userName = user.nickname;
             tradeCoin = data.tradeCoin ? data.tradeCoin : 'ETH';
@@ -138,9 +152,26 @@ define([
             $("#truePrice").html(Math.floor(data.truePrice * 100) / 100 + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             $("#submitDialog .tradePrice").html(config.tradePrice + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             $("#leftCountString").html(base.formatMoney(data.leftCountString, '', tradeCoin))
-            $("#coin").text(tradeCoin)
+            $("#coin").text(tradeCoin);
 
-            $.when(
+          $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
+          $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
+          $('.buy-info .rate').html(data.truePrice + data.tradeCurrency);
+          $('.buy-info .price').html(data.marketPrice + data.tradeCurrency);
+          $('.buy-cjtk').append(`<span>${data.item}</span>`);
+          $('.buy-cjtk .buy-quick-title .buy-title').html(data.user.nickname + '的出价条款');
+          $('.buy-user-nickname').html(data.user.nickname);
+
+          $('.icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.user.photo) + "')" });
+          buildTagsHtml(data.platTag, data.customTag);
+
+          let interval = base.fun(Date.parse(data.user.lastLogin), new Date());
+          $('.detail-container-right .buy-user-info .buy-user-online .interval').html(interval);
+
+          $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
+          $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
+
+          $.when(
                 getAccount(data.tradeCoin),
                 getUser()
             )
@@ -148,22 +179,43 @@ define([
         }, base.hideLoadingSpin)
     }
 
+  // 构建tag的dom结构
+  function buildTagsHtml(tag1, tag2) {
+    let tagsHtml = ``;
+    if(tag1) {
+      tag1.split('||').map((item) => {
+        platTagList.map((k) => {
+          if(item == k.key) {
+            tagsHtml += `<span>${k.value}</span>`;
+          }
+        })
+      });
+    }
+    if(tag2) {
+      tagsHtml += `<span>${tag2}</span>`;
+    }
+    if(!tag1 && !tag2) {
+      tagsHtml += `<span>暂无</span>`;
+    }
+    $('.buy-quick-condition').append(tagsHtml);
+  }
+
     //我的账户
     function getAccount(currency) {
         return AccountCtr.getAccount().then((data) => {
-            if (data.accountList) {
-                // data.accountList.forEach(function(item) {
-                //     if (item.currency == currency) {
-                //         $(".accountLeftCountString").attr('data-amount', base.formatMoneySubtract(item.amountString, item.frozenAmountString, currency));
-                //     }
-                // })
+          if (data.accountList) {
+                data.accountList.forEach(function(item) {
+                    if (item.currency == currency) {
+                        $(".accountLeftCountString").attr('data-amount', base.formatMoneySubtract(item.amountString, item.frozenAmountString, currency));
+                    }
+                })
             }
 
-            data.forEach(function(item) {
-                if (item.currency == currency) {
-                    $(".accountLeftCountString").attr('data-amount', base.formatMoneySubtract(`${item.amount}`, `${item.frozenAmount}`, currency));
-                }
-            })
+            // data.forEach(function(item) {
+            //     if (item.currency == currency) {
+            //         $(".accountLeftCountString").attr('data-amount', base.formatMoneySubtract(`${item.amount}`, `${item.frozenAmount}`, currency));
+            //     }
+            // })
 
             $(".accountLeftCountString").text($(".accountLeftCountString").attr('data-amount'))
         }, base.hideLoadingSpin)

@@ -74,12 +74,14 @@ define([
     }
     // 支付方式
     function getPayTypeList() {
-      return TradeCtr.getPayTypeList({ status: 1 }).then((res) => {
+      return TradeCtr.getPayTypeList({ status: 1, tradeType: 1 }).then((res) => {
+        console.log(res);
         base.hideLoadingSpin();
         res.map((item) => {
           payTypeList.push({
             key: item.code,
-            value: item.name
+            value: item.name,
+            adsCount: item.adsCount
           });
         });
         setHtml();
@@ -229,7 +231,7 @@ define([
       return ` <div class="left-item">
                 <div class="nav-item goHref sell-eth gm" data-value=${item.key}>
                     <span class="nav-item-type en_zf01">${item.value}</span>
-                    <span class="num">1234</span>
+                    <span class="num">${item.adsCount}</span>
                 </div>
             </div>`
     }
@@ -274,15 +276,16 @@ define([
         let countryHtml = ``;
         countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
 
+        let interval = base.fun(Date.parse(item.user.lastLogin), new Date());
         return `<tr>
 					<td class="nickname" style="padding-left: 20px;">
                         <p class="pfirst">
                             ${countryHtml}
                             <span class="dot ${loginStatus}"></span>
                             <span class="name">${item.user.nickname ? item.user.nickname : '-'}</span>
-                            <span class="num">+100</span>
+                            <span class="num">+${item.userStatistics.beiHaoPingCount}</span>
                         </p>
-                        <p class="n-dist"><samp><i>2小时以前查看过</i></samp></p>
+                        <p class="n-dist"><samp><i>${interval}前查看过</i></samp></p>
 					</td>
                     <td class="payType">
                         <p class="payType_pfirst">
@@ -411,7 +414,7 @@ define([
             config.price = $('#payTypeMoney').val() * 1000;
           }
           config.start = 1;
-          config.tradeType = tradeType === 'buy' ? '1' : '0';
+          config.tradeType = '1';
           base.showLoadingSpin();
 
           getPageAdvertise(config);
@@ -425,7 +428,7 @@ define([
             let payConfig = {
                   start: 1,
                   limit: 10,
-                  tradeType: 0,
+                  tradeType: 1,
                   payType,
                   coin: coin.toUpperCase()
               };
