@@ -2336,12 +2336,13 @@ table {
                     color: #565656;
                 }
                 .add-amount{
-                    button{
+                    a{
                         border: 1px solid #D53D3D;
                         border-radius: 2px;
                         color: #D53D3D;
                         margin: 20px 0px;
                         padding: 5px 20px;
+                        display: inline-block;
                     }
                 }
                 .tip{
@@ -2373,6 +2374,7 @@ table {
                     border-radius: 2px;
                     padding: 6px 10px;
                     margin-left: 20px;
+                    cursor: pointer;
                 }
             }
         }
@@ -2663,38 +2665,42 @@ table {
     }
     .tradeRecord-list-wrap {
         width: 100%;
-        padding-bottom: 50px;
+        border: 1px solid #EEEEEE;
         .list-item {
             width: 100%;
             overflow: hidden;
-            border-bottom: 1px solid $border-color;
-            border-left: 1px solid $border-color;
-            padding: 14px 30px;
-            background-color: #fff;
+            padding: 7px 30px;
+            background: #fff;
+            border-radius: 4px 4px 0 0;
+            font-size: 14px;
+            border-bottom: 1px solid #EEEEEE;
             div {
                 float: left;
                 font-size: 16px;
                 line-height: 2;
                 word-break: break-word;
                 &:nth-of-type(1) {
-                    width: 200px;
+                    width: 240px;
                 }
                 &:nth-of-type(2) {
-                    width: 140px;
+                    width: 400px;
                 }
                 &:nth-of-type(3) {
-                    width: 160px;
+                    width: 240px;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
                 &:nth-of-type(4) {
-                    width: 530px;
+                    width: 240px;
                 }
             }
             &.title {
                 background-color: #f8f8f8;
             }
+        }
+        .list-item:last-child{
+            border: none;
         }
         .x-order_warp {
             ul {

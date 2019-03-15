@@ -46,22 +46,22 @@ define([
     }
 
     function init() {
-        $('.tradeRecord-wrap-title').text(base.getText('交易明细', langType));
-        $('.wamx-en_qb').text(base.getText('全部', langType));
-        $('.wamx-en_cb').text(base.getText('充币', langType));
-        $('.wamx-en_tb').text(base.getText('提现', langType));
-        $('.wamx-en_mr').text(base.getText('交易买入', langType));
-        $('.wamx-en_mc').text(base.getText('交易卖出', langType));
+        // $('.tradeRecord-wrap-title').text(base.getText('交易明细', langType));
+        // $('.wamx-en_qb').text(base.getText('全部', langType));
+        // $('.wamx-en_cb').text(base.getText('充币', langType));
+        // $('.wamx-en_tb').text(base.getText('提现', langType));
+        // $('.wamx-en_mr').text(base.getText('交易买入', langType));
+        // $('.wamx-en_mc').text(base.getText('交易卖出', langType));
         // $('.wamx-en_gm').text(base.getText('场外承兑商购买', langType));
         // $('.wamx-en_cs').text(base.getText('场外承兑商出售', langType));
         // $('.wamx-en_sxf').text(base.getText('交易手续费', langType));
         // $('.wamx-en_tx').text(base.getText('提现手续费', langType));
-        $('.wamx-en_fee').text(base.getText('手续费', langType));
-        $('.wamx-en_dj').text(base.getText('冻结解冻', langType));
-        $('.wamx-en_sj').text(base.getText('时间', langType));
-        $('.wamx-en_lx').text(base.getText('类型', langType));
-        $('.wamx-en_sli').text(base.getText('数量', langType));
-        $('.wamx-en_sm').text(base.getText('说明', langType));
+        // $('.wamx-en_fee').text(base.getText('手续费', langType));
+        // $('.wamx-en_dj').text(base.getText('冻结解冻', langType));
+        $('.wamx-en_sj').text(base.getText('日期', langType));
+        $('.wamx-en_yue').text(base.getText('余额USD', langType));
+        $('.wamx-en_lx').text(base.getText('变动金额', langType));
+        $('.wamx-en_sm').text(base.getText('描述', langType));
 
         if(langType == 'EN'){
             $('title').text('order details-FUNMVP blockchain technology application experimental platform');
@@ -129,13 +129,12 @@ define([
             base.hideLoadingSpin();
         }, base.hideLoadingSpin)
     }
-
     function buildHtmlFlow(item) {
         return `<div class="list-item">
 					<div>${base.formateDatetime(item.createDatetime)}</div>
-					<div>${bizTypeValueList[item.bizType]}</div>
-					<div title="${base.formatMoney(item.transAmountString,'',item.currency)}">${base.formatMoney(item.transAmountString,'',item.currency)}</div>
-					<div>${getBizNote(item)}</div>
+					<div>${item.remark}</div>
+					<div>${base.formatMoney(item.transAmountString,'',item.currency)}</div>
+					<div>${base.formatMoney(item.postAmountString,'',item.currency)}</div>
 				</div>`
     }
 
