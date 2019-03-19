@@ -199,10 +199,11 @@ define([
             var lists = data.list;
             if (data.list.length) {
                 var html = "";
+                console.log(lists)
                 lists.forEach((item, i) => {
                     html += buildHtml(item);
                 });
-                $("#content").append(html);
+                $("#content").html(html);
                 $(".trade-list-wrap .no-data").addClass("hidden")
 
                 $("#content .operation .goHref").off("click").click(function() {
@@ -279,6 +280,12 @@ define([
             paySecondHtml += `<span>${platTagList[item]}</span>`;
           });
         }
+        let customHTML = ``;
+        if(item.customTag){
+            item.customTag.split('||').map((item) => {
+                customHTML += `<span>${item}</span>`;
+            });
+        }
         let country = '/static/images/China.png';
         let countryHtml = ``;
         countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
@@ -301,7 +308,7 @@ define([
                             ${payTypeHtml}
                         </p>
                         <p class="payType_psecond">
-                            ${paySecondHtml}
+                            ${paySecondHtml} ${customHTML}
                         </p>
                     </td>
                     <td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
@@ -509,5 +516,18 @@ define([
           base.gohref("../index.html");
         }
       })
+
+        $('.buy_sell .buy i').on('click', (e) => {
+            let target = e.target;
+            if($(target).parents('div').hasClass('buy')) {
+                base.gohref("../index.html");
+            }
+        });
+        $('.buy_sell .sell i').on('click', (e) => {
+            let target = e.target;
+            if($(target).parents('div').hasClass('sell')) {
+                base.gohref("../trade/sell-list.html");
+            }
+        });
     }
 });

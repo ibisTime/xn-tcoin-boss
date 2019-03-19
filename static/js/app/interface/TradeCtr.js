@@ -35,7 +35,8 @@ define([
         // 获取广告详情
         getAdvertiseDetail(adsCode) {
             return Ajax.get("625226", {
-                adsCode
+                adsCode,
+                userId:base.getUserId()
             });
         },
         // 获取广告价格
@@ -199,6 +200,14 @@ define([
           tradeCoin: 'BTC',
           ...config
         }, true);
-      }
+      },
+        /**
+         * 编辑广告
+         */
+        editAdvertise(config) {
+            return Ajax.post("625221", {
+                ...config
+            }, true);
+        },
     };
 })

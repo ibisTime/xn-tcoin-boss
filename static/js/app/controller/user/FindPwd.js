@@ -21,9 +21,9 @@ define([
     	$(".head-button-wrap .button-login").removeClass("hidden")
     	$(".head-button-wrap .button-register").removeClass("hidden")
     	if(langType == 'EN'){
-            $('title').text('Forgot password-FUNMVP blockchain technology application experimental platform');
+            $('title').text('Forgot password- blockchain technology application experimental platform');
         }
-        $('title').text('忘记密码-FUNMVP区块链技术应用实验平台');
+        $('title').text('忘记密码-区块链技术应用实验平台');
         base.hideLoadingSpin();
         addListener();
         
@@ -53,8 +53,9 @@ define([
 	        		sms: true
 	        	},
 	        	"newLoginPwd": {
-	        		required: true,
-	        		minlength: 6,
+                    required: true,
+                    minlength: 6,
+                    pwd: true
 	        	},
 	        	"reNewLoginPwd": {
 	        		required: true,

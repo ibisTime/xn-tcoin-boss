@@ -74,7 +74,7 @@ define([
 
     }
     function setHtml() {
-        $('title').text(base.getText('出售详情') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
+        $('title').text(base.getText('出售详情') + '-' +base.getText('区块链技术应用实验平台'));
         $('.en-buy_jy').text(base.getText('交易次数', langType));
         $('.en-buy_xr').text(base.getText('信任人数', langType));
         $('.en-buy_hp').text(base.getText('好评率', langType));
@@ -124,7 +124,7 @@ define([
                 var photoHtml = `<div class="noPhoto">${tmpl}</div>`
                 $("#photo").html(photoHtml)
             }
-
+            console.log(data)
             config.tradePrice = Math.floor(data.truePrice * 100) / 100;
             limit = data.minTrade + '-' + data.maxTrade
             $("#nickname").html(data.user.nickname);
@@ -256,6 +256,7 @@ define([
       return TradeCtr.sellETH(config).then((data) => {
         console.log(data);
         base.showMsg(base.getText('下单成功', langType));
+        document.getElementById('sellOrder').play();
         setTimeout(function() {
             base.gohref("../order/order-list.html?mod=dd");
         }, 2000)
@@ -296,7 +297,7 @@ define([
                 if (data.tradepwdFlag) {
                     if (_formWrapper.valid()) {
                         if ($("#buyAmount").val() != '' && $("#buyAmount").val()) {
-                            $("#submitDialog").removeClass("hidden")
+                            $("#submitMon").removeClass("hidden");
                         } else {
                             base.showMsg(base.getText('请输入您出售的金额', langType));
                         }
@@ -340,16 +341,24 @@ define([
         })
 
         //下单确认弹窗-确认点击
-        $("#submitDialog .subBtn").click(function() {
-            $("#submitDialog").addClass("hidden");
-            $("#submitMon").removeClass("hidden");
-        })
+        // $("#submitDialog .subBtn").click(function() {
+        //     $("#submitDialog").addClass("hidden");
+        //     $("#submitMon").removeClass("hidden");
+        // })
         $("#buyEth").keyup(function() {
-            $("#buyAmount").val(($("#buyEth").val() * config.tradePrice).toFixed(2));
+            if(config.tradePrice > 0){
+                $("#buyAmount").val(Number($("#buyEth").val() * config.tradePrice).toFixed(2));
+            }else{
+                $("#buyAmount").val(Number($("#buyEth").val()).toFixed(2));
+            }
         })
         $("#buyAmount").keyup(function() {
-                $("#buyEth").val(($("#buyAmount").val() / config.tradePrice).toFixed(8));
-            })
+            if(config.tradePrice > 0){
+                $("#buyEth").val(Number($("#buyAmount").val() / config.tradePrice).toFixed(8));
+            }else{
+                $("#buyEth").val(Number($("#buyAmount").val()).toFixed(8));
+            }
+        })
             //下架-点击
         $("#doDownBtn").click(function() {
             base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType)).then(() => {

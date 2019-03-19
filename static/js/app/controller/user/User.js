@@ -30,7 +30,7 @@ define([
     }
 
     function setHtml() {
-        $('title').text(base.getText('用户中心') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
+        $('title').text(base.getText('用户中心') + '-' +base.getText('区块链技术应用实验平台'));
 
         if(langType === 'EN'){
             $('.u-en').removeClass('none');

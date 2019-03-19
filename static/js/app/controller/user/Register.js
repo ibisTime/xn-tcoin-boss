@@ -24,9 +24,9 @@ define([
         if(langType == 'EN'){
             $('.login-form').addClass('en-login-form');
             $('.form-item').addClass('en-form-item');
-            $('title').text('Register-FUNMVP blockchain technology application experimental platform');
+            $('title').text('Register- blockchain technology application experimental platform');
         }
-        $('title').text('注册-FUNMVP区块链技术应用实验平台');
+        $('title').text('注册-区块链技术应用实验平台');
         $(".head-button-wrap .button-login").removeClass("hidden");
         base.showLoadingSpin();
         $('.title').text(base.getText('注册', langType));
@@ -114,7 +114,7 @@ define([
     //获取邮箱验证码
     function emailYzm(config) {
         return UserCtr.emailYzm(config).then((data) => {
-            // console.log(data);
+            console.log(111)
         }, base.hideLoadingSpin);
     }
 
@@ -182,7 +182,6 @@ define([
         $("#subBtn1").click(function() {
             if (!$(this).hasClass("am-button-disabled")) {
                 if (_registerForm1.valid()) {
-                    base.showLoadingSpin()
                     var params = _registerForm1.serializeObject();
                     var params1 = {
                         loginPwd: params.loginPwd1,
@@ -190,6 +189,11 @@ define([
                         email: params.email,
                         captcha: params.captcha
                     };
+                    if(params.captcha == ''){
+                        base.showMsg(base.getText('验证码不能为空', langType));
+                        return;
+                    }
+                    base.showLoadingSpin()
                     inviteCode != "" && inviteCode ? params1.userReferee = inviteCode : '';
                     register(params1, 'email');
                 }
@@ -212,7 +216,7 @@ define([
         }
 
         //邮箱注册
-        $('#getVerification1').off('click').click(function() {
+        $('#getVerification1').click(function() {
             let reg = /^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$/;
             if ($('#email').val().match(reg)) {
                 var i = 60;
@@ -220,15 +224,13 @@ define([
                     color: '#ccc',
                     'background-color': '#fff'
                 });
-                base.showLoadingSpin();
+
                 emailYzm({
                     bizType: '805043',
                     email: $('#email').val()
                 }).then(data => {
-                    base.hideLoadingSpin();
                     gcGetYzm(i);
                 }, () => {
-                    base.hideLoadingSpin();
                     $('#getVerification1').text(base.getText('获取验证码', langType)).prop("disabled", false);
                     $('#getVerification1').css({
                         color: '#d53d3d'

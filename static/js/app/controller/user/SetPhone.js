@@ -31,9 +31,9 @@ define([
         $('#mobile').attr('placeholder', base.getText('请输入手机号', langType));
         $('#captcha').attr('placeholder', base.getText('手机验证码', langType));
         if(langType == 'EN'){
-            $('title').text('Cellphone number-FUNMVP blockchain technology application experimental platform');
+            $('title').text('Cellphone number- blockchain technology application experimental platform');
         }
-        $('title').text('手机号-FUNMVP区块链技术应用实验平台');
+        $('title').text('手机号-区块链技术应用实验平台');
         base.hideLoadingSpin();
         addListener();
     }

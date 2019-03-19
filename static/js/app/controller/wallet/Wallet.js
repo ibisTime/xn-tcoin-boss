@@ -111,7 +111,7 @@ define([
     }
 
     function setHtml() {
-        // $('title').text(base.getText('钱包-FUNMVP区块链技术应用实验平台'));
+        // $('title').text(base.getText('钱包-区块链技术应用实验平台'));
         $('.wall-en_zzc').text(base.getText('当前余额', langType));
         $('.wall-en_bz').text(base.getText('币种', langType));
         $('.wall-en_ky').text(base.getText('可用', langType));
@@ -168,13 +168,13 @@ define([
             if (m_type == 'CNY') {
                 $('.con-toBuy .x-p_money').text('USD');
                 if($('.con-toBuy .sel-p').text() === base.getText('数量', langType)){
-                    $('.con-toBuy .m_bb').text('FMVP');
+                    // $('.con-toBuy .m_bb').text('FMVP');
                 }
                 $('.con-toBuy .m_cyn').text('USD');
             } else {
                 $('.con-toBuy .x-p_money').text('CNY');
                 if($('.con-toBuy .sel-p').text() === base.getText('数量', langType)){
-                    $('.con-toBuy .m_bb').text('FMVP');
+                    // $('.con-toBuy .m_bb').text('FMVP');
                 }
                 $('.con-toBuy .m_cyn').text('CNY');
             }
@@ -184,13 +184,13 @@ define([
             if (m_type == 'CNY') {
                 $('.con-toSell .x-p_money').text('USD');
                 if($('.con-toSell .sel-p').text() === base.getText('数量', langType)){
-                    $('.con-toSell .m_bb').text('FMVP');
+                    // $('.con-toSell .m_bb').text('FMVP');
                 }
                 $('.con-toSell .m_cyn').text('USD');
             } else {
                 $('.con-toSell .x-p_money').text('CNY');
                 if($('.con-toSell .sel-p').text() === base.getText('数量', langType)){
-                    $('.con-toSell .m_bb').text('FMVP');
+                    // $('.con-toSell .m_bb').text('FMVP');
                 }
                 $('.con-toSell .m_cyn').text('CNY');
             }
@@ -211,9 +211,9 @@ define([
             $(pType + ' .currency_type').text('￥');
             $(pType + ' .x-p_money').text('CNY');
             if($(pType + ' .sel-p').text() === base.getText('数量', langType)){
-                $(pType + ' .m_bb').text('FMVP');
+                // $(pType + ' .m_bb').text('FMVP');
             } else {
-                $(pType + ' .m_cyn').text('FMVP');
+                // $(pType + ' .m_cyn').text('FMVP');
             }
             $(pType + ' .min-money').text(acceptRule.accept_order_min_cny_amount);
             $(pType + ' .max-money').text(acceptRule.accept_order_max_cny_amount);
@@ -223,9 +223,9 @@ define([
             $(pType + ' .max-money').text(acceptRule.accept_order_max_usd_amount);
             $(pType + ' .x-p_money').text('USD');
             if($(pType + ' .sel-p').text() === base.getText('数量', langType)){
-                $(pType + ' .m_bb').text('FMVP');
+                // $(pType + ' .m_bb').text('FMVP');
             }  else {
-                $(pType + ' .m_cyn').text('FMVP');
+                // $(pType + ' .m_cyn').text('FMVP');
             }
         }
     }
@@ -539,6 +539,7 @@ define([
             };
             base.showLoadingSpin();
             TradeCtr.bjPlayfo(config).then(() => {
+
                 base.gohref('./wallet-jilu.html');
             });
         })
@@ -672,7 +673,7 @@ define([
                     $('.m_bb').text(m_type);
                     $('.con-toSell .b-c_put p').text(base.getText('请输入出售金额', langType) + ', ' + base.getText('最低额度', langType) + ' ' + minMoney + m_type);
                 } else {
-                    $('.m_bb').text('FMVP');
+                    // $('.m_bb').text('FMVP');
                     $('.con-toSell .m_cyn').text(m_type);
                     $('.con-toSell .b-c_put p').text(base.getText('请输入出售数量', langType) + ', ' + base.getText('最低额度', langType) + ' ' + minMoney + m_type);
                 }
@@ -682,10 +683,10 @@ define([
                 $('.con-toBuy .b-c_put p').text('');
                 if ($(this).text() == base.getText('金额', langType)) {
                     $('.con-toBuy .b-c_put p').text(base.getText('请输入购买金额', langType) + ', ' + base.getText('最低额度', langType) + ' ' + minMoney + m_type);
-                    $('.m_cyn').text('FMVP');
+                    // $('.m_cyn').text('FMVP');
                     $('.m_bb').text(m_type);
                 } else {
-                    $('.m_bb').text('FMVP');
+                    // $('.m_bb').text('FMVP');
                     $('.con-toBuy .b-c_put p').text(base.getText('请输入购买数量', langType) + ', ' + base.getText('最低额度', langType) + ' ' + minMoney + m_type);
                     $('.con-toBuy .m_cyn').text(m_type);
                 }
@@ -892,9 +893,9 @@ define([
         AccountCtr.getAccount().then((data) => {
             data.accountList.forEach(item => {
                 if (item.currency.toLowerCase() === 'btc') {
-                    $(".wallet-account-wrap .s-bb").text(item.amount + 'BTC');
-                    $(".wallet-account-wrap .y-amount").text(' ≈ ' + item.amountUSD + 'USD');
-                    $('.wallet-account-wrap .freez-amount span').text(item.frozenAmount);
+                    $(".wallet-account-wrap .s-bb").text(base.formatMoney(item.amount) + 'BTC');
+                    $(".wallet-account-wrap .y-amount").text(' ≈ ' + base.formatMoney(item.amountUSD) + 'USD');
+                    $('.wallet-account-wrap .freez-amount a').text(item.frozenAmount);
                     $('.sendBtc-form-wrap p span').text(item.amount)
                     $('#address-BTC').val(item.address)
                     var  erWn =[];
@@ -915,7 +916,17 @@ define([
      *发送比特币
      */
     $(".send-btc").click(function () {
-        $("#sendBtcDialog").removeClass("hidden");
+        UserCtr.getUser().then((data) => {
+            console.log(data.tradepwdFlag)
+            if (data.tradepwdFlag) {
+                $("#sendBtcDialog").removeClass("hidden");
+            } else if (!data.tradepwdFlag) {
+                base.showMsg(base.getText('请先设置交易密码'))
+                setTimeout(function () {
+                    base.gohref("../user/setTradePwd.html?type=1")
+                }, 1800)
+            }
+        }, base.hideLoadingSpin)
     })
     /**
      *发送-确定
@@ -933,11 +944,9 @@ define([
         params.amount = base.formatMoneyParse(params.amount, '', params.payCardInfo);
         console.log(params)
         return AccountCtr.withDraw(params).then((data) => {
-            base.hideLoadingSpin();
             base.showMsg(base.getText('操作成功', langType));
-            base.showLoadingSpin();
+            $("#sendBtcDialog").addClass("hidden");
         }, function () {
-            base.hideLoadingSpin();
         })
     })
 });

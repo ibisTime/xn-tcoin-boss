@@ -40,9 +40,9 @@ define([
     $('.wadet-en_khh').text(base.getText('开户行', langType) + ':');
 
     if(langType == 'EN'){
-        $('title').text('orders records-FUNMVP blockchain technology application experimental platform');
+        $('title').text('orders records- blockchain technology application experimental platform');
     }
-    $('title').text('订单记录-FUNMVP区块链技术应用实验平台');
+    $('title').text('订单记录-区块链技术应用实验平台');
 
     getBankData().then(data => {
         data.forEach(item => {

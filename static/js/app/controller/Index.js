@@ -50,7 +50,7 @@ define([
         $('.in-en_dh').text(base.getText('二手车兑换', langType));
         $('.in-en_jjtc').text(base.getText('即将推出，敬请期待', langType));
         $('.in-en_ksdh').text(base.getText('开始兑换', langType));
-        $('.in-en_wsm').text(base.getText('为什么要选择FUNMVP？', langType));
+        $('.in-en_wsm').text(base.getText('为什么要选择？', langType));
         $('.fy_safe').text(base.getText('买卖自由', langType));
         $('.fy_safe_con').html(base.getText('支持多种数字货币的币币交易与场外交易，买卖自由、双向交易、快速方便', langType));
         $('.fy_teliable').text(base.getText('安全可靠', langType));
@@ -59,14 +59,13 @@ define([
         $('.fy_convenient_con').html(base.getText('支持多终端交易，WEB、APP行情及时掌握，快速交易，贴心服务，全球市场，交易随时随地', langType));
 
         $.when(
-            getBanner(),
             getPageAdvertiseUser(),
             getTradePair()
         ).then(() => {
             base.hideLoadingSpin();
         }, base.hideLoadingSpin);
-
         addListener();
+        getBanner();
 
     }
     // 游戏跳转
@@ -162,6 +161,7 @@ define([
                 });
             });
             base.hideLoadingSpin()
+            console.log(bannerHtml)
             $("#swiper .swiper-wrapper").html(bannerHtml);
             initSwiperBanner();
         }, (msg) => {

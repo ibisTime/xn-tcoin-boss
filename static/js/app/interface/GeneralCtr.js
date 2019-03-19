@@ -65,7 +65,7 @@ define([
             }, refresh);
         },
         // 查询banner列表(前端导航)
-        getBanner(config, btype) {
+        getBanner(config) {
             return Ajax.get("630506", {
                 ...config
             }, true);
@@ -75,6 +75,10 @@ define([
             return Ajax.get("805087", {
                 userId: base.getUserId()
             });
+        },
+        //转账至T网
+        transferT(config){
+            return Ajax.post("802800",config)
         }
     };
 })

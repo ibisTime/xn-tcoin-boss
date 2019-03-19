@@ -71,6 +71,8 @@ define([
         getplatTagList();
         getPayTypeMoneyList();
         addListener();
+        var tipHtml='<p class="tip">来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的<span>“如何提取（出售）比特币指南”</span>，了解有关如何保持安全的提示。</p>'
+        $("#content").before(tipHtml);
     }
     // 支付方式
     function getPayTypeList() {
@@ -118,7 +120,7 @@ define([
     function setHtml() {
         base.getDealLeftText();
         $('.head-nav-wrap .index').addClass('active');
-        $('.en_buyer').text(base.getText('买家'));
+        $('.en_buyer').text(base.getText('卖家'));
         $('.en_pay').text(base.getText('支付方法'));
         $('.en_min_max').text(base.getText('最低-最高金额'));
         // $('.en_xe').text(base.getText('限额'));
@@ -134,11 +136,11 @@ define([
             $('.search-wrap .searchType-wrap').css('width', '200px');
             $('.search-wrap .search-con').css('width', '562px');
         }
-        var payTypeMoneyHtml = `<option value="">${base.getText('请选择')}</option>`;
+        var payTypeMoneyHtml = `<option value="">${base.getText('选择货币')}</option>`;
         payTypeMoneyList.map(item => {
             payTypeMoneyHtml += `<option value="${item.key}">${item.value}</option>`
         });
-        var payTypeHtml = `<option value="">${base.getText('请选择')}</option>`;
+        var payTypeHtml = `<option value="">${base.getText('选择支付方式')}</option>`;
         payTypeList.map(item => {
           payTypeHtml += `<option value="${item.key}">${item.value}</option>`
         });
@@ -272,6 +274,12 @@ define([
               paySecondHtml += `<span>${platTagList[item]}</span>`;
             });
           }
+        let customHTML = ``;
+        if(item.customTag){
+            item.customTag.split('||').map((item) => {
+                customHTML += `<span>${item}</span>`;
+            });
+        }
         let country = '/static/images/China.png';
         let countryHtml = ``;
         countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
@@ -292,7 +300,7 @@ define([
                             ${payTypeHtml}
                         </p>
                         <p class="payType_psecond">
-                            ${paySecondHtml}
+                            ${paySecondHtml} ${customHTML}
                         </p>
                     </td>
                     <td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
@@ -343,7 +351,6 @@ define([
         }, base.hideLoadingSpin)
 
     }
-
     function addListener() {
         $("#searchTypeWrap .select-ul li").click(function() {
             var _this = $(this);
@@ -356,7 +363,7 @@ define([
             }
         })
 
-        $("#searchBtn").click(function() {
+        $("#searchBtn,#bestSearchBtn").click(function() {
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type");
 
           //搜广告
@@ -509,9 +516,22 @@ define([
       // })
       $('.buy_sell div').on('click', (e) => {
         let target = e.target;
+        e.stopPropagation();
         if($(target).hasClass('sell')) {
           base.gohref("../trade/sell-list.html");
         }
-      })
+      });
+        $('.buy_sell .buy i').on('click', (e) => {
+            let target = e.target;
+            if($(target).parents('div').hasClass('buy')) {
+                base.gohref("../index.html");
+            }
+        });
+        $('.buy_sell .sell i').on('click', (e) => {
+            let target = e.target;
+            if($(target).parents('div').hasClass('sell')) {
+                base.gohref("../trade/sell-list.html");
+            }
+        });
     }
 });

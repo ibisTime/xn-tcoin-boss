@@ -31,7 +31,7 @@ define([
     init();
 
     function init() {
-        $('title').text(base.getText('个人主页') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
+        $('title').text(base.getText('个人主页') + '-' +base.getText('区块链技术应用实验平台'));
         $('.udet-en_jy').text(base.getText('交易次数', langType));
         $('.udet-en_xr').text(base.getText('信任人数', langType));
         $('.udet-en_hp').text(base.getText('好评度', langType));

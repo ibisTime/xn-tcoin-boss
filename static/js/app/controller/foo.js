@@ -38,8 +38,8 @@ define([
       }
       data.forEach(item => {
         qHtml += `
-                <div class="contact-info" data-url="${item.pic}">
-                    <div class="foo-tip">
+                <div class="contact-info goHref" data-url="${item.pic}" data-type="${item.type}" data-href="${item.type === 'qq' ? 'http://wpa.qq.com/msgrd?v=3&site=qq&menu=yes&uin='+item.url : ''}" >
+                    <div class="foo-tip"  >
                         <img src="${item.type === 'qq' ? '/static/images/qq.png' : '/static/images/weixin.png'}">
                         <div class="foo-qq"><span class="fname">${base.getText('客服')}${base.getText(item.type)}</span>：<span class="foo-url">${item.url}</span></div>
                     </div>
@@ -60,5 +60,14 @@ define([
       let src = $(this).attr('data-url');
       $('#qrcodeF').children('img').prop('src', base.getAvatar(src));
     })
+    // $("#footer .contact-info-wrap .goHref").off("click").click(function () {
+    //     if (base.isLogin() && $(this.attr("data-type") == 'qq')) {
+    //         var thishref = $(this).attr("data-href");
+    //         window.location.href=thishref;
+    //     }else {
+    //         base.goLogin();
+    //         return false;
+    //     }
+    // })
   }
 })

@@ -21,9 +21,9 @@ define([
         $('#loginName').attr('placeholder', base.getText('请输入账号', langType));
         $('#loginPwd').attr('placeholder', base.getText('请输入6-16位的登录密码', langType));
         if(langType == 'EN'){
-            $('title').text('Login-FUNMVP blockchain technology application experimental platform');
+            $('title').text('Login- blockchain technology application experimental platform');
         }
-        $('title').text('登录-FUNMVP区块链技术应用实验平台');
+        $('title').text('登录-区块链技术应用实验平台');
         initSwiperBanner();
         addListener();
         setTimeout(function() {
