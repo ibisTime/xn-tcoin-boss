@@ -125,10 +125,11 @@ define([
                     base.gohref("./setEmail.html");
                 });
             }
-            if (data.mobile) {
+            if (!data.mobile) {
                 $('#currencyBtn').unbind('click');
                 $("#mobile").val(data.mobile).attr('disabled', 'disabled');
                 $("#code_"+data.countryCode).click();
+                $("#goChangeMobile").removeClass('hidden');
             } else {
                 $('.username-wrap .mobile-remind').removeClass('hidden');
                 $('#form-wrapper').removeClass('hidden');
