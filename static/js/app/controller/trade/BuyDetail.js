@@ -99,6 +99,7 @@ define([
             var user = data.user;
             userName = user.nickname;
             tradeCoin = data.tradeCoin ? data.tradeCoin : 'ETH';
+            console.log(tradeCoin)
             let totalCountString = base.formatMoney(data.totalCountString, '', tradeCoin);
 
             if (user.photo) {
@@ -163,6 +164,27 @@ define([
 
           $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
           $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
+
+            var statusList=base.getUrlParam('statusList');
+            var code=base.getUrlParam('code');
+            var status=base.getUrlParam('status');
+            var tradeCoin=base.getUrlParam('tradeCoin');
+            var operationHtml = ''
+            if (statusList == null || statusList.length == 1) {
+                operationHtml = `<div class="publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('编辑', langType)}</div>
+            			<div class="goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('查看', langType)}</div>`
+                //已发布
+            } else {
+                // 待发布
+                if (status == '0') {
+                    operationHtml = `<div class="publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('编辑', langType)}</div>`
+                    //已上架
+                } else if (status == "1") {
+                    operationHtml = `<div class="publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('编辑', langType)}</div>
+                                 <div class="mr20 doDownBtn" data-code="${code}">${base.getText('下架', langType)}</div>`
+                }
+            }
+            $('.buy-operation').html(operationHtml)
 
           $.when(
                 getAccount(data.tradeCoin),
@@ -238,14 +260,19 @@ define([
     //购买
     function buyETH() {
         config.tradeAmount = $("#buyAmount").val();
-        config.count = base.formatMoneyParse($("#buyEth").val(), '', tradeCoin);
+        config.count = base.formatMoneyParse($("#buyEth").val(), '', $('.buy-detail-formwrapper #coin').text());
+        console.log(tradeCoin )
         // config.交易密码 = $('#moneyPow').val();
         base.showLoadingSpin();
         return TradeCtr.buyETH(config).then((data) => {
+            if(document.getElementById('audioBuyDetail').muted != false){
+                document.getElementById('audioBuyDetail').muted = false;
+                document.getElementById('audioBuyDetail').play();
+            }
                 base.showMsg(base.getText('下单成功', langType))
                 setTimeout(function() {
                     base.gohref("../order/order-detail.html?code="+data.code)
-                }, 2000);
+                }, 3000);
                 base.hideLoadingSpin();
             }, base.hideLoadingSpin) //
 
@@ -265,26 +292,25 @@ define([
         })
 
         //立即下单点击
-        $("#buyBtn").click(function() {
+        $(document).on('click','#buyBtn',function() {
+            console.log(111)
             $('.bb-m').text(tradeCoin);
             $("#submitDialog .tradeAmount").html($("#buyAmount").val() + tradeCurrency)
             $("#submitDialog .count").html($("#buyEth").val() + tradeCoin);
             UserCtr.getUser().then((data) => {
-                if (data.tradepwdFlag) {
-                    if (_formWrapper.valid()) {
-                        if ($("#buyAmount").val() != '' && $("#buyAmount").val()) {
-                            // $("#submitDialog").removeClass("hidden")
-                            buyETH();
-                        } else {
-                            base.showMsg(base.getText('请输入您购买的金额', langType))
-                        }
-                    }
-                } else if (!data.tradepwdFlag) {
-                    base.showMsg(base.getText('请先设置交易密码', langType))
-                    setTimeout(function() {
-                        base.gohref("../user/setTradePwd.html?type=1")
-                    }, 1800)
+                console.log(111)
+                if ($("#buyAmount").val() != '' && $("#buyAmount").val()) {
+                    // $("#submitDialog").removeClass("hidden")
+                    buyETH();
+                } else {
+                    base.showMsg(base.getText('请输入您购买的金额', langType))
                 }
+                // else if (!data.tradepwdFlag) {
+                //     base.showMsg(base.getText('请先设置交易密码', langType))
+                //     setTimeout(function() {
+                //         base.gohref("../user/setTradePwd.html?type=1")
+                //     }, 1800)
+                // }
                 // else if (!data.realName) {
                 //     base.showMsg("请先进行身份验证")
                 //     setTimeout(function() {
@@ -340,7 +366,22 @@ define([
                 }, base.hideLoadingSpin)
             }, base.emptyFun)
         })
+        $(document).on("click", ".buy-operation .doDownBtn", function() {
+            var adsCode = $(this).attr("data-code");
+            base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType)).then(() => {
+                base.showLoadingSpin()
+                TradeCtr.downAdvertise(adsCode).then(() => {
+                    base.hideLoadingSpin();
 
+                    base.showMsg(base.getText('操作成功', langType));
+                    setTimeout(function() {
+                        base.showLoadingSpin();
+                        config.start = 1;
+                        getPageAdvertise(true)
+                    }, 1500)
+                }, base.hideLoadingSpin)
+            }, base.emptyFun)
+        })
         //聊天按钮点击
         $(".det-lx").click(function() {
             base.showLoadingSpin();

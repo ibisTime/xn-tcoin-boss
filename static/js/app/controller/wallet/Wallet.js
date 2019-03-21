@@ -893,7 +893,8 @@ define([
         AccountCtr.getAccount().then((data) => {
             data.accountList.forEach(item => {
                 if (item.currency.toLowerCase() === 'btc') {
-                    $(".wallet-account-wrap .s-bb").text(base.formatMoney(item.amount) + 'BTC');
+                    console.log(item.amount)
+                    $(".wallet-account-wrap .s-bb").text(base.formatMoney(item.amount,'','BTC') + 'BTC');
                     $(".wallet-account-wrap .y-amount").text(' ≈ ' + base.formatMoney(item.amountUSD) + 'USD');
                     $('.wallet-account-wrap .freez-amount a').text(item.frozenAmount);
                     $('.sendBtc-form-wrap p span').text(item.amount)

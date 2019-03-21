@@ -129,6 +129,12 @@ define([
 					<td>
 						<div class="txt2"><p>${base.getPercentum(item.toUserInfo.userStatistics.beiHaoPingCount,item.toUserInfo.userStatistics.beiPingJiaCount)}</p><samp>${base.getText('好评率', langType)}</samp></div>
 					</td>
+					<td>
+					    <div class="txt2"><p>${base.formatMoney(item.toUserInfo.userStatistics.totalTradeCountBtc,'','BTC')} + BTC</p><samp>${base.getText('历史交易', langType)}</samp></div>
+					</td>
+					<td>
+					    跟他交易过${item.toUserInfo.userStatistics.betweenTradeTimes}次
+                    </td>
 				</tr>`;
         }
 

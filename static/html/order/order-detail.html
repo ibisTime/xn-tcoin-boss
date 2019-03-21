@@ -11,6 +11,7 @@
 <body class="bg_fff">
     <link rel="import" href="../top/top.html?__inline">
     <!--不同状态  卖家 买家展示不同-->
+    <audio muted src="/images/audio-message2.mp3"  id="audioOrderDetail"></audio>
     <div class="orderDetail-out-container">
         <div class="orderDetail-container chat-container">
 
@@ -23,7 +24,7 @@
                 <div class="orderDetail-left-infos orderDetail-border">
                     <div class="orderDetail-left-todo">
                         <p class="todo">请通过<span class="todo-payType"></span>发送<span class="amount"></span></p>
-                        <p class="todo-tips">6.74 US Dollar 将加载至您的比特币钱包</p>
+                        <p class="todo-tips"><span>6.74 US Dollar</span>  将加载至您的比特币钱包</p>
                     </div>
                     <div class="orderDetail-left-operations">
                         <div class="paid operation-item">
@@ -72,7 +73,7 @@
                 <div class="orderDetail-left-infos orderDetail-border">
                     <div class="orderDetail-left-todo">
                         <p class="todo">请通过<span class="todo-payType"></span>发送<span class="amount"></span></p>
-                        <p class="todo-tips">6.74 US Dollar 将加载至您的比特币钱包</p>
+                        <p class="todo-tips"><span>6.74 US Dollar</span>  将加载至您的比特币钱包</p>
                     </div>
                     <div class="orderDetail-arbitration-befer">
                         <div class="orderDetail-left-time">
@@ -122,13 +123,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="wait-release-btc-operation">
+
+                </div>
             </div>
             <div class="orderDetail-left hidden before-release-btc">
                 <div class="orderDetail-left-status">交易已开始</div>
                 <div class="orderDetail-left-infos orderDetail-border">
                     <div class="orderDetail-left-todo">
                         <p class="todo">请通过<span class="todo-payType"></span>发送<span class="amount"></span></p>
-                        <p class="todo-tips">6.74 US Dollar 将加载至您的比特币钱包</p>
+                        <p class="todo-tips"><span>6.74 US Dollar</span> 将加载至您的比特币钱包</p>
                     </div>
                     <div class="orderDetail-left-release">
                         <span class="release-btn">放行比特币</span>
@@ -192,7 +196,7 @@
                         </div>
                         <div class="quantity">
                             <span class="finished-bottom-item-title">交易数量</span>
-                            <span class="finished-bottom-item-content">25826.588 CNY</span>
+                            <span class="finished-bottom-item-content">CNY</span>
                         </div>
                         <div class="amount">
                             <span class="finished-bottom-item-title">交易金额</span>
@@ -526,7 +530,7 @@
     <link rel="import" href="../footer.html?__inline">
     <script>
         require(['domReady!'], function (doc) {
-            require(['app/controller/order/OrderDetail']);
+            require(['app/controller/order/OrderDetail','app/controller/order/OrderList']);
         });
     </script>
 </body>

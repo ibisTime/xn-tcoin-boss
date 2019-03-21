@@ -137,7 +137,7 @@ define([
         $('#commentDialog .subBtn').html(base.getText('提交'));
 
       $('#paidDialog .fy_qryzf').html(base.getText('确认已支付'));
-      $('#paidDialog .fy_content').html(base.getText('注意：如以付款，请及时跟商家联系，让商家及时放行比特币；如商家未放行比特币请及时申请仲裁'));
+      $('#paidDialog .fy_content').html(base.getText('注意：如已付款，请及时跟商家联系，让商家及时放行比特币；如商家未放行比特币请及时申请仲裁'));
       $('#paidDialog .paid-subBtn').html(base.getText('确认'));
       $('#paidDialog .paid-canBtn').html(base.getText('取消'));
 
@@ -229,21 +229,29 @@ define([
             }
           });
 
+          $('.wait .orderDetail-left-todo .todo-tips span').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
+          $('.wait .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCurrency+'被安全的保存在托管处');
           $('.wait .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
           $('.wait .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
           $('.wait .orderDetail-left-more-info .trade-id .more-info-value').html(code);
+          $('.wait .orderDetail-left-more-info .frate .more-info-value').html(data.tradePrice + ' USD/BTC');
           $('.wait .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
 
 
-          $('.wait-release-btc .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
+          $('.wait-release-btc .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCurrency+'被安全的保存在托管处');
           $('.wait-release-btc .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
+          $('.wait-release-btc .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
+          $('.wait-release-btc .orderDetail-left-todo .todo-tips span').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
           $('.wait-release-btc .orderDetail-left-more-info .trade-id .more-info-value').html(code);
+          $('.wait-release-btc .orderDetail-left-more-info .frate .more-info-value').html(data.tradePrice + ' USD/BTC');
           $('.wait-release-btc .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
 
-
+          $('.before-release-btc .orderDetail-left-todo .todo-tips span').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
+          $('.before-release-btc .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCurrency+'被安全的保存在托管处');
           $('.before-release-btc .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
           $('.before-release-btc .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
           $('.before-release-btc .orderDetail-left-more-info .trade-id .more-info-value').html(code);
+          $('.before-release-btc .orderDetail-left-more-info .frate .more-info-value').html(data.tradePrice + ' USD/BTC');
           $('.before-release-btc .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
 
 
@@ -251,6 +259,8 @@ define([
           $('.finished .finished-bottom .price-quantity-amount .price .finished-bottom-item-content').html(data.tradePrice + data.tradeCurrency);
           $('.finished .finished-bottom .price-quantity-amount .amount .finished-bottom-item-content').html(data.tradeAmount + data.tradeCurrency);
           $('.finished .finished-bottom .message .price .finished-bottom-item-content').html(data.leaveMessage);
+          $('.finished .finished-bottom .quantity .finished-bottom-item-content').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
+          $('.finished .finished-bottom .amount .finished-bottom-item-content').html(data.tradeAmount + data.tradeCurrency);
 
           let startTime = new Date();
           let endTime = new Date(Date.parse(data.invalidDatetime));
@@ -1307,7 +1317,7 @@ define([
       });
 
       //申請仲裁按钮 点击
-      $(".arbitrate-btn").on("click", function() {
+      $(document).on("click",'.arbitrate-btn', function() {
           $("#arbitrationDialog").removeClass("hidden");
       });
 
@@ -1384,6 +1394,15 @@ define([
                     $("#form-wrapper .textarea-item").val("")
                 }, base.hideLoadingSpin)
             }
+        });
+        
+        //取消仲裁
+        $(".orderDetail-cancel").click(function () {
+            TradeCtr.arbitrationlCancel(code).then(() => {
+                base.hideLoadingSpin();
+                base.showMsg(base.getText('操作成功'));
+                auSx();
+            }, base.hideLoadingSpin)
         })
 
         //交易评价按钮 点击
@@ -1443,7 +1462,9 @@ define([
           TradeCtr.cancelOrder(code).then(() => {
             base.hideLoadingSpin();
             base.showMsg(base.getText('操作成功'));
-            base.gohref('./order-list.html');
+              setTimeout(function() {
+                  base.gohref('./order-list.html');
+              }, 1500)
           }, base.hideLoadingSpin);
         });
 
@@ -1456,11 +1477,15 @@ define([
       // 支付弹窗 - 确定
       $('.paid-dialog .paid-subBtn').click(() => {
         TradeCtr.payOrder(code).then(() => {
+          if(document.getElementById('audioOrderDetail').muted != false){
+              document.getElementById('audioOrderDetail').muted = false;
+              document.getElementById('audioOrderDetail').play();
+          }
           base.hideLoadingSpin();
           base.showMsg(base.getText('操作成功'));
           setTimeout(function() {
             auSx();
-          }, 1500)
+          }, 3000)
         }, base.hideLoadingSpin)
       });
 

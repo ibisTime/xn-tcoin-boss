@@ -53,14 +53,14 @@ define([
         base.getDealLeftText();
         $('.progress').text(base.getText('进行中'));
         $('.end').text(base.getText('已结束'));
-        $('.right-wrap .nickname').text(base.getText('交易伙伴'));
+        $('.b_e_b .nickname').text(base.getText('交易伙伴'));
         $('.code').text(base.getText('订单编号'));
-        $('.type').text(base.getText('类型'));
-        $('.amount').text(base.getText('交易金额'));
-        $('.quantity').text(base.getText('交易数量'));
+        $('.b_e_b .type').text(base.getText('类型'));
+        $('.b_e_b  .amount').text(base.getText('交易金额'));
+        $('.b_e_b  .quantity').text(base.getText('交易数量'));
         $('.createDatetime').text(base.getText('创建时间'));
         $('.status').text(base.getText('交易状态'));
-        $('.operation').text(base.getText('交易操作'));
+        $('.operation').text(base.getText('状态'));
         $('.fy_zwdd').text(base.getText('暂无订单'));
 
         $('#arbitrationDialog .fy_sqzc').text(base.getText('申请仲裁'));
@@ -108,11 +108,11 @@ define([
             if (data.list.length) {
                 var html = "";
                 lists.forEach((item, i) => {
-                    html += buildHtml(item);
+                    html += buildHtml(item,data);
                 });
                 $("#content-order").html(html);
                 isOrderList = true;
-                addUnreadMsgNum();
+                // addUnreadMsgNum();
 
                 $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
             } else {
@@ -131,7 +131,7 @@ define([
         }, base.hideLoadingSpin)
     }
 
-    function buildHtml(item) {
+    function buildHtml(item,data) {
         //头像
         var photoHtml = "";
         //操作按钮
@@ -175,7 +175,7 @@ define([
         //操作按鈕
         //已支付，待解冻
         if (item.status == "1") {
-            operationHtml += `<div class="am-button arbitrationBtn"  data-ocode="${item.code}">${base.getText('申请仲裁')}</div>`
+            operationHtml += `<div class="am-button arbitrationBtn arbitrate-btn"  data-ocode="${item.code}">${base.getText('申请仲裁')}</div>`
         }
 
         //待下单
@@ -203,9 +203,12 @@ define([
             let countNum = parseFloat(base.formatMoney(item.countString, '', item.tradeCoin));
             quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(8)  + item.tradeCoin : '-';
         }
+        console.log(operationHtml)
+        $(".wait-release-btc-operation").html(operationHtml)
+        var totalCount = data.totalCount.toFixed(8)
         return `<tr data-code="${item.code}">
-					<td class="nickname" style="border-left:1px solid #eee;">
-                        <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.sellUser : item.buyUser}&adsCode=${item.code}">
+					<td class="nickname">
+                        <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.sellUser : item.buyUser}&adsCode=${item.code}&bsComment=${item.bsComment}&sellUser=${item.sellUser}">
 							${photoHtml}
 						</div>
 						<samp class="name k-name">${user.nickname ? user.nickname : '-'}</samp>
@@ -213,16 +216,12 @@ define([
 					<td class="code">${item.code.substring(item.code.length-8)}</td>
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
 					<td class="amount">${item.status!="-1" && item.tradeAmount?item.tradeAmount+'CNY':'-'}</td>
-					<td class="quantity">${quantity ? quantity : '-'}</td>
+					<td class="quantity">${totalCount}BTC</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
-					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
-                    <td class="operation">
-                        ${operationHtml}
-                    </td>
-                    <td class="goDetail" style="padding-right: 0;">
-                        <samp class="unread goHref fl" data-href="../order/order-detail.html?code=${item.code}"></samp>
-						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}"></i>
-					</td>
+					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]} 
+					<samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}"></samp>
+						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${item.buyUser}&status=${item.status}&type=${item.type}&adsCode=${item.adsCode}&buyUserInfo=${item.buyUserInfo}"> ></i></td>
+                  
 				</tr>`;
     }
 
@@ -284,11 +283,14 @@ define([
                 base.showLoadingSpin()
                 TradeCtr.payOrder(orderCode).then(() => {
                     base.hideLoadingSpin();
+                    if(document.getElementById('audioOrderDetail').muted != false){
+                        document.getElementById('audioOrderDetail').muted = false;
+                    }
                     base.showMsg(base.getText('操作成功'));
                     setTimeout(function() {
                         base.showLoadingSpin();
                         getPageOrder(true)
-                    }, 1500)
+                    }, 2000)
                 }, base.hideLoadingSpin)
             }, base.emptyFun)
         })

@@ -16,6 +16,7 @@ define([
         init();
         if(base.isLogin()){
             // initSocket();
+            getBTC();
         }
     });
 
@@ -110,7 +111,7 @@ define([
             let activeNewsHtml = '';
             data.forEach(item => {
                 if(item.isNew == 0){
-                    messageHtml = `<li class="goMessageHref" data-href="../user/user.html" data-refNo="${item.refNo}" data-readId="${item.readId}">
+                    messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}" data-refNo="${item.refNo}" data-readId="${item.readId}">
                             <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                             <div class="message-text">
                                 <p class="message-title">${item.title}</p>
@@ -119,7 +120,7 @@ define([
                         </li>`;
                     $('.down-wrap-message ul').append(messageHtml);
                 }else{
-                    messageHtml = `<li class="goMessageHref" data-href="../user/user.html" data-refNo="${item.refNo}" data-readId="${item.readId}">
+                    messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}" data-refNo="${item.refNo}" data-readId="${item.readId}">
                             <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                             <div class="message-text">
                                 <p class="message-title">${item.title}</p>
@@ -130,13 +131,20 @@ define([
                     if(item.type == 1){
                         console.log(data)
                         var refNo;
+                        var readId;
                         data.forEach(item => {
                             refNo = item.refNo;
+                            readId = item.readId;
                         })
 
-                        document.getElementById('audio-message2').play();
+                        setTimeout(() => {
+                            if(document.getElementById('audio-message2').muted != false){
+                                document.getElementById('audio-message2').muted = false;
+                                document.getElementById('audio-message2').play();
+                            }
+                        }, 2000);
                         TradeCtr.getOrderDetail(refNo).then((data) => {
-                            activeNewsHtml =`<li class="goHref" data-href="../user/user.html" >
+                            activeNewsHtml =`<li class="goMessageHref" data-href="../order/order-detail.html?code=${refNo}" data-readId="${item.readId}">
                             <span> <button>聊天</button></span>
                             <span>${data.buyUserInfo.nickname}</span>
                             <span>${data.tradeAmount}  ${data.tradeCurrency}</span>
@@ -149,7 +157,12 @@ define([
                             $('.active-news ul').append(activeNewsHtml);
                         });
                     }else if(item.type == 2){
-                        document.getElementById('audio-message1').play();
+                        setTimeout(() => {
+                            if(document.getElementById('audio-message1').muted != false){
+                                document.getElementById('audio-message1').muted = false;
+                                document.getElementById('audio-message1').play();
+                            }
+                        }, 2000);
                     }
                 }
             })
@@ -232,7 +245,19 @@ define([
             }
         }
     }
-
+    function getBTC() {
+        let params = {};
+        var payTypeMoney= $('.payTypeMoney option:selected').val();
+        if(payTypeMoney == '' || payTypeMoney == undefined){
+            payTypeMoney ='USD'
+        }
+        params.referCurrency = payTypeMoney;
+        params.symbol = 'BTC';
+        console.log(params)
+        TradeCtr.getBtc(params).then((data) => {
+            $('.market-price').html('目前比特币市场价'+data.mid +'USD')
+        });
+    }
     function addListener() {
 
         $("#headLogout").click(function () {
@@ -326,5 +351,30 @@ define([
 
             });
         })
+        $("body").on('click', '.active-news ul li',function () {
+            if($(this).length == 0){
+                $('#head-user-wrap .head-user .msg_num').hide();
+            }
+            var readId = $(this).attr('data-readId');
+            console.log(readId);
+            var params ={"id":readId}
+            TradeCtr.readNews(params).then((data) => {
+                if (!base.isLogin()) {
+                    base.goLogin();
+                    return false;
+                } else {
+                    var thishref = $(this).attr("data-href");
+                    base.gohref(thishref)
+                }
+
+            });
+        });
+        $(document).on('click',function () {
+            console.log('我被点击了')
+            if(document.getElementById('audio-message1').muted ||  document.getElementById('audio-message2').muted != false){
+                document.getElementById('audio-message1').muted = false;
+                document.getElementById('audio-message2').muted = false;
+            }
+        });
     }
 });

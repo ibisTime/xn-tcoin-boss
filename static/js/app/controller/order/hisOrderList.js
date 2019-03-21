@@ -20,7 +20,7 @@ define([
   var config = {
     start: 1,
     limit: 10,
-    statusList: ["2", "3", "4"]
+    statusList: ["2", "3", "4", "6", "7"]
   };
   var unreadMsgList = {},
     lists = [];
@@ -48,7 +48,7 @@ define([
   function setHtml() {
     base.getDealLeftText();
     $('.end').text(base.getText('已结束'));
-    $('.right-wrap .nickname').text(base.getText('交易伙伴'));
+    $('.b_e_b .nickname').text(base.getText('交易伙伴'));
     $('.code').text(base.getText('订单编号'));
     $('.type').text(base.getText('类型'));
     $('.amount').text(base.getText('交易金额'));
@@ -103,7 +103,7 @@ define([
       if (data.list.length) {
         var html = "";
         lists.forEach((item, i) => {
-          html += buildHtml(item);
+          html += buildHtml(item,data);
         });
         $("#content-order").html(html);
         isOrderList = true;
@@ -126,7 +126,7 @@ define([
     }, base.hideLoadingSpin)
   }
 
-  function buildHtml(item) {
+  function buildHtml(item,data) {
     //头像
     var photoHtml = "";
     //操作按钮
@@ -196,9 +196,11 @@ define([
     }
     if (item.status != "-1") {
       let countNum = parseFloat(base.formatMoney(item.countString, '', item.tradeCoin));
-      quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(3)  + item.tradeCoin : '-';
+      quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(8)  + item.tradeCoin : '-';
     }
-    return `<tr data-code="${item.code}">
+      var totalCount = data.totalCount.toFixed(8);
+      return `<tr data-code="${item.code}">
+                    <td><input  type="checkbox" value="" /></td>
 					<td class="nickname" style="border-left:1px solid #eee;">
                         <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.sellUser : item.buyUser}&adsCode=${item.code}">
 							${photoHtml}
@@ -208,16 +210,15 @@ define([
 					<td class="code">${item.code.substring(item.code.length-8)}</td>
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
 					<td class="amount">${item.status!="-1" && item.tradeAmount?item.tradeAmount+'CNY':'-'}</td>
-					<td class="quantity">${quantity ? quantity : '-'}</td>
+					<td class="quantity">${totalCount}BTC</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
 					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
                     <td class="operation">
-                        ${operationHtml}
+                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}">聊天</div>  
+                        <samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}"></samp>
+						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}"> ></i>
                     </td>
-                    <td class="goDetail" style="padding-right: 0;">
-                        <samp class="unread goHref fl" data-href="../order/order-detail.html?code=${item.code}"></samp>
-						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}"></i>
-					</td>
+                  
 				</tr>`;
   }
 

@@ -144,7 +144,7 @@ table {
         }
     }
     .code {
-        width: 90px !important;
+        //width: 90px !important;
     }
 }
 
@@ -813,6 +813,7 @@ table {
                 display: flex;
                 justify-content: space-between;
                 border-bottom: 1px solid #ccc;
+                cursor: pointer;
                 span{
                     line-height: 32px;
                     button{
@@ -2069,6 +2070,7 @@ table {
 .trust-wrap {
     .trust-form {
         width: 100%;
+        border-top: 1px solid #eee;
         td {
             padding: 30px 10px;
             border-top: 1px solid #eee;
@@ -4067,8 +4069,9 @@ table {
             }
         }
         .nickname{
-            width: 270px;
-            p: first-child {
+            //width: 270px;
+
+            p:first-child {
                 display: flex;
                 align-items: center;
             }
@@ -4243,6 +4246,19 @@ table {
                 }
                 span {
                     color: #7d7d7d;
+                }
+            }
+            .buy-operation{
+                margin-top: 50px;
+                div{
+                    display: inline-block;
+                    width: 90px;
+                    line-height: 40px;
+                    border: 1px solid #999;
+                    text-align: center;
+                    border-radius: 2px;
+                    margin-right: 50px;
+                    cursor: pointer;
                 }
             }
         }
@@ -4592,28 +4608,35 @@ table {
                 color: $red-color;
             }
             .operation {
-                width: 170px;
                 padding-right: 0;
                 text-align: center;
             }
+            .icon-detail{
+                display: inline-block;
+                margin-left: 20px;
+                font-size: 20px;
+                color: #999;
+            }
             .nickname {
-                width: 135px !important;
+                //width: 135px !important;
                 .name {
                     width: auto;
                     margin-left: 12px;
                 }
             }
             .code{
-                width: 90px !important;
+                //width: 90px !important;
             }
             .type{
-                width: 80px !important;
+                //width: 80px !important;
             }
             .photoWrap {
                 width: 40px;
                 .photo {
                     width: 40px;
                     height: 40px;
+                    position: relative;
+                    //right: -50px;
                 }
                 .noPhoto {
                     font-size: 20px;
@@ -4628,6 +4651,8 @@ table {
             }
             tr td {
                 height: 70px;
+                text-align: center;
+                border-bottom: 1px solid #eee;
                 &:first-child {
                     padding-left: 20px;
                 }
@@ -4635,17 +4660,28 @@ table {
                     padding-right: 20px;
                 }
             }
+            tr:last-child{
+                td{
+
+                }
+            }
             .code {
                 padding-right: 10px;
             }
             .type {
-                width: 100px;
+                //width: 100px;
             }
             .status {
-                width: 110px;
+                //width: 110px;
+            }
+            .view-details{
+                display: inline-block;
+                margin-left: 20px;
+                font-size: 20px;
+                color: #999;
             }
             .createDatetime {
-                width: 160px;
+                //width: 160px;
             }
             tbody tr:nth-child(even) {
                 background-color: #fff;
@@ -4957,6 +4993,23 @@ table {
             font-size: 20px;
             margin-bottom: 18px;
           }
+        }
+        .step2-accuracy{
+            display: none;
+            .step2AccuracyTags{
+                display: inline-block;
+                width: 100%;
+                height: 60px !important;
+                border: 1px solid #ccc;
+                font-size: 20px;
+                padding-left: 20px;
+                color: #666;
+                -webkit-border-radius: 2px;
+                border-radius: 2px;
+            }
+            .select2-container{
+                width: 920px !important;
+            }
         }
         .jyxe-tips {
           width: 670px;
@@ -5351,8 +5404,9 @@ table {
     .order-container .titleWrap .wrap samp {
         color: #333;
     }
-    .order-container .trade-list-wrap .trade-wrap tr td {
+    .order-container .order-container .trade-wrap tr td {
         height: 60px;
+        text-align: center;
         &:first-child {
             padding-left: 30px;
         }
@@ -5409,6 +5463,7 @@ table {
         .trade-list-wrap .trade-wrap tr td {
             width: auto;
             height: 60px;
+            text-align: center;
             &:first-child {
                 padding-left: 20px;
             }
@@ -5521,6 +5576,7 @@ table {
         color: #878787;
         margin-bottom: 12px;
       }
+
       .orderDetail-left-infos {
         padding: 20px;
         .orderDetail-left-todo {
@@ -5710,6 +5766,19 @@ table {
             }
           }
         }
+      }
+      .wait-release-btc-operation{
+          margin-top: 50px;
+          div{
+              display: inline-block;
+              width: 90px;
+              line-height: 40px;
+              border: 1px solid #999;
+              text-align: center;
+              -webkit-border-radius: 2px;
+              border-radius: 2px;
+              margin-right: 50px;
+          }
       }
       .finished-top {
         border-bottom: 1px solid $border-color;
@@ -6410,6 +6479,9 @@ table {
         padding-bottom: 0;
         text-align: center;
     }
+    .arbitration-content{
+        margin-top: 30px;
+    }
     .am-modal-footer {
         align-items: center;
         padding: 0 50px;
@@ -6850,6 +6922,7 @@ table {
 
 .k-order-list .k-name {
     margin-top: 10px;
+    line-height: 40px;
 }
 
 .sp-wrz{
@@ -8132,6 +8205,22 @@ html {
 }
 .jy-con-left .fy_ky1{
   margin-right: 5px;
+}
+#content-order{
+    input{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1px solid #666;
+        margin-top: 10px;
+        margin-left: -20px;
+    }
+    input:checked{
+        background: #999;
+    }
+    .photo{
+        //top: 20px;
+    }
 }
 
 // 媒体查询

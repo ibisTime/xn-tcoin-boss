@@ -30,6 +30,8 @@ define([
     let tradeCoin = '';
 
     let tradeType = 1;
+    //step2
+    let step2TagInitData = [];
     // step3
     let step3TagInitData = [];
     let targetArea = '';    // 目标国家
@@ -89,13 +91,13 @@ define([
     }
     function salesCalculation() {
         let inputValue =$('#zqInput').val()
+        let price = $('.step2-zq-tips .step2-za-tip-market-price .step2-zq-tip-weighter').text();
         let tipMyprice =$('.step2-zq-tips .step2-za-tip-my-price .step2-zq-tip-weighter');
         let tipRate = $('.step2-zq-tips .step2-za-tip-rate .step2-zq-tip-weighter');
-        let price = $('.step2-zq-tips .step2-za-tip-market-price .step2-zq-tip-weighter').text();
         let myprice = price*(1+inputValue/100);
         tipMyprice.html(myprice.toFixed(8));
         if(inputValue != ''){
-            let value = (inputValue/100 + 1).toFixed(8)
+            let value = (inputValue/100 + 1).toFixed(8);
             tipRate.html(value  + '%');
         }else{
             tipRate.html(0 + '%');
@@ -115,9 +117,31 @@ define([
         base.hideLoadingSpin();
         $('.step2-zq-tips .step2-za-tip-market-price .step2-zq-tip-weighter').html(data1[0].lastPrice);
         $('.step2-zq-tips .step2-zq-tip-unit ,.advertise-step2-jyxe .step2-input .step2-input-tip,.min-price .step2-input-tip').html(data1[0].referCurrency);
-        salesCalculation()
+          salesCalculation()
       }, base.hideLoadingSpin);
       addListener();
+      GeneralCtr.getDictList({ parentKey: 'trade_price_type' }).then((data) => {
+          base.hideLoadingSpin();
+          console.log(data);
+          data.map((item) => {
+              item.text = item.dvalue;
+          });
+          step2TagInitData = data;
+          let step3SelectedData = [];
+          accuracyTags(step3SelectedData)
+          let step3CountryListHtml = '';
+          $('#targetArea').html(step3CountryListHtml);
+      }, base.hideLoadingSpin);
+    }
+    function accuracyTags(step2SelectedData) {
+        $("#step2AccuracyTags").select2({
+            tags: true,                          //支持新增，默认为false
+            maximumSelectionLength: 3,           //最多能够选择的个数
+            multiple: true,                      //支持多选，默认为false
+            data: step2TagInitData,                      //下拉框绑定的数据
+            allowClear: true,                    //支持清空，默认为false
+            placeholder: '请选择标签'      //提示语
+        }).val(step2SelectedData).trigger('change');  //多选情况下给选中项的赋值
     }
   // step3 - 初始化方法
   function step3Init() {
@@ -312,12 +336,18 @@ define([
             $("#price").val((Math.floor(data.truePrice * 100) / 100).toFixed(2));
 
             //step2
-            $("#zqInput").val(data.premiumRate * 100);
+            $("#zqInput").val(data.premiumRate);
+            salesCalculation();
+            // var fixTrade = data.fixTrade;
+            // fixTrade.split('||');
+            // $("#step2AccuracyTags").select2("val", [fixTrade]);
             $("#minInput").val(data.minTrade);
             $("#maxInput").val(data.maxTrade);
             $("#cancelTimeInput").val(data.payLimit)
             //step3
-            $("#step3Tags").select2("val", [data.platTag]);
+            var platTag = data.platTag;
+            platTag.split('||');
+            $("#step3Tags").select2("val", [platTag]);
             $("#myTagInput").val(data.customTag);
             $("#clauseTextarea").val(data.item);
             $("#explainTextarea").val(data.leaveMessage);
@@ -424,8 +454,12 @@ define([
         }
         base.showLoadingSpin();
         let platTag = $('#step3Tags').val().join('||');
+        let accuracyTags = sessionStorage.getItem('accuracyTags')
+        accuracyTags = accuracyTags.split(',').join('||').toString()
+        console.log(accuracyTags)
         return TradeCtr.submitAdvertise({
           allowCountry: targetArea,
+          fixTrade:accuracyTags,
           customTag: $('#myTagInput').val(),
           isValidateEmail: step3ConditionConfig.email,
           isValidateIdentity: step3ConditionConfig.id,
@@ -447,9 +481,9 @@ define([
         }).then((res) => {
           base.showMsg(base.getText('操作成功', langType));
           if (Number(sessionStorage.getItem('tradeType')) == '0') {
-              base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
-          } else {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
+          } else {
+              base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
           }
           base.showLoadingSpin();
         }, base.hideLoadingSpin);
@@ -612,13 +646,25 @@ define([
 
       // step2 - 下一步按钮点击事件
       $('.advertise-step2-btn').on('click', () => {
-        if(!$('#zqInput').val() || !$('#minInput').val() || !$('#maxInput').val() || !$('#cancelTimeInput').val()) {
+        if(!$('#zqInput').val() ||  !$('#cancelTimeInput').val()) {
           base.showMsg(base.getText('请填写所有信息'));
           return;
+        }
+        if($('.jzxe').attr('data-type') == 1){
+            if(!$('#minInput').val() || !$('#maxInput').val()){
+                base.showMsg(base.getText('请填写所有信息'));
+                    return
+            }
+        }else {
+            if(!$("#step2AccuracyTags").val()){
+                base.showMsg(base.getText('请填写所有信息'));
+                return
+            }
         }
         sessionStorage.setItem('zq', $('#zqInput').val());
         sessionStorage.setItem('min', $('#minInput').val());
         sessionStorage.setItem('max', $('#maxInput').val());
+        sessionStorage.setItem('accuracyTags', $('#step2AccuracyTags').val());
         sessionStorage.setItem('cancelTime', $('#cancelTimeInput').val());
         // sessionStorage.setItem('minPrice', $('#minPriceInput').val());
           if(code != ''){
@@ -748,6 +794,21 @@ define([
           tradeType = 0;
         }
       });
+      
+      //精准查找切换
+        $('.jzxe').click(function () {
+            if($(this).attr('data-type') == 1){
+                $('.jzxe').text('使用交易金额');
+                $('.step2-min,.step2-max').hide();
+                $('.step2-accuracy').show();
+                $(this).attr('data-type',2)
+            }else{
+                $('.jzxe').text('使用精准限额');
+                $('.step2-min,.step2-max').show();
+                $('.step2-accuracy').hide();
+                $(this).attr('data-type',1)
+            }
+        })
 
 
         base.hideLoadingSpin();
@@ -775,9 +836,14 @@ define([
         }
         base.showLoadingSpin();
         let platTag = $('#step3Tags').val().join('||');
+
+        let accuracyTags = sessionStorage.getItem('accuracyTags')
+        accuracyTags = accuracyTags.split(',').join('||').toString()
+        console.log(accuracyTags)
         return TradeCtr.editAdvertise({
             adsCode:code,
             allowCountry: targetArea,
+            fixTrade:accuracyTags,
             customTag: $('#myTagInput').val(),
             isValidateEmail: step3ConditionConfig.email,
             isValidateIdentity: step3ConditionConfig.id,
@@ -800,9 +866,9 @@ define([
         }).then((res) => {
             base.showMsg(base.getText('操作成功', langType));
             if (Number(sessionStorage.getItem('tradeType')) == '0') {
-                base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
-            } else {
                 base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
+            } else {
+                base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
             }
             base.showLoadingSpin();
         }, base.hideLoadingSpin);

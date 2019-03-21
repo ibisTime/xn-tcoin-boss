@@ -5,6 +5,7 @@
     <link rel="import" href="../head.html?__inline">
     <title></title>
     <!--SCRIPT_PLACEHOLDER-->
+    <link href="./select2/dist/css/select2.css" rel="stylesheet" />
     <link rel="import" href="../top/top-zendesk.html?__inline">
 </head>
 
@@ -41,7 +42,7 @@
             </div>
         </div>
        <div class="advertise-step2-jyxe">
-           <p><span class="step2-title step2-jyxe-title">我的交易限额</span><span class="jzxe">使用精准限额</span></p>
+           <p><span class="step2-title step2-jyxe-title">我的交易限额</span><span class="jzxe" data-type="1">使用精准限额</span></p>
            <div class="step2-border">
                <div class="step2-min">
                    <span class="min">最低交易金额</span>
@@ -55,6 +56,11 @@
                    <div class="step2-input step2-max-input">
                        <input type="text" class="max-input" id="maxInput">
                        <span class="step2-input-tip max"></span>
+                   </div>
+               </div>
+               <div class="step2-accuracy">
+                   <div class="step2-select">
+                       <select id="step2AccuracyTags" multiple="multiple" type="text" class="step2-input step2-tags"></select>
                    </div>
                </div>
                <div class="jyxe-tips">
@@ -103,7 +109,7 @@
     <link rel="import" href="../footer.html?__inline">
     <script>
         require(['domReady!'], function (doc) {
-            require(['app/controller/trade/Advertising']);
+            require(['app/controller/trade/Advertising', 'select2/dist/js/select2.full']);
         });
     </script>
 </body>

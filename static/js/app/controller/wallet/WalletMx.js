@@ -8,7 +8,8 @@ define([
     'app/controller/foo'
 ], function (base, pagination, AccountCtr, GeneralCtr, UserCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var accountNumber='';
+    var config='';
+    var accountNumber =''
     var bizTypeList = {
         '0': [],
         '1': ['charge'],
@@ -40,7 +41,6 @@ define([
     }
 
     function init() {
-        accountNumber = sessionStorage.getItem('accountNumber'); // 账户编号
         // $('.tradeRecord-wrap-title').text(base.getText('交易明细', langType));
         // $('.wamx-en_qb').text(base.getText('全部', langType));
         // $('.wamx-en_cb').text(base.getText('充币', langType));
@@ -71,12 +71,15 @@ define([
             data1.forEach(function (item) {
                 bizTypeValueList[item.dkey] = item.dvalue
             })
-            var config = {
-                start: 1,
-                limit: 10,
-                accountNumber: accountNumber
-            };
-            getPageFlow(config);
+            setTimeout(function(){
+                accountNumber = sessionStorage.getItem('accountNumber');
+                config = {
+                    start: 1,
+                    limit: 10,
+                    accountNumber: accountNumber
+                };
+                getPageFlow(config)
+            }, 1000);
 
         }, base.hideLoadingSpin);
 
@@ -179,7 +182,7 @@ define([
             } else {
                 delete config.type;
             }
-            getPageFlow(config);
+            // getPageFlow(config);
             // }
         })
     }

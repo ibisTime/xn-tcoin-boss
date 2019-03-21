@@ -148,6 +148,13 @@ define([
                 ...config
             });
         },
+        //取消仲裁
+        arbitrationlCancel(code) {
+            return Ajax.get("625253", {
+                userId: base.getUserId(),
+                code
+        });
+    },
         // 标记付款
         bjPlayfo(config) {
             return Ajax.get('625273', config);
@@ -209,5 +216,10 @@ define([
                 ...config
             }, true);
         },
+        getBtc(config){
+            return Ajax.post("650102", {
+                ...config
+            }, true);
+        }
     };
 })
