@@ -20,7 +20,7 @@ define([
     }
 
     function setHtml() {
-        $('title').text(base.getText('安全设置') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
+        $('title').text(base.getText('安全设置') + '-' +base.getText('区块链技术应用实验平台'));
         $('.left-title').text(base.getText('用户中心'));
         $('.en_yhzl').text(base.getText('用户资料'));
         $('.uleft_en').text(base.getText('基本信息'));

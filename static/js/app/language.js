@@ -107,7 +107,7 @@ var LANGUAGE = {
     },
     '平台介绍': {
         'ZH': '平台介绍',
-        'EN': 'FUNMVP'
+        'EN': '平台介绍'
     },
     '联系我们': {
         'ZH': '联系我们',
@@ -139,9 +139,9 @@ var LANGUAGE = {
     },
 
     // *****///// 首页
-    'FUNMVP区块链技术应用实验平台': {
-        'ZH': 'FUNMVP区块链技术应用实验平台',
-        'EN': 'FUNMVP blockchain technology application experimental platform'
+    '区块链技术应用实验平台': {
+        'ZH': '区块链技术应用实验平台',
+        'EN': 'blockchain technology application experimental platform'
     },
     '尽情游戏': {
         'ZH': '尽情游戏',
@@ -211,9 +211,9 @@ var LANGUAGE = {
         'ZH': '安全可靠',
         'EN': 'Teliable'
     },
-    '为什么要选择FUNMVP？': {
-        'ZH': '为什么要选择FUNMVP？',
-        'EN': 'WHY CHOOSE FUNMVP?'
+    '为什么要选择？': {
+        'ZH': '为什么要选择？',
+        'EN': 'WHY CHOOSE?'
     },
     '支持多种数字货币的币币交易与场外交易，买卖自由、双向交易、快速方便': {
         'ZH': '支持多种数字货币的币币交易与场外交易，买卖自由、双向交易、快速方便',
@@ -349,7 +349,7 @@ var LANGUAGE = {
     },
     '主区': {
         'ZH': '主区',
-        'EN': 'FMVP main '
+        'EN': ' main '
     },
     '高': {
         'ZH': '高',
@@ -930,8 +930,8 @@ var LANGUAGE = {
         'ZH': '请输入有关您交易的相关条款或备注您的支付方式',
         'EN': 'Please enter the terms of your transaction or remarks about your payment method'
     },
-    '付款备注里不得出现 BTC/ETH/FMVP、数字货币、区块链等字眼。': {
-        'ZH': '付款备注里不得出现 BTC/ETH/FMVP、数字货币、区块链等字眼。',
+    '付款备注里不得出现 BTC/ETH、数字货币、区块链等字眼。': {
+        'ZH': '付款备注里不得出现 BTC/ETH、数字货币、区块链等字眼。',
         'EN': 'Please enter the terms of your transaction or remarks about your payment method'
     },
     '谢谢': {
@@ -1296,9 +1296,9 @@ var LANGUAGE = {
     },
 
     // ***** 钱包
-    '钱包-FUNMVP区块链技术应用实验平台': {
-        'ZH': '钱包-FUNMVP区块链技术应用实验平台',
-        'EN': 'Wallet-FUNMVP blockchain technology application experimental platform'
+    '钱包-区块链技术应用实验平台': {
+        'ZH': '钱包-区块链技术应用实验平台',
+        'EN': 'Wallet- blockchain technology application experimental platform'
     },
     '钱包': {
         'ZH': '钱包',
@@ -2020,7 +2020,7 @@ var LANGUAGE = {
 	},
 	'操作成功, 其中含有关键字，需平台进行审核': {
         'ZH': '操作成功, 其中含有关键字，需平台进行审核',
-        'EN': 'Successful action, which contains keywords, needs FUNMVP audit.'
+        'EN': 'Successful action, which contains keywords, needs  audit.'
     },
 	'购买': {
         'ZH': '购买',
@@ -2232,7 +2232,7 @@ var LANGUAGE = {
 	},
 	'平台已取消': {
         'ZH': '平台已取消',
-        'EN': 'FUNMVP cancelled'
+        'EN': ' cancelled'
     },
 	'单价': {
         'ZH': '单价',
@@ -2258,9 +2258,9 @@ var LANGUAGE = {
         'ZH': '请输入自己的支付宝账号（以便确认）',
         'EN': 'Please enter your alipay account (for confirmation)'
     },
-	'付款备注里不得出现 BTC/ETH/FMVP、数字货币、区块链等字眼。': {
-        'ZH': '付款备注里不得出现 BTC/ETH/FMVP、数字货币、区块链等字眼。',
-        'EN': 'No BTC/ETH/FMVP, digital currency, blockchain, etc.'
+	'付款备注里不得出现 BTC/ETH、数字货币、区块链等字眼。': {
+        'ZH': '付款备注里不得出现 BTC/ETH、数字货币、区块链等字眼。',
+        'EN': 'No BTC/ETH, digital currency, blockchain, etc.'
 	},
 	'请输入卖出金额': {
         'ZH': '请输入卖出金额',
@@ -2302,8 +2302,8 @@ var LANGUAGE = {
     //     'ZH': '任何充入',
     //     'EN': 'transact Orders'
     // },
-	// '地址的非FMVP资产将不可找回。': {
-    //     'ZH': '地址的非FMVP资产将不可找回。',
+	// '地址的非资产将不可找回。': {
+    //     'ZH': '地址的非资产将不可找回。',
     //     'EN': 'transact Orders'
     // },
 	'在平台内相互转账是实时到账且免费的。': {
@@ -2580,21 +2580,21 @@ var LANGUAGE = {
         'EN': 'System Message: Seller has evaluated'
     },
     // 流水
-    '提交卖出[FMVP/ETH]委托单': {
-        'ZH': '提交卖出[FMVP/ETH]委托单',
-        'EN': 'Commit sell FMVP/ETH order'
+    '提交卖出[ETH]委托单': {
+        'ZH': '提交卖出[ETH]委托单',
+        'EN': 'Commit sell ETH order'
     },
-    '提交购买[FMVP/ETH]委托单': {
-        'ZH': '提交购买[FMVP/ETH]委托单',
-        'EN': 'Commit buy FMVP/ETH order'
+    '提交购买[ETH]委托单': {
+        'ZH': '提交购买[ETH]委托单',
+        'EN': 'Commit buy ETH order'
     },
-    '提交卖出[FMVP/BTC]委托单': {
-        'ZH': '提交卖出[FMVP/BTC]委托单',
-        'EN': 'Selling orders [FMVP/BTC]'
+    '提交卖出[BTC]委托单': {
+        'ZH': '提交卖出[BTC]委托单',
+        'EN': 'Selling orders [BTC]'
     },
-    '提交购买[FMVP/BTC]委托单': {
-        'ZH': '提交购买[FMVP/BTC]委托单',
-        'EN': 'Buy FMVP/BTC order'
+    '提交购买[BTC]委托单': {
+        'ZH': '提交购买[BTC]委托单',
+        'EN': 'Buy BTC order'
     },
     '充币-来自地址': {
         'ZH': '充币-来自地址',

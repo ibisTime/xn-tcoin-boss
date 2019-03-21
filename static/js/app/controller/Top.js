@@ -15,7 +15,7 @@ define([
     $(document).ready(function () {
         init();
         if(base.isLogin()){
-            initSocket();
+            // initSocket();
         }
     });
 
@@ -93,18 +93,18 @@ define([
      * 初始化Socket链接
      */
     function initSocket() {
-        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId=U20190313173216281758639');
+        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId'));
         ws.onopen = function (event) {
             console.log('链接成功');
             // ws.send('你好啊')
         }
-
         ws.onmessage = function(event) {
             let data =event.data;
             // data = data.replace(/\"\{/, '{').replace(/\}\"/, '}').replace(/\'/g, '"');
             data = JSON.parse(data);
             let taget = $('#head-user-wrap .head-user .msg_num');
             let msg_num = +taget.text()
+            taget.show();
             taget.text(msg_num + data.length);
             let messageHtml = '';
             let activeNewsHtml = '';
@@ -128,12 +128,17 @@ define([
                         </li>`;
                     $('.down-wrap-message ul').append(messageHtml);
                     if(item.type == 1){
+                        console.log(data)
+                        var refNo;
+                        data.forEach(item => {
+                            refNo = item.refNo;
+                        })
+
                         document.getElementById('audio-message2').play();
-                        TradeCtr.getOrderDetail(data.refNo).then((data) => {
-                            console.log('------',data)
+                        TradeCtr.getOrderDetail(refNo).then((data) => {
                             activeNewsHtml =`<li class="goHref" data-href="../user/user.html" >
                             <span> <button>聊天</button></span>
-                            <span>${data.buyUserInfo.realName}</span>
+                            <span>${data.buyUserInfo.nickname}</span>
                             <span>${data.tradeAmount}  ${data.tradeCurrency}</span>
                             <span>${data.countString}  ${data.tradeCoin}</span>
                             <span>${data.nickname}</span>
@@ -304,6 +309,9 @@ define([
          * 消息阅读
          */
         $("body").on('click', '.down-wrap-message ul li',function () {
+            if($(this).length == 0){
+                $('#head-user-wrap .head-user .msg_num').hide();
+            }
             var readId = $(this).attr('data-readId');
             console.log(readId);
             var params ={"id":readId}

@@ -34,7 +34,7 @@ define([
       $('#tradePwd').attr('placeholder', base.getText('请输入交易密码', langType));
       $('#smsCaptcha').attr('placeholder', base.getText('验证码', langType));
 
-      $('title').text(base.getText('交易密码') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
+      $('title').text(base.getText('交易密码') + '-' +base.getText('区块链技术应用实验平台'));
       $("#mobile").val(base.getUserEmail());
       $("#mobile").siblings('.item-icon').addClass('icon-email');
       addListener();

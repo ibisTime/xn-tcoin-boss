@@ -33,7 +33,7 @@ define([
         if(langType == 'EN'){
             $('title').text('mailbox-FUNMVP blockchain technology application experimental platform');
         }
-        $('title').text('邮箱-FUNMVP区块链技术应用实验平台');
+        $('title').text('邮箱-区块链技术应用实验平台');
         base.hideLoadingSpin();
         addListener();
     }

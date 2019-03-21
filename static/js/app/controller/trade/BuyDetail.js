@@ -68,7 +68,7 @@ define([
 
     }
     function setHtml() {
-        $('title').text(base.getText('购买详情') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
+        $('title').text(base.getText('购买详情') + '-' +base.getText('区块链技术应用实验平台'));
         $('.en-buy_jy').text(base.getText('交易次数', langType));
         $('.en-buy_xr').text(base.getText('信任人数', langType));
         $('.en-buy_hp').text(base.getText('好评率', langType));
@@ -81,7 +81,7 @@ define([
         $('.en-buy_fkqx').text(base.getText('付款期限', langType) + ':');
         $('.en-buy_mjly').text(base.getText('卖家留言', langType) + ':');
         $('.en-buy_mmds').text(base.getText('您想购买多少', langType) + '?');
-        $('.en-buy_ggsy').text(base.getText('点击此处获得帮助', langType));
+        // $('.en-buy_ggsy').text(base.getText('点击此处获得帮助', langType));
         $('.en-buy_fz').text(base.getText('分钟', langType));
         $('.en-buy_tx').text(base.getText('交易提醒', langType));
         $('.warnWrap .warn-txt1').html(base.getText('提醒：请确认价格再下单,下单彼此交易的'));
@@ -153,6 +153,7 @@ define([
             $('.buy-cjtk').append(`<span>${data.item}</span>`);
             $('.buy-cjtk .buy-quick-title .buy-title').html(data.user.nickname + '的出价条款');
             $('.buy-user-nickname').html(data.user.nickname);
+            $('.buy-talk').html('安全托管+与'+data.user.nickname+'实时交谈');
 
           $('.icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.user.photo) + "')" });
           buildTagsHtml(data.platTag, data.customTag);
@@ -242,9 +243,8 @@ define([
         base.showLoadingSpin();
         return TradeCtr.buyETH(config).then((data) => {
                 base.showMsg(base.getText('下单成功', langType))
-
                 setTimeout(function() {
-                    base.gohref("../order/order-list.html?mod=dd")
+                    base.gohref("../order/order-detail.html?code="+data.code)
                 }, 2000);
                 base.hideLoadingSpin();
             }, base.hideLoadingSpin) //
@@ -273,7 +273,8 @@ define([
                 if (data.tradepwdFlag) {
                     if (_formWrapper.valid()) {
                         if ($("#buyAmount").val() != '' && $("#buyAmount").val()) {
-                            $("#submitDialog").removeClass("hidden")
+                            // $("#submitDialog").removeClass("hidden")
+                            buyETH();
                         } else {
                             base.showMsg(base.getText('请输入您购买的金额', langType))
                         }
@@ -310,10 +311,10 @@ define([
         })
 
         //下单确认弹窗-确认点击
-        $("#submitDialog .subBtn").click(function() {
-          buyETH();
-          $("#submitDialog").addClass("hidden")
-        })
+        // $("#submitDialog .subBtn").click(function() {
+          // buyETH();
+          // $("#submitDialog").addClass("hidden")
+        // })
 
         $("#buyEth").keyup(function() {
             let truePrice = $("#buyEth").val() * config.tradePrice;

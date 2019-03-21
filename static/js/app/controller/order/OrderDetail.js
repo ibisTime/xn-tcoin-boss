@@ -26,7 +26,7 @@ define([
     var payType = {};
     var tradeOrderStatusObj = {};
     var firstLoad = false;
-    var newMsgHtml = `<div id="newMsgWrap" class="newMsg-wrap goHref" data-href="../order/order-list.html?mod=dd">${base.getText('您有未读消息')}</div>`;
+    var newMsgHtml = '';
     var tradeType;
     var adsCode;
     var tradeCoin = ''; //交易币种
@@ -75,7 +75,7 @@ define([
         addListener();
     }
     function setHtml() {
-        $('title').text(base.getText('订单详情') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
+        $('title').text(base.getText('订单详情') + '-' +base.getText('区块链技术应用实验平台'));
         if(langType == 'EN'){
             $('.file-wrap .file').css('width', '180px');
             $('.am-modal-body .file-wrap .am-button').css('width', '180px');
@@ -187,6 +187,10 @@ define([
               $('.orderDetail-container .wait').removeClass('hidden');
             } else if(data.status == '1') {
               $('.orderDetail-container .wait-release-btc').removeClass('hidden');
+            }else if(data.status == '5'){
+                $('.orderDetail-container .wait-release-btc').removeClass('hidden');
+                $('.orderDetail-arbitration-befer').hide();
+                $('.orderDetail-arbitration-after').show()
             }
           } else {
             let interval = base.fun(Date.parse(data.buyUserInfo.lastLogin), new Date());
@@ -1172,7 +1176,6 @@ define([
             $('#upload_pic_dialog').show();
         }
     }
-
     function addListener() {
 
         //立即下单点击
@@ -1304,8 +1307,39 @@ define([
       });
 
       //申請仲裁按钮 点击
-      $(".arbitrationBtn").on("click", function() {
+      $(".arbitrate-btn").on("click", function() {
           $("#arbitrationDialog").removeClass("hidden");
+      });
+
+        var _arbitrationformWrapper = $("#arbitrationform-wrapper");
+        _arbitrationformWrapper.validate({
+            'rules': {
+                'reason': {
+                    required: true
+                },
+            }
+        })
+
+        //彈窗-申請仲裁
+        $(".arbitration-subBtn").click(function() {
+            var params = _arbitrationformWrapper.serializeObject();
+            if (_arbitrationformWrapper.valid()) {
+                base.showLoadingSpin()
+                TradeCtr.arbitrationlOrder({
+                    code: code,
+                    reason: params.reason
+                }).then(() => {
+                    base.hideLoadingSpin();
+
+                    base.showMsg(base.getText('操作成功'));
+                    auSx();
+                    $("#arbitrationDialog").addClass("hidden");
+                    $("#form-wrapper .textarea-item").val("")
+                }, base.hideLoadingSpin)
+            }
+        })
+      $(".arbitration-canBtn").on("click", function() {
+         $("#arbitrationDialog").addClass("hidden");
       });
       //评价按钮 点击
       $(".finished-top").on("click", '.comment-btn', function() {

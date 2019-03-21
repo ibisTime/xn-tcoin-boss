@@ -41,11 +41,12 @@ define([
     }
 
     function setHtml() {
-        $('title').text(base.getText('邀请好友') + '-' +base.getText('FUNMVP区块链技术应用实验平台'));
+        $('title').text(base.getText('邀请好友') + '-' +base.getText('区块链技术应用实验平台'));
         $('.invi-en_yq').text(base.getText('成功邀请', langType));
         $('.invi-en_sy').text(base.getText('注册分佣奖励', langType));
-        $('#qrcodeBtn').text(base.getText('二维码推荐', langType));
-        $('#invitationBtn').text(base.getText('文字推荐', langType));
+        $('.invi-en_lj').text('获得礼券');
+        $('#qrcodeBtn').text(base.getText('图片邀请', langType));
+        $('#invitationBtn').text(base.getText('文字邀请', langType));
         $('.sel-span').text(base.getText('邀请记录', langType));
         $('.invi-en_yhm').text(base.getText('用户名', langType));
         $('.invi-en_zc').text(base.getText('注册时间', langType));
@@ -70,7 +71,9 @@ define([
     //获取我推荐的人数和收益统计
     function getInvitation() {
         return UserCtr.getInvitation().then((data) => {
-            $('.regAcount').text(data.regAcount);
+            $('.invitation-account .account').text(base.formatMoney(data.totalUnCashAmount,'','BTC') + 'BTC');
+            $('.invitation-content .regAcount').text(base.formatMoney(data.totalAward,'','BTC'));
+            $('.invitation-content .inviteCount').text(data.inviteCount);
         }, base.hideLoadingSpin)
     }
 
@@ -146,7 +149,31 @@ define([
         $("#invitationBtn").click(function() {
             $("#invitationDialog").removeClass("hidden")
         })
-
-
+        $("#transferBtn").click(function () {
+            $("#transferDialog").removeClass("hidden")
+        })
+        $(".transfer-btn-qx").click(function () {
+            $("#transferDialog").addClass("hidden")
+        })
+        /**
+         * 转账至T网
+         */
+        $('.transfer-btn-qd').click(function () {
+            let params = {};
+            let amount =Number($('.transfer-input input').val());
+            if(amount == ''){
+                base.showMsg(base.getText('请输入转入资产数量', langType));
+                return;
+            }
+            params.applyUser = sessionStorage.getItem("nickname");
+            params.userId = base.getUserId();
+            params.currency = 'BTC';
+            params.amount = base.formatMoneyParse(amount, '',  params.currency);
+            return GeneralCtr.transferT(params).then((data) => {
+                base.showMsg(base.getText('操作成功', langType));
+                $("#transferDialog").addClass("hidden")
+            }, function () {
+            })
+        })
     }
 });

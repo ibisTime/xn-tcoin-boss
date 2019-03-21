@@ -132,14 +132,12 @@ define([
         }
         return `<tr>
         <td class="type">${typeList[type.toLowerCase()]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
-        <td class="price">${item.truePrice ? item.truePrice.toFixed(2) : '-'}</td>
+        <td class="price">${item.truePrice ? item.truePrice.toFixed(2) : '-'} ${item.truePrice ? item.tradeCurrency : ''} </td>
         <td class="quantity ">${item.leftCountString ? base.formatMoney(item.leftCountString, '', item.tradeCoin) : '-'}</td>
         <td class="price">${(item.premiumRate * 100).toFixed(2) + '%'}</td>
         <td class="createDatetime">${base.formatDate(item.createDatetime)}</td>
         <td class="status tc">${item.status=="-1"?base.getText('交谈中', langType) + ','+adsStatusValueList[item.status]:adsStatusValueList[item.status]}</td>
-        <td class="operation" style="padding-right: 0;">
-            ${operationHtml}
-        </td>
+       
     </tr>`;
 
 

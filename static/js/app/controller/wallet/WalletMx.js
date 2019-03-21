@@ -8,13 +8,7 @@ define([
     'app/controller/foo'
 ], function (base, pagination, AccountCtr, GeneralCtr, UserCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var accountNumber = sessionStorage.getItem('accountNumber'); // 账户编号
-    var config = {
-        start: 1,
-        limit: 10,
-        accountNumber: accountNumber
-    };
-
+    var accountNumber='';
     var bizTypeList = {
         '0': [],
         '1': ['charge'],
@@ -46,6 +40,7 @@ define([
     }
 
     function init() {
+        accountNumber = sessionStorage.getItem('accountNumber'); // 账户编号
         // $('.tradeRecord-wrap-title').text(base.getText('交易明细', langType));
         // $('.wamx-en_qb').text(base.getText('全部', langType));
         // $('.wamx-en_cb').text(base.getText('充币', langType));
@@ -62,11 +57,10 @@ define([
         $('.wamx-en_yue').text(base.getText('余额USD', langType));
         $('.wamx-en_lx').text(base.getText('变动金额', langType));
         $('.wamx-en_sm').text(base.getText('描述', langType));
-
         if(langType == 'EN'){
-            $('title').text('order details-FUNMVP blockchain technology application experimental platform');
+            $('title').text('order details- blockchain technology application experimental platform');
         }
-        $('title').text('订单明细-FUNMVP区块链技术应用实验平台');
+        $('title').text('订单明细-区块链技术应用实验平台');
 
         base.showLoadingSpin();
         $.when(
@@ -77,6 +71,11 @@ define([
             data1.forEach(function (item) {
                 bizTypeValueList[item.dkey] = item.dvalue
             })
+            var config = {
+                start: 1,
+                limit: 10,
+                accountNumber: accountNumber
+            };
             getPageFlow(config);
 
         }, base.hideLoadingSpin);

@@ -19,7 +19,7 @@ define([
         myName = '';
     var defaultOpt = {};
     var firstChat = true; //页面第一次点击聊天
-    var newMsgHtml = '<div id="newMsgWrap" class="newMsg-wrap cur-pointer userSelect_none">'+ base.getText('您有未读消息') +'</div>';
+    var newMsgHtml = '';
     var unreadMsgList = {}; //未读消息数
 
     if (base.isLogin()) {
@@ -196,7 +196,7 @@ define([
             }
             if (otherNew) {
                 if (!$("#newMsgWrap").length) {
-                    $("body").append(newMsgHtml);
+                    // $("body").append(newMsgHtml);
                     // 订单页面判断进行中/已结束 跳转
                     $("#newMsgWrap").off('click').click(function () {
                         goOrderList(otherNewId);

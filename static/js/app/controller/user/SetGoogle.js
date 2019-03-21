@@ -34,9 +34,9 @@ define([
         $('#googleCaptcha').attr('placeholder', base.getText('谷歌验证码', langType));
 
         if(langType == 'EN'){
-            $('title').text('Google verification code-FUNMVP blockchain technology application experimental platform');
+            $('title').text('Google verification code- blockchain technology application experimental platform');
         }
-        $('title').text('谷歌验证码-FUNMVP区块链技术应用实验平台');
+        $('title').text('谷歌验证码-区块链技术应用实验平台');
         base.showLoadingSpin();
         if (type == 1) {
             $('#form-wrapper div').eq(0).addClass('none');

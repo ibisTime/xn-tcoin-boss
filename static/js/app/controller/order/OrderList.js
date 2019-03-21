@@ -201,7 +201,7 @@ define([
         }
         if (item.status != "-1") {
             let countNum = parseFloat(base.formatMoney(item.countString, '', item.tradeCoin));
-            quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(3)  + item.tradeCoin : '-';
+            quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(8)  + item.tradeCoin : '-';
         }
         return `<tr data-code="${item.code}">
 					<td class="nickname" style="border-left:1px solid #eee;">
