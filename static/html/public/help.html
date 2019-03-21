@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <!--SCRIPT_PLACEHOLDER-->
+    <link rel="import" href="../top/top-zendesk.html?__inline">
+</head>
+
+<body>
+    <link rel="import" href="../top/top.html?__inline">
+    <div class="article-con help-wrapper">
+        <div class="article-left fl bg_fff">
+            <ul id="help-left">
+                <li class="art-tit fy_help"></li>
+            </ul>
+        </div>
+        <div class="article-right fr bg_fff">
+            <h4 class="hmoney-tit"></h4>
+            <div class="article-wrap help-content-wrap wp100 articleHeight" id="content">
+            </div>
+        </div>
+    </div>
+
+    <link rel="import" href="../footer.html?__inline">
+    <script>
+        require(['domReady!'], function (doc) {
+            require(['app/controller/public/Help']);
+        });
+    </script>
+</body>
+
+</html>

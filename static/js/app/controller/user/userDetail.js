@@ -39,10 +39,10 @@ define([
         $('.k-fb').text(base.getText('发布的广告', langType));
         $('.titleWrap .buy').text(base.getText('在线购买', langType));
         $('.titleWrap .sell').text(base.getText('在线出售', langType));
-        $('.currency').text(base.getText('交易币种', langType));
-        $('.oayType').text(base.getText('付款方式', langType));
-        $('.limit').text(base.getText('交易限额', langType));
-        $('.price').text(base.getText('价格', langType));
+        // $('.currency').text(base.getText('交易币种', langType));
+        // $('.oayType').text(base.getText('付款方式', langType));
+        // $('.limit').text(base.getText('交易限额', langType));
+        // $('.price').text(base.getText('价格', langType));
 
         base.showLoadingSpin();
         // getUserRelation() // 测试
@@ -90,21 +90,21 @@ define([
                 photoHtml = `<div class="photo"><div class="noPhoto">${tmpl}</div></div>`
             }
             nickname = data.nickname ? data.nickname : '-';
-            $('.userDetail-top .nickname').html(data.nickname ? data.nickname : '-');
+            $('.nickname').html(data.nickname ? data.nickname : '-');
             $('.userDetail-top .photoWrap').html(photoHtml);
 
             // 邮箱验证，手机验证，身份验证
-            $('.bindWrap .email samp').html(data.email ? base.getText('邮箱已验证', langType) : base.getText('邮箱未验证', langType));
-            $('.bindWrap .mobile samp').html(data.mobile ? base.getText('手机已验证', langType) : base.getText('手机未验证', langType));
-            $('.bindWrap .identity samp').html(data.realName ? base.getText('身份已验证', langType) : base.getText('身份未验证', langType));
+            $('#user-yanzheng .email').html(data.email ? base.getText('邮箱已验证', langType) : base.getText('邮箱未验证', langType));
+            $('#user-yanzheng .tel').html(data.mobile ? base.getText('手机已验证', langType) : base.getText('手机未验证', langType));
 
-            let jiaoYiCount = data.userStatistics ? data.userStatistics.jiaoYiCount : '-';
-            let beiXinRenCount = data.userStatistics ? data.userStatistics.beiXinRenCount : '-';
-            let beiHaoPingCount = data.userStatistics ? data.userStatistics.beiHaoPingCount : '-';
-            let beiPingJiaCount = data.userStatistics ? data.userStatistics.beiPingJiaCount : '-';
-            $('.jiaoYiCount').html(jiaoYiCount);
-            $('.beiXinRenCount').html(beiXinRenCount);
-            $('.beiHaoPingCount').html(base.getPercentum(beiHaoPingCount, beiPingJiaCount));
+            $('#userStatistics .jiaoyifangCount').html(data.userStatistics.jiaoyifangCount);
+            $('#userStatistics .jiaoYiCount').html(data.userStatistics.jiaoYiCount);
+            $('#userStatistics .beiXinRenCount').html(data.userStatistics.beiXinRenCount);
+            $('#userStatistics .pingBiCount').html(data.userStatistics.pingBiCount);
+            $('#beiHaoPingCount').html(data.userStatistics.beiHaoPingCount);
+            $('#beiZhongPingCount').html(data.userStatistics.beiZhongPingCount);
+            $('#beiChaPingCount').html(data.userStatistics.beiChaPingCount);
+            $('#introduct').html(data.introduct);
             base.hideLoadingSpin();
         }, () => {});
     }
@@ -131,24 +131,82 @@ define([
     }
 
     function buildHtml(item) {
-        var operationHtml = '';
-        if (item.tradeType == '1') {
-            operationHtml = `<div class="am-button goHref" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买')}</div>`
+        // 登录状态
+        var loginStatus = '';
+        var time = base.calculateDays(item.user.lastLogin, new Date())
+        if (time <= 10) {
+            loginStatus = 'green'
+        } else if (time <= 30) {
+            loginStatus = 'yellow'
         } else {
-            operationHtml = `<div class="am-button goHref" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`
+            loginStatus = 'gray'
+        }
+        var operationHtml = '';
+
+        operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买', langType)}</div>`;
+        let hpCount = 0;
+        if (item.userStatistics.beiPingJiaCount != 0) {
+            hpCount = base.getPercentum(item.userStatistics.beiHaoPingCount, item.userStatistics.beiPingJiaCount);
         }
 
-        return `<tr>
-					<td class="currency">${item.tradeCoin}</td>
-					<td class="payType">${payType[item.payType]}</td>
-					<td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
-					<td class="price">${item.truePrice} ${item.tradeCurrency}/${item.tradeCoin?item.tradeCoin:' ETH'}</td>
-					<td class="operation">
-						${operationHtml}
-					</td>
-				</tr>`
+        let payTypeHtml = ``;
+        if(item.payType) {
+            payTypeList.map((k) => {
+                if(item.payType === k.key) {
+                    payTypeHtml = `<i>${k.value}</i>`;
+                }
+            })
+        }
+        let paySecondHtml = ``;
+        if(item.platTag) {
+            item.platTag.split('||').map((item) => {
+                paySecondHtml += `<span>${platTagList[item]}</span>`;
+            });
+        }
+        let country = '/static/images/China.png';
+        let countryHtml = ``;
+        countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
 
+        let interval = base.fun(Date.parse(item.user.lastLogin), new Date());
+
+        return `<tr>
+                    <td class="operation">
+                        ${operationHtml}
+                    </td>
+                    <td class="price">${item.truePrice.toFixed(2)} ${item.tradeCurrency}</td>
+                    <td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
+                    <td class="payType">
+                        <p class="payType_pfirst">
+                            ${payTypeHtml}
+                        </p>
+                        <p class="payType_psecond">
+                            ${paySecondHtml}
+                        </p>
+                    </td>
+                    <td class="speed">
+                    </td>
+				</tr>`
     }
+
+    // function buildHtml(item) {
+    //     var operationHtml = '';
+    //     if (item.tradeType == '1') {
+    //         operationHtml = `<div class="am-button goHref" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买')}</div>`
+    //     } else {
+    //         operationHtml = `<div class="am-button goHref" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`
+    //     }
+    //
+    //     return `<tr>
+	// 				<td class="currency">${item.tradeCoin}</td>
+	// 				<td class="payType">${payType[item.payType]}</td>
+	// 				<td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
+	// 				<td class="price">${item.truePrice} ${item.tradeCurrency}/${item.tradeCoin?item.tradeCoin:' ETH'}</td>
+	// 				<td class="operation">
+	// 					${operationHtml}
+	// 				</td>
+	// 			</tr>`
+    //
+    // }
 
     // 初始化交易记录分页器
     function initPagination(data) {

@@ -214,6 +214,13 @@ define([
                 userId: base.getUserId(),
                 currency
             })
+        },
+        // 修改个人资料
+        setUserInfo(params) {
+            return Ajax.post(' 805085', {
+                userId: base.getUserId(),
+                ...params
+            })
         }
     };
 })
