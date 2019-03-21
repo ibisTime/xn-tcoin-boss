@@ -21,5 +21,6 @@
   "noarg": true,
   "nonew": true,
   "quotmark": "single",
-  "undef": true
+  "undef": true,
+  "esversion": 6
 }

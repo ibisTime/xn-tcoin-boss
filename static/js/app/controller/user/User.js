@@ -1,11 +1,13 @@
 define([
     'app/controller/base',
+    'app/module/validate',
     'app/interface/UserCtr',
     'app/interface/GeneralCtr',
+    'app/interface/TradeCtr',
     'app/module/qiniu',
     'app/controller/Top',
     'app/controller/foo'
-], function(base, UserCtr, GeneralCtr, QiniuUpdata, Top, Foo) {
+], function(base, Validate, UserCtr, GeneralCtr, TradeCtr, QiniuUpdata, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
     if (!base.isLogin()) {
         base.goLogin();
@@ -24,8 +26,8 @@ define([
 
         addListener();
         $.when(
-            getUser(),
-            getQiniuToken()
+            getPayTypeMoneyList(),
+            getPayCoinList()
         )
     }
 
@@ -42,7 +44,7 @@ define([
         $('.uleft_en').text(base.getText('基本信息'));
         $('.identity').text(base.getText('身份验证'));
         $('.security').text(base.getText('安全设置'));
-        $('.fy_xgtx').text('[ ' + base.getText('更换头像', langType) + ' ]');
+        $('.fy_xgtx').text(base.getText('更新个人资料图片', langType));
         $('.user-en_sf').text(base.getText('身份验证', langType) + '：');
         $('.user-en_em').text(base.getText('电子邮件', langType) + '：');
         $('.user-en_sj').text(base.getText('手机号码', langType) + '：');
@@ -53,6 +55,42 @@ define([
         $('#editPhotoDialog .fy_xztp').html(base.getText('选择图片'));
         $('#editPhotoDialog .cancelBtn').html(base.getText('取消'));
         $('#editPhotoDialog .subBtn').html(base.getText('提交'));
+    }
+
+    // 货币列表
+    function getPayTypeMoneyList() {
+        return TradeCtr.getPayCoinList().then((res) => {
+            let html = '<option value="">请选择</option>';
+            res.map((item) => {
+                html += `<option value="${item.simpleName}">${item.name}</option>`
+            });
+            $('#defaultCurrency').html(html);
+
+            $.when(
+                getUser(),
+                getQiniuToken()
+            )
+        }, base.hideLoadingSpin);
+    }
+    // 国家编码
+    function getPayCoinList() {
+        return TradeCtr.getCountryList({ status: 1 }).then((data) => {
+            let html = '';
+            let defaultData = {};
+            data.map((item) => {
+                if (item.interSimpleCode === 'CN' && item.chineseName === '中国') {
+                    defaultData = item;
+                }
+                html += `<div class="item" data-code="${item.code}" data-pic="${item.pic}" 
+                            data-interCode="${item.interCode}">${item.chineseName}</div>`
+            });
+            $("#currencyList").html(html);
+            $("#currencyCode").attr('data-code', defaultData.code);
+            $("#currencyCode").css("background-image", `url('${base.getPic(defaultData.pic)}')`);
+            $("#interCode").attr('data-code', defaultData.interCode);
+            $("#interCode").text(defaultData.interCode);
+
+        }, base.hideLoadingSpin);
     }
 
     //获取用户详情
@@ -76,7 +114,10 @@ define([
                 $("#beiHaoPingCount").text(data.userStatistics.beiHaoPingCount);
                 $("#beiHaoPingCount1").text(data.userStatistics.beiHaoPingCount);
             }
-
+            $("#firstName").val(data.firstName);
+            $("#lastName").val(data.lastName);
+            $("#introduct").val(data.introduct);
+            $("#defaultCurrency").val(data.defaultCurrency);
             if (data.email) {
                 $("#email").text(data.email)
             } else {
@@ -84,13 +125,13 @@ define([
                     base.gohref("./setEmail.html");
                 });
             }
-            if (data.mobile) {
-                $("#mobile").text(data.mobile)
-            } else {
-                $("#mobile").text(base.getText('未绑定', langType)).addClass("no").click(function() {
-                    base.gohref("./setPhone.html");
-                });
-            }
+            // if (data.mobile) {
+            //     $("#mobile").text(data.mobile)
+            // } else {
+            //     $("#mobile").text(base.getText('未绑定', langType)).addClass("no").click(function() {
+            //         base.gohref("./setPhone.html");
+            //     });
+            // }
             if (data.idNo) {
                 $("#idNo").text(base.getText('已验证', langType))
             } else {
@@ -98,7 +139,6 @@ define([
                     base.gohref("./identity.html");
                 });
             }
-
 
             base.hideLoadingSpin();
         }, base.hideLoadingSpin)
@@ -130,6 +170,17 @@ define([
                 location.reload(true);
             }, 800)
         }, base.hideLoadingSpin)
+    }
+
+    // 修改个人资料
+    function setUserInfo(params) {
+        base.showLoadingSpin();
+        return UserCtr.setUserInfo(params).then(() => {
+            base.hideLoadingSpin();
+            base.showMsg('操作成功')
+        }, () => {
+            base.hideLoadingSpin();
+        })
     }
 
     function addListener() {
@@ -164,5 +215,36 @@ define([
             base.showLoadingSpin();
             changePhoto();
         })
+
+        let _userInfoWrapper = $('#userInfo-wrapper');
+        _userInfoWrapper.validate({
+            'rules': {
+                "firstName": {
+                    required: true
+                },
+                "lastName": {
+                    required: true
+                },
+                "introduct": {
+                    required: true
+                },
+                "defaultCurrency": {
+                    required: true
+                }
+            },
+            onkeyup: false
+        });
+        $("#userInfoSubBtn").click(function(){
+            if(_userInfoWrapper.valid()){
+                base.showLoadingSpin();
+                var params=_userInfoWrapper.serializeObject()
+                setUserInfo(params)
+            }
+        })
+
+        $("#currencyBtn").click(function () {
+            $("#countryDialog").removeClass('hidden')
+        })
+
     }
 });

@@ -1,6 +1,6 @@
 /.vscode/
 /dist/
 /.idea/
-
+/.DS_Store
 ./static/.idea
 ./static/.idea/*

@@ -76,9 +76,21 @@ define([
                 userId: base.getUserId()
             });
         },
+        // 列表查询文章类别
+        getListHelpCategory() {
+            return Ajax.get("802860", {
+                // status: '1'
+            });
+        },
+        // 列表查询文章类别
+        getListHelp(type) {
+            return Ajax.get("802880", {
+                type
+            });
+        },
         //转账至T网
         transferT(config){
             return Ajax.post("802800",config)
         }
     };
-})
+});
