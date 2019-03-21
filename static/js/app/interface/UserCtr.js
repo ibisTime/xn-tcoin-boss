@@ -71,6 +71,14 @@ define([
                 userId: base.getUserId()
             });
         },
+        //绑定手机号
+        setCurrencyPhone(params) {
+            return Ajax.post('805060', {
+                ...params,
+                isSendSms: '0',
+                userId: base.getUserId()
+            });
+        },
         //修改手机号
         detPhone(mobile, smsCaptcha) {
             return Ajax.post('805061', {
@@ -217,7 +225,7 @@ define([
         },
         // 修改个人资料
         setUserInfo(params) {
-            return Ajax.post(' 805085', {
+            return Ajax.post('805085', {
                 userId: base.getUserId(),
                 ...params
             })

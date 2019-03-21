@@ -2080,6 +2080,7 @@ table {
             }
             .input-wrap{
                  margin-bottom: 20px;
+                position: relative;
                 .input-item{
                     width: 254px;
                     height: 20px;
@@ -5818,6 +5819,14 @@ table {
         }
         .public-container .trade-list-wrap .trade-wrap .operation{
             text-align: left;
+        }
+        .new{
+            font-style: normal;
+            background: #F19348;
+            border-radius: 2px;
+            padding: 5px 10px;
+            color: #fff;
+            font-size: 14px;
         }
     }
 }

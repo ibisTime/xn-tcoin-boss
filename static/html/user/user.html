@@ -23,21 +23,21 @@
                     <div class="username-title">用户名</div>
                     <div class="username b_e_b" id="nickname"></div>
                     <div class="username-remind">必须绑定您的手机，以应对您出现资金、密码等安全问题</div>
-                    <form class="form-wrapper wp100" id="form-wrapper">
+                    <div class="form-wrapper wp100">
                         <div class="username-title mb10">电话</div>
-                        <div class="form-item b_e">
+                        <form class="form-item b_e" id="form-wrapper">
                             <div class="label-wrap" id="currencyBtn">
-                                <i class="item-icon" id="currencyCode"></i>
+                                <samp class="item-icon" id="countryCode"></samp>
                                 <samp class="item-label" id="interCode"></samp>
                             </div>
                             <input type="text" class="input-item" id="mobile" name="mobile" placeholder="请输入手机号码" />
-                        </div>
-                        <div class="mobile-remind">请设置带国家/地区代码的您的电话号码。<samp>发送代码</samp>必须是手机号码！</div>
-                        <div class="input-wrap b_e">
-                            <input type="text" class="input-item" id="ma" name="ma" placeholder="输入确认码" />
-                            <button class="am-button am-button-red">提交</button>
-                        </div>
-                    </form>
+                        </form>
+                        <div class="mobile-remind hidden">请设置带国家/地区代码的您的电话号码。<samp class="cur-pointer" id="sendCode">发送代码</samp>必须是手机号码！</div>
+                        <form class="input-wrap b_e hidden" id="form-wrapper1">
+                            <input type="text" class="input-item" id="smsCaptcha" name="smsCaptcha" placeholder="输入确认码" />
+                            <div class="am-button am-button-red" id="setMobileBtn">提交</div>
+                        </form>
+                    </div>
                 </div>
                 <div class="userInfo-wrap over-hide fl">
                     <div class="fs14 mb10">个人资料图片</div>
@@ -65,7 +65,7 @@
                         <div class="item-wrap fl wp50">
                             <div class="tit">简介</div>
                             <div class="input-wrap b_e">
-                                <textarea class="wp100" placeholder="您的简介会出现在您的公开资料上" id="introduct" name="introduct"></textarea>
+                                <textarea class="wp100" placeholder="您的简介会出现在您的公开资料上" id="introduce" name="introduce"></textarea>
                             </div>
                             <div class="input-remind">最多3行，并且最多180个字符</div>
                         </div>
