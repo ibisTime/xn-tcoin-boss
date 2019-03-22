@@ -300,14 +300,15 @@ define([
 
         return `<tr>
 					<td class="nickname" style="padding-left: 20px;">
-                        <p class="pfirst">
+                        <p class="pfirst goHref" data-href="../user/user-detail.html?userId=${item.user.userId}&tradeType=0">
                             ${countryHtml}
                             <span class="dot ${loginStatus}"></span>
                             <span class="name">${item.user.nickname ? item.user.nickname : '-'}</span>
                             <span class="num">+${item.userStatistics.beiHaoPingCount}</span>
-
                         </p>
-                        <p class="n-dist"><samp><i>${interval}前查看过</i></samp></p>
+                        <p class="n-dist goHref" data-href="../user/user-detail.html?userId=${item.user.userId}&tradeType=0">
+                            <samp><i>${interval}前查看过</i></samp>
+                        </p>
                     </td>
                     <td class="payType">
                         <p class="payType_pfirst">

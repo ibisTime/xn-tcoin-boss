@@ -81,12 +81,12 @@ define([
                 if (item.interSimpleCode === 'CN' && item.chineseName === '中国') {
                     defaultData = item;
                 }
-                html += `<div class="item" data-code="${item.code}" data-pic="${item.pic}" 
+                html += `<div class="item" id="code_${item.code}" data-code="${item.code}" data-pic="${item.pic}" 
                             data-interCode="${item.interCode}">${item.chineseName}</div>`
             });
             $("#currencyList").html(html);
-            $("#currencyCode").attr('data-code', defaultData.code);
-            $("#currencyCode").css("background-image", `url('${base.getPic(defaultData.pic)}')`);
+            $("#countryCode").attr('data-code', defaultData.code);
+            $("#countryCode").css("background-image", `url('${base.getPic(defaultData.pic)}')`);
             $("#interCode").attr('data-code', defaultData.interCode);
             $("#interCode").text(defaultData.interCode);
 
@@ -116,7 +116,7 @@ define([
             }
             $("#firstName").val(data.firstName);
             $("#lastName").val(data.lastName);
-            $("#introduct").val(data.introduct);
+            $("#introduce").val(data.introduce);
             $("#defaultCurrency").val(data.defaultCurrency);
             if (data.email) {
                 $("#email").text(data.email)
@@ -125,13 +125,15 @@ define([
                     base.gohref("./setEmail.html");
                 });
             }
-            // if (data.mobile) {
-            //     $("#mobile").text(data.mobile)
-            // } else {
-            //     $("#mobile").text(base.getText('未绑定', langType)).addClass("no").click(function() {
-            //         base.gohref("./setPhone.html");
-            //     });
-            // }
+            if (!data.mobile) {
+                $('#currencyBtn').unbind('click');
+                $("#mobile").val(data.mobile).attr('disabled', 'disabled');
+                $("#code_"+data.countryCode).click();
+                $("#goChangeMobile").removeClass('hidden');
+            } else {
+                $('.username-wrap .mobile-remind').removeClass('hidden');
+                $('#form-wrapper').removeClass('hidden');
+            }
             if (data.idNo) {
                 $("#idNo").text(base.getText('已验证', langType))
             } else {
@@ -244,6 +246,72 @@ define([
 
         $("#currencyBtn").click(function () {
             $("#countryDialog").removeClass('hidden')
+        })
+
+        $("#countryDialog .cancelBtn").click(function () {
+            $("#countryDialog").addClass('hidden')
+        })
+
+        $('#currencyList').on('click', '.item', function () {
+            var _this = $(this);
+            $("#countryCode").attr('data-code', _this.attr('data-code'));
+            $("#countryCode").css("background-image", `url('${base.getPic(_this.attr('data-pic'))}')`);
+            $("#interCode").attr('data-code', _this.attr('data-interCode'));
+            $("#interCode").text(_this.attr('data-interCode'));
+
+            $("#countryDialog").addClass('hidden')
+        })
+
+        let _formWrapper = $('#form-wrapper');
+        _formWrapper.validate({
+            'rules': {
+                "mobile": {
+                    required: true,
+                    number: true
+                }
+            },
+            onkeyup: false
+        });
+        $("#sendCode").click(function () {
+            if(_formWrapper.valid()){
+                base.showLoadingSpin();
+                var params = _formWrapper.serializeObject();
+                GeneralCtr.sendCaptcha('805060', params.mobile).then(()=> {
+                    base.hideLoadingSpin();
+                    base.showMsg('发送成功');
+                }, base.hideLoadingSpin)
+            }
+        })
+
+        let _formWrapper1 = $('#form-wrapper1');
+        _formWrapper1.validate({
+            'rules': {
+                "smsCaptcha": {
+                    required: true
+                }
+            },
+            onkeyup: false
+        });
+
+        $("#setMobileBtn").click(function () {
+            if (_formWrapper.valid() && _formWrapper1.valid()) {
+                let params = _formWrapper1.serializeObject();
+                params = {
+                    ...params,
+                    ..._formWrapper.serializeObject()
+                };
+                params.countryCode = $('#countryCode').attr('data-code');
+                params.interCode = $('#interCode').attr('data-code');
+                base.showLoadingSpin();
+                UserCtr.setCurrencyPhone(params).then(() => {
+                    debugger;
+                    base.hideLoadingSpin();
+                    base.showMsg('操作成功！');
+                    setTimeout(function () {
+                        location.reload(true);
+                    }, 1200);
+                }, base.hideLoadingSpin);
+            }
         })
 
     }
