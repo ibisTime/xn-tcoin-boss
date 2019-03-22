@@ -127,6 +127,16 @@ table {
     }
 }
 
+.green {
+    background-color: #74c758;
+}
+.gray {
+    background-color: #cdcdcd;
+}
+.yellow {
+    background-color: #fcd606;
+}
+
 .userSelect_none {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -4203,15 +4213,6 @@ table {
                 border-radius: 50%;
                 border: 1.5px solid #fff;
                 margin-right: 5px;
-                &.green {
-                    background-color: #74c758;
-                }
-                &.gray {
-                    background-color: #cdcdcd;
-                }
-                &.yellow {
-                    background-color: #fcd606;
-                }
             }
             .am-button {
                 width: 58px;
