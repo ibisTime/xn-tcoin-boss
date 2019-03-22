@@ -34,7 +34,7 @@ define([
         $('.sel-eml').text(base.getText('邮箱注册', langType));
         $('.txt-getVerification').text(base.getText('获取验证码', langType));
         $('.en_yjs').text(base.getText('我已阅读并接受', langType));
-        $('.en_fw').text(base.getText('产品服务条款', langType));
+        $('.en_fw').text(base.getText('tychely产品服务条款', langType));
         $('#subBtn').text(base.getText('注册', langType));
 
         $('#nickname').attr('placeholder', base.getText('请输入用户名', langType));
@@ -63,6 +63,7 @@ define([
             return UserCtr.register(params).then((data) => {
                 base.showMsg(base.getText('注册成功', langType));
                 let loginParams = {
+                    nickname:params.nickname,
                     loginName: params.mobile,
                     loginPwd :params.loginPwd
                 };
@@ -89,6 +90,7 @@ define([
             return UserCtr.emailRegister(params).then(() => {
                 base.showMsg(base.getText('注册成功', langType));
                 let loginParams = {
+                    nickname:params.nickname,
                     loginName: params.email,
                     loginPwd :params.loginPwd
                 };

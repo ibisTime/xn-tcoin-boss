@@ -54,6 +54,10 @@ define([
         getSysConfigType(type, refresh) {
             return Ajax.get("630048", { type }, refresh);
         },
+        // 根据type查询系统参数
+        getUserTip(config) {
+            return Ajax.get("630048", config);
+        },
         // 分页查询系统参数
         getPageSysConfig(config, refresh) {
             return Ajax.get("630045", {
@@ -79,7 +83,7 @@ define([
         // 列表查询文章类别
         getListHelpCategory() {
             return Ajax.get("802860", {
-                // status: '1'
+                 status: '1'
             });
         },
         // 列表查询文章类别

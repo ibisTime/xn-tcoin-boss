@@ -279,6 +279,9 @@ define([
         let paySecondHtml = ``;
         if(item.platTag) {
           item.platTag.split('||').map((item) => {
+              if(platTagList[item] == undefined){
+                  return
+              }
             paySecondHtml += `<span>${platTagList[item]}</span>`;
           });
         }
@@ -290,8 +293,9 @@ define([
         }
         let country = '/static/images/China.png';
         let countryHtml = ``;
-        countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
-
+        if(item.pic != undefined){
+            countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
+        }
         let interval = base.fun(Date.parse(item.user.lastLogin), new Date());
 
         return `<tr>

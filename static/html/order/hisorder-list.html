@@ -5,32 +5,72 @@
     <link rel="import" href="../head.html?__inline">
     <title></title>
     <!--SCRIPT_PLACEHOLDER-->
+
+    <link href="./bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" />
     <link rel="import" href="../top/top-zendesk.html?__inline">
+    <link href="./select2/dist/css/select2.css" rel="stylesheet" />
+    <link href="./bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
 </head>
 
 <body>
 <link rel="import" href="../top/top.html?__inline">
 <div class="user-container">
     <div class="bg_fff fr">
-        <div class="trade-container order-container b_e bg_fff tradeDetail-container">
-            <div class="advertisement-wrap adver">
-                <div class="item fl">
-                    <samp class="hb"></samp>
-                    <select class="payType ml5" name="payTypeMoney"></select>
-                    <i class="icon icon-down"></i>
-                </div>
-                <div class="item fl">
-                    <samp class="fkfs"></samp>
-                    <select class="payStatic ml5" name="payType">
-                    </select>
-                    <i class="icon icon-down"></i>
-                </div>
-            </div>
+        <div class="trade-container order-container hisorder-container b_e bg_fff tradeDetail-container">
             <div class="titleWrap wp100 over-hide b_e_b">
                 <div class="">
-                    <ul class="titleStatus over-hide">
+                    <ul class="titleStatus over-hide" style="margin: 0">
                         <li class="end on" data-status="end" data-order="end"></li>
                     </ul>
+                </div>
+            </div>
+            <div class="hisorder-wrap adver">
+                <div class="hisorder-content">
+                    <div class="list">
+                        <div class="item ">
+                            <samp class="hb">订单类型：</samp>
+                            <select class="payType ml5" id="payType">
+                                <option value="">选择订单类型</option>
+                                <option value="0">买入</option>
+                                <option value="1">卖出</option>
+                            </select>
+                            <i class="icon icon-down"></i>
+                        </div>
+                        <div class="item ">
+                            <samp class="fkfs">交易状态：</samp>
+                            <select class="payStatic ml5" id="payStatic">
+                                <option value="">选择交易状态</option>
+                                <option value="2">待评价</option>
+                                <option value="3">已完成</option>
+                                <option value="6">仲裁买家胜</option>
+                                <option value="7">仲裁卖家胜</option>
+                            </select>
+                            <i class="icon icon-down"></i>
+                        </div>
+                        <div class="time-item">
+                            <samp class="fkfs">创建时间：</samp>
+                            <div class="form-group">
+                                <div class='input-group date' id='createDatetimeStart'>
+                                    <input type='text' class="form-control" placeholder="请选择"/>
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class='input-group date' id='createDatetimeEnd'>
+                                    <input type='text' class="form-control"placeholder="请选择" />
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hisorder-btn">
+                        <span class="hisorder-reset-btn">重置</span>
+                        <span class="hisorder-search-btn">搜索</span>
+                    </div>
                 </div>
             </div>
             <div class="trade-list-wrap userSelect_none">
@@ -121,10 +161,29 @@
     </div>
 </div>
 <link rel="import" href="../footer.html?__inline">
+<!--<script src="moment/moment.js"></script>-->
+<!--<script src="bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js"></script>-->
 <script>
-  require(['domReady!'], function (doc) {
-    require(['app/controller/order/hisOrderList']);
-  });
+  require(['moment/moment.js'], function(moment) {
+      window.moment = moment
+      require(['app/controller/order/hisOrderList',
+          'bootstrap-3.3.7-dist/js/bootstrap.js',
+          'bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js'], function() {
+          $(function () {
+              $('#createDatetimeStart').datetimepicker();
+              $('#createDatetimeEnd').datetimepicker({
+                  useCurrent: false //Important! See issue #1075
+              });
+              $("#createDatetimeStart").on("dp.change", function (e) {
+                  $('#createDatetimeEnd').data("DateTimePicker").minDate(e.date);
+              });
+              $("#createDatetimeEnd").on("dp.change", function (e) {
+                  $('#createDatetimeStart').data("DateTimePicker").maxDate(e.date);
+              });
+          });
+      })
+  })
+
 </script>
 </body>
 

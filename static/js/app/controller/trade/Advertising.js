@@ -88,6 +88,18 @@ define([
         $("#tradeCoin").append(step1SelectHtml);
       }, base.hideLoadingSpin);
         addListener();
+        var type=base.getUrlParam("type")
+        if(type != "buy") {
+            $(".advertise-step1-bigbigTitle .change").removeClass('sell').addClass('buy');
+            $('.advertise-step1-bigbigTitle .title').html('卖出您的比特币以获得利润');
+            $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要获得比特币吗？<span class="change sell">创建一个出价来购买比特币</span></p>`);
+            tradeType = 1;
+        } else {
+            $(".advertise-step1-bigbigTitle .change").removeClass('buy').addClass('sell');
+            $('.advertise-step1-bigbigTitle .title').html('购买比特币');
+            $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要出售比特币吗？<span class="change buy">去出售比特币</span></p>`);
+            tradeType = 0;
+        }
     }
     function salesCalculation() {
         let inputValue =$('#zqInput').val()
@@ -97,12 +109,19 @@ define([
         let myprice = price*(1+inputValue/100);
         tipMyprice.html(myprice.toFixed(8));
         if(inputValue != ''){
-            let value = (inputValue/100 + 1).toFixed(8);
+            let value = ( Number(inputValue) + 100).toFixed(8);
             tipRate.html(value  + '%');
         }else{
             tipRate.html(0 + '%');
         }
-        $('.step2-zq-tips .step2-za-tip-amount .step2-zq-tip-weighter').html( (Number(myprice) - Number(price)).toFixed(8));
+        var amountWeight =(Number(myprice) - Number(price)).toFixed(8)
+        if(amountWeight < 0){
+            $('.step2-zq-tips .step2-za-tip-amount .tip').html('每出售一个比特币，我将亏损' );
+            amountWeight = (-(amountWeight))
+        }else{
+            $('.step2-zq-tips .step2-za-tip-amount .tip').html('每出售一个比特币，我将赚取' );
+        }
+        $('.step2-zq-tips .step2-za-tip-amount .step2-zq-tip-weighter').html( amountWeight );
     }
     //step2 -计算每笔销售
     $('#zqInput').keyup(function(){
@@ -127,10 +146,8 @@ define([
               item.text = item.dvalue;
           });
           step2TagInitData = data;
-          let step3SelectedData = [];
-          accuracyTags(step3SelectedData)
-          let step3CountryListHtml = '';
-          $('#targetArea').html(step3CountryListHtml);
+          let step2SelectedData = [];
+          accuracyTags(step2SelectedData)
       }, base.hideLoadingSpin);
     }
     function accuracyTags(step2SelectedData) {
@@ -299,7 +316,7 @@ define([
                 $('.m-type').text('USD');
             }
             status = data.status;
-            data.premiumRate = data.premiumRate * 10;
+            data.premiumRate = data.premiumRate * 100;
             let premiumRate = (Math.floor(data.premiumRate * 1000) / 100).toFixed(2);
             data.minTrade = data.minTrade;
             data.maxTrade = (Math.floor(parseInt(data.maxTrade) * 100) / 100).toFixed(2);
@@ -338,15 +355,25 @@ define([
             //step2
             $("#zqInput").val(data.premiumRate);
             salesCalculation();
-            // var fixTrade = data.fixTrade;
-            // fixTrade.split('||');
-            // $("#step2AccuracyTags").select2("val", [fixTrade]);
-            $("#minInput").val(data.minTrade);
-            $("#maxInput").val(data.maxTrade);
+            if(data.fixTrade != ''){
+                $('.jzxe').text('使用交易金额');
+                $('.step2-min,.step2-max').hide();
+                $('.step2-accuracy').show();
+                var fixTrade = data.fixTrade;
+                fixTrade = fixTrade.split('||');
+                console.log(fixTrade)
+                $("#step2AccuracyTags").select2("val", [fixTrade]);
+            }else{
+                $('.jzxe').text('使用精准限额');
+                $('.step2-min,.step2-max').show();
+                $('.step2-accuracy').hide();
+                $("#minInput").val(data.minTrade);
+                $("#maxInput").val(data.maxTrade);
+            }
             $("#cancelTimeInput").val(data.payLimit)
             //step3
             var platTag = data.platTag;
-            platTag.split('||');
+            platTag=platTag.split('||');
             $("#step3Tags").select2("val", [platTag]);
             $("#myTagInput").val(data.customTag);
             $("#clauseTextarea").val(data.item);
@@ -454,20 +481,23 @@ define([
         }
         base.showLoadingSpin();
         let platTag = $('#step3Tags').val().join('||');
-        let accuracyTags = sessionStorage.getItem('accuracyTags')
-        accuracyTags = accuracyTags.split(',').join('||').toString()
-        console.log(accuracyTags)
+        let step2AccuracyTags = sessionStorage.getItem('step2AccuracyTags')
+        step2AccuracyTags = step2AccuracyTags.split(',').join('||').toString()
+        if(step2AccuracyTags == 'null'){
+            step2AccuracyTags = '';
+        }
+        console.log(step2AccuracyTags)
         return TradeCtr.submitAdvertise({
           allowCountry: targetArea,
-          fixTrade:accuracyTags,
+          fixTrade:step2AccuracyTags || undefined,
           customTag: $('#myTagInput').val(),
           isValidateEmail: step3ConditionConfig.email,
           isValidateIdentity: step3ConditionConfig.id,
           isValidateTelephone: step3ConditionConfig.mobile,
           item: $('#clauseTextarea').val(),
           leaveMessage: $('#explainTextarea').val(),
-          maxTrade: Number(sessionStorage.getItem('max')),
-          minTrade: Number(sessionStorage.getItem('min')),
+          maxTrade:  Number(sessionStorage.getItem('max')) || undefined,
+          minTrade:  Number(sessionStorage.getItem('min')) || undefined,
           notAllowCountry: step3AreaLimit,
           onlyTrust: 0,
           payLimit: sessionStorage.getItem('cancelTime'),
@@ -653,7 +683,15 @@ define([
         if($('.jzxe').attr('data-type') == 1){
             if(!$('#minInput').val() || !$('#maxInput').val()){
                 base.showMsg(base.getText('请填写所有信息'));
-                    return
+                return;
+            }
+            if($("#minInput").val() <= 0) {
+                base.showMsg(base.getText('单笔最小交易额必须大于0'));
+                return;
+            }
+            if(Number($("#minInput").val()) >= Number($("#maxInput").val())) {
+                base.showMsg(base.getText('最低不能大于最高交易额'));
+                return;
             }
         }else {
             if(!$("#step2AccuracyTags").val()){
@@ -661,10 +699,17 @@ define([
                 return
             }
         }
+          if($('.jzxe').attr('data-type') == 1){
+              sessionStorage.setItem('step2AccuracyTags', '');
+          }else{
+              $('#minInput').val('');
+              $('#maxInput').val('');
+          }
+        sessionStorage.setItem('jzxe', $('.jzxe').attr('data-type'));
         sessionStorage.setItem('zq', $('#zqInput').val());
         sessionStorage.setItem('min', $('#minInput').val());
         sessionStorage.setItem('max', $('#maxInput').val());
-        sessionStorage.setItem('accuracyTags', $('#step2AccuracyTags').val());
+        sessionStorage.setItem('step2AccuracyTags', $('#step2AccuracyTags').val());
         sessionStorage.setItem('cancelTime', $('#cancelTimeInput').val());
         // sessionStorage.setItem('minPrice', $('#minPriceInput').val());
           if(code != ''){
@@ -837,21 +882,23 @@ define([
         base.showLoadingSpin();
         let platTag = $('#step3Tags').val().join('||');
 
-        let accuracyTags = sessionStorage.getItem('accuracyTags')
-        accuracyTags = accuracyTags.split(',').join('||').toString()
-        console.log(accuracyTags)
+        let step2AccuracyTags = sessionStorage.getItem('step2AccuracyTags')
+        step2AccuracyTags = step2AccuracyTags.split(',').join('||').toString()
+        if(step2AccuracyTags == 'null'){
+            step2AccuracyTags = '';
+        }
         return TradeCtr.editAdvertise({
             adsCode:code,
             allowCountry: targetArea,
-            fixTrade:accuracyTags,
+            fixTrade:step2AccuracyTags || undefined,
             customTag: $('#myTagInput').val(),
             isValidateEmail: step3ConditionConfig.email,
             isValidateIdentity: step3ConditionConfig.id,
             isValidateTelephone: step3ConditionConfig.mobile,
             item: $('#clauseTextarea').val(),
             leaveMessage: $('#explainTextarea').val(),
-            maxTrade: Number(sessionStorage.getItem('max')),
-            minTrade: Number(sessionStorage.getItem('min')),
+            maxTrade:  Number(sessionStorage.getItem('max')) || undefined,
+            minTrade:  Number(sessionStorage.getItem('min')) || undefined,
             notAllowCountry: step3AreaLimit,
             onlyTrust: 0,
             payLimit: sessionStorage.getItem('cancelTime'),
@@ -866,9 +913,9 @@ define([
         }).then((res) => {
             base.showMsg(base.getText('操作成功', langType));
             if (Number(sessionStorage.getItem('tradeType')) == '0') {
-                base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
-            } else {
                 base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
+            } else {
+                base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
             }
             base.showLoadingSpin();
         }, base.hideLoadingSpin);

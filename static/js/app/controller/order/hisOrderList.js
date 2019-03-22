@@ -198,6 +198,8 @@ define([
       let countNum = parseFloat(base.formatMoney(item.countString, '', item.tradeCoin));
       quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(8)  + item.tradeCoin : '-';
     }
+
+      $(".orderDetail-operation-btn").html('')
       var totalCount = data.totalCount.toFixed(8);
       return `<tr data-code="${item.code}">
                     <td><input  type="checkbox" value="" /></td>
@@ -209,19 +211,84 @@ define([
 					</td>
 					<td class="code">${item.code.substring(item.code.length-8)}</td>
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
-					<td class="amount">${item.status!="-1" && item.tradeAmount?item.tradeAmount+'CNY':'-'}</td>
+					<td class="amount">${item.status!="-1" && item.tradeAmount?item.tradeAmount+item.tradeCurrency:'-'}</td>
 					<td class="quantity">${totalCount}BTC</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
 					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
                     <td class="operation">
-                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}">聊天</div>  
-                        <samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}"></samp>
-						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}"> ></i>
+                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}">聊天</div>  
+                        <samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}"></samp>
+						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}"> ></i>
                     </td>
-                  
 				</tr>`;
   }
 
+
+  //按条件查找已结束订单
+    $('.hisorder-search-btn').click(function () {
+      var data;
+      var type =$('.hisorder-wrap #payType option:selected').val()
+      var createDatetimeStart =$('#createDatetimeStart input').val()
+      var createDatetimeEnd =$('#createDatetimeEnd input').val()
+      if( createDatetimeStart == '' || createDatetimeEnd == ''){
+          createDatetimeStart = ''
+          createDatetimeEnd =''
+      }else {
+          createDatetimeStart = base.formateDatetime(createDatetimeStart);
+          createDatetimeEnd = base.formateDatetime(createDatetimeEnd);
+      }
+      var statusList = [];
+      var payStatic =  $('.hisorder-wrap #payStatic option:selected').val();
+      if(payStatic == ''){
+          payStatic: ["2", "3", "4", "6", "7"]
+      }else {
+          statusList.push(payStatic)
+      }
+        data={
+          start: 1,
+          limit: 10,
+          type:type,
+          statusList:statusList,
+          createDatetimeStart:createDatetimeStart,
+          createDatetimeEnd:createDatetimeEnd
+      }
+      console.log(data)
+        return TradeCtr.getPageOrder(data, true).then((data) => {
+            lists = data.list;
+            if (data.list.length) {
+                var html = "";
+                lists.forEach((item, i) => {
+                    html += buildHtml(item,data);
+                });
+                $("#content-order").html(html);
+                isOrderList = true;
+                addUnreadMsgNum();
+
+                $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
+            } else {
+                config.start == 1 && $("#content-order").empty()
+                config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
+            }
+            config.start == 1 && initPagination(data);
+            if(langType == 'EN'){
+                $('.k-order-list .am-button').css({
+                    'width': 'auto',
+                    'padding-left': '6px',
+                    'padding-right': '6px',
+                });
+            }
+            base.hideLoadingSpin();
+        }, base.hideLoadingSpin);
+
+    })
+  //条件重置
+    $('.hisorder-reset-btn').click(function () {
+        $('.hisorder-wrap #payType').val('')
+        $('#createDatetimeStart input').val('')
+        $('#createDatetimeEnd input').val('')
+        $('.hisorder-wrap #payStatic').val('')
+        getPageOrder(config);
+    })
   //添加未读消息数
   function addUnreadMsgNum() {
     if (isUnreadList && isOrderList) {

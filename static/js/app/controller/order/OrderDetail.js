@@ -73,6 +73,24 @@ define([
           getOrderDetail();
         }, base.hideLoadingSpin);
         addListener();
+        getUserTips();
+    }
+    //判断用户风险提醒
+    function getUserTips() {
+        var chapingCount;
+        UserCtr.getUser().then((item) => {
+            chapingCount = item.beiChaPingCount;
+        })
+        return GeneralCtr.getUserTip({
+            type:'trade_rule',
+            ckey:'risk_tip_feedback_count'
+        }).then(data => {
+            base.hideLoadingSpin();
+            if(chapingCount > data.risk_tip_feedback_count){
+                $('.orderDetail-left-tips').show();
+            }
+
+        }, base.hideLoadingSpin);
     }
     function setHtml() {
         $('title').text(base.getText('订单详情') + '-' +base.getText('区块链技术应用实验平台'));
@@ -180,6 +198,7 @@ define([
           tradeOrderStatus = data.status;
           getAdvertiseDetail();
           //待支付
+            console.log(data.buyUser,base.getUserId())
           if(data.buyUser == base.getUserId()) {
             let interval = base.fun(Date.parse(data.sellUserInfo.lastLogin), new Date());
             $('.orderDetail-right-user-info .user-info .time .interval').html(interval);
@@ -191,15 +210,23 @@ define([
                 $('.orderDetail-container .wait-release-btc').removeClass('hidden');
                 $('.orderDetail-arbitration-befer').hide();
                 $('.orderDetail-arbitration-after').show()
+            }else{
+                $('.orderDetail-operation-btn').html('');
             }
           } else {
             let interval = base.fun(Date.parse(data.buyUserInfo.lastLogin), new Date());
             $('.orderDetail-right-user-info .user-info .time .interval').html(interval);
+            console.log(data.status )
             if(data.status == '0') {
               $('.orderDetail-container .before-release-btc').removeClass('hidden');
             } else if(data.status == '1') {
               $('.orderDetail-container .before-release-btc').removeClass('hidden');
               $('.release-warning').html('买家已支付');
+            }else if(data.status == '5'){
+                $('.orderDetail-left-status').html('仲裁中');
+                $('.orderDetail-container .before-release-btc').removeClass('hidden');
+            }else{
+                $('.orderDetail-operation-btn').html('');
             }
           }
 
@@ -1433,7 +1460,7 @@ define([
         $("#commentDialog .subBtn").click(function() {
             var comment = $("#commentDialog .comment-Wrap .item.on").attr("data-value");
             var content = $('#pjText').val();
-
+            var code = base.getUrlParam("code");
             base.showLoadingSpin();
             TradeCtr.commentOrder(code, comment, content).then((data) => {
                 base.hideLoadingSpin();
@@ -1528,6 +1555,16 @@ define([
       $('.release-unpaid-dialog .subBtn').click(() => {
         $("#releaseUnpaidDialog").addClass("hidden")
       });
+
+      //订单详情提示消失
+        $('.orderDetail-left-tips-button').click(() => {
+            $('.orderDetail-left-tips').hide();
+        })
+
+        //跳转卖家信息
+        $('.more-info').click(() => {
+            base.gohref("../user/user-detail.html?userId="+base.getUrlParam('buyUser')+"&adsCode="+base.getUrlParam('adsCode'));
+        })
 
         // 自动刷新页面
         function auSx() {

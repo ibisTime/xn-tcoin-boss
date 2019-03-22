@@ -108,37 +108,48 @@ define([
 
     function buildHtml(item) {
         var operationHtml = ''
-
+        var tipHtml = ''
+        var goHrefHtml = ''
         //待发布
         if (config.statusList == null || config.statusList.length == 1) {
-            // operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
-        		// 			<div class="am-button publish goHref am-button-ghost am-button-out" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('查看', langType)}</div>`
+             operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
+        		 			<div class="am-button publish goHref am-button-ghost am-button-out" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('查看', langType)}</div>`
 
             //已发布
         } else {
             // 待发布
-            if(item.status == '0') {
-                // operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
+            // if(item.status == '0') {
+                 //operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
             //已上架
-            } else if (item.status == "1") {
-                // operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
-                //                 <div class="am-button am-button-red mr20 doDownBtn" data-code="${item.code}">${base.getText('下架', langType)}</div>`
+             if (item.status == '0') {
+                 operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
+                                 <div class="am-button am-button-red mr20 doDownBtn" data-code="${item.code}">${base.getText('下架', langType)}</div>`
+            } else if (item.status == "1"){
+                tipHtml=`<p style="
+                position: absolute;
+                width: 300px;
+                font-size: 12px;
+                color: #d83b37;
+                ">您的出价当前未公开显示,请存入保证金</p>`
+            }else if (item.status == "2") {//已下架
             }
             if (type == 'buy') {
-                operationHtml += `<div class="goHref view-details" data-href="../trade/buy-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}">></div>`
+                goHrefHtml += `<div class="goHref view-details" data-href="../trade/buy-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">></div>`
             } else if (type == 'sell') {
-                operationHtml += `<div class="goHref view-details" data-href="../trade/sell-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}">></div>`
+                goHrefHtml += `<div class="goHref view-details" data-href="../trade/sell-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">></div>`
             }
         }
+        $(".buy-operation").html(operationHtml)
         return `<tr>
-        <td class="code">${item.code.substring(item.code.length-8)}</td>
+        <td class="code">${item.code.substring(item.code.length-8)} ${tipHtml}</td>
         <td class="type">${typeList[type.toLowerCase()]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
         <td>CN</td>
         <td class="price">${item.truePrice ? item.truePrice.toFixed(2) : '-'} ${item.truePrice ? item.tradeCurrency : ''} </td>
         <td class="price">${(item.premiumRate * 100).toFixed(2) + '%'}</td>
-        <td class="createDatetime">${base.formatDate(item.createDatetime)}</td>
-        <td class="status tc">${item.status=="-1"?base.getText('交谈中', langType) + ','+adsStatusValueList[item.status]:adsStatusValueList[item.status]}${operationHtml}</td>
+        <td class="createDatetime">${base.formatDate(item.createDatetime)} </td>
+        <td class="status tc">${item.status=="-1"?base.getText('交谈中', langType) + ','+adsStatusValueList[item.status]:adsStatusValueList[item.status]}${goHrefHtml}</td>
     </tr>`;
+
 
 
     }

@@ -230,8 +230,8 @@ define([
 
     // 构建左侧支付方式list的dom结构
     function buildPayTypeHtml(item) {
-      return ` <div class="left-item">
-                <div class="nav-item goHref sell-eth gm" data-value=${item.key}>
+      return ` <div class="left-item" data-value=${item.key}>
+                <div class="nav-item goHref sell-eth gm">
                     <span class="nav-item-type en_zf01">${item.value}</span>
                     <span class="num">${item.adsCount}</span>
                 </div>
@@ -271,6 +271,9 @@ define([
         let paySecondHtml = ``;
         if(item.platTag) {
             item.platTag.split('||').map((item) => {
+                if(platTagList[item] == undefined){
+                    return
+                 }
               paySecondHtml += `<span>${platTagList[item]}</span>`;
             });
           }
@@ -282,8 +285,9 @@ define([
         }
         let country = '/static/images/China.png';
         let countryHtml = ``;
-        countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
-
+        if(item.pic != undefined){
+            countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
+        }
         let interval = base.fun(Date.parse(item.user.lastLogin), new Date());
         return `<tr>
 					<td class="nickname" style="padding-left: 20px;">
@@ -367,16 +371,16 @@ define([
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type");
 
           //搜广告
-          if ($("#searchConWrap .minPrice").val()) {
-            config.minPrice = $("#searchConWrap .minPrice").val();
+          if ($("#searchConWrap .payTypeAmount").val()) {
+            config.price = $("#searchConWrap .payTypeAmount").val();
           } else {
-            delete config.minPrice;
+            delete config.price;
           }
-          if ($("#searchConWrap .maxPrice").val()) {
-            config.maxPrice = $("#searchConWrap .maxPrice").val();
-          } else {
-            delete config.maxPrice;
-          }
+          // if ($("#searchConWrap .maxPrice").val()) {
+          //   config.maxPrice = $("#searchConWrap .maxPrice").val();
+          // } else {
+          //   delete config.maxPrice;
+          // }
           if ($("#searchConWrap .payType").val()) {
             config.payType = $("#searchConWrap .payType").val();
             switch(config.payType) {
@@ -417,9 +421,9 @@ define([
             delete config.tradeCurrency
           }
 
-          if($('#payTypeMoney').val()) {
-            config.price = $('#payTypeMoney').val() * 1000;
-          }
+          // if($('#payTypeMoney').val()) {
+          //   config.price = $('#payTypeMoney').val() * 1000;
+          // }
           config.start = 1;
           config.tradeType = '1';
           base.showLoadingSpin();
@@ -427,11 +431,16 @@ define([
           getPageAdvertise(config);
         });
 
+        // 点击所以筛选数据
+        $('#left-wrap').on('click','.en_cwai',function () {
+            getPageAdvertise(config);
+            base.showLoadingSpin();
+        });
+
         // 点击付款方式筛选数据
         $('.left-item-group').on('click', '.left-item', (function(ev) {
             // ev = ev || window.event;
-            let target = ev.target;
-            let payType = $(target).attr('data-value');
+            let payType = $(this).attr('data-value');
             let payConfig = {
                   start: 1,
                   limit: 10,

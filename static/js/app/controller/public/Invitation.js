@@ -22,8 +22,7 @@ define([
         // base.showLoadingSpin();
         $(".head-nav-wrap .invitation").addClass("active");//DOMAIN_NAME
         setHtml();
-        // web端文字推荐
-        $("#invitationDialog .hrefWrap p").html(DOMAIN_NAME + "/user/register.html?inviteCode=" + inviteCode)
+
 
         $.when(
             getInvitationHistory(config),
@@ -65,6 +64,8 @@ define([
             // h5 二维码推荐
             var qrcode = new QRCode('qrcode', INVITATION_HREF + "/user/register.html?inviteCode=" + inviteCode);
             qrcode.makeCode(INVITATION_HREF + "/user/register.html?inviteCode=" + inviteCode);
+            // web端文字推荐
+            $("#invitationDialog .hrefWrap p").html(data.cvalue +"?inviteCode="+inviteCode)
         })
     }
 
@@ -79,7 +80,7 @@ define([
 
     //活动说明
     function getSysConfig() {
-        return GeneralCtr.getSysConfig("activity_rule").then((data) => {
+        return GeneralCtr.getSysConfig("reg_info").then((data) => {
             $(".activity-content").html(data.cvalue.replace(/\n/g, '<br>'));
             base.hideLoadingSpin();
         }, base.hideLoadingSpin)

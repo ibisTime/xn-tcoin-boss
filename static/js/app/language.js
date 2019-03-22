@@ -1817,7 +1817,7 @@ var LANGUAGE = {
         'EN': 'I have read and accepted'
     },
     '产品服务条款': {
-        'ZH': '产品服务条款',
+        'ZH': 'tychely产品服务条款',
         'EN': 'Product terms and conditions'
     },
     '注册协议': {

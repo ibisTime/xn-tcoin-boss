@@ -170,25 +170,14 @@ define([
 
           $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
           $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
-          var statusList=base.getUrlParam('statusList');
           var code=base.getUrlParam('code');
           var status=base.getUrlParam('status');
           var tradeCoin=base.getUrlParam('tradeCoin');
           var operationHtml = ''
-        if (statusList == null || statusList.length == 1) {
-            operationHtml = `<div class="publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('编辑', langType)}</div>
-            			<div class="goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('查看', langType)}</div>`
-            //已发布
-        } else {
-            // 待发布
             if (status == '0') {
-                operationHtml = `<div class="publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('编辑', langType)}</div>`
-                //已上架
-            } else if (status == "1") {
-                operationHtml = `<div class="publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('编辑', langType)}</div>
-                                 <div class="mr20 doDownBtn" data-code="${code}">${base.getText('下架', langType)}</div>`
+                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('编辑', langType)}</div>
+                                 <div class="am-button am-button-red mr20 doDownBtn" data-code="${code}">${base.getText('下架', langType)}</div>`
             }
-        }
             $('.buy-operation').html(operationHtml)
           $.when(
                 getAccount(data.tradeCoin),
@@ -270,7 +259,7 @@ define([
     //出售
     function sellETH() {
       config.tradeAmount = $("#buyAmount").val();
-      config.count = base.formatMoneyParse($("#buyEth").val(), '', tradeCoin);
+      config.count = base.formatMoneyParse($("#buyEth").val(), '', $('.buy-detail-formwrapper #coin').text());
       config.tradePwd = $('#moneyPow').val();
       return TradeCtr.sellETH(config).then((data) => {
         console.log(data);
@@ -379,7 +368,7 @@ define([
             }
         })
             //下架-点击
-        $("#doDownBtn").click(function() {
+        $(document).on('click','.doDownBtn',function() {
             base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType)).then(() => {
                 base.showLoadingSpin()
                 TradeCtr.downAdvertise(code).then(() => {

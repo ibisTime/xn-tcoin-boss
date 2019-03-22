@@ -76,6 +76,7 @@ define([
                 config = {
                     start: 1,
                     limit: 10,
+                    type:0,
                     accountNumber: accountNumber
                 };
                 getPageFlow(config)

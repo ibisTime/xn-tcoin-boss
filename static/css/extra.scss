@@ -2,7 +2,6 @@
 @import "./global";
 
 /*公共樣式*/
-
 .fs13 {
     font-size: 13px;
 }
@@ -1719,6 +1718,7 @@ table {
             color: #fff;
             font-size: 16px;
             padding: 11px 20px;
+            cursor: pointer;
         }
         .left-item-group {
             padding: 10px 0;
@@ -3450,13 +3450,23 @@ table {
             .form-item{
                 width: 255px;
             }
-            span{
+            .unit{
                 position: absolute;
                 top: 0;
                 right: 225px;
                 padding: 9px 20px;
                 background: #F0F0F0;
                 border: 1px solid #B3B3B3;
+            }
+            .rate{
+                padding: 0;
+                margin-bottom: 10px;
+                font-size: 14px;
+                margin-top: -9px;
+                color: #8a8a8a;
+                span{
+                    color: #333;
+                }
             }
         }
         .s-address{
@@ -4497,19 +4507,6 @@ table {
                 }
                 span {
                     color: #7d7d7d;
-                }
-            }
-            .buy-operation{
-                margin-top: 50px;
-                div{
-                    display: inline-block;
-                    width: 90px;
-                    line-height: 40px;
-                    border: 1px solid #999;
-                    text-align: center;
-                    border-radius: 2px;
-                    margin-right: 50px;
-                    cursor: pointer;
                 }
             }
         }
@@ -5921,6 +5918,7 @@ table {
     background: #fff;
     padding: 28px 68px;
     display: flex;
+    min-height: 800px;
     .orderDetail-left {
       flex: 1;
       .orderDetail-left-tips {
@@ -5930,6 +5928,7 @@ table {
         color: #878787;
         background: #fcf4ed;
         margin-bottom: 23px;
+        display: none;
         .orderDetail-left-tips-content {
           color: #878787;
         }
@@ -5940,6 +5939,7 @@ table {
           line-height: 26px;
           background: #F19348;
           color: #fff;
+          cursor: pointer;
         }
       }
       .orderDetail-left-status {
@@ -5957,6 +5957,7 @@ table {
           line-height: 20px;
           text-align: center;
           margin-bottom: 26px;
+          letter-spacing: 1px;
           .todo {
             color: #333;
             margin-bottom: 10px;
@@ -6007,7 +6008,9 @@ table {
               border: 1px solid #F19348;
               border-radius: 2px;
               padding: 5px;
-              margin-right: 12px;
+              margin-right: 10px;
+              display: inline-block;
+              margin-bottom: 10px;
             }
           }
           .zs-introduction {
@@ -6105,6 +6108,7 @@ table {
                 .orderDetail-cancel{
                     background: #D8D8D8;
                     border-radius: 2px;
+                    cursor: pointer;
                 }
                 .orderDetail-tip{
                     background: #D53D3D;
@@ -6139,19 +6143,6 @@ table {
             }
           }
         }
-      }
-      .wait-release-btc-operation{
-          margin-top: 50px;
-          div{
-              display: inline-block;
-              width: 90px;
-              line-height: 40px;
-              border: 1px solid #999;
-              text-align: center;
-              -webkit-border-radius: 2px;
-              border-radius: 2px;
-              margin-right: 50px;
-          }
       }
       .finished-top {
         border-bottom: 1px solid $border-color;
@@ -6426,6 +6417,7 @@ table {
         .more-info {
           border: 1px solid $border-color;
           padding: 10px;
+          cursor: pointer;
         }
       }
       .content-wrap {
@@ -8618,7 +8610,93 @@ html {
         }
     }
 }
+.hisorder-container{
+    tbody{
+        .nickname{
+            .photo{
+                top: 20px;
+            }
+        }
+    }
+    .hisorder-wrap{
+        .hisorder-content{
+            margin: 30px 0;
+            .list {
+                margin-left: 30px;
+                .item {
+                    margin-right: 30px;
+                    display: inline-block;
+                    samp {
+                        font-size: 12px;
+                        display: inline-block;
+                        color: #333;
+                    }
+                    select {
+                        border: 1px solid #ccc;
+                        width: 170px;
+                        line-height: 36px;
+                        -webkit-border-radius: 2px;
+                        border-radius: 2px;
+                        padding: 0 10px;
+                        color: #333;
+                    }
+                }
+                .time-item{
+                    display: inline-block;
+                    position: absolute;
+                    samp{
+                        margin-top: -20px;
+                        position: relative;
+                        top: -12px;
+                    }
+                    .form-group{
+                        width: 220px;
+                        display: inline-block;
+                        margin-bottom: 0;
+                        input{
+                            border-radius: 2px;
+                            height: 38px;
+                        }
+                        input::placeholder{
+                            color: #333;
+                        }
+                    }
+                }
+            }
+            .hisorder-btn{
+                margin-left: 30px;
+                margin-top: 30px;
+                span{
+                    display: inline-block;
+                    line-height: 40px;
+                    text-align: center;
+                    width: 100px;
+                    border: 1px solid #ccc;
+                    border-radius: 2px;
+                    margin-right: 20px;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
 
+}
+.orderDetail-operation-btn,.buy-operation {
+    margin-top: 50px;
+    div{
+        display: inline-block !important;
+        width: 90px;
+        background-color: #fff;
+        color: #333;
+        border: 1px solid #999;
+        text-align: center;
+        border-radius: 2px !important;
+        margin-right: 50px;
+        margin-bottom: 20px;
+        padding: 0 !important;
+        height: auto !important;
+    }
+}
 // 媒体查询
 @media screen and (max-width: 1600px) {
     .bb-container {
