@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title></title>
+    <link href="./bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="./bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+</head>
+
+<body>
+<div class="user-container">
+    <div class="bg_fff fr">
+        <div class="trade-container order-container b_e bg_fff tradeDetail-container">
+            <div class="titleWrap wp100 over-hide b_e_b">
+                <div class="">
+                    <ul class="titleStatus over-hide">
+                        <li class="end on" data-status="end" data-order="end"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="hisorder-wrap adver">
+                <div class="hisorder-content">
+                    <div class="list">
+                        <div class="item ">
+                            <samp class="hb">订单类型：</samp>
+                            <select class="payType ml5" name="payType">
+                                <option value="">选择货币</option>
+                                <option value="0">买入</option>
+                                <option value="1">卖出</option>
+                            </select>
+                            <i class="icon icon-down"></i>
+                        </div>
+                        <div class="item ">
+                            <samp class="fkfs">交易状态：</samp>
+                            <select class="payStatic ml5" name="payStatic">
+                                <option value="">选择货币</option>
+                                <option value="2">待评价</option>
+                                <option value="3">已完成</option>
+                                <option value="6">仲裁买家胜</option>
+                                <option value="7">仲裁卖家胜</option>
+                            </select>
+                            <i class="icon icon-down"></i>
+                        </div>
+                        <div class="time-item">
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker6'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker7'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hisorder-btn">
+                        <span>重置</span>
+                        <span>搜索</span>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+</div>
+</body>
+<script src="moment/moment.js"></script>
+<script src="bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+
+    $(function () {
+        $('#datetimepicker6').datetimepicker();
+        $('#datetimepicker7').datetimepicker({
+            useCurrent: false //Important! See issue #1075
+        });
+        $("#datetimepicker6").on("dp.change", function (e) {
+            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+        });
+        $("#datetimepicker7").on("dp.change", function (e) {
+            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+        });
+    });
+</script>
+</html>
