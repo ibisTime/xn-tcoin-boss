@@ -116,7 +116,7 @@ define([
     //获取邮箱验证码
     function emailYzm(config) {
         return UserCtr.emailYzm(config).then((data) => {
-            console.log(111)
+            console.log(data)
         }, base.hideLoadingSpin);
     }
 
@@ -231,6 +231,7 @@ define([
                     bizType: '805043',
                     email: $('#email').val()
                 }).then(data => {
+                    console.log(data)
                     gcGetYzm(i);
                 }, () => {
                     $('#getVerification1').text(base.getText('获取验证码', langType)).prop("disabled", false);

@@ -144,6 +144,7 @@ define([
           console.log(data);
           data.map((item) => {
               item.text = item.dvalue;
+              item.id = item.dvalue;
           });
           step2TagInitData = data;
           let step2SelectedData = [];
@@ -352,6 +353,22 @@ define([
             $("#price").attr("data-coin", $("#tradeCoin").val());
             $("#price").val((Math.floor(data.truePrice * 100) / 100).toFixed(2));
 
+            var type =base.getUrlParam('type');
+            console.log(base.getUrlParam('type'))
+            if(type == 'sell') {
+                $('.advertise-step1-bigbigTitle .text').removeClass('buy').addClass('sell');
+                $('.advertise-step1-bigbigTitle .title').html('卖出您的比特币以获得利润');
+                $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要获得比特币吗？<span class="change sell">创建一个出价来购买比特币</span></p>`);
+                $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('卖出您的比特币以获得利润');
+                tradeType = 1;
+            } else {
+                $('.advertise-step1-bigbigTitle .text').removeClass('sell').addClass('buy');
+                $('.advertise-step1-bigbigTitle .title').html('购买比特币');
+                $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要出售比特币吗？<span class="change buy">去出售比特币</span></p>`);
+                $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('购买比特币');
+                tradeType = 0;
+            }
+
             //step2
             $("#zqInput").val(data.premiumRate);
             salesCalculation();
@@ -363,12 +380,14 @@ define([
                 fixTrade = fixTrade.split('||');
                 console.log(fixTrade)
                 $("#step2AccuracyTags").select2("val", [fixTrade]);
+                $('.jzxe').attr('data-type','2');
             }else{
                 $('.jzxe').text('使用精准限额');
                 $('.step2-min,.step2-max').show();
                 $('.step2-accuracy').hide();
                 $("#minInput").val(data.minTrade);
                 $("#maxInput").val(data.maxTrade);
+                $('.jzxe').attr('data-type','1');
             }
             $("#cancelTimeInput").val(data.payLimit)
             //step3
@@ -694,7 +713,8 @@ define([
                 return;
             }
         }else {
-            if(!$("#step2AccuracyTags").val()){
+            if(!$("#step2AccuracyTags").select2("val")){
+                console.log($("#step2AccuracyTags").select2("val"))
                 base.showMsg(base.getText('请填写所有信息'));
                 return
             }
@@ -831,11 +851,13 @@ define([
           $(target).removeClass('buy').addClass('sell');
           $('.advertise-step1-bigbigTitle .title').html('卖出您的比特币以获得利润');
           $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要获得比特币吗？<span class="change sell">创建一个出价来购买比特币</span></p>`);
-          tradeType = 1;
+          $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('卖出您的比特币以获得利润');
+            tradeType = 1;
         } else {
           $(target).removeClass('sell').addClass('buy');
           $('.advertise-step1-bigbigTitle .title').html('购买比特币');
           $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要出售比特币吗？<span class="change buy">去出售比特币</span></p>`);
+          $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('购买比特币');
           tradeType = 0;
         }
       });
@@ -847,10 +869,12 @@ define([
                 $('.step2-min,.step2-max').hide();
                 $('.step2-accuracy').show();
                 $(this).attr('data-type',2)
+                sessionStorage.setItem('jzxe', $('.jzxe').attr('data-type'));
             }else{
                 $('.jzxe').text('使用精准限额');
                 $('.step2-min,.step2-max').show();
                 $('.step2-accuracy').hide();
+                sessionStorage.setItem('jzxe', $('.jzxe').attr('data-type'));
                 $(this).attr('data-type',1)
             }
         })

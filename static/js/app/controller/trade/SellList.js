@@ -73,7 +73,7 @@ define([
         getPayTypeMoneyList();
         addListener();
         $('.buy_sell .buy').removeClass('on').siblings().addClass('on');
-        var tipHtml='<p class="tip">来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的<span>“如何提取（出售）比特币指南”</span>，了解有关如何保持安全的提示。</p>'
+        var tipHtml='<p class="tip">来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的<span class="goHref" data-href="../public/help.html">“如何提取（出售）比特币指南”</span>，了解有关如何保持安全的提示。</p>'
         $("#content").before(tipHtml);
     }
 
@@ -238,8 +238,8 @@ define([
 
     // 构建左侧支付方式list的dom结构
     function buildPayTypeHtml(item) {
-      return ` <div class="left-item">
-                  <div class="nav-item goHref sell-eth gm" data-value=${item.key}>
+      return ` <div class="left-item" data-value=${item.key}>
+                  <div class="nav-item goHref sell-eth gm">
                       <span class="nav-item-type en_zf01">${item.value}</span>
                       <span class="num">${item.adsCount}</span>
                   </div>
@@ -379,20 +379,25 @@ define([
             }
         })
 
-        $("#searchBtn").click(function() {
+        $("#searchBtn,#bestSearchBtn").click(function() {
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type")
                 //搜广告
             if (_searchType == "adver") {
-                if ($("#searchConWrap .minPrice").val()) {
-                    config.minPrice = $("#searchConWrap .minPrice").val();
+                if ($("#searchConWrap .payTypeAmount").val()) {
+                    config.price = $("#searchConWrap .payTypeAmount").val();
                 } else {
-                    delete config.minPrice;
+                    delete config.price;
                 }
-                if ($("#searchConWrap .maxPrice").val()) {
-                    config.maxPrice = $("#searchConWrap .maxPrice").val();
-                } else {
-                    delete config.maxPrice;
-                }
+                // if ($("#searchConWrap .minPrice").val()) {
+                //     config.minPrice = $("#searchConWrap .minPrice").val();
+                // } else {
+                //     delete config.minPrice;
+                // }
+                // if ($("#searchConWrap .maxPrice").val()) {
+                //     config.maxPrice = $("#searchConWrap .maxPrice").val();
+                // } else {
+                //     delete config.maxPrice;
+                // }
                 if ($("#searchConWrap .payType").val()) {
                     config.payType = $("#searchConWrap .payType").val();
                   switch(config.payType) {
@@ -432,7 +437,7 @@ define([
                 } else {
                     delete config.tradeCurrency
                 }
-                config.price = $('#payTypeMoney').val() * 1000;
+                // config.price = $('#payTypeMoney').val() * 1000;
                 config.start = 1;
                 config.tradeType = tradeType === 'buy' ? '0' : '1';
                 base.showLoadingSpin();
@@ -446,12 +451,16 @@ define([
                 }
             }
         });
-
+    // 点击所以筛选数据
+    $('#left-wrap').on('click','.en_cwai',function () {
+        getPageAdvertise(config);
+        base.showLoadingSpin();
+    });
       // 点击付款方式筛选数据
-      $('#left-wrap').click(function(ev) {
-        ev = ev || window.event;
-        let target = ev.target;
-        let payType = $(target).attr('data-value');
+     $('.left-item-group').on('click', '.left-item', (function(ev) {
+        // ev = ev || window.event;
+        // let target = ev.target;
+        let payType = $(this).attr('data-value');
         let payConfig = {
           start: 1,
           limit: 10,
@@ -499,7 +508,7 @@ define([
         // }
         base.showLoadingSpin();
         getPageAdvertise(payConfig);
-      });
+      }));
 
         //币种点击
         $("#coin-top ul li").click(function() {

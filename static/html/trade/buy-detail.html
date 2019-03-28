@@ -21,13 +21,19 @@
                         <samp class="small"><span class="tit en-buy_ggsy"></span></samp>
                     </div>
                     <div class="titleWrap-right">
-                        <samp class="en-buy_poundage"> 手续费：0NGN</samp>
+                        <samp class="en-buy_poundage"> 手续费：0 BTC</samp>
                     </div>
                 </div>
                 <form class="form-wrapper wp100 form-wrapper-noIcon over-hide buy-detail-formwrapper" id="form-wrapper">
-                    <div class="form-item b_e fl">
-                        <i class="item-unit"></i>
+                    <div class="form-item b_e fl item-buyAmount">
+                        <i class="item-unit "></i>
                         <input type="number" class="input-item" id="buyAmount" name="buyAmount" placeholder="请输入您购买的金额" />
+                    </div>
+                    <div class="form-item b_e fl item-selectAmount hidden">
+                        <div class="item-select">
+                            <i class="item-unit "></i>
+                            <select id="amounSelect"  class="select-tags"></select>
+                        </div>
                     </div>
                     <div class="form-item b_e fl">
                         <i class="item-unit" id="coin"></i>
@@ -53,7 +59,10 @@
                 <p class="buy-title buy-quick-title">快速出价概览</p>
             </div>
             <div class="buy-cjtk">
-                <p class="buy-quick-title"><span class="buy-title">Type some的出价条款</span><span>社区提示</span></p>
+                <p class="buy-quick-title"><span class="buy-title">Type some的出价条款</span><span class="goHref" data-href="../public/help.html">社区提示</span></p>
+            </div>
+            <div class="en-buy_poundage">
+
             </div>
             <div class="buy-operation">
 
@@ -74,17 +83,17 @@
                     <i class="icon icon-share-email"></i>
                 </p>
             </div>
-            <div class="buy-feedback">
-                <p class="buy-title buy-feedback-title">近期反馈</p>
-                <div class="buy-feedback-item">
-                    <p class="buy-feedback-who"><span class="buy-feedback-who-name">hjdsgfwey</span>写道：</p>
-                    <p class="buy-feedback-what">啊skfhiowfhalfhjkawhf</p>
-                    <p class="buy-feedback-when">
-                        <span class="buy-feedback-when-positive">+1 positive</span>
-                        -<span class="buy-feedback-when-date">Feb 15.2019</span>
-                    </p>
-                </div>
-            </div>
+            <!--<div class="buy-feedback">-->
+                <!--<p class="buy-title buy-feedback-title">近期反馈</p>-->
+                <!--<div class="buy-feedback-item">-->
+                    <!--<p class="buy-feedback-who"><span class="buy-feedback-who-name">hjdsgfwey</span>写道：</p>-->
+                    <!--<p class="buy-feedback-what">啊skfhiowfhalfhjkawhf</p>-->
+                    <!--<p class="buy-feedback-when">-->
+                        <!--<span class="buy-feedback-when-positive">+1 positive</span>-->
+                        <!-- -<span class="buy-feedback-when-date">Feb 15.2019</span>-->
+                    <!--</p>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
 
         <!-- 确认交易密码 -->

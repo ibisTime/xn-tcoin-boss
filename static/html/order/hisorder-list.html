@@ -20,6 +20,7 @@
             <div class="titleWrap wp100 over-hide b_e_b">
                 <div class="">
                     <ul class="titleStatus over-hide" style="margin: 0">
+                        <li class="progress on" data-status="inProgress" data-order="progress"></li>
                         <li class="end on" data-status="end" data-order="end"></li>
                     </ul>
                 </div>
@@ -42,6 +43,7 @@
                                 <option value="">选择交易状态</option>
                                 <option value="2">待评价</option>
                                 <option value="3">已完成</option>
+                                <option value="4">已取消</option>
                                 <option value="6">仲裁买家胜</option>
                                 <option value="7">仲裁卖家胜</option>
                             </select>
@@ -70,6 +72,7 @@
                     <div class="hisorder-btn">
                         <span class="hisorder-reset-btn">重置</span>
                         <span class="hisorder-search-btn">搜索</span>
+                        <span class="hisorder-export-btn">导出</span>
                     </div>
                 </div>
             </div>
@@ -168,7 +171,8 @@
       window.moment = moment
       require(['app/controller/order/hisOrderList',
           'bootstrap-3.3.7-dist/js/bootstrap.js',
-          'bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js'], function() {
+          'bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js',
+          'app/jquery-table2excel-master/src/jquery.table2excel.js',], function() {
           $(function () {
               $('#createDatetimeStart').datetimepicker();
               $('#createDatetimeEnd').datetimepicker({
@@ -179,6 +183,12 @@
               });
               $("#createDatetimeEnd").on("dp.change", function (e) {
                   $('#createDatetimeStart').data("DateTimePicker").maxDate(e.date);
+              });
+              $(".hisorder-export-btn").click(function () {
+                  $("#content-order").table2excel({
+                      exclude  : ".noExl", //过滤位置的 css 类名
+                      filename : "已结束订单-" + new Date().getTime() + ".xls" //文件名称
+                  });
               });
           });
       })

@@ -121,10 +121,10 @@ define([
                 lists.forEach((item, i) => {
                     html += buildHtmlFlow(item);
                 });
-                $(".tradeRecord-list-wrap .list-wrap").html(html)
+                $("#tradeRecord-list").html(html)
                 $(".tradeRecord-list-wrap .no-data").addClass("hidden");
             } else {
-                config.start == 1 && $(".tradeRecord-list-wrap .list-wrap").empty()
+                config.start == 1 && $("#tradeRecord-list").empty()
                 config.start == 1 && $(".tradeRecord-list-wrap .no-data").removeClass("hidden");
             }
 
@@ -133,12 +133,12 @@ define([
         }, base.hideLoadingSpin)
     }
     function buildHtmlFlow(item) {
-        return `<div class="list-item">
-					<div>${base.formateDatetime(item.createDatetime)}</div>
-					<div>${item.remark}</div>
-					<div>${base.formatMoney(item.transAmountString,'',item.currency)}</div>
-					<div>${base.formatMoney(item.postAmountString,'',item.currency)}</div>
-				</div>`
+        return `<tr class="list-item">
+					<td>${base.formateDatetime(item.createDatetime)}</td>
+					<td>${item.bizNote}</td>
+					<td>${base.formatMoney(item.transAmountString,'',item.currency)}</td>
+					<td>${base.formatMoney(item.postAmountString,'',item.currency)}</td>
+				</tr>`
     }
 
     // 根据语言替换说明中文

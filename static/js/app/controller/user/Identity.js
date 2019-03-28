@@ -265,6 +265,10 @@ define([
             userConfig.idKind = '1';
             userConfig.idNo = $('#idNo').val().trim();
             userConfig.realName = $('#realName').val().trim();
+            if(userConfig.idNo == '' || userConfig.realName == '' || userConfig.idOppo==''|| userConfig.idFace == ''){
+                base.showMsg('信息不能为空');
+                return;
+            }
             if (_registerForm.valid()) {
                 userSFVerify(userConfig).then(data => {
                     loadFn();

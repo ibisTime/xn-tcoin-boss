@@ -146,13 +146,13 @@ define([
         $('#arbitrationDialog .closeBtn').html(base.getText('放弃'));
         $('#arbitrationDialog .subBtn').html(base.getText('确认申请'));
 
-        $('#commentDialog .fy_jypj').html(base.getText('交易评价'));
-        $('#commentDialog .fy_jyyx').html(base.getText('交易有何印象？快來评价吧'));
-        $('#commentDialog .fy_hp').html(base.getText('好评'));
-        $('#commentDialog .fy_zp').html(base.getText('中评'));
-        $('#commentDialog .fy_cp').html(base.getText('差评'));
-        $('#commentDialog #pjText').attr('placeholder', base.getText('快來评价吧'));
-        $('#commentDialog .subBtn').html(base.getText('提交'));
+        $('.commentDialog .fy_jypj').html(base.getText('交易评价'));
+        $('.commentDialog .fy_jyyx').html(base.getText('交易有何印象？快來评价吧'));
+        $('.commentDialog .fy_hp').html(base.getText('好评'));
+        $('.commentDialog .fy_zp').html(base.getText('中评'));
+        $('.commentDialog .fy_cp').html(base.getText('差评'));
+        $('.commentDialog #pjText').attr('placeholder', base.getText('快來评价吧'));
+        $('.commentDialog .subBtn').html(base.getText('提交'));
 
       $('#paidDialog .fy_qryzf').html(base.getText('确认已支付'));
       $('#paidDialog .fy_content').html(base.getText('注意：如已付款，请及时跟商家联系，让商家及时放行比特币；如商家未放行比特币请及时申请仲裁'));
@@ -196,9 +196,10 @@ define([
         return TradeCtr.getOrderDetail(code).then((data) => {
           adsCode = data.adsCode;
           tradeOrderStatus = data.status;
+            console.log(data.status)
+          sessionStorage.setItem('orderDetailStatus',data.status)
           getAdvertiseDetail();
           //待支付
-            console.log(data.buyUser,base.getUserId())
           if(data.buyUser == base.getUserId()) {
             let interval = base.fun(Date.parse(data.sellUserInfo.lastLogin), new Date());
             $('.orderDetail-right-user-info .user-info .time .interval').html(interval);
@@ -209,21 +210,38 @@ define([
             }else if(data.status == '5'){
                 $('.orderDetail-container .wait-release-btc').removeClass('hidden');
                 $('.orderDetail-arbitration-befer').hide();
-                $('.orderDetail-arbitration-after').show()
+                $('.orderDetail-arbitration-after').show();
+                var maxtime = data.surplusSeconds; //一个小时，按秒计算，自己调整!
+                var minutes;
+                var seconds;
+                var msg;
+                function getCountDown() {
+                    if (maxtime >= 0) {
+                        minutes = Math.floor(maxtime / 60);
+                        seconds = Math.floor(maxtime % 60);
+                        msg = minutes + "分" + seconds + "秒";
+                        --maxtime
+                        $('.orderDetail-tip a').text(msg)
+                    } else{
+                        clearInterval(getCountDown);
+                        $('.orderDetail-tip a').text('0秒')
+                    }
+                }
+                setInterval(getCountDown, 1000)
             }else{
                 $('.orderDetail-operation-btn').html('');
             }
           } else {
             let interval = base.fun(Date.parse(data.buyUserInfo.lastLogin), new Date());
             $('.orderDetail-right-user-info .user-info .time .interval').html(interval);
-            console.log(data.status )
             if(data.status == '0') {
               $('.orderDetail-container .before-release-btc').removeClass('hidden');
             } else if(data.status == '1') {
               $('.orderDetail-container .before-release-btc').removeClass('hidden');
               $('.release-warning').html('买家已支付');
             }else if(data.status == '5'){
-                $('.orderDetail-left-status').html('仲裁中');
+                $('.orderDetail-left-status').html('买家已支付');
+                $('.orderDetail-left-release .release-btn').html('仲裁中');
                 $('.orderDetail-container .before-release-btc').removeClass('hidden');
             }else{
                 $('.orderDetail-operation-btn').html('');
@@ -243,8 +261,10 @@ define([
             } else if(data.buyUser != base.getUserId() && !data.sbComment) {
               comment = 1;
             }
+            $('.finished-top .comment-btn').remove()
             if(comment == 1) {
-              $('.finished-top').append(`<span class="am-button-red comment-btn">去评价</span>`);
+                $(".commentDialog").show()
+              // $('.finished-top .finished-top-status').after(`<span class="am-button-red comment-btn">去评价</span>`);
             }
           }
           payTypeList.map((item) => {
@@ -257,7 +277,7 @@ define([
           });
 
           $('.wait .orderDetail-left-todo .todo-tips span').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
-          $('.wait .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCurrency+'被安全的保存在托管处');
+          $('.wait .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin+'被安全的保存在托管处');
           $('.wait .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
           $('.wait .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
           $('.wait .orderDetail-left-more-info .trade-id .more-info-value').html(code);
@@ -265,7 +285,7 @@ define([
           $('.wait .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
 
 
-          $('.wait-release-btc .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCurrency+'被安全的保存在托管处');
+          $('.wait-release-btc .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin+'被安全的保存在托管处');
           $('.wait-release-btc .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
           $('.wait-release-btc .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
           $('.wait-release-btc .orderDetail-left-todo .todo-tips span').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
@@ -274,7 +294,7 @@ define([
           $('.wait-release-btc .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
 
           $('.before-release-btc .orderDetail-left-todo .todo-tips span').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
-          $('.before-release-btc .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCurrency+'被安全的保存在托管处');
+          $('.before-release-btc .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin+'被安全的保存在托管处');
           $('.before-release-btc .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
           $('.before-release-btc .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
           $('.before-release-btc .orderDetail-left-more-info .trade-id .more-info-value').html(code);
@@ -282,11 +302,11 @@ define([
           $('.before-release-btc .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
 
 
-          $('.finished .finished-bottom .code .finished-bottom-item-content').html(code);
+          $('.finished .finished-bottom .finished-code .finished-bottom-item-content').html(code);
           $('.finished .finished-bottom .price-quantity-amount .price .finished-bottom-item-content').html(data.tradePrice + data.tradeCurrency);
           $('.finished .finished-bottom .price-quantity-amount .amount .finished-bottom-item-content').html(data.tradeAmount + data.tradeCurrency);
           $('.finished .finished-bottom .message .price .finished-bottom-item-content').html(data.leaveMessage);
-          $('.finished .finished-bottom .quantity .finished-bottom-item-content').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
+          $('.finished .finished-bottom .finished-quantitycomment-btn .finished-bottom-item-content').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
           $('.finished .finished-bottom .amount .finished-bottom-item-content').html(data.tradeAmount + data.tradeCurrency);
 
           let startTime = new Date();
@@ -297,16 +317,42 @@ define([
           } else {
             $('.orderDetail-left-time .text .left-time-minute').html('0分钟');
           }
-
+            console.log(data.buyUserInfo.mobile,data.sellUserInfo.mobile)
           if(data.buyUser == base.getUserId()) {
             // 对面是卖家
-            $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.buyUserInfo.photo) + "')" });
-            $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.buyUserInfo.nickname);
+              $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.sellUserInfo.photo) + "')" });
+              $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.sellUserInfo.nickname);
+              $('.orderDetail-right .more-info').attr('userId',data.sellUserInfo.userId);
+              console.log(data.sellUserInfo.userId)
+              getUser(data.sellUserInfo.userId)
+              if(data.sellUserInfo.email != undefined){
+                  $('.orderDetail-right .orderDetail-right-user-info  .yz span:last-child span').html('电子邮件已验证');
+              }else{
+                  $('.orderDetail-right .orderDetail-right-user-info  .yz span:last-child span').html('电子邮件未验证').next('i').removeClass('icon-checked');
+              }
+              if(data.sellUserInfo.mobile != undefined){
+                  $('.orderDetail-right .orderDetail-right-user-info  .yz span:first-child span').html('电话已验证');
+              }else{
+                  $('.orderDetail-right .orderDetail-right-user-info  .yz span:first-child span').html('电话未验证').next('i').removeClass('icon-checked');;
+              }
           } else {
             // 对面是买家
-            $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.sellUserInfo.photo) + "')" });
-            $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.sellUserInfo.nickname);
-          }
+              $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.buyUserInfo.photo) + "')" });
+              $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.buyUserInfo.nickname);
+              $('.orderDetail-right .more-info').attr('userId',data.buyUserInfo.userId);
+              console.log(data.buyUserInfo.userId)
+              getUser(data.buyUserInfo.userId)
+              if( data.buyUserInfo.email != undefined){
+                  $('.orderDetail-right .orderDetail-right-user-info  .yz span:last-child span').html('电子邮件已验证');
+              }else{
+                  $('.orderDetail-right .orderDetail-right-user-info  .yz span:last-child span').html('电子邮件未验证').next('i').removeClass('icon-checked');;
+              }
+              if(data.buyUserInfo.mobile != undefined){
+                  $('.orderDetail-right .orderDetail-right-user-info  .yz span:first-child span').html('电话已验证');
+              }else{
+                  $('.orderDetail-right .orderDetail-right-user-info  .yz span:first-child span').html('电话未验证').next('i').removeClass('icon-checked');;
+              }
+            }
             // if (data.status == '0' || data.status == '1') {
             //     $("#invalidDatetime samp").html(base.getText('订单將在拖管中保持至') + "<i>" + base.formatDate(data.invalidDatetime, "hh:mm:ss") + "</i>," + base.getText('逾期未支付交易將自动取消'));
             //     $("#invalidDatetime").removeClass("hidden")
@@ -429,6 +475,16 @@ define([
         }, base.hideLoadingSpin)
     }
 
+    //获取用户详情
+    function getUser(userId) {
+        console.log(userId)
+        return UserCtr.getUser(true,userId).then((data) => {
+            $('.orderDetail-right .orderDetail-right-user-info  .num .plus').html('+'+data.userStatistics.beiHaoPingCount);
+            $('.orderDetail-right .orderDetail-right-user-info  .num .negative').html('-'+data.userStatistics.beiChaPingCount);
+            $('.orderDetail-right .orderDetail-right-user-info  .trade span:first-child').html(data.userStatistics.jiaoyifangCount+' 交易伙伴');
+            $('.orderDetail-right .orderDetail-right-user-info  .trade span:last-child').html(data.userStatistics.jiaoYiCount+'交易');
+        }, base.hideLoadingSpin)
+    }
     //获取详情
     function getAdvertiseDetail() {
         return TradeCtr.getAdvertiseDetail(adsCode).then((data) => {
@@ -1337,7 +1393,9 @@ define([
         if(tradeOrderStatus == '1') {
           // 买家已付款
           $("#releasePaidDialog").removeClass("hidden");
-        } else {
+        } else if(tradeOrderStatus == '5'){
+
+        }else {
           // 买家未付款
           $("#releaseUnpaidDialog").removeClass("hidden")
         }
@@ -1453,16 +1511,23 @@ define([
             }, base.emptyFun)
         })
 
-        $("#commentDialog .comment-Wrap .item").click(function() {
+        $(".commentDialog .comment-Wrap .item").click(function() {
             $(this).addClass("on").siblings(".item").removeClass("on")
         })
 
-        $("#commentDialog .subBtn").click(function() {
-            var comment = $("#commentDialog .comment-Wrap .item.on").attr("data-value");
+        $(".commentDialog .subBtn").click(function() {
+            base.showLoadingSpin();
+            var comment = $(".commentDialog .comment-Wrap .item.on").attr("data-value");
             var content = $('#pjText').val();
             var code = base.getUrlParam("code");
-            base.showLoadingSpin();
-            TradeCtr.commentOrder(code, comment, content).then((data) => {
+            var config={
+                updater: base.getUserId(),
+                code:code,
+                starLevel:comment,
+                content:content
+            }
+            console.log(config)
+            TradeCtr.commentOrder(config).then((data) => {
                 base.hideLoadingSpin();
                 if(data.filterFlag == '2'){
                     base.showMsg(base.getText('操作成功, 其中含有关键字，需平台进行审核'));
@@ -1470,8 +1535,8 @@ define([
                     base.showMsg(base.getText('操作成功'));
                 }
                 auSx();
-                $("#commentDialog").addClass("hidden");
-                $("#commentDialog .comment-Wrap .item").eq(0).addClass("on").siblings(".item").removeClass("on");
+                // $("#commentDialog").addClass("hidden");
+                $(".commentDialog .comment-Wrap .item").eq(0).addClass("on").siblings(".item").removeClass("on");
             }, base.hideLoadingSpin)
         })
 
@@ -1506,8 +1571,8 @@ define([
         TradeCtr.payOrder(code).then(() => {
           if(document.getElementById('audioOrderDetail').muted != false){
               document.getElementById('audioOrderDetail').muted = false;
-              document.getElementById('audioOrderDetail').play();
           }
+            document.getElementById('audioOrderDetail').play();
           base.hideLoadingSpin();
           base.showMsg(base.getText('操作成功'));
           setTimeout(function() {
@@ -1563,7 +1628,12 @@ define([
 
         //跳转卖家信息
         $('.more-info').click(() => {
-            base.gohref("../user/user-detail.html?userId="+base.getUrlParam('buyUser')+"&adsCode="+base.getUrlParam('adsCode'));
+            var userId = $('.more-info').attr('userId')
+            if(base.getUrlParam('adsCode') == '' || base.getUrlParam('adsCode') == undefined){
+                base.gohref("../user/user-detail.html?userId="+userId+"&adsCode="+base.getUrlParam('code'));
+            }else {
+                base.gohref("../user/user-detail.html?userId="+userId+"&adsCode="+base.getUrlParam('adsCode'));
+            }
         })
 
         // 自动刷新页面

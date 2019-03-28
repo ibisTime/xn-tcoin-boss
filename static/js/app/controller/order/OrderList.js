@@ -16,8 +16,8 @@ define([
             "progress": ["-1", "0", "1", "5"]
         },
         typeList = {
-            "buy": base.getText('购买'),
-            "sell": base.getText('出售'),
+            "buy": base.getText('出售'),
+            "sell": base.getText('购买'),
         },
         statusValueList = {};
     var config = {
@@ -117,7 +117,7 @@ define([
                 $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
             } else {
                 config.start == 1 && $("#content-order").empty()
-                config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
+                // config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
             }
             config.start == 1 && initPagination(data);
             if(langType == 'EN'){
@@ -198,12 +198,11 @@ define([
             var tmpl = user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '-';
             photoHtml = `<div class="photo"><div class="noPhoto">${tmpl}</div></div>`
         }
-        if (item.status != "-1") {
-            let countNum = parseFloat(base.formatMoney(item.countString, '', item.tradeCoin));
-            quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(8)  + item.tradeCoin : '-';
-        }
+        // if (item.status != "-1") {
+        //     let countNum = parseFloat(base.formatMoney(item.countString, '', item.tradeCoin));
+        //     quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(8)  + item.tradeCoin : '-';
+        // }
          $(".orderDetail-operation-btn").html(operationHtml)
-        var totalCount = data.totalCount.toFixed(8)
         return `<tr data-code="${item.code}">
 					<td class="nickname">
                         <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.sellUser : item.buyUser}&adsCode=${item.code}&bsComment=${item.bsComment}&sellUser=${item.sellUser}">
@@ -213,8 +212,8 @@ define([
 					</td>
 					<td class="code">${item.code.substring(item.code.length-8)}</td>
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
-					<td class="amount">${item.status!="-1" && item.tradeAmount?item.tradeAmount+item.tradeCurrency:'-'}</td>
-					<td class="quantity">${totalCount}BTC</td>
+					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
+					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
 					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]} 
 					<samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}"></samp>
@@ -367,28 +366,5 @@ define([
         $("#commentDialog .comment-Wrap .item").click(function() {
             $(this).addClass("on").siblings(".item").removeClass("on")
         })
-
-        $("#commentDialog .subBtn").click(function() {
-            var orderCode = $(this).attr("data-ocode");
-            var comment = $("#commentDialog .comment-Wrap .item.on").attr("data-value");
-            var content = $('#pjText').val();
-
-            base.showLoadingSpin();
-            TradeCtr.commentOrder(orderCode, comment, content).then((data) => {
-                base.hideLoadingSpin();
-                if(data.filterFlag == '2'){
-                    base.showMsg(base.getText('操作成功, 其中含有关键字，需平台进行审核'));
-                }else{
-                    base.showMsg(base.getText('操作成功'));
-                }
-                $("#commentDialog").addClass("hidden");
-                setTimeout(function() {
-                    base.showLoadingSpin();
-                    $("#commentDialog .comment-Wrap .item").eq(0).addClass("on").siblings(".item").removeClass("on")
-                    getPageOrder(true)
-                }, 1500)
-            }, base.hideLoadingSpin)
-        })
-
     }
 });

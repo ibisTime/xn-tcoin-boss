@@ -88,6 +88,8 @@ define([
             $("#countryCode").attr('data-code', defaultData.code);
             $("#countryCode").css("background-image", `url('${base.getPic(defaultData.pic)}')`);
             $("#interCode").attr('data-code', defaultData.interCode);
+            sessionStorage.setItem('countryCode',$('#countryCode').attr('data-code'));
+            sessionStorage.setItem('interCode',$('#interCode').attr('data-code'));
             $("#interCode").text(defaultData.interCode);
 
         }, base.hideLoadingSpin);
@@ -125,14 +127,14 @@ define([
                     base.gohref("./setEmail.html");
                 });
             }
-            if (!data.mobile) {
+            if (data.mobileBindFlag) {
                 $('#currencyBtn').unbind('click');
                 $("#mobile").val(data.mobile).attr('disabled', 'disabled');
                 $("#code_"+data.countryCode).click();
                 $("#goChangeMobile").removeClass('hidden');
             } else {
+                $('#form-wrapper1').removeClass('hidden');
                 $('.username-wrap .mobile-remind').removeClass('hidden');
-                $('#form-wrapper').removeClass('hidden');
             }
             if (data.idNo) {
                 $("#idNo").text(base.getText('已验证', langType))
@@ -258,7 +260,8 @@ define([
             $("#countryCode").css("background-image", `url('${base.getPic(_this.attr('data-pic'))}')`);
             $("#interCode").attr('data-code', _this.attr('data-interCode'));
             $("#interCode").text(_this.attr('data-interCode'));
-
+            sessionStorage.setItem('countryCode',$('#countryCode').attr('data-code'));
+            sessionStorage.setItem('interCode',$('#interCode').attr('data-code'));
             $("#countryDialog").addClass('hidden')
         })
 
@@ -276,7 +279,16 @@ define([
             if(_formWrapper.valid()){
                 base.showLoadingSpin();
                 var params = _formWrapper.serializeObject();
-                GeneralCtr.sendCaptcha('805060', params.mobile).then(()=> {
+                let params = _formWrapper1.serializeObject();
+                params = {
+                    ...params,
+                    ..._formWrapper.serializeObject()
+                };
+                params.countryCode = $('#countryCode').attr('data-code');
+                params.interCode = $('#interCode').attr('data-code');
+                params.userId = base.getUserId();
+                params.bizType = '805060';
+                GeneralCtr.sendPhone(params).then(()=> {
                     base.hideLoadingSpin();
                     base.showMsg('发送成功');
                 }, base.hideLoadingSpin)
@@ -304,7 +316,6 @@ define([
                 params.interCode = $('#interCode').attr('data-code');
                 base.showLoadingSpin();
                 UserCtr.setCurrencyPhone(params).then(() => {
-                    debugger;
                     base.hideLoadingSpin();
                     base.showMsg('操作成功！');
                     setTimeout(function () {
@@ -313,6 +324,5 @@ define([
                 }, base.hideLoadingSpin);
             }
         })
-
     }
 });

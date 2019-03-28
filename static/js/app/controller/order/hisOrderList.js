@@ -29,7 +29,8 @@ define([
   init();
 
   function init() {
-    base.showLoadingSpin();
+      $(".tradeDetail-container .titleStatus li." + coin.toLowerCase()).addClass("on").siblings('li').removeClass('on');
+      base.showLoadingSpin();
     setHtml();
     TencentCloudLogin.goLogin(function(list) {
       unreadMsgList = list;
@@ -47,6 +48,7 @@ define([
 
   function setHtml() {
     base.getDealLeftText();
+    $('.progress').text(base.getText('进行中'));
     $('.end').text(base.getText('已结束'));
     $('.b_e_b .nickname').text(base.getText('交易伙伴'));
     $('.code').text(base.getText('订单编号'));
@@ -194,10 +196,7 @@ define([
       var tmpl = user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '-';
       photoHtml = `<div class="photo"><div class="noPhoto">${tmpl}</div></div>`
     }
-    if (item.status != "-1") {
-      let countNum = parseFloat(base.formatMoney(item.countString, '', item.tradeCoin));
-      quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(8)  + item.tradeCoin : '-';
-    }
+
 
       $(".orderDetail-operation-btn").html('')
       var totalCount = data.totalCount.toFixed(8);
@@ -210,9 +209,9 @@ define([
 						<samp class="name k-name">${user.nickname ? user.nickname : '-'}</samp>
 					</td>
 					<td class="code">${item.code.substring(item.code.length-8)}</td>
-					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
-					<td class="amount">${item.status!="-1" && item.tradeAmount?item.tradeAmount+item.tradeCurrency:'-'}</td>
-					<td class="quantity">${totalCount}BTC</td>
+					<td class="type">${typeList[item.type]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
+					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
+					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
 					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
                     <td class="operation">
@@ -239,8 +238,8 @@ define([
       }
       var statusList = [];
       var payStatic =  $('.hisorder-wrap #payStatic option:selected').val();
-      if(payStatic == ''){
-          payStatic: ["2", "3", "4", "6", "7"]
+      if(payStatic == ""){
+          statusList = ['2','3','4','6','7'];
       }else {
           statusList.push(payStatic)
       }
@@ -249,10 +248,10 @@ define([
           limit: 10,
           type:type,
           statusList:statusList,
-          createDatetimeStart:createDatetimeStart,
-          createDatetimeEnd:createDatetimeEnd
+          createDatetimeStart:createDatetimeStart || undefined,
+          createDatetimeEnd:createDatetimeEnd || undefined
       }
-      console.log(data)
+      console.log(payStatic,data);
         return TradeCtr.getPageOrder(data, true).then((data) => {
             lists = data.list;
             if (data.list.length) {
@@ -318,9 +317,9 @@ define([
       base.gohref("../trade/sell-detail.html?code=" + orderCode)
     })
     // 已结束
-    $('.tradeDetail-container .titleStatus .end').click(function() {
-      if($(this).text() === '已结束') {
-        base.gohref("../order/hisorder-list.html");
+    $('.tradeDetail-container .titleStatus .progress').click(function() {
+      if($(this).text() === '进行中') {
+        base.gohref("../order/order-list.html");
       }
     });
 
@@ -432,27 +431,33 @@ define([
       $(this).addClass("on").siblings(".item").removeClass("on")
     })
 
-    $("#commentDialog .subBtn").click(function() {
-      var orderCode = $(this).attr("data-ocode");
-      var comment = $("#commentDialog .comment-Wrap .item.on").attr("data-value");
-      var content = $('#pjText').val();
-
-      base.showLoadingSpin();
-      TradeCtr.commentOrder(orderCode, comment, content).then((data) => {
-        base.hideLoadingSpin();
-        if(data.filterFlag == '2'){
-          base.showMsg(base.getText('操作成功, 其中含有关键字，需平台进行审核'));
-        }else{
-          base.showMsg(base.getText('操作成功'));
-        }
-        $("#commentDialog").addClass("hidden");
-        setTimeout(function() {
+      $("#commentDialog .subBtn").click(function() {
           base.showLoadingSpin();
-          $("#commentDialog .comment-Wrap .item").eq(0).addClass("on").siblings(".item").removeClass("on")
-          getPageOrder(true)
-        }, 1500)
-      }, base.hideLoadingSpin)
-    })
-
+          var comment = $("#commentDialog .comment-Wrap .item.on").attr("data-value");
+          var content = $('#pjText').val();
+          var code = base.getUrlParam("code");
+          var config={
+              updater: base.getUserId(),
+              code:code,
+              starLevel:comment,
+              content:content
+          }
+          console.log(config)
+          TradeCtr.commentOrder(config).then((data) => {
+              base.hideLoadingSpin();
+              if(data.filterFlag == '2'){
+                  base.showMsg(base.getText('操作成功, 其中含有关键字，需平台进行审核'));
+              }else{
+                  base.showMsg(base.getText('操作成功'));
+              }
+              auSx();
+              $("#commentDialog").addClass("hidden");
+              $("#commentDialog .comment-Wrap .item").eq(0).addClass("on").siblings(".item").removeClass("on");
+          }, base.hideLoadingSpin)
+      })
+      // 自动刷新页面
+      function auSx() {
+          window.location.reload();
+      }
   }
 });

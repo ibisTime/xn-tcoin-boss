@@ -21,13 +21,19 @@
                     </div>
                 </div>
                 <form class="form-wrapper wp100 form-wrapper-noIcon over-hide buy-detail-formwrapper" id="form-wrapper">
-                    <div class="form-item b_e fl">
+                    <div class="form-item b_e fl item-buyAmount">
                         <i class="item-unit"></i>
-                        <input type="number" class="input-item" id="buyAmount" name="buyAmount" placeholder="请输入您购买的金额" />
+                        <input type="number" class="input-item" id="buyAmount" name="buyAmount" placeholder="请输入您想获得的金额" />
+                    </div>
+                    <div class="form-item b_e fl item-selectAmount hidden">
+                        <div class="item-select">
+                            <i class="item-unit "></i>
+                            <select id="amounSelect"  class="select-tags"></select>
+                        </div>
                     </div>
                     <div class="form-item b_e fl">
                         <i class="item-unit" id="coin"></i>
-                        <input type="text" class="input-item" id="buyEth" name="buyEth" placeholder="请输入您购买的数量" />
+                        <input type="text" class="input-item" id="buyEth" name="buyEth" placeholder="请输入您想获得的金额" />
                     </div>
                 </form>
                 <div class="am-button am-button-red wp100" id="buyBtn">
@@ -46,10 +52,10 @@
                 <p class="item">市场价格为每比特币<span class="buy-info-weighter price">143289.90 NGH</span>（您可以购买任意分之一的比特币）</p>
             </div>
             <div class="buy-cjtk">
-                <p class="buy-quick-title"><span class="buy-title">Type some的出价条款</span><span>社区提示</span></p>
+                <p class="buy-quick-title"><span class="buy-title">Type some的出价条款</span><span class="goHref" data-href="../public/help.html">社区提示</span></p>
                 <!--<span>Newsgd.com is the premier online source of Guangdong news and information, fully displaying Guangdong through channels including Guangdong News, Guangdong</span>-->
             </div>
-            <div class="buy-operation">
+            <div class="sell-operation">
 
             </div>
         </div> 
@@ -68,19 +74,19 @@
                     <i class="icon icon-share-email"></i>
                 </p>
             </div>
-            <div class="buy-feedback">
-                <p class="buy-title buy-feedback-title">近期反馈</p>
-                <div class="buy-feedback-item">
-                    <p class="buy-feedback-who"><span class="buy-feedback-who-name">hjdsgfwey</span>写道：</p>
-                    <p class="buy-feedback-what">啊skfhiowfhalfhjkawhf</p>
-                    <p class="buy-feedback-when">
-                        <span class="buy-feedback-when-positive">+1 positive</span>
-                        -<span class="buy-feedback-when-date">Feb 15.2019</span>
-                    </p>
-                </div>
-            </div>
+            <!--<div class="buy-feedback">-->
+                <!--<p class="buy-title buy-feedback-title">近期反馈</p>-->
+                <!--<div class="buy-feedback-item">-->
+                    <!--<p class="buy-feedback-who"><span class="buy-feedback-who-name">hjdsgfwey</span>写道：</p>-->
+                    <!--<p class="buy-feedback-what">啊skfhiowfhalfhjkawhf</p>-->
+                    <!--<p class="buy-feedback-when">-->
+                        <!--<span class="buy-feedback-when-positive">+1 positive</span>-->
+                        <!-- -<span class="buy-feedback-when-date">Feb 15.2019</span>-->
+                    <!--</p>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
-        <audio id="sellOrder" src=""></audio>
+        <audio muted id="sellOrder" src="/images/audio-message2.mp3"></audio>
         <!-- 确认交易密码 -->
         <div class="am-modal-wrap dialog submit-dialog hidden" id="submitMon">
             <div class="am-modal">
@@ -144,7 +150,8 @@
 
     <script>
         require(['domReady!'], function (doc) {
-            require(['app/controller/trade/SellDetail']);
+            require(['app/controller/trade/SellDetail',
+                'app/controller/user/MyAdvertise']);
         });
     </script>
 </body>

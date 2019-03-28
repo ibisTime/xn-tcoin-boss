@@ -91,8 +91,8 @@ define([
         $('.en-buy_fz').text(base.getText('分钟', langType));
         $('.en-buy_tx').text(base.getText('交易提醒', langType));
         $('.fy_ljcs').html(base.getText('立即出售'));
-        $('#buyAmount').attr('placeholder', base.getText('请输入您出售的金额'));
-        $('#buyEth').attr('placeholder', base.getText('请输入您出售的数量'));
+        // $('#buyAmount').attr('placeholder', base.getText('请输入您出售的金额'));
+        // $('#buyEth').attr('placeholder', base.getText('请输入您出售的数量'));
         // $('#buyBtn').html(base.getText('立即出售'));
 
         $('.warnWrap .warn-txt1').html(base.getText('提醒：请确认价格再下单,下单彼此交易的'));
@@ -154,13 +154,30 @@ define([
             $("#leftCountString").html(base.formatMoney(data.leftCountString, '', tradeCoin))
             $("#coin").text(tradeCoin);
 
-          $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
-          $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
           $('.buy-info .rate').html(data.truePrice + data.tradeCurrency);
           $('.buy-info .price').html(data.marketPrice + data.tradeCurrency);
           $('.buy-cjtk').append(`<span>${data.item}</span>`);
           $('.buy-cjtk .buy-quick-title .buy-title').html(data.user.nickname + '的出价条款');
           $('.buy-user-nickname').html(data.user.nickname);
+
+            if(data.fixTrade == '' || data.fixTrade == undefined){
+                $('.item-buyAmount').removeClass('hidden')
+                $('.item-selectAmount').addClass('hidden')
+                $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
+                $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
+            }else{
+                $('.item-buyAmount').addClass('hidden')
+                $('.item-selectAmount').removeClass('hidden')
+                $('#buyEth').attr('readonly','true')
+                var selectHtml ='<option value="">请选择</option>';
+                data.fixTradeList.forEach(function(item) {
+                    selectHtml += `<option  value="${item}">${item}</option>`;
+                })
+                $('.item-selectAmount #amounSelect').html(selectHtml)
+                $('.buy-info .min').html(data.fixTradeList[0] + '' + data.tradeCurrency);
+                $('.buy-info .max').html(data.fixTradeList[data.fixTradeList.length - 1] + '' + data.tradeCurrency);
+
+            }
 
           $('.icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.user.photo) + "')" });
           buildTagsHtml(data.platTag, data.customTag);
@@ -170,15 +187,17 @@ define([
 
           $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
           $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
-          var code=base.getUrlParam('code');
-          var status=base.getUrlParam('status');
-          var tradeCoin=base.getUrlParam('tradeCoin');
-          var operationHtml = ''
-            if (status == '0') {
-                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('编辑', langType)}</div>
-                                 <div class="am-button am-button-red mr20 doDownBtn" data-code="${code}">${base.getText('下架', langType)}</div>`
-            }
-            $('.buy-operation').html(operationHtml)
+
+            // var code=base.getUrlParam('code');
+            // var status=base.getUrlParam('status');
+            // var tradeCoin=base.getUrlParam('tradeCoin');
+            // var type=base.getUrlParam('type');
+            // var operationHtml = ''
+            // if (status == '0') {
+            //     operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}&type=${type}">${base.getText('编辑', langType)}</div>
+            //                      <div class="am-button am-button-red mr20 doDownBtn" data-code="${code}">${base.getText('下架', langType)}</div>`
+            // }
+            // $('.sell-operation').html(operationHtml)
           $.when(
                 getAccount(data.tradeCoin),
                 getUser()
@@ -258,12 +277,18 @@ define([
 
     //出售
     function sellETH() {
-      config.tradeAmount = $("#buyAmount").val();
-      config.count = base.formatMoneyParse($("#buyEth").val(), '', $('.buy-detail-formwrapper #coin').text());
-      config.tradePwd = $('#moneyPow').val();
+        if($('.item-buyAmount').hasClass('hidden')){
+            config.tradeAmount = $("#amounSelect option:selected").text();
+        }else {
+            config.tradeAmount = $("#buyAmount").val();
+        }
+        config.count = base.formatMoneyParse($("#buyEth").val(), '', $('.buy-detail-formwrapper #coin').text());
+       config.tradePwd = $('#moneyPow').val();
       return TradeCtr.sellETH(config).then((data) => {
-        console.log(data);
         base.showMsg(base.getText('下单成功', langType));
+          if(document.getElementById('sellOrder').muted != false){
+              document.getElementById('sellOrder').muted = false;
+          }
         document.getElementById('sellOrder').play();
         setTimeout(function() {
             base.gohref("../order/order-list.html?mod=dd");
@@ -304,10 +329,19 @@ define([
             UserCtr.getUser().then((data) => {
                 if (data.tradepwdFlag) {
                     if (_formWrapper.valid()) {
-                        if ($("#buyAmount").val() != '' && $("#buyAmount").val()) {
-                            $("#submitMon").removeClass("hidden");
-                        } else {
-                            base.showMsg(base.getText('请输入您出售的金额', langType));
+                        if($('.item-selectAmount').hasClass('hidden')){
+                            if ($("#buyAmount").val() != '') {
+                                // $("#submitMon").removeClass("hidden");
+                                sellETH();
+                            } else {
+                                base.showMsg(base.getText('请输入您购买的金额', langType))
+                            }
+                        }else {
+                            if ($("#amounSelect").val() != '') {
+                                // $("#submitMon").removeClass("hidden");
+                            } else {
+                                base.showMsg(base.getText('请选择您购买的金额', langType))
+                            }
                         }
                     }
                 } else if (!data.tradepwdFlag) {
@@ -365,6 +399,13 @@ define([
                 $("#buyEth").val(Number($("#buyAmount").val() / config.tradePrice).toFixed(8));
             }else{
                 $("#buyEth").val(Number($("#buyAmount").val()).toFixed(8));
+            }
+        })
+        $("#amounSelect").change(function() {
+            if($("#amounSelect").val() == ''){
+                $("#buyEth").val('')
+            }else {
+                $("#buyEth").val(($("#amounSelect option:selected").text() / config.tradePrice).toFixed(8));
             }
         })
             //下架-点击

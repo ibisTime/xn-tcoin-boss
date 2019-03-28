@@ -23,9 +23,9 @@
                 </samp>
                 <samp class="freez">
                     <span class="freez-amount">冻结金额: <a>0.05</a> BTC</span>
-                    <span class="add-amount"><a href="../index.html">增加资金</a></span>
+                    <span class="add-amount"><a href="../index.html">购买比特币</a></span>
                     <span>存入<a class="accept-bail">0.1 </a>BTC保证金</span>
-                    <span class="tip">就像黄金一样，您的比特币US dillars价值因市场而异，这是正常的，您仍有相同比特币金额</span>
+                    <span class="tip">就像黄金一样，您的比特币US dollars价值因市场而异，这是正常的，您仍有相同比特币金额</span>
                     <span class="send-btc">发送比特币</span>
                     <span class="currency"></span>
                 </samp>
@@ -75,13 +75,21 @@
                             <!--<li class="wamx-en_dj"></li>-->
                         <!--</ul>-->
                     <!--</div>-->
+                    <span class="tradeRecord-export-btn">导出</span>
                     <div class="tradeRecord-list-wrap">
-                        <div class="list-item title">
-                            <div class="wamx-en_sj"></div>
-                            <div class="wamx-en_sm"></div>
-                            <div class="wamx-en_lx"></div>
-                            <div class="wamx-en_yue"></div>
-                        </div>
+                        <table class="wp100 trade-form" cellpadding="0" cellspacing="0">
+                            <thead>
+                            <tr class="b_e_b">
+                                <td class="wamx-en_sj"></td>
+                                <td class="wamx-en_sm"></td>
+                                <td class="wamx-en_lx"></td>
+                                <td class="wamx-en_yue"></td>
+                            </tr>
+                            </thead>
+                            <tbody id="tradeRecord-list" class="k-order-list">
+
+                            </tbody>
+                        </table>
                         <div class="list-wrap">
                         </div>
                         <div class="no-data hidden bg_fff">
@@ -225,7 +233,17 @@
     <script src="../../js/lib/qrcode.js"></script>
     <script>
         require(['domReady!'], function (doc) {
-          require(['app/controller/wallet/Wallet','app/controller/wallet/WalletMx'])
+          require(['app/controller/wallet/Wallet',
+              'app/controller/wallet/WalletMx',
+              'app/jquery-table2excel-master/src/jquery.table2excel.js'])
+            $(function () {
+                $(".tradeRecord-export-btn").click(function () {
+                    $("#tradeRecord-list").table2excel({
+                        exclude: ".noExl", //过滤位置的 css 类名
+                        filename: "钱包流水订单-" + new Date().getTime() + ".xls" //文件名称
+                    });
+                })
+            });
         });
     </script>
 </body>

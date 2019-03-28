@@ -11,12 +11,15 @@ define([
     // langPackage 配置文件
 
     let langPackage = LANGUAGE;
-
+    var typeList = {
+        "buy": base.getText('购买'),
+        "sell": base.getText('出售'),
+    }
     $(document).ready(function () {
         init();
+        getBTC();
         if(base.isLogin()){
-            // initSocket();
-            getBTC();
+            initSocket();
         }
     });
 
@@ -94,7 +97,7 @@ define([
      * 初始化Socket链接
      */
     function initSocket() {
-        var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId'));
+        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId'));
         ws.onopen = function (event) {
             console.log('链接成功');
             // ws.send('你好啊')
@@ -109,7 +112,22 @@ define([
             taget.text(msg_num + data.length);
             let messageHtml = '';
             let activeNewsHtml = '';
-            data.forEach(item => {
+           data.forEach(item => {
+                // if(window.location.pathname == "/order/order-detail.html"){
+                //     var orderDetailCode = base.getUrlParam('code');
+                //     var orderDetailStatus;
+                //     return TradeCtr.getOrderDetail(orderDetailCode).then((data) => {
+                //         orderDetailStatus = data.status;
+                //         console.log(orderDetailStatus,item.status)
+                //         console.log(orderDetailCode,item.refNo)
+                //         if(orderDetailCode == item.refNo){
+                //             if(orderDetailStatus == item.status){
+                //                 // window.location.reload();
+                //                 // return
+                //             }
+                //         }
+                //     })
+                // }
                 if(item.isNew == 0){
                     messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}" data-refNo="${item.refNo}" data-readId="${item.readId}">
                             <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
@@ -127,9 +145,8 @@ define([
                                 <span class="message-content">${item.content}</span>
                             </div>
                         </li>`;
-                    $('.down-wrap-message ul').append(messageHtml);
+                    $('.down-wrap-message ul').prepend(messageHtml);
                     if(item.type == 1){
-                        console.log(data)
                         var refNo;
                         var readId;
                         data.forEach(item => {
@@ -140,33 +157,33 @@ define([
                         setTimeout(() => {
                             if(document.getElementById('audio-message2').muted != false){
                                 document.getElementById('audio-message2').muted = false;
-                                document.getElementById('audio-message2').play();
                             }
-                        }, 2000);
+                            document.getElementById('audio-message2').play();
+                        }, 1000);
                         TradeCtr.getOrderDetail(refNo).then((data) => {
-                            activeNewsHtml =`<li class="goMessageHref" data-href="../order/order-detail.html?code=${refNo}" data-readId="${item.readId}">
+                            console.log(data)
+                            activeNewsHtml =`<li class="goMessageHref" data-href="../order/order-detail.html?code=${refNo}" data-readId="${readId}">
                             <span> <button>聊天</button></span>
                             <span>${data.buyUserInfo.nickname}</span>
                             <span>${data.tradeAmount}  ${data.tradeCurrency}</span>
-                            <span>${data.countString}  ${data.tradeCoin}</span>
-                            <span>${data.nickname}</span>
+                            <span>${base.formatMoney(data.countString,'',data.tradeCoin)} ${data.tradeCoin}</span>
+                            <span>${data.sellUserInfo.nickname}</span>
                             <span>${data.payment}</span>
-                            <span>出售</span>
+                            <span>${typeList[data.type]}</span>
                         </li>`;
                             $('.active-news').show();
-                            $('.active-news ul').append(activeNewsHtml);
+                            $('.active-news ul').prepend(activeNewsHtml);
                         });
                     }else if(item.type == 2){
                         setTimeout(() => {
                             if(document.getElementById('audio-message1').muted != false){
                                 document.getElementById('audio-message1').muted = false;
-                                document.getElementById('audio-message1').play();
                             }
-                        }, 2000);
+                            document.getElementById('audio-message1').play();
+                        }, 1000);
                     }
                 }
             })
-
         };
 
         ws.onclose = function() {

@@ -28,7 +28,8 @@ define([
             getInvitationHistory(config),
             getInvitation(),
             getSysConfig(),
-            getInvitaFn()
+            getInvitaFn(),
+            getInvitationBanner()
             // getUserInviteProfit()
         )
         if(langType == 'EN'){
@@ -110,7 +111,25 @@ define([
             }
         });
     }
-
+    function  getInvitationBanner(refresh) {
+        return GeneralCtr.getBanner({
+            type: '2',
+            location: 'web_invite'
+        }, refresh).then((data) => {
+            var bannerHtml = "";
+            data.forEach((d) => {
+                var pics = base.getPicArr(d.pic);
+                pics.forEach((pic) => {
+                    bannerHtml += `<a class="banner" style="background-image:url(${pic});"></a>`;
+                });
+            });
+            base.hideLoadingSpin()
+            console.log(bannerHtml)
+            $(".invitation-top").html(bannerHtml);
+        }, (msg) => {
+            base.showMsg(msg || base.getText('加载失败', langType));
+        });
+    }
     //获取推荐人历史
     function getInvitationHistory(refresh) {
         return UserCtr.getInvitationHistory(config, refresh).then((data) => {

@@ -4,7 +4,7 @@ define([
     'app/module/smsCaptcha',
     'app/interface/UserCtr',
     'app/controller/Top',
-    'app/controller/foo'
+    'app/controller/foo',
 ], function(base, Validate, smsCaptcha, UserCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
     var type = base.getUrlParam("type");//设置类型： 0,设置  1，修改
@@ -50,17 +50,16 @@ define([
         }, base.hideLoadingSpin)
     }
     //修改手机
-    function detPhone(mobile, smsCaptcha) {
-        return UserCtr.detPhone(mobile, smsCaptcha).then(() => {
+    function detPhone(params,smsCaptcha) {
+        return UserCtr.detPhone(params,smsCaptcha).then(() => {
             base.hideLoadingSpin()
             base.showMsg(base.getText('设置成功', langType))
             sessionStorage.setItem("mobile", mobile);
             setTimeout(function() {
-                base.gohrefReplace("../user/security.html")
+                // base.gohrefReplace("../user/security.html")
             }, 800)
         }, base.hideLoadingSpin)
     }
-
     function addListener() {
         var _formWrapper = $("#form-wrapper");
         _formWrapper.validate({
@@ -88,12 +87,19 @@ define([
         $("#subBtn").click(function() {
             if (_formWrapper.valid()) {
                 base.showLoadingSpin();
-                var params = _formWrapper.serializeObject();
+                let params = _formWrapper.serializeObject();
+                params = {
+                    ...params,
+                    ..._formWrapper.serializeObject()
+                };
+                params.countryCode = sessionStorage.getItem('countryCode')
+                params.interCode = sessionStorage.getItem('interCode')
+                console.log(params)
                 if(type == 1){
-                    detPhone(params.mobile, params.captcha);
+                    detPhone(params);
                 }
                 if(type == 0){
-                    setPhone(params.mobile, params.captcha);
+                    setPhone(params);
                 }
             }
         })

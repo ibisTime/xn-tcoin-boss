@@ -65,7 +65,6 @@ define([
           getAdvertiseDetail();
         }, base.hideLoadingSpin);
         addListener();
-
     }
     function setHtml() {
         $('title').text(base.getText('购买详情') + '-' +base.getText('区块链技术应用实验平台'));
@@ -146,34 +145,49 @@ define([
             // $("#leftCountString").html(base.formatMoney(data.leftCountString, '', tradeCoin))
             $("#coin").text(tradeCoin);
 
-
-            $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
-            $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
             $('.buy-info .rate').html(data.truePrice + data.tradeCurrency);
             $('.buy-info .price').html(data.marketPrice + data.tradeCurrency);
             $('.buy-cjtk').append(`<span>${data.item}</span>`);
             $('.buy-cjtk .buy-quick-title .buy-title').html(data.user.nickname + '的出价条款');
             $('.buy-user-nickname').html(data.user.nickname);
             $('.buy-talk').html('安全托管+与'+data.user.nickname+'实时交谈');
+            if(data.fixTrade == '' ||  data.fixTrade == undefined){
+                $('.item-buyAmount').removeClass('hidden')
+                $('.item-selectAmount').addClass('hidden')
+                $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
+                $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
+            }else{
+                $('.item-buyAmount').addClass('hidden')
+                $('.item-selectAmount').removeClass('hidden')
+                $('#buyEth').attr('readonly','true')
+                var selectHtml ='<option value="">请选择</option>';
+                data.fixTradeList.forEach(function(item) {
+                    selectHtml += `<option  value="${item}">${item}</option>`;
+                })
+                $('.item-selectAmount #amounSelect').html(selectHtml)
+                $('.buy-info .min').html(data.fixTradeList[0] + '' + data.tradeCurrency);
+                $('.buy-info .max').html(data.fixTradeList[data.fixTradeList.length - 1] + '' + data.tradeCurrency);
 
+            }
           $('.icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.user.photo) + "')" });
           buildTagsHtml(data.platTag, data.customTag);
 
           let interval = base.fun(Date.parse(data.user.lastLogin), new Date());
           $('.detail-container-right .buy-user-info .buy-user-online .interval').html(interval);
 
-          $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
-          $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
-
-            var code=base.getUrlParam('code');
-            var status=base.getUrlParam('status');
-            var tradeCoin=base.getUrlParam('tradeCoin');
-            var operationHtml = ''
-            if (status == '0') {
-                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}">${base.getText('编辑', langType)}</div>
-                                 <div class="am-button am-button-red mr20 doDownBtn" data-code="${code}">${base.getText('下架', langType)}</div>`
-            }
-            $('.buy-operation').html(operationHtml)
+          // $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
+          // $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
+          //
+          //   var code=base.getUrlParam('code');
+          //   var status=base.getUrlParam('status');
+          //   var tradeCoin=base.getUrlParam('tradeCoin');
+          //   var type=base.getUrlParam('type');
+          //   var operationHtml = ''
+          //   if (status == '0') {
+          //       operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}&type=${type}">${base.getText('编辑', langType)}</div>
+          //                        <div class="am-button am-button-red mr20 doDownBtn" data-code="${code}">${base.getText('下架', langType)}</div>`
+          //   }
+          //   $('.buy-operation').html(operationHtml)
 
           $.when(
                 getAccount(data.tradeCoin),
@@ -248,7 +262,11 @@ define([
 
     //购买
     function buyETH() {
-        config.tradeAmount = $("#buyAmount").val();
+        if($('.item-buyAmount').hasClass('hidden')){
+            config.tradeAmount = $("#amounSelect option:selected").text();
+        }else {
+            config.tradeAmount = $("#buyAmount").val();
+        }
         config.count = base.formatMoneyParse($("#buyEth").val(), '', $('.buy-detail-formwrapper #coin').text());
         console.log(tradeCoin )
         // config.交易密码 = $('#moneyPow').val();
@@ -256,11 +274,11 @@ define([
         return TradeCtr.buyETH(config).then((data) => {
             if(document.getElementById('audioBuyDetail').muted != false){
                 document.getElementById('audioBuyDetail').muted = false;
-                document.getElementById('audioBuyDetail').play();
             }
+            document.getElementById('audioBuyDetail').play();
                 base.showMsg(base.getText('下单成功', langType))
                 setTimeout(function() {
-                    base.gohref("../order/order-detail.html?code="+data.code)
+                    base.gohref("../order/order-detail.html?code="+data.code);
                 }, 3000);
                 base.hideLoadingSpin();
             }, base.hideLoadingSpin) //
@@ -282,18 +300,26 @@ define([
 
         //立即下单点击
         $(document).on('click','#buyBtn',function() {
-            console.log(111)
             $('.bb-m').text(tradeCoin);
             $("#submitDialog .tradeAmount").html($("#buyAmount").val() + tradeCurrency)
             $("#submitDialog .count").html($("#buyEth").val() + tradeCoin);
             UserCtr.getUser().then((data) => {
-                console.log(111)
-                if ($("#buyAmount").val() != '' && $("#buyAmount").val()) {
-                    // $("#submitDialog").removeClass("hidden")
-                    buyETH();
-                } else {
-                    base.showMsg(base.getText('请输入您购买的金额', langType))
+                if($('.item-selectAmount').hasClass('hidden')){
+                    if ($("#buyAmount").val() != '') {
+                        // $("#submitDialog").removeClass("hidden")
+                        buyETH();
+                    } else {
+                        base.showMsg(base.getText('请输入您购买的金额', langType))
+                    }
+                }else {
+                    if ($("#amounSelect").val() != '') {
+                        // $("#submitDialog").removeClass("hidden")
+                        buyETH();
+                    } else {
+                        base.showMsg(base.getText('请选择您购买的金额', langType))
+                    }
                 }
+
                 // else if (!data.tradepwdFlag) {
                 //     base.showMsg(base.getText('请先设置交易密码', langType))
                 //     setTimeout(function() {
@@ -339,7 +365,13 @@ define([
         $("#buyAmount").keyup(function() {
             $("#buyEth").val(($("#buyAmount").val() / config.tradePrice).toFixed(8));
         })
-
+        $("#amounSelect").change(function() {
+            if($("#amounSelect").val() == ''){
+                $("#buyEth").val('')
+            }else {
+                $("#buyEth").val(($("#amounSelect option:selected").text() / config.tradePrice).toFixed(8));
+            }
+        })
         //下架-点击
         $("#doDownBtn").click(function() {
             base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType)).then(() => {
@@ -350,7 +382,7 @@ define([
                     base.showMsg(base.getText('操作成功', langType));
                     $("#doDownBtn").addClass("hidden");
                     setTimeout(function() {
-                        base.gohref("./buy-list.html?mod=gm");
+                        base.gohref("./index.html?mod=gm");
                     }, 1000)
                 }, base.hideLoadingSpin)
             }, base.emptyFun)
@@ -366,7 +398,7 @@ define([
                     setTimeout(function() {
                         base.showLoadingSpin();
                         config.start = 1;
-                        getPageAdvertise(true)
+                        base.gohref("../index.html?mod=gm");
                     }, 1500)
                 }, base.hideLoadingSpin)
             }, base.emptyFun)

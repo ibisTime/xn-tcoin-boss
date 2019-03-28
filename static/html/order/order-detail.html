@@ -95,7 +95,7 @@
                                 <span>如果错误的发起了交易，或者您不满足交易说明中提出的要求，您随时可以取消交易。</span>
                             </div>
                             <div>
-                                <span class="orderDetail-tip">纠纷将在下列时间后处理 2:50</span>
+                                <span class="orderDetail-tip">纠纷将在下列时间后处理 <a></a></span>
                                 <span>无需担心，你的比特币安全保存在拖管中，且这个交易不会过期，只有在卖家没回应且没有其他办法的情况下才能发起纠纷处理，滥用纠纷处理会被封禁。</span>
                             </div>
                         </div>
@@ -175,11 +175,37 @@
                     <div class="finished-top">
                         <i class="finished-top-icon"></i>
                         <div class="finished-top-status">交易已完成</div>
+                        <div class="commentDialog" style="display: none">
+                            <div class="am-modal-content">
+                                <div class="am-modal-body">
+                                    <div class="comment-Wrap">
+                                        <div class="item on" data-value="2">
+                                            <div class="icon icon-good"></div>
+                                            <p class="fy_hp"></p>
+                                        </div>
+                                        <div class="item ml20" data-value="1">
+                                            <div class="icon icon-middle"></div>
+                                            <p class="fy_zp"></p>
+                                        </div>
+                                        <div class="item ml20" data-value="0">
+                                            <div class="icon icon-bad"></div>
+                                            <p class="fy_cp"></p>
+                                        </div>
+                                    </div>
+                                    <div class="com-content">
+                                        <textarea name="" id="pjText" placeholder=""></textarea>
+                                    </div>
+                                </div>
+                                <div class="am-modal-footer">
+                                    <div class="am-button am-button-red subBtn"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="finished-bottom">
                         <p class="finished-bottom-title">订单信息</p>
                         <div class="finished-bottom-item code-payType">
-                            <div class="code">
+                            <div class="finished-code">
                                 <span class="finished-bottom-item-title">订单编号</span>
                                 <span class="finished-bottom-item-content"></span>
                             </div>
@@ -187,15 +213,15 @@
                                 <span class="finished-bottom-item-title">付款方式</span>
                                 <span class="finished-bottom-item-content"></span>
                             </div>
-                            <div class="space">
-                            </div>
+                            <!--<div class="space">-->
+                            <!--</div>-->
                         </div>
                         <div class="finished-bottom-item price-quantity-amount">
                             <div class="price">
                                 <span class="finished-bottom-item-title">交易价格</span>
                                 <span class="finished-bottom-item-content"></span>
                             </div>
-                            <div class="quantity">
+                            <div class="finished-quantity">
                                 <span class="finished-bottom-item-title">交易数量</span>
                                 <span class="finished-bottom-item-content">CNY</span>
                             </div>
@@ -231,7 +257,7 @@
                             <span class="time">已查看<span class="interval"></span>前</span>
                         </div>
                         <div class="yz">
-                            <span><span>电子邮件已验证</span><i class="icon-checked"></i></span>
+                            <span><span></span><i class="icon-checked"></i></span>
                             <span><span>电话已验证</span><i class="icon-checked"></i></span>
                         </div>
                         <div class="trade">
@@ -385,39 +411,39 @@
         <!-- /.modal-dialog -->
     </div>
     <!--评价弹窗-->
-    <div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <p class="fy_jypj"></p>
-                </div>
-                <div class="am-modal-body">
-                    <p class="title fy_jyyx"></p>
-                    <div class="comment-Wrap">
-                        <div class="item on" data-value="2">
-                            <div class="icon icon-good"></div>
-                            <p class="fy_hp"></p>
-                        </div>
-                        <div class="item ml20" data-value="1">
-                            <div class="icon icon-middle"></div>
-                            <p class="fy_zp"></p>
-                        </div>
-                        <div class="item ml20" data-value="0">
-                            <div class="icon icon-bad"></div>
-                            <p class="fy_cp"></p>
-                        </div>
-                    </div>
-                    <div class="com-content">
-                        <textarea name="" id="pjText" placeholder=""></textarea>
-                    </div>
-                </div>
-                <div class="am-modal-footer">
-                    <div class="am-button am-button-red subBtn"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--<div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">-->
+        <!--<div class="am-modal-mask"></div>-->
+        <!--<div class="am-modal">-->
+            <!--<div class="am-modal-content">-->
+                <!--<div class="am-modal-header">-->
+                    <!--<p class="fy_jypj"></p>-->
+                <!--</div>-->
+                <!--<div class="am-modal-body">-->
+                    <!--<p class="title fy_jyyx"></p>-->
+                    <!--<div class="comment-Wrap">-->
+                        <!--<div class="item on" data-value="2">-->
+                            <!--<div class="icon icon-good"></div>-->
+                            <!--<p class="fy_hp"></p>-->
+                        <!--</div>-->
+                        <!--<div class="item ml20" data-value="1">-->
+                            <!--<div class="icon icon-middle"></div>-->
+                            <!--<p class="fy_zp"></p>-->
+                        <!--</div>-->
+                        <!--<div class="item ml20" data-value="0">-->
+                            <!--<div class="icon icon-bad"></div>-->
+                            <!--<p class="fy_cp"></p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="com-content">-->
+                        <!--<textarea name="" id="pjText" placeholder=""></textarea>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="am-modal-footer">-->
+                    <!--<div class="am-button am-button-red subBtn"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
     <!--已支付弹窗-->
     <div class="am-modal-wrap dialog paid-dialog hidden" id="paidDialog">
         <div class="am-modal-mask"></div>

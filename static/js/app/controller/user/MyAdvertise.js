@@ -16,7 +16,7 @@ define([
         start: 1,
         limit: 10,
         tradeType: 1,
-        statusList: [0, 1],
+        statusList: [0, 1,2],
         userId: base.getUserId(),
         coin: coin.toUpperCase()
     }
@@ -98,7 +98,7 @@ define([
                 $(".myAdvertise-container .trade-list-wrap .no-data").addClass("hidden")
             } else {
                 config.start == 1 && $("#content-adver").empty()
-                config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
+                // config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
             }
             config.start == 1 && initPagination(data);
             base.hideLoadingSpin();
@@ -110,44 +110,55 @@ define([
         var operationHtml = ''
         var tipHtml = ''
         var goHrefHtml = ''
-        //待发布
-        if (config.statusList == null || config.statusList.length == 1) {
-             operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
+
+        //当前用户为买家
+            //待发布
+            if (config.statusList == null || config.statusList.length == 1) {
+                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
         		 			<div class="am-button publish goHref am-button-ghost am-button-out" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('查看', langType)}</div>`
 
-            //已发布
-        } else {
-            // 待发布
-            // if(item.status == '0') {
-                 //operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
-            //已上架
-             if (item.status == '0') {
-                 operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
-                                 <div class="am-button am-button-red mr20 doDownBtn" data-code="${item.code}">${base.getText('下架', langType)}</div>`
-            } else if (item.status == "1"){
-                tipHtml=`<p style="
+                //已发布
+            } else {
+                // 待发布
+                // if(item.status == '0') {
+                //operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
+                //已上架
+                // <div class="am-button am-button-red mr20 doDownBtn" data-code="${item.code}">${base.getText('下架', langType)}</div>
+                if (item.status == '0') {
+                    operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
+                } else if (item.status == "1"){
+                    tipHtml=`<p style="
                 position: absolute;
                 width: 300px;
                 font-size: 12px;
                 color: #d83b37;
                 ">您的出价当前未公开显示,请存入保证金</p>`
-            }else if (item.status == "2") {//已下架
+                }else if (item.status == "2") {//已下架
+                }
             }
-            if (type == 'buy') {
-                goHrefHtml += `<div class="goHref view-details" data-href="../trade/buy-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">></div>`
-            } else if (type == 'sell') {
-                goHrefHtml += `<div class="goHref view-details" data-href="../trade/sell-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">></div>`
-            }
+        if (type == 'buy') {
+            operationHtml += `<div class="goHref am-button am-button-red" data-href="../trade/buy-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">查看</div>`
+        } else if (type == 'sell') {
+            operationHtml += `<div class="goHref  am-button am-button-red" data-href="../trade/sell-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">查看</div>`
         }
-        $(".buy-operation").html(operationHtml)
+        // console.log(operationHtml)
+        // console.log(base.getUrlParam('type'))
+        // if(base.getUrlParam('type') == 'buy'){
+        //     $(".buy-operation").html(operationHtml)
+        // }
+        // if(base.getUrlParam('type') == 'sell'){
+        //     $(".sell-operation").html(operationHtml)
+        // }
         return `<tr>
+        <td><label class="switch"><input type="checkbox" id="buyitem${item.code.substring(item.code.length-8)}"  checked="${item.status == "0" ? 'checked' : 'unchecked'}" data-code="${item.code}"><div class="slider round"></div></label></td>
         <td class="code">${item.code.substring(item.code.length-8)} ${tipHtml}</td>
         <td class="type">${typeList[type.toLowerCase()]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
-        <td>CN</td>
+        <td>${item.country ? item.country.interSimpleCode : '-'} </td>
         <td class="price">${item.truePrice ? item.truePrice.toFixed(2) : '-'} ${item.truePrice ? item.tradeCurrency : ''} </td>
         <td class="price">${(item.premiumRate * 100).toFixed(2) + '%'}</td>
         <td class="createDatetime">${base.formatDate(item.createDatetime)} </td>
-        <td class="status tc">${item.status=="-1"?base.getText('交谈中', langType) + ','+adsStatusValueList[item.status]:adsStatusValueList[item.status]}${goHrefHtml}</td>
+        <td class="status tc">${item.status=="-1"?base.getText('交谈中', langType) + ','+adsStatusValueList[item.status]:adsStatusValueList[item.status]}</td>
+          <td>${operationHtml}</td>
     </tr>`;
 
 
@@ -169,21 +180,26 @@ define([
             getPageAdvertise(true);
         });
 
-        $(document).on("click", "#content-adver .doDownBtn", function() {
-            var adsCode = $(this).attr("data-code");
-            base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType)).then(() => {
-                base.showLoadingSpin()
-                TradeCtr.downAdvertise(adsCode).then(() => {
-                    base.hideLoadingSpin();
-
-                    base.showMsg(base.getText('操作成功', langType));
-                    setTimeout(function() {
-                        base.showLoadingSpin();
-                        config.start = 1;
-                        getPageAdvertise(true)
-                    }, 1500)
-                }, base.hideLoadingSpin)
-            }, base.emptyFun)
+        $(document).on("click", "#content-adver input", function() {
+            console.log($(this).prop('checked'))
+            if ($(this).prop('checked') == false){
+                var adsCode = $(this).attr("data-code");
+                base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType))
+                    .then(() => {
+                        base.showLoadingSpin()
+                            TradeCtr.downAdvertise(adsCode).then(() => {
+                                base.hideLoadingSpin();
+                                base.showMsg(base.getText('操作成功', langType));
+                                setTimeout(function() {
+                                    base.showLoadingSpin();
+                                    config.start = 1;
+                                    getPageAdvertise(true)
+                                }, 1500)
+                            }, base.hideLoadingSpin)
+                    }).catch(() => {
+                    $(this).prop("checked", true);
+                })
+            }
         })
     }
 });

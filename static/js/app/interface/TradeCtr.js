@@ -27,7 +27,7 @@ define([
         },
         //下架广告
         downAdvertise(adsCode) {
-            return Ajax.get("625224", {
+            return Ajax.get("625222", {
                 userId: base.getUserId(),
                 adsCode
             }, true);
@@ -126,13 +126,8 @@ define([
             });
         },
         //訂單-评价
-        commentOrder(code, comment, content) {
-            return Ajax.get("625245", {
-                updater: base.getUserId(),
-                code,
-                starLevel: comment,
-                content
-            });
+        commentOrder(config) {
+            return Ajax.get("625245", config);
         },
         //个人-评价
         userEvaluate(config) {

@@ -886,6 +886,26 @@ define([
         document.execCommand("Copy"); // 执行浏览器复制命令
         base.showMsg(base.getText('已复制到剪贴板', langType));
     });
+
+    /**
+     * 计算费率
+     */
+    function getRate(){
+        return GeneralCtr.getUserTip({
+            type:'withdraw_rule',
+            ckey:'btc_withdraw_fee'
+        }).then(data => {
+            base.hideLoadingSpin();
+            var rate;
+            if($('.s-account .input-item').val() != ''){
+                rate =  $('.s-account .input-item').val() * data.btc_withdraw_fee;
+            }else{
+                rate = 0;
+            }
+            $('.sendBtc-form-wrap  .rate span').text(rate)
+
+        }, base.hideLoadingSpin);
+    }
     /**
      * 获取当前余额
      */
@@ -895,10 +915,10 @@ define([
                 if (item.currency.toLowerCase() === 'btc') {
                     console.log(item.amount)
                     $(".wallet-account-wrap .s-bb").text(base.formatMoney(item.amount,'',item.currency) + 'BTC');
-                    $(".wallet-account-wrap .y-amount").text(' ≈ ' + base.formatMoney(item.amountUSD) + 'USD');
+                    $(".wallet-account-wrap .y-amount").text(' ≈ ' + item.amountUSD+ 'USD');
                     $('.wallet-account-wrap .freez-amount a').text(base.formatMoney(item.frozenAmount,'','BTC'));
-                    $('.sendBtc-form-wrap .wallet-account span').text(base.formatMoney(item.amount,'',item.currency))
-                    $('.sendBtc-form-wrap .wallet-account span').text(base.formatMoney(item.amount,'',item.currency))
+                    $('.sendBtc-form-wrap .wallet-account span').text(base.formatMoney(item.amount,'',item.currency));
+                    getRate();
                     $('#address-BTC').val(item.address)
                     var  erWn =[];
                     erWn.push(item.address);
@@ -914,6 +934,11 @@ define([
             $(".wallet-account-wrap .accept-bail").text(data.accept_bail);
         });
     }
+
+    //计算费率
+    $('.s-account .input-item').keyup(function () {
+        getRate();
+    })
     /**
      *发送比特币
      */

@@ -21,6 +21,10 @@ define([
             }
             return Ajax.post(sendCode, param);
         },
+        // 发送短信
+        sendPhone(config) {
+            return Ajax.post(805953, config);
+        },
         // 获取转化汇率
         getTransRate(fromCurrency, toCurrency) {
             return Ajax.get("002051", {

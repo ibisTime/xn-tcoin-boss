@@ -820,7 +820,7 @@ table {
             padding: 0px 20px;
         }
         ul{
-            background: #ffffffd9;
+            background: #fffffff5;
             li{
                 padding: 12px 30px 12px 12px;
                 display: flex;
@@ -2098,8 +2098,7 @@ table {
                 position: relative;
                 .input-item{
                     width: 254px;
-                    height: 20px;
-                    margin-top: 10px;
+                    height: 42px;
                     font-size: 14px;
                     color: #999999;
                     padding-left: 15px;
@@ -2109,7 +2108,7 @@ table {
                     height: 42px;
                     line-height: 38px;
                     border-radius: 0 !important;
-                    position: relative;
+                    position: absolute;
                     top: -1px;
                     right: -1px;
                 }
@@ -2937,9 +2936,24 @@ table {
             }
         }
     }
+    .tradeRecord-export-btn{
+        display: inline-block;
+        border: 1px solid;
+        padding: 10px 32px;
+        margin-bottom: 20px;
+        border-radius: 2px;
+        cursor: pointer;
+    }
     .tradeRecord-list-wrap {
         width: 100%;
         border: 1px solid #EEEEEE;
+        td {
+            font-size: 12px !important;
+            color: #1E1E1E;
+            border-bottom: 1px solid #EEEEEE;
+            line-height: 52px;
+            padding: 0 10px;
+        }
         .list-item {
             width: 100%;
             overflow: hidden;
@@ -2948,27 +2962,6 @@ table {
             border-radius: 4px 4px 0 0;
             font-size: 14px;
             border-bottom: 1px solid #EEEEEE;
-            div {
-                float: left;
-                font-size: 16px;
-                line-height: 2;
-                word-break: break-word;
-                &:nth-of-type(1) {
-                    width: 240px;
-                }
-                &:nth-of-type(2) {
-                    width: 400px;
-                }
-                &:nth-of-type(3) {
-                    width: 240px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-                &:nth-of-type(4) {
-                    width: 240px;
-                }
-            }
             &.title {
                 background-color: #f8f8f8;
             }
@@ -3512,11 +3505,13 @@ table {
 
 .invitation-wrap {
     .invitation-top {
-        height: 500px;
-        background-image: url('../images/Invitation-banner.png');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
+       a{
+           height: 500px;
+           width: 100%;
+           background-position: center;
+           background-repeat: no-repeat;
+           background-size: cover;
+       }
     }
     .invitation-account{
         width: 1200px;
@@ -4428,6 +4423,12 @@ table {
                 justify-content: space-between;
                 .form-item {
                     width: 274px;
+                    padding: 0;
+                    input,select{
+                        width: 100%;
+                        height: 50px;
+                        padding-left: 10px;
+                    }
                 }
             }
             .am-button {
@@ -4829,6 +4830,11 @@ table {
                 -ms-transition: color, border-color .4s;
                 -moz-transition: color, border-color .4s;
                 -webkit-transition: color, border-color .4s;
+                box-shadow: none;
+                height: 60px;
+                background: none;
+                margin-bottom: 0;
+                border-radius: 0;
                 &.on,
                 &:hover {
                     cursor: pointer;
@@ -4853,11 +4859,10 @@ table {
                 }
             }
             .am-button {
-                width: 72px;
-                height: 26px;
-                line-height: 24px;
                 font-size: 12px;
-                border-radius: 3px;
+                border-radius: 2px;
+                display: inline;
+                padding: 6px 12px;
                 &.am-button-gray {
                     border: 1px solid #ddd;
                 }
@@ -4989,7 +4994,7 @@ table {
       width: 1200px;
       margin: 0 auto;
       padding: 52px 100px;
-      .advertise-step1-bigbigTitle {
+      .advertise-step1-bigbigTitle,.advertise-step2-bigbigTitle,.advertise-step3-bigbigTitle {
         text-align: center;
         margin-bottom: 54px;
         .title {
@@ -5023,9 +5028,58 @@ table {
         padding: 30px 37px;
         margin-bottom: 24px;
       }
+        .advertise-step1-bigTitle{
+            span:first-child{
+                samp{
+                    color: #2c79cd !important;
+                }
+            }
+        }
+        .advertise-step2-bigTitle{
+            span:nth-child(3){
+                samp{
+                    color: #2c79cd !important;
+                }
+            }
+        }
+        .advertise-step3-bigTitle{
+            span:nth-child(2){
+                samp{
+                    color: #2c79cd !important;
+                }
+            }
+        }
       .advertise-step1-bigTitle,.advertise-step2-bigTitle,.advertise-step3-bigTitle {
         text-align: center;
         margin-bottom: 54px;
+          .tip{
+              margin-bottom: 80px;
+              span{
+                  display: inline-block;
+                  position: relative;
+                  top: 35px;
+                  samp{
+                      display: block;
+                      margin-bottom: 10px;
+                      color:#999 ;
+                  }
+              }
+              span:first-child{
+                  float: left;
+                  left: -20px;
+              }
+              span:nth-child(2){
+                  float: right;
+                  right: -40px;
+              }
+              .line{
+                  width: 100%;
+                  height: 10px;
+                  background: #eaf1f9;
+                  margin: auto;
+                  border-radius: 50px;
+              }
+          }
         p {
           font-size: 32px;
           line-height: 45px;
@@ -5729,6 +5783,7 @@ table {
                 font-size: 14px;
                 color: #F19348;
                 letter-spacing: 0.12px;
+                cursor: pointer;
             }
         }
     }
@@ -5785,6 +5840,7 @@ table {
             .title-item {
                 text-align: left !important;
                 padding-left: 20px !important;
+                font-size: 16px;
             }
             .icon-email{
                 background-image: url('../images/电子邮件.png');
@@ -5802,7 +5858,7 @@ table {
                 border-radius: 2px 2px 0 0;
                 color: #fff;
                 padding-left: 20px;
-                font-size: 14px;
+                font-size: 16px;
                 samp{
                     color: #fff;
                     font-size: 14px;
@@ -6113,7 +6169,7 @@ table {
                     display: inline-block;
                 }
                 span:first-child{
-                    width: 90px;
+                    width: 100px;
                     text-align: center;
                     line-height: 30px;
                     margin-right: 20px;
@@ -6131,6 +6187,9 @@ table {
                     padding: 2px;
                     color: #fff;
                     line-height: 24px !important;
+                    a{
+                        color: #fff;
+                    }
                 }
                 span:last-child{
                     width: 300px;
@@ -6203,6 +6262,7 @@ table {
             flex: 1;
             display: flex;
             flex-direction: column;
+              margin-right: 20px;
           }
           .finished-bottom-item-title {
             color: #999;
@@ -6596,7 +6656,7 @@ table {
     }
 }
 
-.comment-dialog {
+.commentDialog {
   .am-modal-content {
     .am-modal-header {
       .fy_jypj {
@@ -6617,7 +6677,10 @@ table {
     }
     .am-modal-footer {
       .subBtn {
-        border-radius: 2px;
+          border-radius: 2px;
+          display: inline-block;
+          margin-bottom: 50px;
+          width: 80px;
         &:hover {
           cursor: pointer;
         }
@@ -8628,9 +8691,9 @@ html {
 .hisorder-container{
     tbody{
         .nickname{
-            .photo{
-                top: 20px;
-            }
+            //.photo{
+            //    top: 20px;
+            //}
         }
     }
     .hisorder-wrap{
@@ -8696,7 +8759,7 @@ html {
     }
 
 }
-.orderDetail-operation-btn,.buy-operation {
+.orderDetail-operation-btn,.buy-operation,.sell-operation {
     margin-top: 50px;
     div{
         display: inline-block !important;
@@ -8711,6 +8774,61 @@ html {
         padding: 0 !important;
         height: auto !important;
     }
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 22px;
+}
+
+.switch input {display:none;}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }
 // 媒体查询
 @media screen and (max-width: 1600px) {

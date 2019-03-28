@@ -71,7 +71,7 @@ define([
         getplatTagList();
         getPayTypeMoneyList();
         addListener();
-        var tipHtml='<p class="tip">来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的<span>“如何提取（出售）比特币指南”</span>，了解有关如何保持安全的提示。</p>'
+        var tipHtml='<p class="tip">来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的<span class="goHref" data-href="../public/help.html">“如何提取（出售）比特币指南”</span>，了解有关如何保持安全的提示。</p>'
         $("#content").before(tipHtml);
     }
     // 支付方式
