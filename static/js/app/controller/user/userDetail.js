@@ -17,6 +17,8 @@ define([
     var nickname = '';
     var coinList = {},
         payType = {};
+    let payTypeList = [];
+    let platTagList = [];
     let tradeTypeList = {
         '1': '购买',
         '0': '出售'
@@ -25,7 +27,7 @@ define([
         start: 1,
         limit: 10,
         tradeType: tradeType,
-        status: '1',
+        status: '0',
         userId: userId,
         coin: currency // 测试
     }
@@ -66,10 +68,33 @@ define([
             });
             // getAdvertiseDetail();
             getPageAdvertise();
+            getPayTypeList();
+            getplatTagList();
         })
         addListener();
     }
-
+    // 支付方式
+    function getPayTypeList() {
+        return TradeCtr.getPayTypeList({ status: 1, tradeType: 1 }).then((res) => {
+            base.hideLoadingSpin();
+            res.map((item) => {
+                payTypeList.push({
+                    key: item.code,
+                    value: item.name,
+                    adsCount: item.adsCount
+                });
+            });
+        }, base.hideLoadingSpin);
+    }
+    // 标签列表
+    function getplatTagList() {
+        return TradeCtr.getTagsList({ status: 1 }).then((res) => {
+            base.hideLoadingSpin();
+            res.map((item) => {
+                platTagList[item.id] = item.name;
+            });
+        }, base.hideLoadingSpin);
+    }
     // 查询用户的信任关系
     function getUserRelation() {
         return UserCtr.getUserRelation(currency, userId).then((data) => {
@@ -139,6 +164,7 @@ define([
                 lists.forEach((item, i) => {
                     html += buildHtml(item);
                 });
+                console.log(html)
                 $("#content").html(html);
                 $(".trade-list-wrap .no-data").addClass("hidden")
             } else {
