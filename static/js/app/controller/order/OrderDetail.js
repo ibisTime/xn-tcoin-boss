@@ -306,7 +306,7 @@ define([
           $('.finished .finished-bottom .price-quantity-amount .price .finished-bottom-item-content').html(data.tradePrice + data.tradeCurrency);
           $('.finished .finished-bottom .price-quantity-amount .amount .finished-bottom-item-content').html(data.tradeAmount + data.tradeCurrency);
           $('.finished .finished-bottom .message .price .finished-bottom-item-content').html(data.leaveMessage);
-          $('.finished .finished-bottom .finished-quantitycomment-btn .finished-bottom-item-content').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
+          $('.finished .finished-bottom .finished-quantity .finished-bottom-item-content').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
           $('.finished .finished-bottom .amount .finished-bottom-item-content').html(data.tradeAmount + data.tradeCurrency);
 
           let startTime = new Date();

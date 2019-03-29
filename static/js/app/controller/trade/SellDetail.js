@@ -71,7 +71,6 @@ define([
         getAdvertiseDetail();
       }, base.hideLoadingSpin);
       addListener();
-
     }
     function setHtml() {
         $('title').text(base.getText('出售详情') + '-' +base.getText('区块链技术应用实验平台'));
@@ -319,13 +318,13 @@ define([
             $('.bb-m').text(tradeCoin);
             $("#submitDialog .tradeAmount").html($("#buyAmount").val() + tradeCurrency);
             $("#submitDialog .count").html($("#buyEth").val() + tradeCoin);
-            if (_formWrapper.valid()) {
+            // if (_formWrapper.valid()) {
                 // if ($("#buyAmount").val() != '' && $("#buyAmount").val()) {
                 //     $("#submitDialog").removeClass("hidden")
                 // } else {
                 //     base.showMsg("请输入您购买的金額")
                 // }
-            }
+            // }
             UserCtr.getUser().then((data) => {
                 if (data.tradepwdFlag) {
                     if (_formWrapper.valid()) {
@@ -338,6 +337,7 @@ define([
                             }
                         }else {
                             if ($("#amounSelect").val() != '') {
+                                sellETH();
                                 // $("#submitMon").removeClass("hidden");
                             } else {
                                 base.showMsg(base.getText('请选择您购买的金额', langType))

@@ -140,7 +140,7 @@ define([
 
         if (item.fromUserInfo) {
             if (item.fromUserInfo.photo) {
-                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.fromUserInfo.photo)}')" data-href="../user/user-detail.html?userId=${item.toUserInfo.userId}"></div>`
+                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.fromUserInfo.photo)}')" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}"></div>`
             } else {
                 var tmpl = item.fromUserInfo.nickname.substring(0, 1).toUpperCase();
                 photoHtml = `<div class="photo"><div class="noPhoto goHref" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}">${tmpl}</div></div>`

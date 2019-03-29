@@ -193,6 +193,10 @@ define([
     function getPageAdvertise(config) {
         return TradeCtr.getPageAdvertise(config, true).then((data) => {
             var lists = data.list;
+            console.log(lists)
+            if($('#bestSearchBtn').attr('data-type') == 'bestSearch'){
+                base.gohref('../trade/sell-detail.html?code='+lists[0].code);
+            }
             if (data.list.length) {
                 var html = "";
                 lists.forEach((item, i) => {
@@ -370,6 +374,9 @@ define([
         })
 
         $("#searchBtn,#bestSearchBtn").click(function() {
+            if($(this).children('span').text() == '请给我最好的'){
+                $('#bestSearchBtn').attr('data-type','bestSearch');
+            }
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type");
 
           //搜广告

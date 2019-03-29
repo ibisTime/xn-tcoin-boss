@@ -902,7 +902,7 @@ define([
             }else{
                 rate = 0;
             }
-            $('.sendBtc-form-wrap  .rate span').text(rate)
+            $('.sendBtc-form-wrap  .rate span').text(rate.toFixed(8))
 
         }, base.hideLoadingSpin);
     }

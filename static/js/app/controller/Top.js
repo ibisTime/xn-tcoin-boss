@@ -12,14 +12,15 @@ define([
 
     let langPackage = LANGUAGE;
     var typeList = {
-        "buy": base.getText('购买'),
-        "sell": base.getText('出售'),
+        "buy":base.getText('出售') ,
+        "sell":base.getText('购买'),
     }
     $(document).ready(function () {
         init();
         getBTC();
         if(base.isLogin()){
             initSocket();
+            getUnreadList();
         }
     });
 
@@ -94,6 +95,29 @@ define([
     }
 
     /**
+     * 获取未读消息
+     */
+    function getUnreadList() {
+        TradeCtr.getUnreadDetail(base.getUserId(),0).then((item) => {
+            console.log(item)
+            let taget = $('#head-user-wrap .head-user .msg_num');
+            let msg_num = +taget.text()
+            taget.show();
+            taget.text(msg_num + item.length);
+            let messageHtml = '';
+            item.forEach(function (data) {
+                messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.smsInfo.readId}">
+                    <img src="${data.smsInfo.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
+                    <div class="message-text">
+                        <p class="message-title">${data.smsInfo.title}</p>
+                        <span class="message-content">${data.smsInfo.content}</span>
+                    </div>
+                </li>`;
+                $('.down-wrap-message ul').append(messageHtml);
+            })
+        })
+    }
+    /**
      * 初始化Socket链接
      */
     function initSocket() {
@@ -113,21 +137,20 @@ define([
             let messageHtml = '';
             let activeNewsHtml = '';
            data.forEach(item => {
-                // if(window.location.pathname == "/order/order-detail.html"){
-                //     var orderDetailCode = base.getUrlParam('code');
-                //     var orderDetailStatus;
-                //     return TradeCtr.getOrderDetail(orderDetailCode).then((data) => {
-                //         orderDetailStatus = data.status;
-                //         console.log(orderDetailStatus,item.status)
-                //         console.log(orderDetailCode,item.refNo)
-                //         if(orderDetailCode == item.refNo){
-                //             if(orderDetailStatus == item.status){
-                //                 // window.location.reload();
-                //                 // return
-                //             }
-                //         }
-                //     })
-                // }
+                if(window.location.pathname == "/order/order-detail.html"){
+                    var orderDetailCode = base.getUrlParam('code');
+                    var orderDetailStatus;
+                    return TradeCtr.getOrderDetail(orderDetailCode).then((data) => {
+                        orderDetailStatus = data.status;
+                        console.log(orderDetailStatus,item.status)
+                        console.log(orderDetailCode,item.refNo)
+                        if(orderDetailCode == item.refNo){
+                            if(orderDetailStatus == item.status){
+                                window.location.reload();
+                            }
+                        }
+                    })
+                }
                 if(item.isNew == 0){
                     messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}" data-refNo="${item.refNo}" data-readId="${item.readId}">
                             <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
@@ -153,7 +176,6 @@ define([
                             refNo = item.refNo;
                             readId = item.readId;
                         })
-
                         setTimeout(() => {
                             if(document.getElementById('audio-message2').muted != false){
                                 document.getElementById('audio-message2').muted = false;

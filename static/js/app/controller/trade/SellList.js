@@ -202,6 +202,9 @@ define([
             if (data.list.length) {
                 var html = "";
                 console.log(lists)
+                if($('#bestSearchBtn').attr('data-type') == 'bestSearch'){
+                    base.gohref('../trade/sell-detail.html?code='+lists[0].code);
+                }
                 lists.forEach((item, i) => {
                     html += buildHtml(item);
                 });
@@ -380,6 +383,9 @@ define([
         })
 
         $("#searchBtn,#bestSearchBtn").click(function() {
+            if($(this).children('span').text() == '请给我最好的'){
+                $('#bestSearchBtn').attr('data-type','bestSearch');
+            }
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type")
                 //搜广告
             if (_searchType == "adver") {

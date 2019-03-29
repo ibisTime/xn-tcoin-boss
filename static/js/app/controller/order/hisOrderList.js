@@ -13,8 +13,8 @@ define([
   let langType = localStorage.getItem('langType') || 'ZH';
   var coin = base.getUrlParam("orderCoin") || 'end';
   var typeList = {
-      "buy": base.getText('购买'),
-      "sell": base.getText('出售'),
+      "buy": base.getText('出售'),
+      "sell": base.getText('购买'),
     },
     statusValueList = {};
   var config = {
