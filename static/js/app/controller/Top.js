@@ -99,7 +99,6 @@ define([
      */
     function getUnreadList() {
         TradeCtr.getUnreadDetail(base.getUserId(),0).then((item) => {
-            console.log(item)
             let taget = $('#head-user-wrap .head-user .msg_num');
             let msg_num = +taget.text()
             taget.show();

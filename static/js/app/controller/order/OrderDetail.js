@@ -251,6 +251,14 @@ define([
           if(data.status === '2' || data.status == '3') {
             // 待评价和已完成状态
             $('.orderDetail-container .finished').removeClass('hidden');
+          }else if (data.status == '4'){
+              //取消状态
+              $('.orderDetail-container .finished').removeClass('hidden');
+              $('.finished-top .finished-top-status').text('交易已取消');
+          }else if (data.status == '7'){
+              //取消状态
+              $('.orderDetail-container .finished').removeClass('hidden');
+              $('.finished-top .finished-top-status').text('仲裁已完成');
           }
           if(data.status == '2') {
             // 待评价
@@ -446,6 +454,7 @@ define([
 
             userName = user.nickname;
             myName = myInfo.nickname;
+
             if (user.photo) {
                 tradePhoto = `<div class="photo goHref" data-href="../user/user-detail.html?coin=${tradeCoin}&userId=${user.userId}"   style="background-image:url('${base.getAvatar(user.photo)}')"></div>`;
             } else {
@@ -458,6 +467,7 @@ define([
                 var tmpl = myInfo.nickname ? myInfo.nickname.substring(0, 1).toUpperCase() : '-';
                 tradePhotoMy = '<div class="photo"><div class="noPhoto">' + tmpl + '</div></div>'
             }
+
 
             $("#photoWrap").html(tradePhoto)
             $("#nickname").html(user.nickname)
