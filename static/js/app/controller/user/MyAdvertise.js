@@ -181,7 +181,7 @@ define([
         });
 
         $(document).on("click", "#content-adver input", function() {
-            console.log($(this).prop('checked'))
+            console.log("当前状态："+$(this).prop('checked'));
             if ($(this).prop('checked') == false){
                 var adsCode = $(this).attr("data-code");
                 base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType))

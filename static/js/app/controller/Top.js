@@ -158,7 +158,7 @@ define([
                                 <span class="message-content">${item.content}</span>
                             </div>
                         </li>`;
-                    $('.down-wrap-message ul').append(messageHtml);
+                    $('.down-wrap-message ul .messge-content').append(messageHtml);
                 }else{
                     messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}" data-refNo="${item.refNo}" data-readId="${item.readId}">
                             <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
@@ -167,7 +167,7 @@ define([
                                 <span class="message-content">${item.content}</span>
                             </div>
                         </li>`;
-                    $('.down-wrap-message ul').prepend(messageHtml);
+                    $('.down-wrap-message ul .messge-content').prepend(messageHtml);
                     if(item.type == 1){
                         var refNo;
                         var readId;
@@ -414,5 +414,20 @@ define([
                 document.getElementById('audio-message2').muted = false;
             }
         });
+        $(document).on('click','.left-item',function () {
+            var i = $(this).index();
+            console.log(i);
+            $(this).addClass('pay-active');
+            $(this).siblings().removeClass('pay-active');
+        });
+
+
+        $(document).on('click', '.article-tit-list',function(){
+            let i = $(this).index();
+            $(this).addClass('sel-li');
+
+            $(this).siblings().removeClass('sel-li');
+        });
+
     }
 });
