@@ -232,6 +232,7 @@ define([
         }, base.hideLoadingSpin)
     }
 
+
     // 构建左侧支付方式list的dom结构
     function buildPayTypeHtml(item) {
       return ` <div class="left-item" data-value=${item.key}>
@@ -362,6 +363,7 @@ define([
 
     }
     function addListener() {
+
         $("#searchTypeWrap .select-ul li").click(function() {
             var _this = $(this);
             var _thisType = $(this).attr("data-type")
@@ -551,5 +553,6 @@ define([
                 base.gohref("../trade/sell-list.html");
             }
         });
+
     }
 });
