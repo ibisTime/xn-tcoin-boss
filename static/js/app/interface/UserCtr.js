@@ -29,7 +29,7 @@ define([
         },
         //获取邮箱注册码
         emailYzm(config) {
-            return Ajax.get('630093', config);
+            return Ajax.post('630093', config);
         },
         // 获取用户详情
         getUser(refresh, userId) {

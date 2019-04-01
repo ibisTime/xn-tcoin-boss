@@ -96,6 +96,12 @@ define([
                 type
             });
         },
+      // 列表查询文章类别
+      getDetailHelp(code) {
+        return Ajax.get("802883", {
+          code
+        });
+      },
         //转账至T网
         transferT(config){
             return Ajax.post("802800",config)

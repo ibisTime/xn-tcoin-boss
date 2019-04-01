@@ -486,10 +486,10 @@ define([
           base.showMsg(base.getText('请选择标签'));
           return;
         }
-        if(!$('#myTagInput').val()) {
-          base.showMsg(base.getText('请填写自定义标签'));
-          return;
-        }
+        // if(!$('#myTagInput').val()) {
+        //   base.showMsg(base.getText('请填写自定义标签'));
+        //   return;
+        // }
         if(!$('#clauseTextarea').val()) {
           base.showMsg(base.getText('请填写条款'));
           return;
@@ -833,8 +833,12 @@ define([
       // step3 - 国家/地区限制
       $('.step3-area-limit-checkbox .area-limit-checkbox-item i').on('click', (e) => {
         let target = e.target;
+        if($(target).hasClass('on')) {
+          $(target).removeClass('on');
+          return;
+        }
+        $($(target).addClass('on').parents('.area-limit-checkbox-item')[0]).siblings().children('i').removeClass('on');
         step3AreaLimit = $(target).attr('data-code');
-        $(target).addClass('on').siblings.removeClass('on');
       });
 
       // vpn
@@ -891,10 +895,10 @@ define([
             base.showMsg(base.getText('请选择标签'));
             return;
         }
-        if(!$('#myTagInput').val()) {
-            base.showMsg(base.getText('请填写自定义标签'));
-            return;
-        }
+        // if(!$('#myTagInput').val()) {
+        //     base.showMsg(base.getText('请填写自定义标签'));
+        //     return;
+        // }
         if(!$('#clauseTextarea').val()) {
             base.showMsg(base.getText('请填写条款'));
             return;

@@ -60,7 +60,7 @@ define([
 
     // 获取邀请好友的链接
     function getInvitaFn(){
-        return GeneralCtr.getSysConfig('invite_url').then(data => {
+        return GeneralCtr.getSysConfig('reg_invite_url').then(data => {
             INVITATION_HREF = data.cvalue;
             // h5 二维码推荐
             var qrcode = new QRCode('qrcode', INVITATION_HREF + "/user/register.html?inviteCode=" + inviteCode);
@@ -173,7 +173,8 @@ define([
             $("#transferDialog").removeClass("hidden")
         })
         $(".transfer-btn-qx").click(function () {
-            $("#transferDialog").addClass("hidden")
+            $("#transferDialog").addClass("hidden");
+            $('#transferMoney').val('');
         })
         /**
          * 转账至T网
@@ -191,7 +192,8 @@ define([
             params.amount = base.formatMoneyParse(amount, '',  params.currency);
             return GeneralCtr.transferT(params).then((data) => {
                 base.showMsg(base.getText('操作成功', langType));
-                $("#transferDialog").addClass("hidden")
+                $("#transferDialog").addClass("hidden");
+                $('#transferMoney').val('');
             }, function () {
             })
         })

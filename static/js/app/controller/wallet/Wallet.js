@@ -911,13 +911,14 @@ define([
      */
     function getAmount() {
         AccountCtr.getAccount().then((data) => {
+            console.log(data.accountList);
             data.accountList.forEach(item => {
                 if (item.currency.toLowerCase() === 'btc') {
                     console.log(item.amount)
                     $(".wallet-account-wrap .s-bb").text(base.formatMoney(item.amount,'',item.currency) + 'BTC');
                     $(".wallet-account-wrap .y-amount").text(' ≈ ' + item.amountUSD+ 'USD');
                     $('.wallet-account-wrap .freez-amount a').text(base.formatMoney(item.frozenAmount,'','BTC'));
-                    $('.sendBtc-form-wrap .wallet-account span').text(base.formatMoney(item.amount,'',item.currency));
+                    $('.sendBtc-form-wrap .wallet-account span').text(base.formatMoney((item.amount - item.frozenAmount),'',item.currency));
                     getRate();
                     $('#address-BTC').val(item.address)
                     var  erWn =[];

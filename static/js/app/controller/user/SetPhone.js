@@ -39,8 +39,8 @@ define([
     }
 
     //綁定手机
-    function setPhone(mobile, smsCaptcha) {
-        return UserCtr.setPhone(mobile, smsCaptcha).then(() => {
+    function setPhone(params) {
+        return UserCtr.setCurrencyPhone(params).then(() => {
             base.hideLoadingSpin()
             base.showMsg(base.getText('设置成功', langType))
             sessionStorage.setItem("mobile", mobile);
@@ -94,12 +94,13 @@ define([
                 };
                 params.countryCode = sessionStorage.getItem('countryCode')
                 params.interCode = sessionStorage.getItem('interCode')
-                console.log(params)
+                params.smsCaptcha = params.captcha;
+                delete params.captcha;
                 if(type == 1){
                     detPhone(params);
                 }
                 if(type == 0){
-                    setPhone(params);
+                  setPhone(params);
                 }
             }
         })

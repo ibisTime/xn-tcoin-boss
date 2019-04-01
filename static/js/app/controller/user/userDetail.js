@@ -191,9 +191,9 @@ define([
         var operationHtml = '';
 
         if (item.tradeType == '1') {
-            operationHtml = `<div class="am-button goHref" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买')}</div>`
+            operationHtml = `<div class="goHref" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买')}</div>`
         } else {
-            operationHtml = `<div class="am-button goHref" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`
+            operationHtml = `<div class="goHref" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`
         }
 
         let hpCount = 0;
@@ -223,7 +223,7 @@ define([
 
         let speenHtml = '';
         if (item.releaseTime) {
-            speenHtml = releaseTime;
+            speenHtml = item.releaseTime;
         } else {
             speenHtml = '<i class="new">新</i>'
         }
@@ -311,11 +311,14 @@ define([
 
         // 信任按钮的点击事件
         $('.k-userbtn .trust').click(function() {
+                if(!base.isLogin()) {
+                  base.showMsg(base.getText('请登录后操作', langType));
+                  return;
+                }
                 relationConfig.type = '1';
                 var _this = $(this);
                 base.showLoadingSpin();
                 if (_this.attr("data-isTrust") == '1') {
-
                     UserCtr.removeUserRelation(relationConfig, true).then((data) => {
                         _this.empty().append(base.getText('信任', langType));
                         _this.attr("data-isTrust", _this.attr("data-isTrust") == '1' ? '0' : '1');

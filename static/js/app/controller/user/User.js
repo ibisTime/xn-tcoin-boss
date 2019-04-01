@@ -81,7 +81,7 @@ define([
                 if (item.interSimpleCode === 'CN' && item.chineseName === '中国') {
                     defaultData = item;
                 }
-                html += `<div class="item" id="code_${item.code}" data-code="${item.code}" data-pic="${item.pic}" 
+                html += `<div class="item" id="code_${item.code}" data-code="${item.code}" data-pic="${item.pic}"
                             data-interCode="${item.interCode}">${item.chineseName}</div>`
             });
             $("#currencyList").html(html);
@@ -278,7 +278,6 @@ define([
         $("#sendCode").click(function () {
             if(_formWrapper.valid()){
                 base.showLoadingSpin();
-                var params = _formWrapper.serializeObject();
                 let params = _formWrapper1.serializeObject();
                 params = {
                     ...params,

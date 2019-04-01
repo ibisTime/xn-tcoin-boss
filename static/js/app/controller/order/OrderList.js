@@ -39,7 +39,7 @@ define([
                 unreadMsgList = list;
                 isUnreadList = true;
                 addUnreadMsgNum();
-        })
+        });
         GeneralCtr.getDictList({ "parentKey": "trade_order_status" }).then((data) => {
                 data.forEach(function(item) {
                     statusValueList[item.dkey] = item.dvalue
@@ -215,7 +215,7 @@ define([
 					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
 					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
-					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]} 
+					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}
 					<samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}"></samp>
 						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${item.buyUser}&status=${item.status}&type=${item.type}&adsCode=${item.adsCode}&buyUserInfo=${item.buyUserInfo}"> ></i></td>
 				</tr>`;

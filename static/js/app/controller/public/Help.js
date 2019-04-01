@@ -7,6 +7,7 @@ define([
 ], function(base, Ajax, GeneralCtr, Top, Foo) {
     var code = base.getUrlParam('code') || '';
     let langType = localStorage.getItem('langType') || 'ZH';
+    let detailMsg = '';
 
     init();
 
@@ -53,9 +54,18 @@ define([
             let html = '';
             data.forEach((item, index) => {
                 html += buildHtml(item);
+                
             });
+          getDetailHelp(data[0].code);
             $('#content').html(html);
         }, base.hideLoadingSpin);
+    }
+    
+    // 详情查帮助
+    function getDetailHelp(detailCode) {
+      return GeneralCtr.getDetailHelp(detailCode).then(data => {
+        detailMsg = data.content;
+      });
     }
 
     function buildHtml(item) {

@@ -145,9 +145,9 @@ define([
             $("#leaveMessage").html(data.leaveMessage.replace(/\n/g, '<br>'))
             $("#limit").html(limit);
             $('#countString').html(totalCountString);
-            $("#payType").html(bizTypeList[data.payType])
-            $("#payLimit").html(data.payLimit)
-
+            $("#payType").html(bizTypeList[data.payType]);
+            $("#payLimit").html(data.payLimit);
+            $('.buy-talk').html('安全托管+与'+data.user.nickname+'实时交谈');
             $("#truePrice").html(Math.floor(data.truePrice * 100) / 100 + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             $("#submitDialog .tradePrice").html(config.tradePrice + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             $("#leftCountString").html(base.formatMoney(data.leftCountString, '', tradeCoin))

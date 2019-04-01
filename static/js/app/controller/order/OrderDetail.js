@@ -196,8 +196,8 @@ define([
         return TradeCtr.getOrderDetail(code).then((data) => {
           adsCode = data.adsCode;
           tradeOrderStatus = data.status;
-            console.log(data.status)
-          sessionStorage.setItem('orderDetailStatus',data.status)
+            console.log(data.status);
+          sessionStorage.setItem('orderDetailStatus',data.status);
           getAdvertiseDetail();
           //待支付
           if(data.buyUser == base.getUserId()) {
@@ -228,8 +228,10 @@ define([
                     }
                 }
                 setInterval(getCountDown, 1000)
-            }else{
-                $('.orderDetail-operation-btn').html('');
+            }else if(data.status == '6'){
+              //取消状态
+              $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
+              $('.finished-top .finished-top-status').text('仲裁已完成');
             }
           } else {
             let interval = base.fun(Date.parse(data.buyUserInfo.lastLogin), new Date());
@@ -243,22 +245,24 @@ define([
                 $('.orderDetail-left-status').html('买家已支付');
                 $('.orderDetail-left-release .release-btn').html('仲裁中');
                 $('.orderDetail-container .before-release-btc').removeClass('hidden');
-            }else{
-                $('.orderDetail-operation-btn').html('');
+            }else if (data.status == '6'){
+              //取消状态
+              $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
+              $('.finished-top .finished-top-status').text('交易已取消');
             }
           }
 
           if(data.status === '2' || data.status == '3') {
             // 待评价和已完成状态
-            $('.orderDetail-container .finished').removeClass('hidden');
+            $('.orderDetail-container .finished').removeClass('hidden').siblings('.orderDetail-left').addClass('hidden');
           }else if (data.status == '4'){
               //取消状态
               $('.orderDetail-container .finished').removeClass('hidden');
               $('.finished-top .finished-top-status').text('交易已取消');
           }else if (data.status == '7'){
               //取消状态
-              $('.orderDetail-container .finished').removeClass('hidden');
-              $('.finished-top .finished-top-status').text('仲裁已完成');
+              $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
+              $('.finished-top .finished-top-status').text('交易已取消');
           }
           if(data.status == '2') {
             // 待评价
@@ -269,7 +273,7 @@ define([
             } else if(data.buyUser != base.getUserId() && !data.sbComment) {
               comment = 1;
             }
-            $('.finished-top .comment-btn').remove()
+            $('.finished-top .comment-btn').remove();
             if(comment == 1) {
                 $(".commentDialog").show()
               // $('.finished-top .finished-top-status').after(`<span class="am-button-red comment-btn">去评价</span>`);
@@ -283,13 +287,12 @@ define([
               $('.finished .finished-bottom .code-payType .payType .finished-bottom-item-content').html(item.value);
             }
           });
-
           $('.wait .orderDetail-left-todo .todo-tips span').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
           $('.wait .orderDetail-left-message .message-tips').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin+'被安全的保存在托管处');
           $('.wait .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
           $('.wait .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
           $('.wait .orderDetail-left-more-info .trade-id .more-info-value').html(code);
-          $('.wait .orderDetail-left-more-info .frate .more-info-value').html(data.tradePrice + ' USD/BTC');
+          $('.wait .orderDetail-left-more-info .frate .more-info-value').html(data.tradePrice + ` ${data.tradeCurrency}/${data.tradeCoin}`);
           $('.wait .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
 
 
@@ -298,7 +301,7 @@ define([
           $('.wait-release-btc .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
           $('.wait-release-btc .orderDetail-left-todo .todo-tips span').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
           $('.wait-release-btc .orderDetail-left-more-info .trade-id .more-info-value').html(code);
-          $('.wait-release-btc .orderDetail-left-more-info .frate .more-info-value').html(data.tradePrice + ' USD/BTC');
+          $('.wait-release-btc .orderDetail-left-more-info .frate .more-info-value').html(data.tradePrice + ` ${data.tradeCurrency}/${data.tradeCoin}`);
           $('.wait-release-btc .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
 
           $('.before-release-btc .orderDetail-left-todo .todo-tips span').html(base.formatMoney(data.countString,'',data.tradeCoin) + data.tradeCoin);
@@ -306,7 +309,7 @@ define([
           $('.before-release-btc .orderDetail-left-todo .todo .amount').html(data.tradeAmount + data.tradeCurrency);
           $('.before-release-btc .orderDetail-left-zs .zs-title .zs-nickname').html(data.sellUserInfo.nickname);
           $('.before-release-btc .orderDetail-left-more-info .trade-id .more-info-value').html(code);
-          $('.before-release-btc .orderDetail-left-more-info .frate .more-info-value').html(data.tradePrice + ' USD/BTC');
+          $('.before-release-btc .orderDetail-left-more-info .frate .more-info-value').html(data.tradePrice + ` ${data.tradeCurrency}/${data.tradeCoin}`);
           $('.before-release-btc .orderDetail-left-more-info .time .more-info-value').html(base.formateDatetime(data.createDatetime));
 
 
@@ -454,7 +457,6 @@ define([
 
             userName = user.nickname;
             myName = myInfo.nickname;
-
             if (user.photo) {
                 tradePhoto = `<div class="photo goHref" data-href="../user/user-detail.html?coin=${tradeCoin}&userId=${user.userId}"   style="background-image:url('${base.getAvatar(user.photo)}')"></div>`;
             } else {
@@ -959,7 +961,7 @@ define([
         //获取消息子类型
         //会话类型为群聊时，子类型为：webim.GROUP_MSG_SUB_TYPE
         //会话类型为私聊时，子类型为：webim.C2C_MSG_SUB_TYPE
-        var adminMsg = ''
+        var adminMsg = '';
         subType = msg.getSubType();
 
         switch (subType) {
@@ -991,14 +993,12 @@ define([
             msghead.innerHTML = "<div class='photoWrap'>" + tradePhotoMy + "</div><div class='nameWrap'><samp class='name'>" + webim.Tool.formatText2Html(myName) + "</samp><samp>" + webim.Tool.formatText2Html(webim.Tool.formatTimeStamp(msg.getTime())) + '</samp></div>';
             onemsg.setAttribute('class', 'onemsg my')
         }
-
         if (fromAccount != 'admin') {
             msgbody.appendChild(msgPre);
         }
 
         onemsg.appendChild(msghead);
         onemsg.appendChild(msgbody);
-
         if (fromAccount == 'admin') {
             if (isNew) {
                 setTimeout(function() {
@@ -1562,7 +1562,7 @@ define([
         // 取消弹窗 - 确定
         $('.cancel-dialog .paid-subBtn').click(() => {
           TradeCtr.cancelOrder(code).then(() => {
-            base.hideLoadingSpin();
+            base.showLoadingSpin();
             base.showMsg(base.getText('操作成功'));
               setTimeout(function() {
                   base.gohref('./order-list.html');

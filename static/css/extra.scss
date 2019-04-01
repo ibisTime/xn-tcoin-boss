@@ -471,7 +471,7 @@ table {
             //width: 0;
             //height: 0;
             opacity: 1;
-            overflow: hidden;
+            overflow: scroll;
             position: absolute;
             top: 15px;
             left: -150px;
@@ -481,6 +481,7 @@ table {
             -moz-transition: opacity, width, height .4s;
             -webkit-transition: opacity, width, height .4s;
             line-height: 1;
+            max-height: 700px;
             ul{
                 display: none;
             }
@@ -8807,6 +8808,11 @@ html {
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
+}
+
+#content-adver img{
+    height: 12px;
+    margin-right: 3px;
 }
 
 input:checked + .slider {

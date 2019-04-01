@@ -122,7 +122,6 @@ define([
     function initSocket() {
         var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId'));
         ws.onopen = function (event) {
-            console.log('链接成功');
             // ws.send('你好啊')
         }
         ws.onmessage = function(event) {
@@ -408,7 +407,6 @@ define([
             });
         });
         $(document).on('click',function () {
-            console.log('我被点击了')
             if(document.getElementById('audio-message1').muted ||  document.getElementById('audio-message2').muted != false){
                 document.getElementById('audio-message1').muted = false;
                 document.getElementById('audio-message2').muted = false;

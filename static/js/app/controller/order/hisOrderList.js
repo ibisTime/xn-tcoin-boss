@@ -13,8 +13,8 @@ define([
   let langType = localStorage.getItem('langType') || 'ZH';
   var coin = base.getUrlParam("orderCoin") || 'end';
   var typeList = {
-      "buy": base.getText('出售'),
-      "sell": base.getText('购买'),
+      "buy": base.getText('购买'),
+      "sell": base.getText('出售'),
     },
     statusValueList = {};
   var config = {
@@ -102,6 +102,7 @@ define([
   function getPageOrder(refresh) {
     return TradeCtr.getPageOrder(config, refresh).then((data) => {
       lists = data.list;
+      console.log(lists);
       if (data.list.length) {
         var html = "";
         lists.forEach((item, i) => {
@@ -215,7 +216,7 @@ define([
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
 					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
                     <td class="operation">
-                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}">聊天</div>  
+                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}">聊天</div>
                         <samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}"></samp>
 						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}"> ></i>
                     </td>
@@ -246,12 +247,11 @@ define([
         data={
           start: 1,
           limit: 10,
-          type:type,
+          tradeType:type,
           statusList:statusList,
           createDatetimeStart:createDatetimeStart || undefined,
           createDatetimeEnd:createDatetimeEnd || undefined
-      }
-      console.log(payStatic,data);
+      };
         return TradeCtr.getPageOrder(data, true).then((data) => {
             lists = data.list;
             if (data.list.length) {
