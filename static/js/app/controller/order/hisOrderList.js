@@ -102,7 +102,6 @@ define([
   function getPageOrder(refresh) {
     return TradeCtr.getPageOrder(config, refresh).then((data) => {
       lists = data.list;
-      console.log(lists);
       if (data.list.length) {
         var html = "";
         lists.forEach((item, i) => {
@@ -227,9 +226,9 @@ define([
   //按条件查找已结束订单
     $('.hisorder-search-btn').click(function () {
       var data;
-      var type =$('.hisorder-wrap #payType option:selected').val()
-      var createDatetimeStart =$('#createDatetimeStart input').val()
-      var createDatetimeEnd =$('#createDatetimeEnd input').val()
+      var type =$('.hisorder-wrap #payType option:selected').val();
+      var createDatetimeStart =$('#createDatetimeStart input').val();
+      var createDatetimeEnd =$('#createDatetimeEnd input').val();
       if( createDatetimeStart == '' || createDatetimeEnd == ''){
           createDatetimeStart = ''
           createDatetimeEnd =''
@@ -247,7 +246,7 @@ define([
         data={
           start: 1,
           limit: 10,
-          tradeType:type,
+          type: type === '0' ? 'buy' : 'sell',
           statusList:statusList,
           createDatetimeStart:createDatetimeStart || undefined,
           createDatetimeEnd:createDatetimeEnd || undefined

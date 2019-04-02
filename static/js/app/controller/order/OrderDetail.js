@@ -21,6 +21,7 @@ define([
     var emotionFlag = false;
     var tradePhoto = '';
     var tradePhotoMy = '';
+    var customerPhoto = '';
     var userName = '',
         myName = '';
     var payType = {};
@@ -34,6 +35,8 @@ define([
   let payTypeList = [];
   let platTagList = [];
   let tradeOrderStatus = '';
+  
+  let isWebUser = 1;
 
     init();
 
@@ -334,7 +337,6 @@ define([
               $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.sellUserInfo.photo) + "')" });
               $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.sellUserInfo.nickname);
               $('.orderDetail-right .more-info').attr('userId',data.sellUserInfo.userId);
-              console.log(data.sellUserInfo.userId)
               getUser(data.sellUserInfo.userId)
               if(data.sellUserInfo.email != undefined){
                   $('.orderDetail-right .orderDetail-right-user-info  .yz span:last-child span').html('电子邮件已验证');
@@ -454,9 +456,7 @@ define([
             } else {
                 $("title").html(base.getText('订单详情') + "-HappyMoney")
             }
-
-            userName = user.nickname;
-            myName = myInfo.nickname;
+            
             if (user.photo) {
                 tradePhoto = `<div class="photo goHref" data-href="../user/user-detail.html?coin=${tradeCoin}&userId=${user.userId}"   style="background-image:url('${base.getAvatar(user.photo)}')"></div>`;
             } else {
@@ -677,7 +677,6 @@ define([
         var sess, newMsg;
         //获取所有聊天会话
         var sessMap = webim.MsgStore.sessMap();
-
         for (var j in newMsgList) { //遍历新消息
             newMsg = newMsgList[j];
             if (!selSess) { // 没有聊天对象
@@ -938,6 +937,7 @@ define([
 
         isSelfSend = msg.getIsSend(); // 消息是否为自己发的
         fromAccount = msg.getFromAccount();
+        console.log(fromAccount);
         if (!fromAccount) {
             return;
         }
@@ -977,13 +977,18 @@ define([
                 }
                 break;
         }
-
+        
         //系統消息 //昵称  消息时间
         if (fromAccount == 'admin') {
             msghead.innerHTML = base.getText(adminMsg) + '<samp>(' + webim.Tool.formatText2Html(webim.Tool.formatTimeStamp(msg.getTime())) + ")</samp>";
             onemsg.setAttribute('class', 'onemsg admin')
-
-            //对方消息
+  
+          // 客服消息
+        }else if (isWebUser === -1) {
+          msghead.innerHTML = "<div class='photoWrap'><div class='photo'><div class='noPhoto'>客</div></div></div><div class='nameWrap'><samp class='name'>客服</samp><samp>" + webim.Tool.formatText2Html(webim.Tool.formatTimeStamp(msg.getTime())) + '</samp></div>';
+          onemsg.setAttribute('class', 'onemsg user')
+  
+          //对方消息
         } else if (fromAccount != base.getUserId()) {
             msghead.innerHTML = "<div class='photoWrap'>" + tradePhoto + "</div><div class='nameWrap'><samp class='name'>" + webim.Tool.formatText2Html(userName) + "</samp><samp>" + webim.Tool.formatText2Html(webim.Tool.formatTimeStamp(msg.getTime())) + '</samp></div>';
             onemsg.setAttribute('class', 'onemsg user')
@@ -1071,7 +1076,9 @@ define([
 
     //解析文本消息元素
     function convertTextMsgToHtml(content) {
-        return content.getText();
+      let context = content.getText();
+      isWebUser = context.search(/^WE_B:/);
+        return context;
     }
     //解析表情消息元素
     function convertFaceMsgToHtml(content) {
@@ -1293,7 +1300,7 @@ define([
             //--聊天 star--
             $('#send').on('click', function() {
                 if($('#msgedit').val()!=""&&$('#msgedit').val()){
-                    onSendMsg($('#msgedit').val());
+                    onSendMsg('WE_B:' + $('#msgedit').val());
                 }
             });
             // $('#msgedit').on('click', function() {
@@ -1305,7 +1312,7 @@ define([
             $('#msgedit').css('overflow', 'hidden');
             if (event.keyCode == 13) {
                 if ($('#msgedit').val() != "" && $('#msgedit').val()) {
-                    onSendMsg($('#msgedit').val());
+                    onSendMsg('WE_B:' + $('#msgedit').val());
                     $('#msgedit').val('')
                 }
             }

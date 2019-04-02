@@ -159,6 +159,7 @@ define([
 					<td>
 						<div class="txt2"><p>${base.getPercentum(item.fromUserInfo.userStatistics.beiHaoPingCount,item.fromUserInfo.userStatistics.beiPingJiaCount)}</p><samp>${base.getText('好评率', langType)}</samp></div>
 					</td>
+					<td></td>
 				</tr>`;
         }
     }

@@ -193,7 +193,6 @@ define([
     function getPageAdvertise(config) {
         return TradeCtr.getPageAdvertise(config, true).then((data) => {
             var lists = data.list;
-            console.log(lists)
             if($('#bestSearchBtn').attr('data-type') == 'bestSearch'){
                 base.gohref('../trade/sell-detail.html?code='+lists[0].code);
             }

@@ -54,8 +54,7 @@ define([
                     }
                 });
             });
-            base.hideLoadingSpin()
-            console.log(bannerHtml)
+            base.hideLoadingSpin();
             $("#swiper .swiper-wrapper").html(bannerHtml);
             initSwiperBanner();
         }, (msg) => {

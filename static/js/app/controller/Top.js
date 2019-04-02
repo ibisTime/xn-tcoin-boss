@@ -209,9 +209,7 @@ define([
         ws.onclose = function() {
             console.log('链接断开，尝试重连')
             // initSocket()
-        }
-
-        console.log(ws)
+        };
     }
 
     /**
@@ -337,7 +335,16 @@ define([
         $("#head .head-nav-wrap .store").off("click").click(function () {
             var thishref = $(this).attr("data-href");
             base.gohref(thishref)
-        })
+        });
+        
+        $('#topAdvertise').off('click').click(function () {
+          if(!base.isLogin()){
+            base.goLogin();
+            return;
+          }else {
+            base.gohref('../trade/advertise.html')
+          }
+        });
 
         // $("#head .trade .goHref").off("click").click(function () {
             // var thishref = $(this).attr("data-href");

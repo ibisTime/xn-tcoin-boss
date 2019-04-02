@@ -91,9 +91,9 @@ define([
             });
         },
         // 列表查询文章类别
-        getListHelp(type) {
+        getListHelp(code) {
             return Ajax.get("802880", {
-                type
+              code
             });
         },
       // 列表查询文章类别

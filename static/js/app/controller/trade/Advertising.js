@@ -44,9 +44,11 @@ define([
     let step3AreaLimit = '';    //国家/地区限制
     let step3Visible = '';     // 可见性
     let isAllowProxy = '';
+    let cancelTimeInput = '';
 
       if(!base.isLogin()){
-        base.goLogin()
+        base.goLogin();
+        return;
       }else {
         if(location.href.indexOf('step2') !== -1) {
           step2Init();
@@ -131,9 +133,12 @@ define([
   function step2Init() {
       base.showLoadingSpin();
       $.when(
-        TradeCtr.getMarket(sessionStorage.getItem('tradeCoin'))
-      ).then((data1) => {
+        TradeCtr.getMarket(sessionStorage.getItem('tradeCoin')),
+        GeneralCtr.getSysConfig('trade_validate_min_minutes')
+      ).then((data1, data2) => {
         base.hideLoadingSpin();
+        cancelTimeInput = data2.cvalue;
+        $('#cancelTimeInput').val(cancelTimeInput);
         $('.step2-zq-tips .step2-za-tip-market-price .step2-zq-tip-weighter').html(data1[0].lastPrice);
         $('.step2-zq-tips .step2-zq-tip-unit ,.advertise-step2-jyxe .step2-input .step2-input-tip,.min-price .step2-input-tip').html(data1[0].referCurrency);
           salesCalculation()
@@ -168,12 +173,8 @@ define([
     $.when(
       TradeCtr.getTagsList({ status: 1 }),
       TradeCtr.getCountryList({ status: 1 })
-    ).then((data1, data2) => {
+    ).then((data1, data2, data3) => {
       base.hideLoadingSpin();
-      // data1.map((item) => {
-      //   step3TagInitData.push(item.name);
-      // });
-      console.log(data1);
       data1.map((item) => {
         item.text = item.name;
       });
@@ -354,7 +355,6 @@ define([
             $("#price").val((Math.floor(data.truePrice * 100) / 100).toFixed(2));
 
             var type =base.getUrlParam('type');
-            console.log(base.getUrlParam('type'))
             if(type == 'sell') {
                 $('.advertise-step1-bigbigTitle .text').removeClass('buy').addClass('sell');
                 $('.advertise-step1-bigbigTitle .title').html('卖出您的比特币以获得利润');
@@ -699,6 +699,10 @@ define([
           base.showMsg(base.getText('请填写所有信息'));
           return;
         }
+        if(+$('#cancelTimeInput').val() < +cancelTimeInput) {
+          base.showMsg(base.getText(`请填写大于${cancelTimeInput}的时间`));
+          return;
+        }
         if($('.jzxe').attr('data-type') == 1){
             if(!$('#minInput').val() || !$('#maxInput').val()){
                 base.showMsg(base.getText('请填写所有信息'));
@@ -881,7 +885,7 @@ define([
                 sessionStorage.setItem('jzxe', $('.jzxe').attr('data-type'));
                 $(this).attr('data-type',1)
             }
-        })
+        });
 
 
         base.hideLoadingSpin();

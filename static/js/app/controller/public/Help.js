@@ -28,12 +28,26 @@ define([
     function getListHelpCategory() {
         return GeneralCtr.getListHelpCategory().then((data) => {
             base.hideLoadingSpin();
-            let html = '';
+            let html = '', aHItem = '';
             data.forEach((item, index) => {
-                html += `<li class="article-item code_${item.code}" data-code="${item.code}">${item.name}</li>`;
+              GeneralCtr.getListHelp(item.code).then((hItem, hIndex) => {
+                hItem.forEach(dList => {
+                  aHItem += `<li class="article-item code_${dList.code}" data-code="${dList.code}">${dList.title}</li>`
+                });
+                html += `<li class="help-article_item">
+                        <p>${item.name}</p>
+                        <ul class="article-ul">
+                            <li>123</li>
+                            <li>123</li>
+                            <li>123</li>
+                            ${aHItem}
+                        </ul>
+                   </li>`;
+                if(index === data.length - 1) {
+                  $('#help-left').append(html);
+                }
+              })
             });
-            $('#help-left').append(html);
-
             // 选中
             if(code) {
                 $('#help-left li.code_' + code).addClass('sel-li');
@@ -43,7 +57,7 @@ define([
             }
             $('.hmoney-tit').text($('#help-left li.sel-li').text());
 
-            getListHelp();
+            // getListHelp();
         }, base.hideLoadingSpin);
     }
 
@@ -83,6 +97,15 @@ define([
             let thisCode = $(this).attr('data-code');
             base.gohref(base.changeURLArg(location.href, "code", thisCode));
         });
+  
+      $('.article-left').on('click', 'li.help-article_item', function(){
+        let thisCode = $(this).attr('data-code');
+        if(thisCode) {
+          GeneralCtr.getDetailHelp(thisCode).then(data => {
+            console.log(data);
+          });
+        }
+      });
 
         $('#content').on('click', '.help-list-item .title-wrap', function(){
             if ($(this).siblings('.content-wrap').hasClass('hidden')) {
