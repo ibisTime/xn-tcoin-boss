@@ -6,6 +6,7 @@ define([
     'app/controller/foo'
 ], function(base, Ajax, GeneralCtr, Top, Foo) {
     var code = base.getUrlParam('code') || '';
+    var helpKey = +base.getUrlParam('key') || 0;
     let langType = localStorage.getItem('langType') || 'ZH';
     let detailMsg = '';
 
@@ -28,12 +29,16 @@ define([
     function getListHelpCategory() {
         return GeneralCtr.getListHelpCategory().then((data) => {
             base.hideLoadingSpin();
-            let html = '', len = data.length - 1;
+            let html = '', len = data.length - 1, key = helpKey, defIndex = 0;
+            if(helpKey > 2) {
+              key = helpKey - 3;
+              defIndex = 1;
+            }
             data.forEach((item, index) => {
               let aHItem = '';
               GeneralCtr.getListHelp(item.code).then((hItem, hIndex) => {
-                if(index === 0) {
-                  GeneralCtr.getDetailHelp(hItem[0].code).then(data => {
+                if(index === defIndex) {
+                  GeneralCtr.getDetailHelp(hItem[key].code).then(data => {
                     $('.hmoney-tit').text(data.title);
                     $('#content').html(data.content);
                   });
@@ -41,6 +46,7 @@ define([
                 hItem.forEach(dList => {
                   aHItem += `<li class="help-article_item code_${dList.code}" data-code="${dList.code}">${dList.title}</li>`
                 });
+                console.log('aHItem', aHItem);
                 html += `<li>
                         <p>${item.name}</p>
                         <ul class="article-ul">
@@ -49,7 +55,11 @@ define([
                    </li>`;
                 if(index === len) {
                   $('#help-left').append(html);
-                  $($($('#help-left .article-ul')[0]).children('li')[0]).addClass('sel-li');
+                  if(helpKey > 3) {
+                    $($($('#help-left .article-ul')[1]).children('li')[key]).addClass('sel-li');
+                  }else {
+                    $($($('#help-left .article-ul')[0]).children('li')[key]).addClass('sel-li');
+                  }
                 }
               })
             });

@@ -23,6 +23,7 @@ define([
       $('.contact-txt').css('width', '39%');
     }
     addListener();
+    // getListHelpCategory();
   }
 
   // 获取Q社群
@@ -54,12 +55,55 @@ define([
       base.showMsg(msg || base.getText('加载失败', langType));
     });
   }
+  
+  // 列表查询文章类别
+  function getListHelpCategory() {
+    return GeneralCtr.getListHelpCategory().then((data) => {
+      base.hideLoadingSpin();
+      let html = `
+        <li class="foo-li">
+            <h2 class="foo-en_gj">工具</h2>
+            <ul>
+                <li class="help en-help goHref" data-href="../public/help.html">帮助中心</li>
+            </ul>
+        </li>
+      `, len = data.length - 1, key = 0;
+      data.forEach((item, index) => {
+        let aHItem = '';
+        GeneralCtr.getListHelp(item.code).then((hItem, hIndex) => {
+          if(index === 0) {
+            GeneralCtr.getDetailHelp(hItem[0].code).then(data => {
+              $('.hmoney-tit').text(data.title);
+              $('#content').html(data.content);
+            });
+          }
+          hItem.forEach(dList => {
+            key ++;
+            aHItem += `<li class="goHref" data-href="../public/help.html?key=${key}">${dList.title}</li>`
+          });
+          html += `<li class="foo-li">
+                        <h2>${item.name}</h2>
+                        <ul class="article-ul">
+                            ${aHItem}
+                        </ul>
+                   </li>`;
+          if(index === len) {
+            $('#foo_help').append(html);
+          }
+        })
+      });
+    }, base.hideLoadingSpin);
+  }
 
   function addListener() {
     $('.contact-info-wrap .contact-info').mouseenter(function () {
       let src = $(this).attr('data-url');
       $('#qrcodeF').children('img').prop('src', base.getAvatar(src));
     })
+    
+    // $('#foo_help').on('click', 'li.help-article_item', function() {
+    //   alert(1);
+    // })
     // $("#footer .contact-info-wrap .goHref").off("click").click(function () {
     //     if (base.isLogin() && $(this.attr("data-type") == 'qq')) {
     //         var thishref = $(this).attr("data-href");
