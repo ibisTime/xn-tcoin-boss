@@ -3794,7 +3794,7 @@ table {
                 font-size: 14px;
                 color: #292929;
                 margin-bottom: 26px;
-                padding-left: 31px;
+               // padding-left: 31px;
                 cursor: pointer;
             }
             .art-tit {
@@ -3803,7 +3803,7 @@ table {
                 height: 42px;
                 text-align: center;
                 line-height: 42px;
-                padding-left: 0px;
+               // padding-left: 0px;
                 margin-bottom: 20px;
                 background-color: #d53d3d;
             }
@@ -8862,7 +8862,7 @@ html {
 
 .article-ul li{
     margin: 10px 0 !important;
-    padding-left: 10px !important;
+    //padding-left: 10px !important;
 }
 
 input:checked + .slider {

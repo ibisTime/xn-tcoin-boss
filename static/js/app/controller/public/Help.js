@@ -18,7 +18,7 @@ define([
             $('title').text('blockchain technology application experimental platform');
         }
         $('title').text('区块链技术应用实验平台');
-        $('.fy_help').html(base.getText('帮助中心'));
+        //$('.fy_help').html(base.getText('帮助中心222'));
 
         $(".head-nav-wrap .help").addClass("active");
         getListHelpCategory();
@@ -47,9 +47,9 @@ define([
                   aHItem += `<li class="help-article_item code_${dList.code}" data-code="${dList.code}">${dList.title}</li>`
                 });
                 console.log('aHItem', aHItem);
-                html += `<li>
-                        <p>${item.name}</p>
-                        <ul class="article-ul">
+                html += `<li style="padding-left: 0px">
+                        <p class="art-tit fy_hel">${item.name}</p>
+                        <ul class="article-ul" style="text-align: center;">
                             ${aHItem}
                         </ul>
                    </li>`;
