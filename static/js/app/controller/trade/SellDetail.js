@@ -290,8 +290,8 @@ define([
           }
         document.getElementById('sellOrder').play();
         setTimeout(function() {
-            base.gohref("../order/order-list.html?mod=dd");
-        }, 2000)
+            base.gohref("../order/order-detail.html?code=" + data.code + "&type=sell&status=0" + "&buyUser=" + userId);
+        }, 2000);
         base.hideLoadingSpin();
       }, base.hideLoadingSpin)
 
@@ -326,36 +326,23 @@ define([
                 // }
             // }
             UserCtr.getUser().then((data) => {
-                if (data.tradepwdFlag) {
-                    if (_formWrapper.valid()) {
-                        if($('.item-selectAmount').hasClass('hidden')){
-                            if ($("#buyAmount").val() != '') {
-                                // $("#submitMon").removeClass("hidden");
-                                sellETH();
-                            } else {
-                                base.showMsg(base.getText('请输入您购买的金额', langType))
-                            }
-                        }else {
-                            if ($("#amounSelect").val() != '') {
-                                sellETH();
-                                // $("#submitMon").removeClass("hidden");
-                            } else {
-                                base.showMsg(base.getText('请选择您购买的金额', langType))
-                            }
-                        }
-                    }
-                } else if (!data.tradepwdFlag) {
-                    base.showMsg(base.getText('请先设置交易密码', langType))
-                    setTimeout(function() {
-                        base.gohref("../user/setTradePwd.html?type=1&mod=dd");
-                    }, 1800)
+              if (_formWrapper.valid()) {
+                if($('.item-selectAmount').hasClass('hidden')){
+                  if ($("#buyAmount").val() != '') {
+                    // $("#submitMon").removeClass("hidden");
+                    sellETH();
+                  } else {
+                    base.showMsg(base.getText('请输入您购买的金额', langType))
+                  }
+                }else {
+                  if ($("#amounSelect").val() != '') {
+                    sellETH();
+                    // $("#submitMon").removeClass("hidden");
+                  } else {
+                    base.showMsg(base.getText('请选择您购买的金额', langType))
+                  }
                 }
-                // else if (!data.realName) {
-                //     base.showMsg("请先进行身份验证")
-                //     setTimeout(function() {
-                //         base.gohref("../user/identity.html")
-                //     }, 1800)
-                // }
+              }
             }, base.hideLoadingSpin);
         })
 

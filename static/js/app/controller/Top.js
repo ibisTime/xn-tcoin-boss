@@ -104,8 +104,9 @@ define([
             taget.show();
             taget.text(msg_num + item.length);
             let messageHtml = '';
+            console.log('item：', item);
             item.forEach(function (data) {
-                messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.smsInfo.readId}">
+                messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
                     <img src="${data.smsInfo.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                     <div class="message-text">
                         <p class="message-title">${data.smsInfo.title}</p>
@@ -181,7 +182,7 @@ define([
                             document.getElementById('audio-message2').play();
                         }, 1000);
                         TradeCtr.getOrderDetail(refNo).then((data) => {
-                            console.log(data)
+                            console.log('active-news', data);
                             activeNewsHtml =`<li class="goMessageHref" data-href="../order/order-detail.html?code=${refNo}" data-readId="${readId}">
                             <span> <button>聊天</button></span>
                             <span>${data.buyUserInfo.nickname}</span>
@@ -288,7 +289,6 @@ define([
         }
         params.referCurrency = payTypeMoney;
         params.symbol = 'BTC';
-        console.log(params)
         TradeCtr.getBtc(params).then((data) => {
             $('.market-price').html('目前比特币市场价'+data.mid +'USD')
         });
@@ -381,9 +381,8 @@ define([
             if($(this).length == 0){
                 $('#head-user-wrap .head-user .msg_num').hide();
             }
-            var readId = $(this).attr('data-readId');
-            console.log(readId);
-            var params ={"id":readId}
+            var readId = $(this).attr('data-readid');
+            var params ={"id":readId};
             TradeCtr.readNews(params).then((data) => {
                 if (!base.isLogin()) {
                     base.goLogin();

@@ -232,9 +232,15 @@ define([
                 }
                 setInterval(getCountDown, 1000)
             }else if(data.status == '6'){
-              //取消状态
+              //仲裁状态
               $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
               $('.finished-top .finished-top-status').text('仲裁已完成');
+            }else if(data.status == '7') {
+              //仲裁状态
+              $('.orderDetail-container .finished .failure-top-icon').removeClass('hidden');
+              $('.orderDetail-container .finished .finished-top-icon').addClass('hidden');
+              $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
+              $('.finished-top .finished-top-status').text('仲裁已完成，卖家胜');
             }
           } else {
             let interval = base.fun(Date.parse(data.buyUserInfo.lastLogin), new Date());
@@ -249,9 +255,15 @@ define([
                 $('.orderDetail-left-release .release-btn').html('仲裁中');
                 $('.orderDetail-container .before-release-btc').removeClass('hidden');
             }else if (data.status == '6'){
-              //取消状态
+              // 仲裁状态
               $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
-              $('.finished-top .finished-top-status').text('交易已取消');
+              $('.finished-top .finished-top-status').text('仲裁已完成，买家胜');
+            }else if(data.status == '7') {
+              // 仲裁状态
+              $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
+              $('.orderDetail-container .finished .failure-top-icon').removeClass('hidden');
+              $('.orderDetail-container .finished .finished-top-icon').addClass('hidden');
+              $('.finished-top .finished-top-status').text('仲裁已完成');
             }
           }
 
@@ -260,11 +272,7 @@ define([
             $('.orderDetail-container .finished').removeClass('hidden').siblings('.orderDetail-left').addClass('hidden');
           }else if (data.status == '4'){
               //取消状态
-              $('.orderDetail-container .finished').removeClass('hidden');
-              $('.finished-top .finished-top-status').text('交易已取消');
-          }else if (data.status == '7'){
-              //取消状态
-              $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
+              $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');;
               $('.finished-top .finished-top-status').text('交易已取消');
           }
           if(data.status == '2') {
@@ -331,7 +339,6 @@ define([
           } else {
             $('.orderDetail-left-time .text .left-time-minute').html('0分钟');
           }
-            console.log(data.buyUserInfo.mobile,data.sellUserInfo.mobile)
           if(data.buyUser == base.getUserId()) {
             // 对面是卖家
               $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.sellUserInfo.photo) + "')" });
