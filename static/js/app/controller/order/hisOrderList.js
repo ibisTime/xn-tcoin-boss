@@ -171,9 +171,9 @@ define([
 
     //操作按鈕
     //已支付，待解冻
-    if (item.status == "1") {
+    /*if (item.status == "1") {
       operationHtml += `<div class="am-button arbitrationBtn"  data-ocode="${item.code}">${base.getText('申请仲裁')}</div>`
-    }
+    }*/
 
     //待下单
     if (item.status == "-1") {

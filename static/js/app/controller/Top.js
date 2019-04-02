@@ -184,7 +184,7 @@ define([
                         TradeCtr.getOrderDetail(refNo).then((data) => {
                             console.log('active-news', data);
                             activeNewsHtml =`<li class="goMessageHref" data-href="../order/order-detail.html?code=${refNo}" data-readId="${readId}">
-                            <span> <button>聊天</button></span>
+                            <span> <button style="border: none;padding: 0px;">聊天</button></span>
                             <span>${data.buyUserInfo.nickname}</span>
                             <span>${data.tradeAmount}  ${data.tradeCurrency}</span>
                             <span>${base.formatMoney(data.countString,'',data.tradeCoin)} ${data.tradeCoin}</span>
@@ -424,7 +424,9 @@ define([
             $(this).addClass('pay-active');
             $(this).siblings().removeClass('pay-active');
         });
-
+        $(document).on('click', '.left-title',function(){
+            $(".left-item").removeClass('pay-active'); //隐藏阴影效果
+        });
 
         $(document).on('click', '.article-tit-list',function(){
             let i = $(this).index();
@@ -432,6 +434,7 @@ define([
 
             $(this).siblings().removeClass('sel-li');
         });
+
 
     }
 });

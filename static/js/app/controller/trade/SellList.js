@@ -211,6 +211,7 @@ define([
                 $("#content").html(html);
                 $(".trade-list-wrap .no-data").addClass("hidden")
 
+
                 $("#content .operation .goHref").off("click").click(function() {
                     if (!base.isLogin()) {
                         base.goLogin();

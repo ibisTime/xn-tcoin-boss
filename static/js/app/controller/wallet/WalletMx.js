@@ -54,8 +54,8 @@ define([
         // $('.wamx-en_fee').text(base.getText('手续费', langType));
         // $('.wamx-en_dj').text(base.getText('冻结解冻', langType));
         $('.wamx-en_sj').text(base.getText('日期', langType));
-        $('.wamx-en_yue').text(base.getText('余额USD', langType));
-        $('.wamx-en_lx').text(base.getText('变动金额', langType));
+        $('.wamx-en_yue').text(base.getText('余额', langType));
+        $('.wamx-en_lx').text(base.getText('金额', langType));
         $('.wamx-en_sm').text(base.getText('描述', langType));
         if(langType == 'EN'){
             $('title').text('order details- blockchain technology application experimental platform');
@@ -136,8 +136,8 @@ define([
         return `<tr class="list-item">
 					<td>${base.formateDatetime(item.createDatetime)}</td>
 					<td>${item.bizNote}</td>
-					<td>${base.formatMoney(item.transAmountString,'',item.currency)}</td>
-					<td>${base.formatMoney(item.postAmountString,'',item.currency)}</td>
+					<td>${base.formatMoney(item.transAmountString,'',item.currency)}BTC</td>
+					<td>${base.formatMoney(item.postAmountString,'',item.currency)}BTC</td>
 				</tr>`
     }
 

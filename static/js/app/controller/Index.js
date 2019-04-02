@@ -115,6 +115,7 @@ define([
                 </li>`
             })
             $('.bb-jy ul').html(adverHtml);
+
         });
     }
 
