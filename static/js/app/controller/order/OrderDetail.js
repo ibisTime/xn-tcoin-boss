@@ -82,18 +82,17 @@ define([
     function getUserTips() {
         var chapingCount;
         UserCtr.getUser().then((item) => {
-            chapingCount = item.beiChaPingCount;
-        })
-        return GeneralCtr.getUserTip({
-            type:'trade_rule',
-            ckey:'risk_tip_feedback_count'
-        }).then(data => {
-            base.hideLoadingSpin();
-            if(chapingCount > data.risk_tip_feedback_count){
+            chapingCount = item.userStatistics.beiChaPingCount;
+            GeneralCtr.getUserTip({
+              type:'trade_rule',
+              ckey:'risk_tip_feedback_count'
+            }).then(data => {
+              base.hideLoadingSpin();
+              if(chapingCount >= +data.risk_tip_feedback_count){
                 $('.orderDetail-left-tips').show();
-            }
-
-        }, base.hideLoadingSpin);
+              }
+            }, base.hideLoadingSpin);
+        });
     }
     function setHtml() {
         $('title').text(base.getText('订单详情') + '-' +base.getText('区块链技术应用实验平台'));

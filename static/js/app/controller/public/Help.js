@@ -36,30 +36,32 @@ define([
             }
             data.forEach((item, index) => {
               let aHItem = '';
-              GeneralCtr.getListHelp(item.code).then((hItem, hIndex) => {
-                if(index === defIndex) {
-                  GeneralCtr.getDetailHelp(hItem[key].code).then(data => {
-                    $('.hmoney-tit').text(data.title);
-                    $('#content').html(data.content);
-                  });
-                }
-                hItem.forEach(dList => {
-                  aHItem += `<li class="help-article_item code_${dList.code}" data-code="${dList.code}">${dList.title}</li>`
+              if(index === defIndex) {
+                GeneralCtr.getDetailHelp(item.articleList[key].code).then(data => {
+                  $('.hmoney-tit').text(data.title);
+                  $('#content').html(data.content);
                 });
-                html += `<li style="padding-left: 0px">
+              }
+              item.articleList.forEach(dList => {
+                aHItem += `<li class="help-article_item code_${dList.code}" data-code="${dList.code}">${dList.title}</li>`
+              });
+              html += `<li style="padding-left: 0px">
                         <p class="art-tit fy_hel">${item.name}</p>
                         <ul class="article-ul" style="text-align: center;">
+                            ${aHItem}
                         </ul>
                    </li>`;
-                if(index === len) {
-                  $('#help-left').append(html);
+              if(index === len) {
+                $('#help-left').append(html);
+                setTimeout(() => {
+                  $('#help-left li.help-article_item').removeClass('sel-li');
                   if(helpKey > 2) {
                     $($($('#help-left .article-ul')[1]).children('li')[key]).addClass('sel-li');
                   }else {
                     $($($('#help-left .article-ul')[0]).children('li')[key]).addClass('sel-li');
                   }
-                }
-              })
+                }, 10);
+              }
             });
             // 选中
             if(code) {

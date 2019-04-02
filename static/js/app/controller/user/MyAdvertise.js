@@ -206,6 +206,26 @@ define([
                     $(this).prop("checked", true);
                   })
                 }
+            }else {
+              var adsCode = $(this).attr("data-code");
+              var adsStatus = $(this).attr("data-status");
+              if(+adsStatus === 2) {
+                base.confirm(base.getText('确认上架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType))
+                  .then(() => {
+                    base.showLoadingSpin();
+                    TradeCtr.upAdvertise(adsCode).then(() => {
+                      base.hideLoadingSpin();
+                      base.showMsg(base.getText('操作成功', langType));
+                      setTimeout(function() {
+                        base.showLoadingSpin();
+                        config.start = 1;
+                        getPageAdvertise(true)
+                      }, 1500)
+                    }, base.hideLoadingSpin)
+                  }).catch(() => {
+                  $(this).prop("checked", true);
+                })
+              }
             }
         })
     }

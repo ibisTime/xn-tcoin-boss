@@ -100,11 +100,10 @@ define([
     function getUnreadList() {
         TradeCtr.getUnreadDetail(base.getUserId(),0).then((item) => {
             let taget = $('#head-user-wrap .head-user .msg_num');
-            let msg_num = +taget.text()
+            let msg_num = +taget.text();
             taget.show();
             taget.text(msg_num + item.length);
             let messageHtml = '';
-            console.log('item：', item);
             item.forEach(function (data) {
                 messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
                     <img src="${data.smsInfo.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
@@ -113,7 +112,7 @@ define([
                         <span class="message-content">${data.smsInfo.content}</span>
                     </div>
                 </li>`;
-                $('.down-wrap-message ul').append(messageHtml);
+                $('.down-wrap-message ul').prepend(messageHtml);
             })
         })
     }
@@ -158,7 +157,7 @@ define([
                                 <span class="message-content">${item.content}</span>
                             </div>
                         </li>`;
-                    $('.down-wrap-message ul .messge-content').append(messageHtml);
+                    $('.down-wrap-message ul .messge-content').prepend(messageHtml);
                 }else{
                     messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}" data-refNo="${item.refNo}" data-readId="${item.readId}">
                             <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">

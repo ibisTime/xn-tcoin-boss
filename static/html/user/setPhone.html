@@ -22,22 +22,42 @@
             <div class="setSecurity-wrap tradePwd-wrap b_e bg_fff minheight p30">
                 <div class="title"></div>
                 <div class="setSecurity-from-wrap">
-                    <form class="form-wrapper wp100" id="form-wrapper">
-                        <div class="form-item b_e">
-                            <i class="item-icon icon-phone"></i>
+                    <div class="form-wrapper wp100" id="form-wrapper">
+                        <div class="form-item b_e" style="position: relative;padding-left: 70px;">
+                            <samp class="item-icon" style="width: 20px;height: 13px; position: absolute; left: 5px; top: 15px;" id="countryCode"></samp>
+                            <samp class="item-label" style="position: absolute; left: 30px; top: 12px; cursor: pointer" id="interCode"></samp>
                             <input type="text" class="input-item" id="mobile" name="mobile" placeholder="" />
                         </div>
                         <div class="form-item-sms wp100">
                             <div class="form-item b_e">
                                 <i class="item-icon icon-sms"></i>
-                                <input type="text" class="input-item" id="captcha" name="captcha" placeholder="" />
+                                <input type="text" class="input-item" id="captcha" placeholder="" />
                             </div>
-                            <button class="sms-button am-button am-button-red" id="getVerification"></button>
+                            <button class="sms-button am-button am-button-red" id="getVerification1"></button>
                         </div>
                         <div class="form-btn-item">
                             <div class="am-button am-button-red" id="subBtn"></div>
                         </div>
-                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--弹窗-->
+        <div class="am-modal-wrap dialog country-dialog hidden" id="countryDialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p>国家选择</p>
+                    </div>
+                    <div class="am-modal-body">
+                        <div class="currencyList" id="currencyList" style="height: 300px; overflow: auto">
+                            <div class="item"></div>
+                        </div>
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="am-button am-button-gray cancelBtn">关闭</div>
+                    </div>
                 </div>
             </div>
         </div>

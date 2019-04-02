@@ -16,8 +16,8 @@ define([
             "progress": ["-1", "0", "1", "5"]
         },
         typeList = {
-            "buy": base.getText('出售'),
-            "sell": base.getText('购买'),
+            "buy": base.getText('购买'),
+            "sell": base.getText('出售'),
         },
         statusValueList = {};
     var config = {
@@ -211,7 +211,7 @@ define([
 						<samp class="name k-name">${user.nickname ? user.nickname : '-'}</samp>
 					</td>
 					<td class="code">${item.code.substring(item.code.length-8)}</td>
-					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
+					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'BTC'}</td>
 					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
 					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>

@@ -39,6 +39,13 @@ define([
                 userId:base.getUserId()
             });
         },
+      //下架广告
+      upAdvertise(adsCode) {
+        return Ajax.get("625223", {
+          userId: base.getUserId(),
+          adsCode: adsCode
+        }, true);
+      },
         // 获取广告价格
         getAdvertisePrice(coin, ctype) {
             let referCurrency = ctype || 'CNY';
