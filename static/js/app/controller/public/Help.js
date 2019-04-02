@@ -55,7 +55,7 @@ define([
                    </li>`;
                 if(index === len) {
                   $('#help-left').append(html);
-                  if(helpKey > 3) {
+                  if(helpKey > 2) {
                     $($($('#help-left .article-ul')[1]).children('li')[key]).addClass('sel-li');
                   }else {
                     $($($('#help-left .article-ul')[0]).children('li')[key]).addClass('sel-li');
