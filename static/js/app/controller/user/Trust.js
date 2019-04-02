@@ -156,9 +156,10 @@ define([
 					<td>
 						<div class="txt2"><p>${item.fromUserInfo.userStatistics.beiXinRenCount}</p><samp>${base.getText('信任人数', langType)}</samp></div>
 					</td>
-					<td>
+					<td style="width: 100px;">
 						<div class="txt2"><p>${base.getPercentum(item.fromUserInfo.userStatistics.beiHaoPingCount,item.fromUserInfo.userStatistics.beiPingJiaCount)}</p><samp>${base.getText('好评率', langType)}</samp></div>
 					</td>
+					<td></td>
 					<td></td>
 				</tr>`;
         }

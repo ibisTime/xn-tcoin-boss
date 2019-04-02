@@ -102,7 +102,7 @@ define([
         let thisCode = $(this).attr('data-code');
         if(thisCode) {
           GeneralCtr.getDetailHelp(thisCode).then(data => {
-            console.log(data);
+            console.log(data); // content
           });
         }
       });

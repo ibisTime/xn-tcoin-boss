@@ -1078,7 +1078,10 @@ define([
     function convertTextMsgToHtml(content) {
       let context = content.getText();
       isWebUser = context.search(/^WE_B:/);
-        return context;
+      if(isWebUser === 0) {
+        return context.substring(5);
+      }
+      return context;
     }
     //解析表情消息元素
     function convertFaceMsgToHtml(content) {
