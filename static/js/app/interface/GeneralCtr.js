@@ -93,7 +93,7 @@ define([
         // 列表查询文章类别
         getListHelp(code) {
             return Ajax.get("802880", {
-              code
+              type: code
             });
         },
       // 列表查询文章类别

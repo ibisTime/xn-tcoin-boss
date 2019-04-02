@@ -28,23 +28,28 @@ define([
     function getListHelpCategory() {
         return GeneralCtr.getListHelpCategory().then((data) => {
             base.hideLoadingSpin();
-            let html = '', aHItem = '';
+            let html = '';
             data.forEach((item, index) => {
+              let aHItem = '';
               GeneralCtr.getListHelp(item.code).then((hItem, hIndex) => {
+                if(index === 0) {
+                  GeneralCtr.getDetailHelp(hItem[0].code).then(data => {
+                    $('.hmoney-tit').text(data.title);
+                    $('#content').html(data.content);
+                  });
+                }
                 hItem.forEach(dList => {
-                  aHItem += `<li class="article-item code_${dList.code}" data-code="${dList.code}">${dList.title}</li>`
+                  aHItem += `<li class="help-article_item code_${dList.code}" data-code="${dList.code}">${dList.title}</li>`
                 });
-                html += `<li class="help-article_item">
+                html += `<li>
                         <p>${item.name}</p>
                         <ul class="article-ul">
-                            <li>123</li>
-                            <li>123</li>
-                            <li>123</li>
                             ${aHItem}
                         </ul>
                    </li>`;
                 if(index === data.length - 1) {
                   $('#help-left').append(html);
+                  $($($('#help-left .article-ul')[0]).children('li')[0]).addClass('sel-li');
                 }
               })
             });
@@ -93,16 +98,21 @@ define([
     }
 
     function addListener() {
-        $('.article-left').on('click', 'li.article-item', function(){
+        $('.article-left').on('click', '.article-item', function(){
             let thisCode = $(this).attr('data-code');
             base.gohref(base.changeURLArg(location.href, "code", thisCode));
         });
   
-      $('.article-left').on('click', 'li.help-article_item', function(){
+      $('.article-left').on('click', 'li.help-article_item', function(e){
+        e.stopPropagation();
         let thisCode = $(this).attr('data-code');
+        let _this = this;
         if(thisCode) {
           GeneralCtr.getDetailHelp(thisCode).then(data => {
-            console.log(data); // content
+            $('.hmoney-tit').text(data.title);
+            $('#content').html(data.content);
+            $('li.help-article_item').removeClass('sel-li');
+            $(_this).addClass('sel-li');
           });
         }
       });
