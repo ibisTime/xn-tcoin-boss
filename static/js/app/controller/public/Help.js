@@ -28,7 +28,7 @@ define([
     function getListHelpCategory() {
         return GeneralCtr.getListHelpCategory().then((data) => {
             base.hideLoadingSpin();
-            let html = '';
+            let html = '', len = data.length - 1;
             data.forEach((item, index) => {
               let aHItem = '';
               GeneralCtr.getListHelp(item.code).then((hItem, hIndex) => {
@@ -47,7 +47,7 @@ define([
                             ${aHItem}
                         </ul>
                    </li>`;
-                if(index === data.length - 1) {
+                if(index === len) {
                   $('#help-left').append(html);
                   $($($('#help-left .article-ul')[0]).children('li')[0]).addClass('sel-li');
                 }
