@@ -23,7 +23,7 @@ define([
       $('.contact-txt').css('width', '39%');
     }
     addListener();
-    // getListHelpCategory();
+    getListHelpCategory();
   }
 
   // 获取Q社群
@@ -57,6 +57,7 @@ define([
   }
   
   // 列表查询文章类别
+  // 列表查询文章类别
   function getListHelpCategory() {
     return GeneralCtr.getListHelpCategory().then((data) => {
       base.hideLoadingSpin();
@@ -67,34 +68,34 @@ define([
                 <li class="help en-help goHref" data-href="../public/help.html">帮助中心</li>
             </ul>
         </li>
-      `, len = data.length - 1, key = 0;
+      `;
       data.forEach((item, index) => {
         let aHItem = '';
-        GeneralCtr.getListHelp(item.code).then((hItem, hIndex) => {
-          if(index === 0) {
-            GeneralCtr.getDetailHelp(hItem[0].code).then(data => {
-              $('.hmoney-tit').text(data.title);
-              $('#content').html(data.content);
-            });
-          }
-          hItem.forEach(dList => {
-            key ++;
-            aHItem += `<li class="goHref" data-href="../public/help.html?key=${key}">${dList.title}</li>`
-          });
-          html += `<li class="foo-li">
-                        <h2>${item.name}</h2>
-                        <ul class="article-ul">
-                            ${aHItem}
-                        </ul>
-                   </li>`;
-          if(index === len) {
-            $('#foo_help').append(html);
-          }
-        })
+        item.articleList.forEach((dList, dIndex) => {
+          aHItem += `<li class="goHref foo-en_pt" data-href="../public/help.html?pkey=${index}&key=${dIndex}">${dList.title}</li>`
+        });
+        html += `<li class="foo-li">
+                    <h2 class="foo-en_tk">${item.name}</h2>
+                    <ul>
+                        ${aHItem}
+                    </ul>
+                </li>`;
+        $('.contact-txt #foo_help').html(html);
       });
+      // 选中
+      if(code) {
+        $('#help-left li.code_' + code).addClass('sel-li');
+      } else {
+        $('#help-left li').eq(1).addClass('sel-li');
+        code = $('#help-left li').eq(1).attr('data-code');
+      }
+      $('.hmoney-tit').text($('#help-left li.sel-li').text());
+      
+      // getListHelp();
     }, base.hideLoadingSpin);
   }
-
+  
+  
   function addListener() {
     $('.contact-info-wrap .contact-info').mouseenter(function () {
       let src = $(this).attr('data-url');

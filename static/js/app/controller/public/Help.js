@@ -6,7 +6,8 @@ define([
     'app/controller/foo'
 ], function(base, Ajax, GeneralCtr, Top, Foo) {
     var code = base.getUrlParam('code') || '';
-    var helpKey = +base.getUrlParam('key') || 0;
+    var key = +base.getUrlParam('key') || 0;
+    var pKey = +base.getUrlParam('pkey') || 0;
     let langType = localStorage.getItem('langType') || 'ZH';
     let detailMsg = '';
 
@@ -29,18 +30,16 @@ define([
     function getListHelpCategory() {
         return GeneralCtr.getListHelpCategory().then((data) => {
             base.hideLoadingSpin();
-            let html = '', len = data.length - 1, key = helpKey, defIndex = 0;
-            if(helpKey > 2) {
-              key = helpKey - 3;
-              defIndex = 1;
-            }
+            let html = '', len = data.length - 1;
             data.forEach((item, index) => {
               let aHItem = '';
-              if(index === defIndex) {
-                GeneralCtr.getDetailHelp(item.articleList[key].code).then(data => {
-                  $('.hmoney-tit').text(data.title);
-                  $('#content').html(data.content);
-                });
+              if(index === pKey) {
+                if(Array.isArray(item.articleList) && item.articleList.length > 0) {
+                  GeneralCtr.getDetailHelp(item.articleList[key].code).then(data => {
+                    $('.hmoney-tit').text(data.title);
+                    $('#content').html(data.content);
+                  });
+                }
               }
               item.articleList.forEach(dList => {
                 aHItem += `<li class="help-article_item code_${dList.code}" data-code="${dList.code}">${dList.title}</li>`
@@ -55,58 +54,13 @@ define([
                 $('#help-left').append(html);
                 setTimeout(() => {
                   $('#help-left li.help-article_item').removeClass('sel-li');
-                  if(helpKey > 2) {
-                    $($($('#help-left .article-ul')[1]).children('li')[key]).addClass('sel-li');
-                  }else {
-                    $($($('#help-left .article-ul')[0]).children('li')[key]).addClass('sel-li');
-                  }
+                  $($($('#help-left .article-ul')[pKey]).children('li')[key]).addClass('sel-li');
                 }, 10);
               }
             });
-            // 选中
-            if(code) {
-                $('#help-left li.code_' + code).addClass('sel-li');
-            } else {
-                $('#help-left li').eq(1).addClass('sel-li');
-                code = $('#help-left li').eq(1).attr('data-code');
-            }
-            $('.hmoney-tit').text($('#help-left li.sel-li').text());
-
-            // getListHelp();
-        }, base.hideLoadingSpin);
-    }
-
-    // 列表查询帮助
-    function getListHelp() {
-        return GeneralCtr.getListHelp(code).then((data) => {
-            base.hideLoadingSpin();
-            let html = '';
-            data.forEach((item, index) => {
-                html += buildHtml(item);
-                
-            });
-          getDetailHelp(data[0].code);
-            $('#content').html(html);
         }, base.hideLoadingSpin);
     }
     
-    // 详情查帮助
-    function getDetailHelp(detailCode) {
-      return GeneralCtr.getDetailHelp(detailCode).then(data => {
-        detailMsg = data.content;
-      });
-    }
-
-    function buildHtml(item) {
-        return `<div class="help-list-item">
-                    <div class="title-wrap over-hide">
-                        <div class="title fl">${item.title}</div>
-                        <div class="icon icon-right fr"></div>
-                    </div>
-                    <div class="content-wrap hidden">${item.content}</div>
-                </div>`;
-    }
-
     function addListener() {
         $('.article-left').on('click', '.article-item', function(){
             let thisCode = $(this).attr('data-code');
