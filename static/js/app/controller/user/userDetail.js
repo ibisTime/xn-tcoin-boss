@@ -120,7 +120,7 @@ define([
                 photoHtml = `<div class="photo"><div class="noPhoto">${tmpl}</div></div>`
             }
             nickname = data.nickname ? data.nickname : '-';
-            $('.nickname').html(data.nickname ? data.nickname : '-');
+            $('.userDetail-container .nickname').html(data.nickname ? data.nickname : '-');
             $('.userDetail-top .photoWrap').html(photoHtml);
 
             let loginStatus = '';
@@ -164,7 +164,6 @@ define([
                 lists.forEach((item, i) => {
                     html += buildHtml(item);
                 });
-                console.log(html)
                 $("#content").html(html);
                 $(".trade-list-wrap .no-data").addClass("hidden")
             } else {

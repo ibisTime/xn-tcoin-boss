@@ -144,7 +144,7 @@ define([
     if (item.buyUser == base.getUserId()) {
       var user = item.sellUserInfo;
 
-      type = 'sell';
+      type = 'buy';
       //待支付
       if (item.status == "0") {
         operationHtml = `<div class="am-button am-button-red payBtn" data-ocode="${item.code}">${base.getText('标记付款')}</div>
@@ -158,7 +158,7 @@ define([
     } else {
       var user = item.buyUserInfo;
 
-      type = 'buy';
+      type = 'sell';
       //待支付
       if (item.status == "1") {
         operationHtml = `<div class="am-button am-button-red releaseBtn mr10" data-ocode="${item.code}">${base.getText('解冻货币')}</div>`;

@@ -198,7 +198,6 @@ define([
         return TradeCtr.getOrderDetail(code).then((data) => {
           adsCode = data.adsCode;
           tradeOrderStatus = data.status;
-            console.log(data.status);
           sessionStorage.setItem('orderDetailStatus',data.status);
           getAdvertiseDetail();
           //待支付
