@@ -911,10 +911,8 @@ define([
      */
     function getAmount() {
         AccountCtr.getAccount().then((data) => {
-            console.log(data.accountList);
             data.accountList.forEach(item => {
                 if (item.currency.toLowerCase() === 'btc') {
-                    console.log(item.amount)
                     $(".wallet-account-wrap .s-bb").text(base.formatMoney(item.amount,'',item.currency) + 'BTC');
                     $(".wallet-account-wrap .y-amount").text(' ≈ ' + item.amountUSD+ 'USD');
                     $('.wallet-account-wrap .freez-amount a').text(base.formatMoney(item.frozenAmount,'','BTC'));
@@ -932,7 +930,7 @@ define([
             })
         });
         GeneralCtr.getSysConfigType('trade_rule', true).then(data => {
-            $(".wallet-account-wrap .accept-bail").text(data.accept_bail);
+            $(".wallet-account-wrap .accept-bail").text(data.trade_bail);
         });
     }
 
@@ -945,7 +943,6 @@ define([
      */
     $(".send-btc").click(function () {
         UserCtr.getUser().then((data) => {
-            console.log(data.tradepwdFlag)
             if (data.tradepwdFlag) {
                 $("#sendBtcDialog").removeClass("hidden");
             } else if (!data.tradepwdFlag) {
@@ -970,7 +967,6 @@ define([
         params.payCardInfo = 'BTC';
         params.accountNumber = sessionStorage.getItem('accountNumber');
         params.amount = base.formatMoneyParse(params.amount, '', params.payCardInfo);
-        console.log(params)
         return AccountCtr.withDraw(params).then((data) => {
             base.showMsg(base.getText('操作成功', langType));
             $("#sendBtcDialog").addClass("hidden");

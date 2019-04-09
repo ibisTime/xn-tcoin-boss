@@ -3,9 +3,10 @@ define([
     'pagination',
     'app/interface/GeneralCtr',
     'app/interface/UserCtr',
+  'app/interface/AccountCtr',
     'app/controller/Top',
     'app/controller/foo'
-], function(base, pagination, GeneralCtr, UserCtr, Top, Foo) {
+], function(base, pagination, GeneralCtr, UserCtr, AccountCtr, Top, Foo) {
     var inviteCode = sessionStorage.getItem("inviteCode");
     let langType = localStorage.getItem('langType') || 'ZH';
 
@@ -15,6 +16,7 @@ define([
         userId: base.getUserId()
     };
     let inviNumber = 0;
+    let balanceAmount = 0;
     let INVITATION_HREF = '';
     init();
 
@@ -31,11 +33,15 @@ define([
             getInvitaFn(),
             getInvitationBanner()
             // getUserInviteProfit()
-        )
+        );
         if(langType == 'EN'){
             $('#invitationBtn').css({'width':'auto', 'padding': '0 15px'});
             $('.pt10').css('display', 'flex');
         }
+        AccountCtr.getAccount().then(data => {
+          balanceAmount = base.formatMoney((data.accountList[0].amount - data.accountList[0].frozenAmount), '', 'BTC') || 0;
+          $('#modal_bal').text(balanceAmount);
+        });
         addListener();
 
     }
@@ -44,7 +50,7 @@ define([
         $('title').text(base.getText('邀请好友') + '-' +base.getText('区块链技术应用实验平台'));
         $('.invi-en_yq').text(base.getText('成功邀请', langType));
         $('.invi-en_sy').text(base.getText('注册分佣奖励', langType));
-        $('.invi-en_lj').text('获得礼券');
+        $('.invi-en_lj').text('交易分佣');
         $('#qrcodeBtn').text(base.getText('图片邀请', langType));
         $('#invitationBtn').text(base.getText('文字邀请', langType));
         $('.sel-span').text(base.getText('邀请记录', langType));
@@ -72,10 +78,12 @@ define([
 
     //获取我推荐的人数和收益统计
     function getInvitation() {
-        return UserCtr.getInvitation().then((data) => {
+        return UserCtr.getInvitation().then((data) => {console.log(data);
             $('.invitation-account .account').text(base.formatMoney(data.totalUnCashAmount,'','BTC') + 'BTC');
-            $('.invitation-content .regAcount').text(base.formatMoney(data.totalAward,'','BTC'));
+            $('.invitation-content .regAcount').text(base.formatMoney(data.regAward,'','BTC'));
             $('.invitation-content .inviteCount').text(data.inviteCount);
+            $('.invitation-content .getAcount').text(base.formatMoney(data.OTCTradeAward,'','BTC'));
+            console.log(data);
         }, base.hideLoadingSpin)
     }
 
@@ -123,8 +131,7 @@ define([
                     bannerHtml += `<a class="banner" style="background-image:url(${pic});"></a>`;
                 });
             });
-            base.hideLoadingSpin()
-            console.log(bannerHtml)
+            base.hideLoadingSpin();
             $(".invitation-top").html(bannerHtml);
         }, (msg) => {
             base.showMsg(msg || base.getText('加载失败', langType));

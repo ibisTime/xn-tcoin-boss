@@ -3,6 +3,8 @@
 
 <head>
     <link rel="import" href="../head.html?__inline">
+    <link href="./bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="./bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
     <title></title>
     <!--SCRIPT_PLACEHOLDER-->
 </head>
@@ -76,6 +78,32 @@
                         <!--</ul>-->
                     <!--</div>-->
                     <span class="tradeRecord-export-btn">导出</span>
+                    <div class="tradeRecord-time">
+                        <div class="trade-time">
+                            <samp class="fkfs" style="padding-top: 8px;">开始时间：</samp>
+                            <div class="form-group" style="margin-right: 20px;">
+                                <div class='input-group date' id='createDatetimeStart' data-date-format="yyyy-mm-dd">
+                                    <input type='text' class="form-control" placeholder="请选择"/>
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                            <samp class="fkfs" style="padding-top: 8px;">结束时间：</samp>
+                            <div class="form-group">
+                                <div class='input-group date' id='createDatetimeEnd' data-date-format="yyyy-mm-dd">
+                                    <input type='text' class="form-control"placeholder="请选择" />
+                                    <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hisorder-btn" style="display: inline-block;">
+                        <span class="tradeRecord-search-btn">搜索</span>
+                        <span class="tradeRecord-reset-btn">重置</span>
+                    </div>
                     <div class="tradeRecord-list-wrap">
                         <table class="wp100 trade-form" cellpadding="0" cellspacing="0">
                             <thead>
@@ -232,18 +260,34 @@
     <link rel="import" href="../footer.html?__inline">
     <script src="../../js/lib/qrcode.js"></script>
     <script>
-        require(['domReady!'], function (doc) {
+        require(['moment/moment.js'], function (moment) {
+          window.moment = moment;
           require(['app/controller/wallet/Wallet',
               'app/controller/wallet/WalletMx',
-              'app/jquery-table2excel-master/src/jquery.table2excel.js'])
+              'bootstrap-3.3.7-dist/js/bootstrap.js',
+              'bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js',
+              'app/jquery-table2excel-master/src/jquery.table2excel.js'], function() {
             $(function () {
+              setTimeout(() => {
+                $('#createDatetimeStart').datetimepicker();
+                $('#createDatetimeEnd').datetimepicker({
+                  useCurrent: false
+                });
+                $("#createDatetimeStart").on("dp.change", function (e) {
+                  $('#createDatetimeEnd').data("DateTimePicker").minDate(e.date);
+                });
+                $("#createDatetimeEnd").on("dp.change", function (e) {
+                  $('#createDatetimeStart').data("DateTimePicker").maxDate(e.date);
+                });
                 $(".tradeRecord-export-btn").click(function () {
-                    $("#tradeRecord-list").table2excel({
-                        exclude: ".noExl", //过滤位置的 css 类名
-                        filename: "钱包流水订单-" + new Date().getTime() + ".xls" //文件名称
-                    });
+                  $("#tradeRecord-list").table2excel({
+                    exclude: ".noExl", //过滤位置的 css 类名
+                    filename: "钱包流水订单-" + new Date().getTime() + ".xls" //文件名称
+                  });
                 })
+              }, 100);
             });
+          });
         });
     </script>
 </body>

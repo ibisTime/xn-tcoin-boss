@@ -373,12 +373,12 @@ define([
         $("#submitDialog .closeBtn").click(function() {
             $("#submitDialog").addClass("hidden");
         })
-
-        //下单确认弹窗-确认点击
-        // $("#submitDialog .subBtn").click(function() {
-        //     $("#submitDialog").addClass("hidden");
-        //     $("#submitMon").removeClass("hidden");
-        // })
+  
+      // 点击头像跳个人中心
+      $('.buy-user-info .icon-user-photo').stop().click(function() {
+        base.gohref(`../user/user-detail.html?userId=${userId}`);
+      });
+        
         $("#buyEth").keyup(function() {
             if(config.tradePrice > 0){
                 $("#buyAmount").val(Number($("#buyEth").val() * config.tradePrice).toFixed(2));

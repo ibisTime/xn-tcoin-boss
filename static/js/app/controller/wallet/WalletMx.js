@@ -185,6 +185,43 @@ define([
             }
             // getPageFlow(config);
             // }
-        })
+        });
+      //按条件查找已结束订单
+      $('.tradeRecord-search-btn').click(function () {
+        var data;
+        var type =$('.hisorder-wrap #payType option:selected').val();
+        var createDatetimeStart =$('#createDatetimeStart input').val();
+        var createDatetimeEnd =$('#createDatetimeEnd input').val();
+        if( createDatetimeStart == '' || createDatetimeEnd == ''){
+          base.showMsg('请选择完整');
+          return;
+        }else {
+          createDatetimeStart = base.formateDatetime(createDatetimeStart);
+          createDatetimeEnd = base.formateDatetime(createDatetimeEnd);
+        }
+        config = {
+          start: 1,
+          limit: 10,
+          type:0,
+          accountNumber: accountNumber,
+          dateStart: createDatetimeStart,
+          dataEnd: createDatetimeEnd
+        };
+        base.showLoadingSpin();
+        getPageFlow(config);
+      });
+      //条件重置
+      $('.tradeRecord-reset-btn').click(function () {
+        $('#createDatetimeStart input').val('');
+        $('#createDatetimeEnd input').val('');
+        config = {
+          start: 1,
+          limit: 10,
+          type:0,
+          accountNumber: accountNumber
+        };
+        base.showLoadingSpin();
+        getPageFlow(config);
+      })
     }
 });

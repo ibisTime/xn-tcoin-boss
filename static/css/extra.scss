@@ -8797,24 +8797,25 @@ html {
                     }
                 }
             }
-            .hisorder-btn{
-                margin-left: 30px;
-                margin-top: 30px;
-                span{
-                    display: inline-block;
-                    line-height: 40px;
-                    text-align: center;
-                    width: 100px;
-                    border: 1px solid #ccc;
-                    border-radius: 2px;
-                    margin-right: 20px;
-                    cursor: pointer;
-                }
-            }
         }
     }
 
 }
+.hisorder-btn{
+    margin-left: 30px;
+    margin-top: 30px;
+    span{
+        display: inline-block;
+        line-height: 40px;
+        text-align: center;
+        width: 100px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        margin-right: 20px;
+        cursor: pointer;
+    }
+}
+
 .orderDetail-operation-btn,.buy-operation,.sell-operation {
     margin-top: 50px;
     div{
@@ -8876,6 +8877,13 @@ html {
     text-align: center;
     line-height: 62px;
     cursor: pointer;
+}
+.tradeRecord-time{
+    margin-left: 30px;
+    display: inline-block;
+    .trade-time{
+        display: flex;
+    }
 }
 
 #content-adver img{

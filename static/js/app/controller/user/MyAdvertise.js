@@ -24,6 +24,7 @@ define([
         "buy": base.getText('购买', langType),
         "sell": base.getText('出售', langType),
     };
+    let trade_bail = '';
     init();
 
     function init() {
@@ -45,6 +46,12 @@ define([
             });
             getPageAdvertise(); // 正式
         }, base.hideLoadingSpin);
+        
+        // 获取保证金
+      GeneralCtr.getSysConfig('trade_bail').then(data => {
+        trade_bail = data.cvalue + 'BTC';
+      });
+        
         addListener();
     }
 
@@ -128,13 +135,15 @@ define([
                     operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
                 } else if (item.status == "1"){
                   operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
-                    tipHtml=`<p style="
-                position: absolute;
-                width: 300px;
-                font-size: 12px;
-                color: #d83b37;
-                ">您的出价当前未公开显示,请存入保证金</p>`
+                  tipHtml=`<p style="
+                    position: absolute;
+                    width: 300px;
+                    font-size: 12px;
+                    color: #d83b37;
+                    "
+                  >您的出价当前未公开显示,请存入<span class="goHref" style="color: #E9967A;" data-href="../wallet/wallet.html">保证金(${trade_bail})</span></p>`
                 }else if (item.status == "2") {//已下架
+                
                 }
             }
         if (type == 'buy') {

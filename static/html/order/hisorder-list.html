@@ -51,7 +51,7 @@
                         <div class="time-item">
                             <samp class="fkfs">创建时间：</samp>
                             <div class="form-group">
-                                <div class='input-group date' id='createDatetimeStart'>
+                                <div class='input-group date' id='createDatetimeStart' data-date-format="yyyy-mm-dd">
                                     <input type='text' class="form-control" placeholder="请选择"/>
                                     <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class='input-group date' id='createDatetimeEnd'>
+                                <div class='input-group date' id='createDatetimeEnd' data-date-format="yyyy-mm-dd">
                                     <input type='text' class="form-control"placeholder="请选择" />
                                     <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -173,22 +173,22 @@
           'bootstrap-datetimepicker-master/build/js/bootstrap-datetimepicker.min.js',
           'app/jquery-table2excel-master/src/jquery.table2excel.js',], function() {
           $(function () {
-              $('#createDatetimeStart').datetimepicker();
-              $('#createDatetimeEnd').datetimepicker({
-                  useCurrent: false //Important! See issue #1075
+            $('#createDatetimeStart').datetimepicker();
+            $('#createDatetimeEnd').datetimepicker({
+              useCurrent: false //Important! See issue #1075
+            });
+            $("#createDatetimeStart").on("dp.change", function (e) {
+              $('#createDatetimeEnd').data("DateTimePicker").minDate(e.date);
+            });
+            $("#createDatetimeEnd").on("dp.change", function (e) {
+              $('#createDatetimeStart').data("DateTimePicker").maxDate(e.date);
+            });
+            $(".hisorder-export-btn").click(function () {
+              $("#content-order").table2excel({
+                exclude  : ".noExl", //过滤位置的 css 类名
+                filename : "已结束订单-" + new Date().getTime() + ".xls" //文件名称
               });
-              $("#createDatetimeStart").on("dp.change", function (e) {
-                  $('#createDatetimeEnd').data("DateTimePicker").minDate(e.date);
-              });
-              $("#createDatetimeEnd").on("dp.change", function (e) {
-                  $('#createDatetimeStart').data("DateTimePicker").maxDate(e.date);
-              });
-              $(".hisorder-export-btn").click(function () {
-                  $("#content-order").table2excel({
-                      exclude  : ".noExl", //过滤位置的 css 类名
-                      filename : "已结束订单-" + new Date().getTime() + ".xls" //文件名称
-                  });
-              });
+            });
           });
       })
   })

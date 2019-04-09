@@ -97,8 +97,7 @@ define([
             $('#limit').next().text(tradeCurrency);
             var user = data.user;
             userName = user.nickname;
-            tradeCoin = data.tradeCoin ? data.tradeCoin : 'ETH';
-            console.log(tradeCoin)
+            tradeCoin = data.tradeCoin ? data.tradeCoin : 'BTC';
             let totalCountString = base.formatMoney(data.totalCountString, '', tradeCoin);
 
             if (user.photo) {
@@ -338,29 +337,17 @@ define([
                 //     }, 1800)
                 // }
             }, base.hideLoadingSpin);
-        })
-
-        //交易密码-放弃点击
-        // $("#submitMon .closeBtn").click(function() {
-        //     $("#submitMon").addClass("hidden");
-        // })
-
-        //下单确认弹窗-确认点击
-        // $("#submitMon .subBtn").click(function() {
-        //     $("#submitMon").addClass("hidden");
-        //     $("#submitDialog").removeClass("hidden")
-        // })
-
+        });
+      
         //下单确认弹窗-放弃点击
         $("#submitDialog .closeBtn").click(function() {
             $("#submitDialog").addClass("hidden")
-        })
-
-        //下单确认弹窗-确认点击
-        // $("#submitDialog .subBtn").click(function() {
-          // buyETH();
-          // $("#submitDialog").addClass("hidden")
-        // })
+        });
+        
+        // 点击头像跳个人中心
+      $('.buy-user-info .icon-user-photo').stop().click(function() {
+        base.gohref(`../user/user-detail.html?userId=${userId}`);
+      });
 
         $("#buyEth").keyup(function() {
             let truePrice = $("#buyEth").val() * config.tradePrice;
