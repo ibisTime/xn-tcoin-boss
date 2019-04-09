@@ -90,7 +90,7 @@ define([
         $("#tradeCoin").append(step1SelectHtml);
       }, base.hideLoadingSpin);
         addListener();
-        var type=base.getUrlParam("type")
+        var type=base.getUrlParam("type");
         if(type != "buy") {
             $(".advertise-step1-bigbigTitle .change").removeClass('sell').addClass('buy');
             $('.advertise-step1-bigbigTitle .title').html('卖出您的比特币以获得利润');
@@ -146,7 +146,6 @@ define([
       addListener();
       GeneralCtr.getDictList({ parentKey: 'trade_price_type' }).then((data) => {
           base.hideLoadingSpin();
-          console.log(data);
           data.map((item) => {
               item.text = item.dvalue;
               item.id = item.dvalue;
@@ -155,6 +154,12 @@ define([
           let step2SelectedData = [];
           accuracyTags(step2SelectedData)
       }, base.hideLoadingSpin);
+      let type = base.getUrlParam('type');
+      if(type === 'buy') {
+        $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('购买比特币');
+      }else{
+        $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('卖出您的比特币以获得利润');
+      }
     }
     function accuracyTags(step2SelectedData) {
         $("#step2AccuracyTags").select2({
@@ -189,6 +194,12 @@ define([
       $('#targetArea').html(step3CountryListHtml);
     }, base.hideLoadingSpin);
     addListener();
+    let type = base.getUrlParam('type');
+    if(type === 'buy') {
+      $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('购买比特币');
+    }else {
+      $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('卖出您的比特币以获得利润');
+    }
   }
   function select2WithData(step3SelectedData) {
     $("#step3Tags").select2({
@@ -199,12 +210,6 @@ define([
       allowClear: true,                    //支持清空，默认为false
       placeholder: '请选择标签'      //提示语
     }).val(step3SelectedData).trigger('change');  //多选情况下给选中项的赋值
-    // $('#step3Tags').bSelectPage({
-    //   showField : 'name',
-    //   keyField : 'id',
-    //   data : step3TagInitData,
-    //   multiple : true
-    // });
   }
   // step1-构建顶部tab的dom结构
   function buildTabHtml(data, i) {
@@ -251,38 +256,7 @@ define([
     }
 
     function setHtml() {
-        // $('title').text(base.getText('发布广告') + '-' +base.getText('区块链技术应用实验平台'));
-        // $('.en_fbgg').html(`${base.getText('发布')}<span class="bb-name"></span>${base.getText('交易广告')}`);
-        // $('.jylx').html(base.getText('交易类型'));
-        // $('.fy_gdxz').html(base.getText('更多信息'));
-        // $('.xzgglx').html(base.getText('选择广告类型') + '：');
-        // $('.xzgglxsm').html(base.getText('选择广告类型说明'));
-        // $('.zxcs').html(base.getText('在线出售'));
-        // $('.zxgm').html(base.getText('在线购买'));
-        // $('.hb').html(base.getText('货币') + '：');
-        // $('.hbsm').html(base.getText('您希望交易付款的货币类型'));
-        // $('.yj').html(base.getText('溢价') + '：');
-        // $('.fy_jg').html(base.getText('价格') + '：');
-        // $('.fy_zdjxt').html(base.getText('最低价（选填）') + '：');
-        // $('.fy_zxxe').html(base.getText('最小限额') + '：');
-        // $('.fy_zdxe').html(base.getText('最大限额') + '：');
-        // $('.fy_gmzl').html(base.getText('购买总量') + '：');
-        // $('.fy_zhkyye').html(base.getText('账户可用余额'));
-        // $('.fy_fkfs').html(base.getText('收款方式') + '：');
-        // $('.fy_ggly').html(base.getText('广告留言') + '：');
         $('.fy_gjsz').html(base.getText('高级选项'));
-        // $('.fy_jxsxrdjyz').html(base.getText('仅限受信任的交易者') + `：<samp id="trustExp"></samp>`);
-        // $('.fy_qy').html(base.getText('启用'));
-        // $('.fy_kfsj').html(base.getText('开放时间') + `：<samp id="displayTimeExp"></samp>`);
-        // $('.fy_rhsh').html(base.getText('任何时候'));
-        // $('.fy_zdy').html(base.getText('自定义'));
-        // $('.fy_xq1').html(base.getText('星期一') + '：');
-        // $('.fy_xq2').html(base.getText('星期二') + '：');
-        // $('.fy_xq3').html(base.getText('星期三') + '：');
-        // $('.fy_xq4').html(base.getText('星期四') + '：');
-        // $('.fy_xq5').html(base.getText('星期五') + '：');
-        // $('.fy_xq6').html(base.getText('星期六') + '：');
-        // $('.fy_xq7').html(base.getText('星期日') + '：');
         $('.fy_xsgjsz').html(base.getText('高级选项') + '...');
         // $('#draftBtn').html(base.getText('保存草稿'));
         $('.advertise-step3-btn').html(base.getText('立即发布'));
@@ -359,13 +333,11 @@ define([
                 $('.advertise-step1-bigbigTitle .text').removeClass('buy').addClass('sell');
                 $('.advertise-step1-bigbigTitle .title').html('卖出您的比特币以获得利润');
                 $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要获得比特币吗？<span class="change sell">创建一个出价来购买比特币</span></p>`);
-                $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('卖出您的比特币以获得利润');
                 tradeType = 1;
             } else {
                 $('.advertise-step1-bigbigTitle .text').removeClass('sell').addClass('buy');
                 $('.advertise-step1-bigbigTitle .title').html('购买比特币');
                 $('.advertise-step1-bigbigTitle .text').html(`<p class="text">想要出售比特币吗？<span class="change buy">去出售比特币</span></p>`);
-                $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('购买比特币');
                 tradeType = 0;
             }
 
@@ -460,17 +432,17 @@ define([
             $("#payTypeExp").html(data['payType'+langText])
             $("#premiumRateExp").html(data['premiumRate'+langText])
             $("#priceExp").html(data['price'+langText]);
-
             if (type == 'buy') {
                 $("#protectPriceExp").siblings('.txt').text(base.getText('最高价格', langType) + '：');
                 $("#protectPrice").attr('placeholder', base.getText('广告最高可成交的价格', langType));
                 $("#totalCountExp").siblings('.txt').text(base.getText('购买总量', langType) + '：');
                 $("#totalCount").attr('placeholder', base.getText('请输请入购买币的总量', langType));
             } else if (type == 'sell') {
-                $("#protectPriceExp").siblings('.txt').text(base.getText('最低价格', langType) + '：')
+                $("#protectPriceExp").siblings('.txt').text(base.getText('最低价格', langType) + '：');
                 $("#protectPrice").attr('placeholder', base.getText('广告最低可成交的价格', langType));
                 $("#totalCountExp").siblings('.txt').text(base.getText('出售总量', langType) + '：');
                 $("#totalCount").attr('placeholder', base.getText('请输入售卖币的总量', langType));
+              $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text('卖出您的比特币以获得利润');
             }
 
             $("#protectPriceExp").html(data['protectPrice'+langText]);
@@ -505,7 +477,6 @@ define([
         if(step2AccuracyTags == 'null'){
             step2AccuracyTags = '';
         }
-        console.log(step2AccuracyTags)
         return TradeCtr.submitAdvertise({
           allowCountry: targetArea,
           fixTrade:step2AccuracyTags || undefined,
@@ -529,7 +500,7 @@ define([
           isAllowProxy: isAllowProxy || 1
         }).then((res) => {
           base.showMsg(base.getText('操作成功', langType));
-          if (Number(sessionStorage.getItem('tradeType')) == '0') {
+          if (parseInt(sessionStorage.getItem('tradeType')) === 0) {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
           } else {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
@@ -686,10 +657,11 @@ define([
         sessionStorage.setItem('paySubType', paySubType);
         sessionStorage.setItem('tradeCoin', $("#tradeCoin option:selected").attr("data-code"));
         sessionStorage.setItem('tradeType', tradeType);
+        let type = tradeType === 1 ? 'sell' : 'buy';
         if(code != ''){
-            base.gohref('../trade/advertise-step2.html?code='+code+'&coin='+coin);
+            base.gohref('../trade/advertise-step2.html?code='+code+'&coin='+coin+'&type='+type);
         }else{
-            base.gohref('../trade/advertise-step2.html');
+            base.gohref('../trade/advertise-step2.html?type='+type);
         }
       });
 
@@ -735,11 +707,11 @@ define([
         sessionStorage.setItem('max', $('#maxInput').val());
         sessionStorage.setItem('step2AccuracyTags', $('#step2AccuracyTags').val());
         sessionStorage.setItem('cancelTime', $('#cancelTimeInput').val());
-        // sessionStorage.setItem('minPrice', $('#minPriceInput').val());
+        let type = +sessionStorage.getItem('tradeType') === 1 ? 'sell' : 'buy';
           if(code != ''){
-              base.gohref('../trade/advertise-step3.html?code='+code+'&coin='+coin);
+              base.gohref('../trade/advertise-step3.html?code='+code+'&coin='+coin+'&type='+type);
           }else{
-              base.gohref('../trade/advertise-step3.html');
+              base.gohref('../trade/advertise-step3.html?type='+type);
           }
       });
 
@@ -777,8 +749,9 @@ define([
             $(target).addClass('on').siblings().removeClass('on');
         });
         $('.advertise-payType-item-container').on('click', '.icon-step1-unselected,.on', (e) => {
+          e.stopPropagation();
             let target = e.target;
-            paySubType = $(target).attr('data-code');
+            paySubType = $(target).parent().attr('data-code');
             $(target).parents('.advertise-payType-item').addClass('on').siblings('.advertise-payType-item').removeClass('on');
         });
       // step1-select点击事件

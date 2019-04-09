@@ -141,8 +141,6 @@ define([
                     var orderDetailStatus;
                     return TradeCtr.getOrderDetail(orderDetailCode).then((data) => {
                         orderDetailStatus = data.status;
-                        console.log(orderDetailStatus,item.status)
-                        console.log(orderDetailCode,item.refNo)
                         if(orderDetailCode == item.refNo){
                             if(orderDetailStatus == item.status){
                                 window.location.reload();
@@ -182,7 +180,6 @@ define([
                             document.getElementById('audio-message2').play();
                         }, 1000);
                         TradeCtr.getOrderDetail(refNo).then((data) => {
-                            console.log('active-news', data);
                             activeNewsHtml =`<li class="goMessageHref" data-href="../order/order-detail.html?code=${refNo}" data-readId="${readId}">
                             <span> <button style="border: none;padding: 0px;">聊天</button></span>
                             <span>${data.buyUserInfo.nickname}</span>
@@ -399,7 +396,6 @@ define([
                 $('#head-user-wrap .head-user .msg_num').hide();
             }
             var readId = $(this).attr('data-readId');
-            console.log(readId);
             var params ={"id":readId}
             TradeCtr.readNews(params).then((data) => {
                 if (!base.isLogin()) {
@@ -420,7 +416,6 @@ define([
         });
         $(document).on('click','.left-item',function () {
             var i = $(this).index();
-            console.log(i);
             $(this).addClass('pay-active');
             $(this).siblings().removeClass('pay-active');
         });

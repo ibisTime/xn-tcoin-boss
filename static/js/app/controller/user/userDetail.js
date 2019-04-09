@@ -204,14 +204,14 @@ define([
         if(item.payType) {
             payTypeList.map((k) => {
                 if(item.payType === k.key) {
-                    payTypeHtml = `<i>${k.value}</i>`;
+                    payTypeHtml = `<i>${k.value ? k.value : ''}</i>`;
                 }
             })
         }
         let paySecondHtml = ``;
         if(item.platTag) {
-            item.platTag.split('||').map((item) => {
-                paySecondHtml += `<span>${platTagList[item]}</span>`;
+            item.platTag.split('||').map((it) => {
+              paySecondHtml += `${platTagList[it] ? `<span>${platTagList[it]}</span>` : ''}`;
             });
         }
         let country = '/static/images/China.png';

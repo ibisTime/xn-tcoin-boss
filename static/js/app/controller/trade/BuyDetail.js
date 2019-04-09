@@ -102,7 +102,7 @@ define([
             let totalCountString = base.formatMoney(data.totalCountString, '', tradeCoin);
 
             if (user.photo) {
-                tradePhoto = '<div class="photo goHref" data-href="../user/user-detail.html?coin=' + tradeCoin + '&userId=' + user.userId + '"  style="background-image:url(\'' + base.getAvatar(user.photo) + '\')"></div>'
+                tradePhoto = `<div class="photo goHref" data-href="../user/user-detail.html?coin=${tradeCoin}&userId=${user.userId} style="background-image:url(${base.getAvatar(user.photo)})"></div>`;
             } else {
                 var tmpl = user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '-';
                 tradePhoto = '<div class="photo goHref" data-href="../user/user-detail.html?coin=' + tradeCoin + '&userId=' + user.userId + '" ><div class="noPhoto">' + tmpl + '</div></div>'
@@ -169,14 +169,19 @@ define([
                 $('.buy-info .max').html(data.fixTradeList[data.fixTradeList.length - 1] + '' + data.tradeCurrency);
 
             }
-          $('.icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.user.photo) + "')" });
+            if(data.user.photo) {
+              $('.icon-user-photo').css({ "background-image": "url('" + base.getAvatar(data.user.photo) + "')" });
+            }else {
+              let nick = data.user.nickname.substring(0, 1);
+              $('.icon-user-photo').text(nick);
+            }
           buildTagsHtml(data.platTag, data.customTag);
 
           let interval = base.fun(Date.parse(data.user.lastLogin), new Date());
           $('.detail-container-right .buy-user-info .buy-user-online .interval').html(interval);
 
-          // $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
-          // $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
+          $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
+          $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
           //
           //   var code=base.getUrlParam('code');
           //   var status=base.getUrlParam('status');
@@ -239,7 +244,7 @@ define([
             var myInfo = data;
             myName = myInfo.nickname;
             if (myInfo.photo) {
-                tradePhotoMy = '<div class="photo" style="background-image:url(\'' + base.getAvatar(myInfo.photo) + '\')"></div>'
+                tradePhotoMy = `<div class="photo" style="background-image:url(${base.getAvatar(myInfo.photo)})"></div>`
             } else {
                 var tmpl = myInfo.nickname.substring(0, 1).toUpperCase();
                 tradePhotoMy = '<div class="photo"><div class="noPhoto">' + tmpl + '</div></div>'

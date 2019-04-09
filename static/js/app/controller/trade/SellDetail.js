@@ -177,8 +177,13 @@ define([
                 $('.buy-info .max').html(data.fixTradeList[data.fixTradeList.length - 1] + '' + data.tradeCurrency);
 
             }
-
-          $('.icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.user.photo) + "')" });
+  
+          if(data.user.photo) {
+            $('.icon-user-photo').css({ "background-image": "url('" + base.getAvatar(data.user.photo) + "')" });
+          }else {
+            let nick = data.user.nickname.substring(0, 1);
+            $('.icon-user-photo').text(nick);
+          }
           buildTagsHtml(data.platTag, data.customTag);
 
           let interval = base.fun(Date.parse(data.user.lastLogin), new Date());

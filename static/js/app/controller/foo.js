@@ -82,16 +82,6 @@ define([
                 </li>`;
         $('.contact-txt #foo_help').html(html);
       });
-      // 选中
-      if(code) {
-        $('#help-left li.code_' + code).addClass('sel-li');
-      } else {
-        $('#help-left li').eq(1).addClass('sel-li');
-        code = $('#help-left li').eq(1).attr('data-code');
-      }
-      $('.hmoney-tit').text($('#help-left li.sel-li').text());
-      
-      // getListHelp();
     }, base.hideLoadingSpin);
   }
   

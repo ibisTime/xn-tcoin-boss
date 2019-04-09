@@ -121,7 +121,7 @@ define([
         base.getDealLeftText();
         $('.head-nav-wrap .index').addClass('active');
         $('.en_buyer').text(base.getText('卖家'));
-        $('.en_pay').text(base.getText('支付方法'));
+        $('.en_pay').text(base.getText('支付方式'));
         $('.en_min_max').text(base.getText('最低-最高金额'));
         // $('.en_xe').text(base.getText('限额'));
         $('.en_price').text(base.getText('每个比特币的价格'));
@@ -141,7 +141,7 @@ define([
             payTypeMoneyHtml += `<option value="${item.key}">${item.value}</option>`
         });
         var payTypeHtml = `<option value="">${base.getText('选择支付方式')}</option>`;
-        payTypeList.map(item => {
+        payTypeList.map((item) => {
           payTypeHtml += `<option value="${item.key}">${item.value}</option>`
         });
         $('.advertisement-wrap .payTypeMoney').html(payTypeMoneyHtml);
@@ -234,9 +234,9 @@ define([
 
     // 构建左侧支付方式list的dom结构
     function buildPayTypeHtml(item) {
-      return ` <div class="left-item" data-value=${item.key}>
+      return ` <div class="left-item ${item.key}" data-value=${item.key}>
                 <div class="nav-item goHref sell-eth gm">
-                    <span class="nav-item-type en_zf01">${item.value}</span>
+                    <span class="nav-item-type">${item.value}</span>
                     <span class="num">${item.adsCount}</span>
                 </div>
             </div>`
@@ -268,17 +268,14 @@ define([
         if(item.payType) {
           payTypeList.map((k) => {
             if(item.payType === k.key) {
-              payTypeHtml = `<i>${k.value}</i>`;
+              payTypeHtml = `<i>${k.value ? k.value : ''}</i>`;
             }
           })
         }
         let paySecondHtml = ``;
         if(item.platTag) {
             item.platTag.split('||').map((item) => {
-                if(platTagList[item] == undefined){
-                    return
-                 }
-              paySecondHtml += `<span>${platTagList[item]}</span>`;
+              paySecondHtml += `${platTagList[item] ? `<span>${platTagList[item]}</span>` : ''}`;
             });
           }
         let customHTML = ``;
@@ -386,43 +383,11 @@ define([
           } else {
             delete config.price;
           }
-          // if ($("#searchConWrap .maxPrice").val()) {
-          //   config.maxPrice = $("#searchConWrap .maxPrice").val();
-          // } else {
-          //   delete config.maxPrice;
-          // }
           if ($("#searchConWrap .payType").val()) {
             config.payType = $("#searchConWrap .payType").val();
-            switch(config.payType) {
-              case '0':
-                $('#left-wrap .en_zf01').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '1':
-                $('#left-wrap .en_zf02').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '2':
-                $('#left-wrap .en_zf03').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '3':
-                $('#left-wrap .en_zf04').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '4':
-                $('#left-wrap .en_zf05').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '5':
-                $('#left-wrap .en_zf06').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '6':
-                $('#left-wrap .en_zf07').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '7':
-                $('#left-wrap .en_zf08').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '8':
-                $('#left-wrap .en_zf09').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-            }
+            $(`#left-wrap .${config.payType}`).addClass('pay-active').parents().siblings().children().removeClass('pay-active');
           } else {
+            $(`#left-wrap .left-item`).removeClass('pay-active');
             delete config.payType
           }
           if ($("#searchConWrap .payTypeMoney").val()) {
@@ -431,9 +396,6 @@ define([
             delete config.tradeCurrency
           }
 
-          // if($('#payTypeMoney').val()) {
-          //   config.price = $('#payTypeMoney').val() * 1000;
-          // }
           config.start = 1;
           config.tradeType = '1';
           base.showLoadingSpin();
@@ -449,8 +411,8 @@ define([
 
         // 点击付款方式筛选数据
         $('.left-item-group').on('click', '.left-item', (function(ev) {
-            // ev = ev || window.event;
             let payType = $(this).attr('data-value');
+          $('#searchConWrap .payType').val(payType);
             let payConfig = {
                   start: 1,
                   limit: 10,

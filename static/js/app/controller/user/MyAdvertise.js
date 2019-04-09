@@ -114,8 +114,8 @@ define([
         //当前用户为买家
             //待发布
             if (config.statusList == null || config.statusList.length == 1) {
-                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
-        		 			<div class="am-button publish goHref am-button-ghost am-button-out" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('查看', langType)}</div>`
+                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
+        		 			<div class="am-button publish goHref am-button-ghost am-button-out" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('查看', langType)}</div>`
 
                 //已发布
             } else {
@@ -125,8 +125,9 @@ define([
                 //已上架
                 // <div class="am-button am-button-red mr20 doDownBtn" data-code="${item.code}">${base.getText('下架', langType)}</div>
                 if (item.status == '0') {
-                    operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
+                    operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
                 } else if (item.status == "1"){
+                  operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
                     tipHtml=`<p style="
                 position: absolute;
                 width: 300px;
@@ -190,41 +191,30 @@ define([
                 var adsCode = $(this).attr("data-code");
                 var adsStatus = $(this).attr("data-status");
                 if(+adsStatus === 0) {
-                  base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType))
-                    .then(() => {
+                  TradeCtr.downAdvertise(adsCode).then(() => {
+                    base.hideLoadingSpin();
+                    base.showMsg(base.getText('操作成功', langType));
+                    setTimeout(function() {
                       base.showLoadingSpin();
-                      TradeCtr.downAdvertise(adsCode).then(() => {
-                        base.hideLoadingSpin();
-                        base.showMsg(base.getText('操作成功', langType));
-                        setTimeout(function() {
-                          base.showLoadingSpin();
-                          config.start = 1;
-                          getPageAdvertise(true)
-                        }, 1500)
-                      }, base.hideLoadingSpin)
-                    }).catch(() => {
-                    $(this).prop("checked", true);
-                  })
+                      config.start = 1;
+                      getPageAdvertise(true)
+                    }, 1000)
+                  }, base.hideLoadingSpin)
                 }
             }else {
               var adsCode = $(this).attr("data-code");
               var adsStatus = $(this).attr("data-status");
               if(+adsStatus === 2) {
-                base.confirm(base.getText('确认上架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType))
-                  .then(() => {
+                base.showLoadingSpin();
+                TradeCtr.upAdvertise(adsCode).then(() => {
+                  base.hideLoadingSpin();
+                  base.showMsg(base.getText('操作成功', langType));
+                  setTimeout(function() {
                     base.showLoadingSpin();
-                    TradeCtr.upAdvertise(adsCode).then(() => {
-                      base.hideLoadingSpin();
-                      base.showMsg(base.getText('操作成功', langType));
-                      setTimeout(function() {
-                        base.showLoadingSpin();
-                        config.start = 1;
-                        getPageAdvertise(true)
-                      }, 1500)
-                    }, base.hideLoadingSpin)
-                  }).catch(() => {
-                  $(this).prop("checked", true);
-                })
+                    config.start = 1;
+                    getPageAdvertise(true)
+                  }, 1000)
+                }, base.hideLoadingSpin)
               }
             }
         })
