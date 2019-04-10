@@ -196,10 +196,10 @@ define([
         });
 
         $(document).on("click", "#content-adver input", function() {
-            if ($(this).prop('checked') == false){
+            if ($(this).prop('checked') === false){
                 var adsCode = $(this).attr("data-code");
                 var adsStatus = $(this).attr("data-status");
-                if(+adsStatus === 0) {
+                if(+adsStatus !== 2) {
                   TradeCtr.downAdvertise(adsCode).then(() => {
                     base.hideLoadingSpin();
                     base.showMsg(base.getText('操作成功', langType));
@@ -208,7 +208,10 @@ define([
                       config.start = 1;
                       getPageAdvertise(true)
                     }, 1000)
-                  }, base.hideLoadingSpin)
+                  }, () => {
+                    $(this).prop('checked', false);
+                    base.hideLoadingSpin();
+                  })
                 }
             }else {
               var adsCode = $(this).attr("data-code");
@@ -223,7 +226,10 @@ define([
                     config.start = 1;
                     getPageAdvertise(true)
                   }, 1000)
-                }, base.hideLoadingSpin)
+                }, () => {
+                  $(this).prop('checked', true);
+                  base.hideLoadingSpin();
+                })
               }
             }
         })

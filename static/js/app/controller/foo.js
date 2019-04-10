@@ -68,20 +68,24 @@ define([
                 <li class="help en-help goHref" data-href="../public/help.html">帮助中心</li>
             </ul>
         </li>
+        <li class="foo-li">
+            <h2 class="foo-en_tk">关于我们</h2>
+            <ul>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324210756951530028">平台介绍</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324210922546490941">联系我们</li>
+            </ul>
+        </li>
+        <li class="foo-li">
+            <h2 class="foo-en_tk">条款说明</h2>
+            <ul>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211009909218167">用户协议</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211106413304900">隐私条款</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211134448529203">法律声明</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211158117569107">费率说明</li>
+            </ul>
+        </li>
       `;
-      data.forEach((item, index) => {
-        let aHItem = '';
-        item.articleList.forEach((dList, dIndex) => {
-          aHItem += `<li class="goHref foo-en_pt" data-href="../public/help.html?pkey=${index}&key=${dIndex}">${dList.title}</li>`
-        });
-        html += `<li class="foo-li">
-                    <h2 class="foo-en_tk">${item.name}</h2>
-                    <ul>
-                        ${aHItem}
-                    </ul>
-                </li>`;
-        $('.contact-txt #foo_help').html(html);
-      });
+      $('.contact-txt #foo_help').html(html);
     }, base.hideLoadingSpin);
   }
   

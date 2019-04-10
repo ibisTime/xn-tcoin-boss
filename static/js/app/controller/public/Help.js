@@ -6,8 +6,6 @@ define([
     'app/controller/foo'
 ], function(base, Ajax, GeneralCtr, Top, Foo) {
     var code = base.getUrlParam('code') || '';
-    var key = +base.getUrlParam('key') || 0;
-    var pKey = +base.getUrlParam('pkey') || 0;
     let langType = localStorage.getItem('langType') || 'ZH';
     let detailMsg = '';
 
@@ -31,16 +29,12 @@ define([
         return GeneralCtr.getListHelpCategory().then((data) => {
             base.hideLoadingSpin();
             let html = '', len = data.length - 1;
+            GeneralCtr.getDetailHelp(code).then(data => {
+              $('.hmoney-tit').text(data.title);
+              $('#content').html(data.content);
+            });
             data.forEach((item, index) => {
               let aHItem = '';
-              if(index === pKey) {
-                if(Array.isArray(item.articleList) && item.articleList.length > 0) {
-                  GeneralCtr.getDetailHelp(item.articleList[key].code).then(data => {
-                    $('.hmoney-tit').text(data.title);
-                    $('#content').html(data.content);
-                  });
-                }
-              }
               item.articleList.forEach(dList => {
                 aHItem += `<li class="help-article_item code_${dList.code}" data-code="${dList.code}">${dList.title}</li>`
               });
@@ -54,7 +48,7 @@ define([
                 $('#help-left').append(html);
                 setTimeout(() => {
                   $('#help-left li.help-article_item').removeClass('sel-li');
-                  $($($('#help-left .article-ul')[pKey]).children('li')[key]).addClass('sel-li');
+                  $($($(`#help-left li.code_${code}`)).addClass('sel-li'));
                 }, 10);
               }
             });

@@ -38,10 +38,6 @@ define([
             $('#invitationBtn').css({'width':'auto', 'padding': '0 15px'});
             $('.pt10').css('display', 'flex');
         }
-        AccountCtr.getAccount().then(data => {
-          balanceAmount = base.formatMoney((data.accountList[0].amount - data.accountList[0].frozenAmount), '', 'BTC') || 0;
-          $('#modal_bal').text(balanceAmount);
-        });
         addListener();
 
     }
@@ -78,12 +74,12 @@ define([
 
     //获取我推荐的人数和收益统计
     function getInvitation() {
-        return UserCtr.getInvitation().then((data) => {console.log(data);
-            $('.invitation-account .account').text(base.formatMoney(data.totalUnCashAmount,'','BTC') + 'BTC');
+        return UserCtr.getInvitation().then((data) => {
+          $('#modal_bal').text(base.formatMoney(data.totalUnCashAmount,'','BTC'));
+            $('.invitation-account .account').text(base.formatMoney(data.totalAssets,'','BTC') + 'BTC');
             $('.invitation-content .regAcount').text(base.formatMoney(data.regAward,'','BTC'));
             $('.invitation-content .inviteCount').text(data.inviteCount);
             $('.invitation-content .getAcount').text(base.formatMoney(data.OTCTradeAward,'','BTC'));
-            console.log(data);
         }, base.hideLoadingSpin)
     }
 
@@ -128,7 +124,7 @@ define([
             data.forEach((d) => {
                 var pics = base.getPicArr(d.pic);
                 pics.forEach((pic) => {
-                    bannerHtml += `<a class="banner" style="background-image:url(${pic});"></a>`;
+                    bannerHtml += `<a style="display: block;"><img src="${pic}" alt="" style="width: 100%;"></a>`;
                 });
             });
             base.hideLoadingSpin();
