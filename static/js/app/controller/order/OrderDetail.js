@@ -339,7 +339,25 @@ define([
           }
           if(data.buyUser == base.getUserId()) {
             // 对面是卖家
-              $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.sellUserInfo.photo) + "')" });
+              let showPhoto = data.sellUserInfo.nickname.substring(0, 1);
+              if(!!data.sellUserInfo.photo) {
+                $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({
+                  "background-image": "url('" + base.getAvatar(data.sellUserInfo.photo) + "')",
+                  'background-color': '#000',
+                  'color': '#fff',
+                  'text-align': 'center',
+                  'line-height': '42px'
+                });
+              }else {
+                $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({
+                  'background-image': 'none',
+                  'background-color': '#000',
+                  'color': '#fff',
+                  'text-align': 'center',
+                  'line-height': '42px',
+                  'font-size': '18px'
+                }).text(showPhoto);
+              }
               $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.sellUserInfo.nickname);
               $('.orderDetail-right .more-info').attr('userId',data.sellUserInfo.userId);
               getUser(data.sellUserInfo.userId)
@@ -355,7 +373,25 @@ define([
               }
           } else {
             // 对面是买家
-              $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({ "background-image": "url('" + base.getAvatar(data.buyUserInfo.photo) + "')" });
+            let showPhoto = data.buyUserInfo.nickname.substring(0, 1);
+            if(!!data.buyUserInfo.photo) {
+              $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({
+                "background-image": "url('" + base.getAvatar(data.buyUserInfo.photo) + "')",
+                'background-color': '#000',
+                'color': '#fff',
+                'text-align': 'center',
+                'line-height': '42px'
+              });
+            }else {
+              $('.orderDetail-right .orderDetail-right-user-info .icon-user-avatar').css({
+                'background-image': 'none',
+                'background-color': '#000',
+                'color': '#fff',
+                'text-align': 'center',
+                'line-height': '42px',
+                'font-size': '18px'
+              }).text(showPhoto);
+            }
               $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.buyUserInfo.nickname);
               $('.orderDetail-right .more-info').attr('userId',data.buyUserInfo.userId);
               console.log(data.buyUserInfo.userId)
@@ -371,11 +407,7 @@ define([
                   $('.orderDetail-right .orderDetail-right-user-info  .yz span:first-child span').html('电话未验证').next('i').removeClass('icon-checked');;
               }
             }
-            // if (data.status == '0' || data.status == '1') {
-            //     $("#invalidDatetime samp").html(base.getText('订单將在拖管中保持至') + "<i>" + base.formatDate(data.invalidDatetime, "hh:mm:ss") + "</i>," + base.getText('逾期未支付交易將自动取消'));
-            //     $("#invalidDatetime").removeClass("hidden")
-            //     $("#statusInfo").addClass("hidden")
-            // }
+            
             $("#statusInfo samp").html(tradeOrderStatusObj[data.status]);
             $("#tradePrice").html(data.tradePrice);
             $('.m_type').text(data.tradeCurrency);

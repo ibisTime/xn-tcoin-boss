@@ -58,7 +58,9 @@ define([
             GeneralCtr.getDictList({ "parentKey": "coin" }),
             GeneralCtr.getDictList({ "parentKey": "pay_type" }),
             getUserRelation(), // 正式
-            getUserDetail()
+            getUserDetail(),
+            getPayTypeList(),
+            getplatTagList(),
         ).then((data1, data2) => {
             data1.forEach(function(item) {
                 coinList[item.dkey] = item.dvalue;
@@ -66,11 +68,8 @@ define([
             data2.forEach(function(item) {
                 payType[item.dkey] = item.dvalue;
             });
-            // getAdvertiseDetail();
-            getPageAdvertise();
-            getPayTypeList();
-            getplatTagList();
-        })
+          getPageAdvertise();
+        });
         addListener();
     }
     // 支付方式
@@ -222,7 +221,7 @@ define([
 
         let speenHtml = '';
         if (item.releaseTime) {
-            speenHtml = item.releaseTime;
+            speenHtml = item.releaseTime + '分钟';
         } else {
             speenHtml = '<i class="new">新</i>'
         }
@@ -246,26 +245,6 @@ define([
                     </td>
 				</tr>`
     }
-
-    // function buildHtml(item) {
-    //     var operationHtml = '';
-    //     if (item.tradeType == '1') {
-    //         operationHtml = `<div class="am-button goHref" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买')}</div>`
-    //     } else {
-    //         operationHtml = `<div class="am-button goHref" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`
-    //     }
-    //
-    //     return `<tr>
-	// 				<td class="currency">${item.tradeCoin}</td>
-	// 				<td class="payType">${payType[item.payType]}</td>
-	// 				<td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
-	// 				<td class="price">${item.truePrice} ${item.tradeCurrency}/${item.tradeCoin?item.tradeCoin:' ETH'}</td>
-	// 				<td class="operation">
-	// 					${operationHtml}
-	// 				</td>
-	// 			</tr>`
-    //
-    // }
 
     // 初始化交易记录分页器
     function initPagination(data) {

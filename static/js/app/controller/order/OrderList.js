@@ -205,7 +205,7 @@ define([
          $(".orderDetail-operation-btn").html(operationHtml)
         return `<tr data-code="${item.code}">
 					<td class="nickname">
-                        <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.sellUser : item.buyUser}&adsCode=${item.code}&bsComment=${item.bsComment}&sellUser=${item.sellUser}">
+                        <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.buyUser : item.sellUser}&adsCode=${item.code}&bsComment=${item.bsComment}&sellUser=${item.sellUser}">
 							${photoHtml}
 						</div>
 						<samp class="name k-name">${user.nickname ? user.nickname : '-'}</samp>

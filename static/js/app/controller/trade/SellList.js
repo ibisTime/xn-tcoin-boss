@@ -14,49 +14,8 @@ define([
         tradeType: 0,
         coin: coin.toUpperCase()
     };
-  // var bizTypeList = {
-  //   "0": base.getText('支付宝', langType),
-  //   "1": base.getText('微信', langType),
-  //   "2": base.getText('银联转账', langType),
-  //   "3": base.getText('苹果礼品卡', langType),
-  //   "4": base.getText('steam礼品卡', langType),
-  //   "5": base.getText('银行转账', langType),
-  //   "6": base.getText('尼日利亚银行转账', langType),
-  //   "7": base.getText('Paypal 贝宝', langType),
-  //   "8": base.getText('西联', langType)
-  // };
     // 货币下拉
     var payTypeMoneyList = [];
-
-    // 付款类型下拉
-    // var payTypeList = [{
-    //     key: '0',
-    //     value: base.getText('支付宝', langType)
-    // }, {
-    //     key: '1',
-    //     value: base.getText('微信', langType)
-    // }, {
-    //     key: '2',
-    //     value: base.getText('银联转账', langType)
-    // }, {
-    //   key: '3',
-    //   value: base.getText('苹果礼品卡', langType)
-    // }, {
-    //   key: '4',
-    //   value: base.getText('steam礼品卡', langType)
-    // }, {
-    //   key: '5',
-    //   value: base.getText('银行转账', langType)
-    // },{
-    //   key: '6',
-    //   value: base.getText('尼日利亚银行转账', langType)
-    // }, {
-    //   key: '7',
-    //   value: base.getText('Paypal 贝宝', langType)
-    // },{
-    //   key: '8',
-    //   value: base.getText('西联', langType)
-    // }];
     let payTypeList = [];
     let platTagList = [];
     let tradeType = 'buy';
@@ -65,16 +24,19 @@ define([
 
     function init() {
         base.showLoadingSpin();
-        getCoinList();
-        setHtml();
+      $.when(
+        getCoinList(),
+        setHtml(),
+        getPayTypeList(),
+        getplatTagList(),
+        getPayTypeMoneyList(),
+        addListener(),
+      ).then(() => {
         getPageAdvertise(config);
-        getPayTypeList();
-        getplatTagList();
-        getPayTypeMoneyList();
-        addListener();
         $('.buy_sell .buy').removeClass('on').siblings().addClass('on');
         var tipHtml='<p class="tip">来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的<span class="goHref" data-href="../public/help.html">“如何提取（出售）比特币指南”</span>，了解有关如何保持安全的提示。</p>'
         $("#content").before(tipHtml);
+      });
     }
 
   // 支付方式

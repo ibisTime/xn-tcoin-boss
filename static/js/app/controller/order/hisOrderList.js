@@ -198,12 +198,12 @@ define([
     }
 
 
-      $(".orderDetail-operation-btn").html('')
+      $(".orderDetail-operation-btn").html('');
       var totalCount = data.totalCount.toFixed(8);
       return `<tr data-code="${item.code}">
                     <td><input  type="checkbox" value="" /></td>
 					<td class="nickname" style="border-left:1px solid #eee;">
-                        <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.sellUser : item.buyUser}&adsCode=${item.code}">
+                        <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.buyUser : item.sellUser}&adsCode=${item.code}">
 							${photoHtml}
 						</div>
 						<samp class="name k-name">${user.nickname ? user.nickname : '-'}</samp>

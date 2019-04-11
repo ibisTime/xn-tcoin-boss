@@ -5,7 +5,7 @@ define([
     'app/controller/Top',
     'app/controller/foo'
 ], function(base, Ajax, GeneralCtr, Top, Foo) {
-    var code = base.getUrlParam('code') || '';
+    var code = base.getUrlParam('code') || 'WZ20190324210756951530028';
     let langType = localStorage.getItem('langType') || 'ZH';
     let detailMsg = '';
 

@@ -897,11 +897,7 @@ define([
         }).then(data => {
             base.hideLoadingSpin();
             var rate;
-            if($('.s-account .input-item').val() != ''){
-                rate =  $('.s-account .input-item').val() * data.btc_withdraw_fee;
-            }else{
-                rate = 0;
-            }
+            rate = +data.btc_withdraw_fee;
             $('.sendBtc-form-wrap  .rate span').text(rate.toFixed(8))
 
         }, base.hideLoadingSpin);
@@ -967,6 +963,10 @@ define([
         params.payCardInfo = 'BTC';
         params.accountNumber = sessionStorage.getItem('accountNumber');
         params.amount = base.formatMoneyParse(params.amount, '', params.payCardInfo);
+        if(!params.tradePwd && !params.payCardNo) {
+            base.showMsg(base.getText('请填写完整', langType));
+            return;
+        }
         return AccountCtr.withDraw(params).then((data) => {
             base.showMsg(base.getText('操作成功', langType));
             $("#sendBtcDialog").addClass("hidden");

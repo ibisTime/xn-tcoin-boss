@@ -120,6 +120,7 @@ define([
      * 初始化Socket链接
      */
     function initSocket() {
+        // var ws = new WebSocket('ws://localhost:2802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId')); // 线上
         var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId')); // 研发
         // var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId')); // 测试
         ws.onopen = function (event) {
