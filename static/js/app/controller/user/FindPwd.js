@@ -23,7 +23,14 @@ define([
     	if(langType == 'EN'){
             $('title').text('Forgot password- blockchain technology application experimental platform');
         }
-        $('title').text('忘记密码-区块链技术应用实验平台');
+        $('.wjmm').html(base.getText('忘记密码'));
+        $('title').text(base.getText('忘记密码-区块链技术应用实验平台'));
+        $('#mobile').attr('placeholder', base.getText('请输入手机号或邮箱'));
+        $('#smsCaptcha').attr('placeholder', base.getText('验证码'));
+        $('#newLoginPwd').attr('placeholder', base.getText('请输入6-16位的登录密码'));
+        $('#reNewLoginPwd').attr('placeholder', base.getText('请确认密码'));
+        $('#getVerification').html(base.getText('获取验证码'));
+        $('#subBtn').html(base.getText('确定'));
         base.hideLoadingSpin();
         addListener();
         
@@ -33,7 +40,7 @@ define([
 		return UserCtr.resetPwd(params).then((data)=>{
 			
 			base.hideLoadingSpin()
-			base.showMsg(base.getText('密码重置成功', langType))
+			base.showMsg(base.getText('密码重置成功'))
 			setTimeout(function(){
 				base.gohref("../user/login.html")
 			},800)
@@ -85,6 +92,6 @@ define([
 			errorFn: function(){
 			}
 		});
-	    
+	   
     }
 });

@@ -10,299 +10,295 @@
 
 <body class="bg_fff">
     <link rel="import" href="../top/top.html?__inline">
+    <audio muted src="/images/audio-message2.mp3"  id="audioBuyDetail"></audio>
     <!--不同状态  卖家 买家展示不同-->
     <audio muted src="/images/audio-message2.mp3"  id="audioOrderDetail"></audio>
-    <div class="orderDetail-out-container">
-        <div class="orderDetail-container chat-container">
-            <div class="orderDetailBox-left">
-                <div class="orderDetail-left hidden wait">
-                    <div class="orderDetail-left-tips">
-                        <p class="orderDetail-left-tips-content">注意！这位卖家的声誉反馈较低。在分享您的礼品卡信息前，请确保卖家在线并回复了您。请确保卖家在线并回复了您。如果您已经给了他信息，而他要求您取消交易，请点击已支付完成按钮。版主将会介入来确保卖家服从规则。</p>
-                        <p style="height: 26px;"><span class="orderDetail-left-tips-button fr">我理解</span></p>
-                    </div>
-                    <div class="orderDetail-left-status">交易已开始</div>
-                    <div class="orderDetail-left-infos orderDetail-border">
-                        <div class="orderDetail-left-todo">
-                            <p class="todo">请通过<span class="todo-payType"></span>发送<span class="amount"></span></p>
-                            <p class="todo-tips"><span>6.74 US Dollar</span>  将加载至您的比特币钱包</p>
+    <div class="order-detail-container">
+        <div class="orderDetail-out-container">
+            <div class="orderDetail-container chat-container">
+                <div class="orderDetailBox-left">
+                    <div class="orderDetail-left hidden wait">
+                        <div class="orderDetail-left-tips">
+                            <p class="orderDetail-left-tips-content"></p>
+                            <p style="height: 26px;"><span class="orderDetail-left-tips-button fr"></span></p>
                         </div>
-                        <div class="orderDetail-left-operations">
-                            <div class="paid operation-item">
-                                <span class="btn payBtn">已支付</span>
-                                <span class="tips">在您完成支付后，请务必点击“我已支付”按钮。否则，交易将超时，比特币将退回给卖家。</span>
+                        <div class="orderDetail-left-status"></div>
+                        <div class="orderDetail-left-infos orderDetail-border">
+                            <div class="orderDetail-left-todo">
+                                <p class="todo"></p>
+                                <p class="todo-tips"></p>
                             </div>
-                            <div class="cancel operation-item">
-                                <span class="btn canBtn">取消</span>
-                                <span class="tips">如果错误的发起了交易，或者您不满足交易说明中提出的要求，您随时可以取消交易。</span>
+                            <div class="orderDetail-left-operations">
+                                <div class="paid operation-item">
+                                    <span class="btn payBtn"></span>
+                                    <span class="tips cg_tips"></span>
+                                </div>
+                                <div class="cancel operation-item">
+                                    <span class="btn canBtn"></span>
+                                    <span class="tips sb_tips"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="orderDetail-left-zs">
-                            <div class="zs-title">请按照<span class="zs-nickname"></span> 的指示操作</div>
-                            <div class="zs-tags"></div>
-                            <div class="zs-introduction"></div>
-                        </div>
-                        <div class="orderDetail-left-time">
-                            <i class="icon-clock"></i>
-                            <div class="text">
-                                <span class="left-time-minute"></span>
-                                <span>支付剩余时间</span>
+                            <div class="orderDetail-left-zs">
+                                <div class="zs-title"></div>
+                                <div class="zs-tags"></div>
+                                <div class="zs-introduction"></div>
                             </div>
-                        </div>
-                        <div class="orderDetail-left-message">
-                            <p class="message-title">信息</p>
-                            <p class="message-tips">0.00171391 BTC 被安全的保存在托管处</p>
-                        </div>
-                        <div class="orderDetail-left-more-info">
-                            <div class="more-info-item frate">
-                                <span class="more-info-title">费率</span>
-                                <span class="more-info-value">5834.60 USD/BTC</span>
-                            </div>
-                            <div class="more-info-item trade-id">
-                                <span class="more-info-title">交易ID</span>
-                                <span class="more-info-value"></span>
-                            </div>
-                            <div class="more-info-item time">
-                                <span class="more-info-title">已开始</span>
-                                <span class="more-info-value"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="orderDetail-left hidden wait-release-btc">
-                    <div class="orderDetail-left-status">交易已开始</div>
-                    <div class="orderDetail-left-infos orderDetail-border">
-                        <div class="orderDetail-left-todo">
-                            <p class="todo">请通过<span class="todo-payType"></span>发送<span class="amount"></span></p>
-                            <p class="todo-tips"><span>6.74 US Dollar</span>  将加载至您的比特币钱包</p>
-                        </div>
-                        <div class="orderDetail-arbitration-befer">
                             <div class="orderDetail-left-time">
                                 <i class="icon-clock"></i>
                                 <div class="text">
                                     <span class="left-time-minute"></span>
-                                    <span>支付剩余时间</span>
+                                    <span class="syzfsj"></span>
                                 </div>
                             </div>
-                            <div class="orderDetail-left-arbitrate">
-                                <p class="arbitrate-title">已支付，等待卖家放行比特币</p>
-                                <p class="arbitrate-tips">如卖家在指定时间未放行比特币，请及时申请仲裁</p>
-                                <span class="arbitrate-btn">申请仲裁</span>
+                            <div class="orderDetail-left-message">
+                                <p class="message-title"></p>
+                                <p class="message-tips"></p>
                             </div>
-                        </div>
-                        <div class="orderDetail-arbitration-after">
-                            <div>
-                                <span class="orderDetail-cancel">取消</span>
-                                <span>如果错误的发起了交易，或者您不满足交易说明中提出的要求，您随时可以取消交易。</span>
-                            </div>
-                            <div>
-                                <span class="orderDetail-tip">纠纷将在下列时间后处理 <a></a></span>
-                                <span>无需担心，你的比特币安全保存在拖管中，且这个交易不会过期，只有在卖家没回应且没有其他办法的情况下才能发起纠纷处理，滥用纠纷处理会被封禁。</span>
-                            </div>
-                        </div>
-                        <div class="orderDetail-left-zs">
-                            <div class="zs-title">请按照 <span class="zs-nickname"></span> 的指示操作</div>
-                            <div class="zs-tags"></div>
-                            <div class="zs-introduction"></div>
-                        </div>
-                        <div class="orderDetail-left-message">
-                            <p class="message-title">信息</p>
-                            <p class="message-tips">0.00171391 BTC 被安全的保存在托管处</p>
-                        </div>
-                        <div class="orderDetail-left-more-info">
-                            <div class="more-info-item frate">
-                                <span class="more-info-title">费率</span>
-                                <span class="more-info-value">5834.60 USD/BTC</span>
-                            </div>
-                            <div class="more-info-item trade-id">
-                                <span class="more-info-title">交易ID</span>
-                                <span class="more-info-value"></span>
-                            </div>
-                            <div class="more-info-item time">
-                                <span class="more-info-title">已开始</span>
-                                <span class="more-info-value">几秒前</span>
+                            <div class="orderDetail-left-more-info">
+                                <div class="more-info-item frate">
+                                    <span class="more-info-title more_fv"></span>
+                                    <span class="more-info-value"></span>
+                                </div>
+                                <div class="more-info-item trade-id">
+                                    <span class="more-info-title more_jyid"></span>
+                                    <span class="more-info-value"></span>
+                                </div>
+                                <div class="more-info-item time">
+                                    <span class="more-info-title more_yks"></span>
+                                    <span class="more-info-value"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="wait-release-btc-operation">
+                    <div class="orderDetail-left hidden wait-release-btc">
+                        <div class="orderDetail-left-status"></div>
+                        <div class="orderDetail-left-infos orderDetail-border">
+                            <div class="orderDetail-left-todo">
+                                <p class="todo"></p>
+                                <p class="todo-tips"></p>
+                            </div>
+                            <div class="orderDetail-arbitration-befer">
+                                <!--<div class="orderDetail-left-time">-->
+                                <!--<i class="icon-clock"></i>-->
+                                <!--<div class="text">-->
+                                <!--<span class="left-time-minute"></span>-->
+                                <!--<span>支付剩余时间</span>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <div class="orderDetail-left-arbitrate">
+                                    <p class="arbitrate-title"></p>
+                                    <p class="arbitrate-tips"></p>
+                                    <span class="arbitrate-btn"></span>
+                                </div>
+                            </div>
+                            <div class="orderDetail-arbitration-after">
+                                <div>
+                                    <span class="orderDetail-cancel"></span>
+                                    <span class="bmy_qxdd"></span>
+                                </div>
+                                <div>
+                                    <span class="orderDetail-tip"></span>
+                                    <span class="wxdx"></span>
+                                </div>
+                            </div>
+                            <div class="orderDetail-left-zs">
+                                <div class="zs-title"></div>
+                                <div class="zs-tags"></div>
+                                <div class="zs-introduction"></div>
+                            </div>
+                            <div class="orderDetail-left-message">
+                                <p class="message-title"></p>
+                                <p class="message-tips"></p>
+                            </div>
+                            <div class="orderDetail-left-more-info">
+                                <div class="more-info-item frate">
+                                    <span class="more-info-title more_fv"></span>
+                                    <span class="more-info-value"></span>
+                                </div>
+                                <div class="more-info-item trade-id">
+                                    <span class="more-info-title more_jyid"></span>
+                                    <span class="more-info-value"></span>
+                                </div>
+                                <div class="more-info-item time">
+                                    <span class="more-info-title more_yks"></span>
+                                    <span class="more-info-value"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wait-release-btc-operation">
 
+                        </div>
                     </div>
-                </div>
-                <div class="orderDetail-left hidden before-release-btc">
-                    <div class="orderDetail-left-status">交易已开始</div>
-                    <div class="orderDetail-left-infos orderDetail-border">
-                        <div class="orderDetail-left-todo">
-                            <p class="todo">请通过<span class="todo-payType"></span>发送<span class="amount"></span></p>
-                            <p class="todo-tips"><span>6.74 US Dollar</span> 将加载至您的比特币钱包</p>
-                        </div>
-                        <div class="orderDetail-left-release">
-                            <span class="release-btn">放行比特币</span>
-                            <p class="release-warning"><span class="warning">警告：</span>买家未支付</p>
-                        </div>
-                        <div class="orderDetail-left-zs">
-                            <div class="zs-title">请按照<span class="zs-nickname"></span> 的指示操作</div>
-                            <div class="zs-tags"></div>
-                            <div class="zs-introduction"></div>
-                        </div>
-                        <div class="orderDetail-left-time">
-                            <i class="icon-clock"></i>
-                            <div class="text">
-                                <span class="left-time-minute"></span>
-                                <span>支付剩余时间</span>
+                    <div class="orderDetail-left hidden before-release-btc">
+                        <div class="orderDetail-left-status"></div>
+                        <div class="orderDetail-left-infos orderDetail-border">
+                            <div class="orderDetail-left-todo">
+                                <p class="todo"></p>
+                                <p class="todo-tips"></p>
                             </div>
-                        </div>
-                        <div class="orderDetail-left-message">
-                            <p class="message-title">信息</p>
-                            <p class="message-tips">0.00171391 BTC 被安全的保存在托管处</p>
-                        </div>
-                        <div class="orderDetail-left-more-info">
-                            <div class="more-info-item frate">
-                                <span class="more-info-title">费率</span>
-                                <span class="more-info-value">5834.60 USD/BTC</span>
+                            <div class="orderDetail-left-release">
+                                <span class="release-btn"></span>
+                                <p class="release-warning"></p>
                             </div>
-                            <div class="more-info-item trade-id">
-                                <span class="more-info-title">交易ID</span>
-                                <span class="more-info-value"></span>
+                            <div class="orderDetail-left-zs">
+                                <div class="zs-title"></div>
+                                <div class="zs-tags"></div>
+                                <div class="zs-introduction"></div>
                             </div>
-                            <div class="more-info-item time">
-                                <span class="more-info-title">已开始</span>
-                                <span class="more-info-value"></span>
+                            <div class="orderDetail-left-time">
+                                <i class="icon-clock"></i>
+                                <div class="text">
+                                    <span class="left-time-minute"></span>
+                                    <span class="syzfsj"></span>
+                                </div>
                             </div>
-                        </div>
+                            <div class="orderDetail-left-message">
+                                <p class="message-title"></p>
+                                <p class="message-tips"></p>
+                            </div>
+                            <div class="orderDetail-left-more-info">
+                                <div class="more-info-item frate">
+                                    <span class="more-info-title more_fv"></span>
+                                    <span class="more-info-value"></span>
+                                </div>
+                                <div class="more-info-item trade-id">
+                                    <span class="more-info-title more_jyid"></span>
+                                    <span class="more-info-value"></span>
+                                </div>
+                                <div class="more-info-item time">
+                                    <span class="more-info-title more_yks"></span>
+                                    <span class="more-info-value"></span>
+                                </div>
+                            </div>
 
+                        </div>
                     </div>
-                </div>
-                <div class="orderDetail-left hidden finished">
-                    <div class="finished-top">
-                        <i class="finished-top-icon"></i>
-                        <i class="failure-top-icon hidden"></i>
-                        <div class="finished-top-status">交易已完成</div>
-                        <div class="commentDialog" style="display: none">
-                            <div class="am-modal-content">
-                                <div class="am-modal-body">
-                                    <div class="comment-Wrap">
-                                        <div class="item on" data-value="2">
-                                            <div class="icon icon-good"></div>
-                                            <p class="fy_hp"></p>
+                    <div class="orderDetail-left hidden finished">
+                        <div class="finished-top">
+                            <i class="finished-top-icon"></i>
+                            <i class="failure-top-icon hidden"></i>
+                            <div class="finished-top-status"></div>
+                            <div class="commentDialog" style="display: none">
+                                <div class="am-modal-content">
+                                    <div class="am-modal-body">
+                                        <div class="comment-Wrap">
+                                            <div class="item on" data-value="2">
+                                                <div class="icon icon-good"></div>
+                                                <p class="fy_hp"></p>
+                                            </div>
+                                            <div class="item ml20" data-value="1">
+                                                <div class="icon icon-middle"></div>
+                                                <p class="fy_zp"></p>
+                                            </div>
+                                            <div class="item ml20" data-value="0">
+                                                <div class="icon icon-bad"></div>
+                                                <p class="fy_cp"></p>
+                                            </div>
                                         </div>
-                                        <div class="item ml20" data-value="1">
-                                            <div class="icon icon-middle"></div>
-                                            <p class="fy_zp"></p>
-                                        </div>
-                                        <div class="item ml20" data-value="0">
-                                            <div class="icon icon-bad"></div>
-                                            <p class="fy_cp"></p>
+                                        <div class="com-content">
+                                            <textarea name="" id="pjText" placeholder=""></textarea>
                                         </div>
                                     </div>
-                                    <div class="com-content">
-                                        <textarea name="" id="pjText" placeholder=""></textarea>
+                                    <div class="am-modal-footer">
+                                        <div class="am-button am-button-red subBtn"></div>
                                     </div>
                                 </div>
-                                <div class="am-modal-footer">
-                                    <div class="am-button am-button-red subBtn"></div>
+                            </div>
+                        </div>
+                        <div class="finished-bottom">
+                            <p class="finished-bottom-title"></p>
+                            <div class="finished-bottom-item code-payType">
+                                <div class="finished-code">
+                                    <span class="finished-bottom-item-title finished-ddbh"></span>
+                                    <span class="finished-bottom-item-content"></span>
+                                </div>
+                                <div class="payType">
+                                    <span class="finished-bottom-item-title finished-fkfs"></span>
+                                    <span class="finished-bottom-item-content"></span>
+                                </div>
+                                <!--<div class="space">-->
+                                <!--</div>-->
+                            </div>
+                            <div class="finished-bottom-item price-quantity-amount">
+                                <div class="price">
+                                    <span class="finished-bottom-item-title finished-jyjg"></span>
+                                    <span class="finished-bottom-item-content"></span>
+                                </div>
+                                <div class="finished-quantity">
+                                    <span class="finished-bottom-item-title finished-jysl"></span>
+                                    <span class="finished-bottom-item-content">CNY</span>
+                                </div>
+                                <div class="amount">
+                                    <span class="finished-bottom-item-title finished-jyje"></span>
+                                    <span class="finished-bottom-item-content"></span>
+                                </div>
+                            </div>
+                            <div class="finished-bottom-item message">
+                                <div class="price">
+                                    <span class="finished-bottom-item-title finished-ggly"></span>
+                                    <span class="finished-bottom-item-content"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="finished-bottom">
-                        <p class="finished-bottom-title">订单信息</p>
-                        <div class="finished-bottom-item code-payType">
-                            <div class="finished-code">
-                                <span class="finished-bottom-item-title">订单编号</span>
-                                <span class="finished-bottom-item-content"></span>
-                            </div>
-                            <div class="payType">
-                                <span class="finished-bottom-item-title">付款方式</span>
-                                <span class="finished-bottom-item-content"></span>
-                            </div>
-                            <!--<div class="space">-->
-                            <!--</div>-->
-                        </div>
-                        <div class="finished-bottom-item price-quantity-amount">
-                            <div class="price">
-                                <span class="finished-bottom-item-title">交易价格</span>
-                                <span class="finished-bottom-item-content"></span>
-                            </div>
-                            <div class="finished-quantity">
-                                <span class="finished-bottom-item-title">交易数量</span>
-                                <span class="finished-bottom-item-content">CNY</span>
-                            </div>
-                            <div class="amount">
-                                <span class="finished-bottom-item-title">交易金额</span>
-                                <span class="finished-bottom-item-content"></span>
-                            </div>
-                        </div>
-                        <div class="finished-bottom-item message">
-                            <div class="price">
-                                <span class="finished-bottom-item-title">广告留言</span>
-                                <span class="finished-bottom-item-content"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--<div class="orderDetail-operation-btn">
+                    <!--<div class="orderDetail-operation-btn">
 
-                </div>-->
-            </div>
-            <div class="orderDetail-right">
-                <div class="orderDetail-middle b_e ">
-                    <!--<div class="title wp100 b_e_b">-->
+                    </div>-->
+                </div>
+                <div class="orderDetail-right" style="max-height: 580px;">
+                    <div class="orderDetail-middle b_e ">
+                        <!--<div class="title wp100 b_e_b">-->
                         <!--<div class="item on en-o_lt"></div>-->
                         <!--&lt;!&ndash; 注意区分 卖家买家 &ndash;&gt;-->
                         <!--<div class="item" id="user"></div>-->
-                    <!--</div>-->
-                    <div class="orderDetail-right-user-info">
-                        <i class="icon-user-avatar"></i>
-                        <div class="user-info">
-                            <span class="name">Type some</span>
-                            <span class="num"><span class="plus">+306</span>/<span class="negative">-3</span></span>
-                            <span class="time">已查看<span class="interval"></span>前</span>
+                        <!--</div>-->
+                        <div class="orderDetail-right-user-info">
+                            <i class="icon-user-avatar"></i>
+                            <div class="user-info">
+                                <span class="name">Type some</span>
+                                <span class="num"><span class="plus"></span>/<span class="negative"></span></span>
+                                <span class="time"></span>
+                            </div>
+                            <div class="yz">
+                                <span><span></span><i class="icon-checked"></i></span>
+                                <span><span class="dhyyz"></span><i class="icon-checked"></i></span>
+                            </div>
+                            <div class="trade">
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div class="more-info"></div>
                         </div>
-                        <div class="yz">
-                            <span><span></span><i class="icon-checked"></i></span>
-                            <span><span>电话已验证</span><i class="icon-checked"></i></span>
-                        </div>
-                        <div class="trade">
-                            <span>256 交易伙伴</span>
-                            <span>256 交易</span>
-                        </div>
-                        <div class="more-info">更多信息></div>
-                    </div>
-                    <div class="content-wrap wp100">
-                        <div class="wrap chat-wrap hp100 wp100">
-                            <div class="msgflow" id="msgflow"></div>
-                            <div class="btnWrap">
-                                <textarea type="text" id="msgedit" class="msgedit" placeholder=""></textarea>
-                                <button id="msgImg" class="msgImg"></button>
-                                <button id="openPic" class="openPic"></button>
-                                <button id="send" class="am-button am-button-red send"></button>
-                                <div class="emotionUL-wrap hidden">
-                                    <ul id="emotionUL" class="wp100"></ul>
+                        <div class="content-wrap wp100">
+                            <div class="wrap chat-wrap hp100 wp100">
+                                <div class="msgflow" id="msgflow" style="height: 88%"></div>
+                                <div class="btnWrap">
+                                    <textarea type="text" id="msgedit" class="msgedit" placeholder=""></textarea>
+                                    <button id="msgImg" class="msgImg"></button>
+                                    <button id="openPic" class="openPic"></button>
+                                    <button id="send" class="am-button am-button-red send"></button>
+                                    <div class="emotionUL-wrap hidden">
+                                        <ul id="emotionUL" class="wp100"></ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="wrap userInfo-wrap over-hide hp100 hidden">
-                            <div class="photoWrap fl" id="photoWrap">
-                            </div>
-                            <div class="info-wrap fl ml20">
-                                <div class="nickname" id="nickname"></div>
-                                <div class="txt">
-                                    <!--<p><samp>交易量：</samp><samp id="user">30+ETH</samp></p>-->
-                                    <p><samp class="fy_dzyx"></samp><samp id="email"></samp></p>
+                            <div class="wrap userInfo-wrap over-hide hp100 hidden">
+                                <div class="photoWrap fl" id="photoWrap">
                                 </div>
-                                <div class="txt">
-                                    <!--<p><samp>已確認的交易次数：</samp><samp id="jiaoyi">30+ETH</samp></p>-->
-                                    <p><samp class="fy_sjhm"></samp><samp id="mobile"></samp></p>
-                                </div>
-                                <div class="txt">
-                                    <!--<p><samp>好评度：</samp><samp>90%</samp></p>-->
-                                    <p><samp class="fy_smrz"></samp><samp id="identity"></samp></p>
-                                </div>
-                                <!--<div class="txt">
-                                                <p><samp>第一次购买：</samp><samp id="firstBuyDatatime"></samp></p>
-                                                <p><samp>信任：</samp><samp id="trust">237</samp></p>
-                                            </div>-->
-                                <div class="txt">
-                                    <p><samp class="fy_yhcjsj"></samp><samp id="createDatetime"></samp></p>
+                                <div class="info-wrap fl ml20">
+                                    <div class="nickname" id="nickname"></div>
+                                    <div class="txt">
+                                        <p><samp class="fy_dzyx"></samp><samp id="email"></samp></p>
+                                    </div>
+                                    <div class="txt">
+                                        <p><samp class="fy_sjhm"></samp><samp id="mobile"></samp></p>
+                                    </div>
+                                    <div class="txt">
+                                        <p><samp class="fy_smrz"></samp><samp id="identity"></samp></p>
+                                    </div>
+                                    <div class="txt">
+                                        <p><samp class="fy_yhcjsj"></samp><samp id="createDatetime"></samp></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -310,251 +306,225 @@
                 </div>
             </div>
         </div>
-    </div>
+        <!-- 发送图片 -->
+        <div class="am-modal-wrap pic-dialog" id="upload_pic_dialog" style="display:none;">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="upload_pic_dialog_label"></h4>
+                    </div>
+                    <div class="am-modal-body">
 
-    <!--评价弹窗-->
-    <!--<div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">-->
-        <!--<div class="am-modal-mask"></div>-->
-        <!--<div class="am-modal">-->
-            <!--<div class="am-modal-content">-->
-                <!--<div class="am-modal-header">-->
-                    <!--<p class="fy_jypj"></p>-->
-                <!--</div>-->
-                <!--<div class="am-modal-body">-->
-                    <!--<p class="title fy_jyyx"></p>-->
-                    <!--<div class="comment-Wrap">-->
-                        <!--<div class="item on" data-value="2">-->
-                            <!--<div class="icon icon-good"></div>-->
-                            <!--<p class="fy_hp"></p>-->
-                        <!--</div>-->
-                        <!--<div class="item ml20" data-value="0">-->
-                            <!--<div class="icon icon-bad"></div>-->
-                            <!--<p class="fy_cp"></p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="com-content">-->
-                        <!--<textarea name="" id="pjText" placeholder=""></textarea>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="am-modal-footer">-->
-                    <!--<div class="am-button am-button-red subBtn"></div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!-- 发送图片 -->
-    <div class="am-modal-wrap pic-dialog" id="upload_pic_dialog" style="display:none;">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="upload_pic_dialog_label"></h4>
-                </div>
-                <div class="am-modal-body">
+                        <form class="form-horizontal" role="form" onkeydown="if(event.keyCode==13)return false;" id="upd_form" name="upd_form">
+                            <div class="form-group file-wrap">
+                                <div class="col-sm-10">
+                                    <input class="file" type="file" accept="image/*" id="upd_pic" />
+                                </div>
+                                <div class="am-button am-button-ghost fy_xztp"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label fy_yl"></label>
+                                <div class="col-sm-10">
+                                    <div id="previewPicDiv"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="upd_progress" class="col-sm-2 control-label fy_jd"></label>
+                                <div class="col-sm-10">
+                                    <progress id="upd_progress" value="0" max="100"></progress>
+                                </div>
+                            </div>
 
-                    <form class="form-horizontal" role="form" onkeydown="if(event.keyCode==13)return false;" id="upd_form" name="upd_form">
-                        <div class="form-group file-wrap">
-                            <div class="col-sm-10">
-                                <input class="file" type="file" accept="image/*" id="upd_pic" />
-                            </div>
-                            <div class="am-button am-button-ghost fy_xztp"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="File" class="col-sm-2 control-label fy_yl"></label>
-                            <div class="col-sm-10">
-                                <div id="previewPicDiv"></div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="upd_progress" class="col-sm-2 control-label fy_jd"></label>
-                            <div class="col-sm-10">
-                                <progress id="upd_progress" value="0" max="100"></progress>
-                            </div>
-                        </div>
-
-                    </form>
+                        </form>
+                    </div>
+                    <div class="am-modal-footer">
+                        <button type="button" class="am-button am-button-gray" id="upd_close"></button>
+                        <button type="button" class="am-button am-button-red ml20" id="upd_send"></button>
+                    </div>
                 </div>
-                <div class="am-modal-footer">
-                    <button type="button" class="am-button am-button-gray" id="upd_close"></button>
-                    <button type="button" class="am-button am-button-red ml20" id="upd_send"></button>
-                </div>
+                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-content -->
+            <!-- /.modal-dialog -->
         </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- 查看图片 -->
-    <div class="am-modal-wrap pic-dialog" style="display:none;" id="click_pic_dialog">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="click_pic_dialog_label"></h4>
-                </div>
-                <div class="am-modal-body">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <div id="bigPicDiv"></div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="am-modal-footer">
-                    <button type="button" class="am-button am-button-red" id="click_pic_dialog_close">关闭</button>
-                    <!--<button type="button" class="btn btn-primary" id="viewOriPicBt">查看原图</button>-->
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!--评价弹窗-->
-    <!--<div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">-->
-        <!--<div class="am-modal-mask"></div>-->
-        <!--<div class="am-modal">-->
-            <!--<div class="am-modal-content">-->
-                <!--<div class="am-modal-header">-->
-                    <!--<p class="fy_jypj"></p>-->
-                <!--</div>-->
-                <!--<div class="am-modal-body">-->
-                    <!--<p class="title fy_jyyx"></p>-->
-                    <!--<div class="comment-Wrap">-->
-                        <!--<div class="item on" data-value="2">-->
-                            <!--<div class="icon icon-good"></div>-->
-                            <!--<p class="fy_hp"></p>-->
-                        <!--</div>-->
-                        <!--<div class="item ml20" data-value="1">-->
-                            <!--<div class="icon icon-middle"></div>-->
-                            <!--<p class="fy_zp"></p>-->
-                        <!--</div>-->
-                        <!--<div class="item ml20" data-value="0">-->
-                            <!--<div class="icon icon-bad"></div>-->
-                            <!--<p class="fy_cp"></p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="com-content">-->
-                        <!--<textarea name="" id="pjText" placeholder=""></textarea>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="am-modal-footer">-->
-                    <!--<div class="am-button am-button-red subBtn"></div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--已支付弹窗-->
-    <div class="am-modal-wrap dialog paid-dialog hidden" id="paidDialog">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <p class="fy_qryzf"></p>
-                </div>
-                <div class="am-modal-body">
-                    <p class="title fy_content"></p>
-                </div>
-                <div class="am-modal-footer">
-                    <div class="paid-subBtn"></div>
-                    <div class="paid-canBtn"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--取消弹窗-->
-    <div class="am-modal-wrap dialog cancel-dialog hidden" id="cancelDialog">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <p class="fy_qryzf"></p>
-                </div>
-                <div class="am-modal-body">
-                    <p class="title fy_content"></p>
-                </div>
-                <div class="am-modal-footer">
-                    <div class="paid-subBtn"></div>
-                    <div class="paid-canBtn"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--释放比特币-已支付弹窗-->
-    <div class="am-modal-wrap dialog release-paid-dialog hidden" id="releasePaidDialog">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <p class="fy_release-paid-title"></p>
-                </div>
-                <div class="am-modal-body">
-                    <p class="title fy_release-paid-content"></p>
-                </div>
-                <div class="am-modal-footer">
-                    <div class="subBtn"></div>
-                    <div class="canBtn"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--释放比特币-未支付弹窗-->
-    <div class="am-modal-wrap dialog release-unpaid-dialog hidden" id="releaseUnpaidDialog">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <p class="fy_release-unpaid-title"></p>
-                </div>
-                <div class="am-modal-body">
-                    <p class="title fy_release-unpaid-content"></p>
-                </div>
-                <div class="am-modal-footer">
-                    <div class="subBtn"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--输入资金密码弹窗-->
-    <div class="am-modal-wrap dialog tradePwd-dialog hidden" id="tradePwdDialog">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <p class="fy_tradePwd-title"></p>
-                </div>
-                <div class="am-modal-body">
-                    <input class="title fy_tradePwd-content" id="pwd-input" placeholder="请输入资金密码" type="password">
-                </div>
-                <div class="am-modal-footer">
-                    <div class="subBtn"></div>
-                    <div class="canBtn"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--申请仲裁弹窗-->
-    <div class="am-modal-wrap dialog arbitration-dialog hidden" id="arbitrationDialog">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <p class="fy_qryzf">是否申请仲裁</p>
-                </div>
-                <div class="am-modal-body">
-                    <p>仲裁之后客服将会介入</p>
-                    <div class="arbitration-content">
-                        <form class="form-wrapper form-wrapper-noIcon" id="arbitrationform-wrapper" novalidate="novalidate">
-                            <div class="form-item form-item-textarea b_e">
-                                <textarea style="resize: none;" class="textarea-item fy_reason" name="reason" placeholder="请填写您申请仲裁的理由"></textarea>
+        <!-- 查看图片 -->
+        <div class="am-modal-wrap pic-dialog" style="display:none;" id="click_pic_dialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="click_pic_dialog_label"></h4>
+                    </div>
+                    <div class="am-modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group" style="position: relative;">
+                                <div class="col-sm-12">
+                                    <div id="bigPicDiv">
+                                    </div>
+                                </div>
+                                <div class="fdsx">
+                                    <span class="jia">+</span>
+                                    <span class="jian">-</span>
+                                </div>
                             </div>
                         </form>
                     </div>
+                    <div class="am-modal-footer">
+                        <button type="button" class="am-button am-button-red" id="click_pic_dialog_close"></button>
+                        <!--<button type="button" class="btn btn-primary" id="viewOriPicBt">查看原图</button>-->
+                    </div>
                 </div>
-                <div class="am-modal-footer">
-                    <div class="arbitration-subBtn">确认</div>
-                    <div class="arbitration-canBtn">取消</div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!--评价弹窗-->
+        <!--<div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">-->
+        <!--<div class="am-modal-mask"></div>-->
+        <!--<div class="am-modal">-->
+        <!--<div class="am-modal-content">-->
+        <!--<div class="am-modal-header">-->
+        <!--<p class="fy_jypj"></p>-->
+        <!--</div>-->
+        <!--<div class="am-modal-body">-->
+        <!--<p class="title fy_jyyx"></p>-->
+        <!--<div class="comment-Wrap">-->
+        <!--<div class="item on" data-value="2">-->
+        <!--<div class="icon icon-good"></div>-->
+        <!--<p class="fy_hp"></p>-->
+        <!--</div>-->
+        <!--<div class="item ml20" data-value="1">-->
+        <!--<div class="icon icon-middle"></div>-->
+        <!--<p class="fy_zp"></p>-->
+        <!--</div>-->
+        <!--<div class="item ml20" data-value="0">-->
+        <!--<div class="icon icon-bad"></div>-->
+        <!--<p class="fy_cp"></p>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="com-content">-->
+        <!--<textarea name="" id="pjText" placeholder=""></textarea>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="am-modal-footer">-->
+        <!--<div class="am-button am-button-red subBtn"></div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--已支付弹窗-->
+        <div class="am-modal-wrap dialog paid-dialog hidden" id="paidDialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p class="fy_qryzf"></p>
+                    </div>
+                    <div class="am-modal-body">
+                        <p class="title fy_content"></p>
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="paid-subBtn"></div>
+                        <div class="paid-canBtn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--取消弹窗-->
+        <div class="am-modal-wrap dialog cancel-dialog hidden" id="cancelDialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p class="fy_qryzf"></p>
+                    </div>
+                    <div class="am-modal-body">
+                        <p class="title fy_content"></p>
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="paid-subBtn"></div>
+                        <div class="paid-canBtn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--释放比特币-已支付弹窗-->
+        <div class="am-modal-wrap dialog release-paid-dialog hidden" id="releasePaidDialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p class="fy_release-paid-title"></p>
+                    </div>
+                    <div class="am-modal-body">
+                        <p class="title fy_release-paid-content"></p>
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="subBtn"></div>
+                        <div class="canBtn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--释放比特币-未支付弹窗-->
+        <div class="am-modal-wrap dialog release-unpaid-dialog hidden" id="releaseUnpaidDialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p class="fy_release-unpaid-title"></p>
+                    </div>
+                    <div class="am-modal-body">
+                        <p class="title fy_release-unpaid-content"></p>
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="subBtn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--输入资金密码弹窗-->
+        <div class="am-modal-wrap dialog tradePwd-dialog hidden" id="tradePwdDialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p class="fy_tradePwd-title"></p>
+                    </div>
+                    <div class="am-modal-body">
+                        <input class="title fy_tradePwd-content" id="pwd-input" placeholder="" type="password">
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="subBtn"></div>
+                        <div class="canBtn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--申请仲裁弹窗-->
+        <div class="am-modal-wrap dialog arbitration-dialog hidden" id="arbitrationDialog">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <p class="fy_qryzf"></p>
+                    </div>
+                    <div class="am-modal-body">
+                        <p class="zchf"></p>
+                        <div class="arbitration-content">
+                            <form class="form-wrapper form-wrapper-noIcon" id="arbitrationform-wrapper" novalidate="novalidate">
+                                <div class="form-item form-item-textarea b_e">
+                                    <textarea style="resize: none;" class="textarea-item fy_reason" name="reason" placeholder=""></textarea>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="am-modal-footer">
+                        <div class="arbitration-subBtn"></div>
+                        <div class="arbitration-canBtn"></div>
+                    </div>
                 </div>
             </div>
         </div>

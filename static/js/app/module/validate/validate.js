@@ -5,7 +5,7 @@ define([
     let langType = localStorage.getItem('langType') || 'ZH';
     jQuery.extend(jQuery.validator.messages, {
         required: base.getText('不能为空', langType),
-        remote: "请修正该字段",
+        remote: base.getText('请修正该字段'),
         email: base.getText('请输入正确格式的电子邮件', langType),
         url: base.getText('请输入合法的网址', langType),
         date: base.getText('请输入合法的日期', langType),
@@ -146,6 +146,11 @@ define([
         return this.optional(element) || (pwd.test(value) && 5 < value.length && value.length < 16);
         return this.optional(element) || /[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/.test(value);
     }, base.getText('字母数字组合6-16位', langType));
+  
+  $.validator.addMethod("nickname", function(value, element) {
+    var nickname = /\W/;
+    return this.optional(element) || !(nickname.test(value));
+  }, base.getText('数字、字母或下划线', langType));
 
 
 

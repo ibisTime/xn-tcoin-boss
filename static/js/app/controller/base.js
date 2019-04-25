@@ -302,52 +302,52 @@ define([
             window.history.back();
         },
         goReturn: function() {
-            var returnUrl = sessionStorage.getItem("l-return");
-            sessionStorage.removeItem("l-return");
+            var returnUrl = localStorage.getItem("l-return");
+            localStorage.removeItem("l-return");
             Base.gohref(returnUrl || "../index.html");
         },
         isLogin: function() {
-            return !!sessionStorage.getItem("userId");
+            return !!localStorage.getItem("userId");
         },
         goLogin: function(flag) {
             Base.clearSessionUser();
             if (flag) {
-                sessionStorage.removeItem("l-return");
+                localStorage.removeItem("l-return");
             } else {
-                sessionStorage.setItem("l-return", location.pathname + location.search);
+                localStorage.setItem("l-return", location.pathname + location.search);
             }
             Base.gohref("../user/login.html");
         },
         getUserId: function() {
-            return sessionStorage.getItem("userId");
+            return localStorage.getItem("userId");
         },
         getUserMobile: function() {
-            return sessionStorage.getItem("mobile");
+            return localStorage.getItem("mobile");
         },
         getUserEmail: function() {
-            return sessionStorage.getItem("email");
+            return localStorage.getItem("email");
         },
         getToken: function() {
-            return sessionStorage.getItem("token");
+            return localStorage.getItem("token");
         },
         //谷歌验证
         getGoogleAuthFlag: function() {
-            return sessionStorage.getItem("googleAuthFlag");
+            return localStorage.getItem("googleAuthFlag");
         },
         setSessionUser: function(data) {
-            sessionStorage.setItem("userId", data.userId);
-            sessionStorage.setItem("token", data.token);
+            localStorage.setItem("userId", data.userId);
+            localStorage.setItem("token", data.token);
         },
         clearSessionUser: function() {
-            sessionStorage.removeItem("userId"); //userId
-            sessionStorage.removeItem("token"); //token
-            sessionStorage.removeItem("googleAuthFlag"); //token
-            sessionStorage.removeItem("mobile"); //token
-            sessionStorage.removeItem("email"); //token
-            sessionStorage.removeItem("nickname"); //token
+            localStorage.removeItem("userId"); //userId
+            localStorage.removeItem("token"); //token
+            localStorage.removeItem("googleAuthFlag"); //token
+            localStorage.removeItem("mobile"); //token
+            localStorage.removeItem("email"); //token
+            localStorage.removeItem("nickname"); //token
         },
         //登出
-        logout: function() {
+      logout: function() {
             Base.clearSessionUser();
             Base.gohref("../user/login.html");
         },
@@ -517,8 +517,8 @@ define([
         },
         //获取币种列表
         getCoinList: function() {
-            if (sessionStorage.getItem('coinList')) {
-                return JSON.parse(sessionStorage.getItem('coinList'));
+            if (localStorage.getItem('coinList')) {
+                return JSON.parse(localStorage.getItem('coinList'));
             } else {
                 return COIN_DEFAULTDATA;
             }
@@ -555,7 +555,8 @@ define([
             return n;
         },
         // 根据语言获取文本
-        getText: function(text, lang) {
+        getText: function(text) {
+          let lang = localStorage.getItem('lang') || 'ZH';
             if(lang == '' || !lang){
                 lang = NOWLANG
             }
@@ -584,18 +585,6 @@ define([
             $('.en_gg').text(Base.getText('广告管理'));
             $('.en_xr').text(Base.getText('信任管理'));
             $('.en_fb').text(Base.getText('发布广告'));
-
-            // index-left
-          // $('.en_zf02').text(Base.getText('微信'));
-          // $('.en_zf01').text(Base.getText('支付宝'));
-          // $('.en_zf03').text(Base.getText('银联转账'));
-          // $('.en_zf04').text(Base.getText('苹果礼品卡'));
-          // $('.en_zf05').text(Base.getText('steam礼品卡'));
-          // $('.en_zf06').text(Base.getText('银行转账'));
-          // $('.en_zf07').text(Base.getText('尼日利亚银行转账'));
-          // $('.en_zf08').text(Base.getText('Paypal 贝宝'));
-          // $('.en_zf09').text(Base.getText('西联'));
-          // $('.in_fkfs').text(Base.getText('支付方式'));
         },
         // 计算相隔时间
       fun(startTime, endTime) {
@@ -609,17 +598,17 @@ define([
           let minutes = Math.floor(leavel2 / (60 * 1000)); // 计算剩余的分钟数
           let result = '';
           if(days) {
-            result += days + '天'
+            result += days + Base.getText('天')
           }
           if(hours) {
-            result += hours + '时'
+            result += hours + Base.getText('时')
           }
           if(minutes) {
-            result += minutes + '分钟'
+            result += minutes + Base.getText('分钟')
           }
           return result;
         }
-        return '0分钟';
+        return '0' + Base.getText('分钟');
       }
     };
 

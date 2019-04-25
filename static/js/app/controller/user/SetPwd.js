@@ -29,10 +29,7 @@ define([
         $('#oldLoginPwd').attr('placeholder', base.getText('请输入原密码', langType));
         $('#newLoginPwd').attr('placeholder', base.getText('请输入6-16位的新密码', langType));
         $('#renewLoginPwd').attr('placeholder', base.getText('请再次输入新密码', langType));
-        if(langType == 'EN'){
-            $('title').text('Login password- blockchain technology application experimental platform');
-        }
-        $('title').text('登录密码-区块链技术应用实验平台');
+        $('title').text(base.getText('登录密码-区块链技术应用实验平台'));
         base.hideLoadingSpin();
         addListener();
     }

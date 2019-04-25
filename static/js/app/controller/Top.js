@@ -53,6 +53,14 @@ define([
         $('.store_gm').text(base.getText('区块链游戏'));
         $('.store_car').text(base.getText('二手车兑换'));
         $('.store_ye').text(base.getText('游戏余额'));
+        $('.active-news .hyxx').html('您有活跃消息');
+        $('.active-news .bt').html('标题');
+        $('.active-news .mj').html('买家');
+        $('.active-news .jg').html('价格');
+        $('.active-news .sl').html('数量');
+        $('.active-news .mj').html('卖家');
+        $('.active-news .zffs').html('支付方式');
+        $('.active-news .zt').html('状态');
 
         if(langType === 'EN'){
             $('.lang_select option.l-en').attr('selected', true);
@@ -83,8 +91,8 @@ define([
         $("#footTeTui").html(FOOT_TETUI)
         $("#footEmail").html(FOOT_EMAIL)
         if (base.isLogin()) {
-            if(sessionStorage.getItem("nickname")) {
-                $("#head-user-wrap .nickname").text(sessionStorage.getItem("nickname"))
+            if(localStorage.getItem("nickname")) {
+                $("#head-user-wrap .nickname").text(localStorage.getItem("nickname"))
                 $("#head-user-wrap").removeClass("hidden");
             }
         } else {
@@ -100,9 +108,9 @@ define([
     function getUnreadList() {
         TradeCtr.getUnreadDetail(base.getUserId(),0).then((item) => {
             let taget = $('#head-user-wrap .head-user .msg_num');
-            let msg_num = +taget.text();
+            let msg_num = +taget.text() > 0 ? +taget.text() : '';
             taget.show();
-            taget.text(msg_num + item.length);
+            taget.text(msg_num + (item.length > 0 ? item.length : ''));
             let messageHtml = '';
             item.forEach(function (data) {
                 messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
@@ -120,9 +128,9 @@ define([
      * 初始化Socket链接
      */
     function initSocket() {
-        // var ws = new WebSocket('ws://localhost:2802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId')); // 线上
-        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId')); // 研发
-        // var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ sessionStorage.getItem('userId')); // 测试
+        // var ws = new WebSocket('ws://localhost:2802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 线上
+        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
+        // var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 测试
         ws.onopen = function (event) {
             // ws.send('你好啊')
         }
@@ -182,7 +190,7 @@ define([
                         }, 1000);
                         TradeCtr.getOrderDetail(refNo).then((data) => {
                             activeNewsHtml =`<li class="goMessageHref" data-href="../order/order-detail.html?code=${refNo}" data-readId="${readId}">
-                            <span> <button style="border: none;padding: 0px;">聊天</button></span>
+                            <span> <button style="border: none;padding: 0px;">${base.getText('聊天')}</button></span>
                             <span>${data.buyUserInfo.nickname}</span>
                             <span>${data.tradeAmount}  ${data.tradeCurrency}</span>
                             <span>${base.formatMoney(data.countString,'',data.tradeCoin)} ${data.tradeCoin}</span>
@@ -215,13 +223,15 @@ define([
      * 消息查看
      */
     $(".head-user.message").mouseenter(function () {
-        var length = $('.down-wrap-message li').length
+        var length = $('.down-wrap-message li').length;
         if(length == 0){
             $(".head-user.message .head-triangle").hide();
+            $(".head-user.message .down-wrap-message").hide();
         }else{
             $(".head-user.message .head-triangle").show();
+          $(".head-user.message .down-wrap-message").show();
         }
-    })
+    });
 
     function changeLanguageFn(nodeObj){
         if (nodeObj.children().length > 0){
@@ -288,7 +298,7 @@ define([
         params.referCurrency = payTypeMoney;
         params.symbol = 'BTC';
         TradeCtr.getBtc(params).then((data) => {
-            $('.market-price').html('目前比特币市场价'+data.mid +'USD')
+            $('.market-price').html(base.getText('目前比特币市场价')+data.mid +'USD')
         });
     }
     function addListener() {

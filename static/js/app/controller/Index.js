@@ -71,11 +71,11 @@ define([
     // 游戏跳转
     function getUserInfo() {
         UserCtr.getUser(true).then((item) => {
-            sessionStorage.setItem("nickname", item.nickname);
-            sessionStorage.setItem("googleAuthFlag", item.googleAuthFlag);
-            sessionStorage.setItem("mobile",item.mobile ? item.mobile : '');
-            sessionStorage.setItem("email",item.email ? item.email : '');
-            sessionStorage.setItem("inviteCode", item.userId);
+            localStorage.setItem("nickname", item.nickname);
+            localStorage.setItem("googleAuthFlag", item.googleAuthFlag);
+            localStorage.setItem("mobile",item.mobile ? item.mobile : '');
+            localStorage.setItem("email",item.email ? item.email : '');
+            localStorage.setItem("inviteCode", item.userId);
 
             $("#head-user-wrap .nickname").text(item.nickname);
             $("#head-user-wrap").removeClass("hidden");
@@ -203,7 +203,7 @@ define([
                     setBazDeal.toSymbol = 'ETH';
                     setBazDeal.toUnit = base.getCoinUnit('ETH');
                 }
-                sessionStorage.setItem('setBazDeal', JSON.stringify(setBazDeal));
+                localStorage.setItem('setBazDeal', JSON.stringify(setBazDeal));
                 base.gohref(href);
             })
         });

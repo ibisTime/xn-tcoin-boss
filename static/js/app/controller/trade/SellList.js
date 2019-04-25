@@ -23,6 +23,7 @@ define([
     init();
 
     function init() {
+      $('title').text(base.getText('出售比特币'));
         base.showLoadingSpin();
       $.when(
         getCoinList(),
@@ -34,7 +35,7 @@ define([
       ).then(() => {
         getPageAdvertise(config);
         $('.buy_sell .buy').removeClass('on').siblings().addClass('on');
-        var tipHtml='<p class="tip">来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的<span class="goHref" data-href="../public/help.html">“如何提取（出售）比特币指南”</span>，了解有关如何保持安全的提示。</p>'
+        var tipHtml=`<p class="tip">${base.getText('来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的')}<span class="goHref" data-href="../public/help.html">“${base.getText('如何提取（出售）比特币指南')}”</span>，${base.getText('了解有关如何保持安全的提示')}。</p>`;
         $("#content").before(tipHtml);
       });
     }
@@ -97,6 +98,16 @@ define([
         $('#buyAmount').attr('placeholder', base.getText('请输入您出售的金额'));
         $('#buyEth').attr('placeholder', base.getText('请输入您出售的数量'));
         $('#buyBtn').html(base.getText('立即出售'));
+        $('.advertise-index-left .gmbtb').html(`<i class="icon-check"></i>${base.getText('购买比特币')}`);
+        $('.advertise-index-left .csbtb').html(`<i class="icon-check"></i>${base.getText('出售比特币')}`);
+        $('.advertise-index-left .amount').text(base.getText('输入数额'));
+        $('.advertise-index-left #payTypeMoney').attr('placeholder', '输入数额');
+        $('.advertise-index-left .nickname').attr('placeholder', '请输入完整用户名');
+        $('#searchBtn .search-txt').text(base.getText('搜索'));
+        $('#bestSearchBtn .search-txt').text(base.getText('请给我最好的'));
+        $('.kfjg').text(base.getText('开放出价'));
+        $('.csrhbf').text(base.getText('您可以出售任何部分'));
+        $('.zwgg').text(base.getText('暂无广告'));
 
         if(langType === 'EN'){
             $('.search-wrap .searchType-wrap').css('width', '200px');
@@ -145,7 +156,7 @@ define([
             totalData: data.totalCount,
             jumpIptCls: 'pagination-ipt',
             jumpBtnCls: 'pagination-btn',
-            jumpBtn: base.getText('确定', langType),
+            jumpBtn: base.getText('确定'),
             isHide: true,
             callback: function(_this) {
                 if (_this.getCurrent() != config.start) {
@@ -270,7 +281,7 @@ define([
                             <span class="num">+${item.userStatistics.beiHaoPingCount}</span>
                         </p>
                         <p class="n-dist goHref" data-href="../user/user-detail.html?userId=${item.user.userId}&tradeType=0">
-                            <samp><i>${interval}前查看过</i></samp>
+                            <samp><i>${interval}${base.getText('前查看过')}</i></samp>
                         </p>
                     </td>
                     <td class="payType">
@@ -343,7 +354,7 @@ define([
         });
 
         $("#searchBtn,#bestSearchBtn").click(function() {
-            if($(this).children('span').text() == '请给我最好的'){
+            if($(this).children('span').text() === base.getText('请给我最好的')){
                 $('#bestSearchBtn').attr('data-type','bestSearch');
             }
             if ($("#searchConWrap .payTypeAmount").val()) {

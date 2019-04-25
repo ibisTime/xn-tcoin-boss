@@ -13,10 +13,7 @@ define([
 
     function init() {
         base.showLoadingSpin();
-        if(langType == 'EN'){
-            $('title').text('blockchain technology application experimental platform');
-        }
-        $('title').text('区块链技术应用实验平台');
+        $('title').text(base.getText('区块链技术应用实验平台'));
         //$('.fy_help').html(base.getText('帮助中心222'));
 
         $(".head-nav-wrap .help").addClass("active");

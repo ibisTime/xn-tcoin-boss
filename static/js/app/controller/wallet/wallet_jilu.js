@@ -10,7 +10,7 @@ define([
     let langType = localStorage.getItem('langType') || 'ZH';
     let userCTSList = [];
 
-    let statusList = {}
+    let statusList = {};
     let typeList = {
         '0': base.getText('买入', langType),
         '1': base.getText('卖出', langType)
@@ -34,6 +34,7 @@ define([
         $('.date_li').text(base.getText('下单日期', langType));
         $('.wajl-en_zt').text(base.getText('状态', langType));
         $('.wajl-en_cz').text(base.getText('操作', langType));
+        $('.zwmx').text(base.getText('暂无明细'));
         if(langType == 'EN'){
             $('title').text('orders records- blockchain technology application experimental platform');
         }

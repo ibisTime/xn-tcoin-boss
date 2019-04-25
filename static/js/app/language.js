@@ -215,18 +215,6 @@ var LANGUAGE = {
         'ZH': '为什么要选择？',
         'EN': 'WHY CHOOSE?'
     },
-    '支持多种数字货币的币币交易与场外交易，买卖自由、双向交易、快速方便': {
-        'ZH': '支持多种数字货币的币币交易与场外交易，买卖自由、双向交易、快速方便',
-        'EN': 'Transactions support multiple digital currency;<br/>safe, two-way trading, quick and easy'
-    },
-    'SSL、多重加密等银行级别安全技术，十年技术安全团队、多重保障资产安全': {
-        'ZH': 'SSL、多重加密等银行级别安全技术，十年技术安全团队、多重保障资产安全',
-        'EN': 'Bank-level security technologies, such as SSL, multiple encryption;<br/>multiple safeguards of fund security'
-    },
-    '支持多终端交易，WEB、APP行情及时掌握，快速交易，贴心服务，全球市场，交易随时随地': {
-        'ZH': '支持多终端交易，WEB、APP行情及时掌握，快速交易，贴心服务，全球市场，交易随时随地',
-        'EN': 'support multi-terminal transactions, grasp market information timely, transact fast & trade anywhere, anytime'
-    },
     '支持多种数字货币的币币交易与场外交易': {
         'ZH': '支持多种数字货币的币币交易与场外交易',
         'EN': 'Transactions of fiat and exchange which support multiple digital currency'

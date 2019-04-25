@@ -26,7 +26,7 @@ define([
             json = json || {};
             json["systemCode"] = SYSTEM_CODE;
             json["companyCode"] = SYSTEM_CODE;
-            var token = sessionStorage.getItem("token");
+            var token = localStorage.getItem("token");
             token && (json["token"] = token);
             var param = {
                 code: code,
@@ -50,9 +50,9 @@ define([
             }
             return cache[code][cache_url].pipe(function(res) {
                 if (res.errorCode == "4") {
-                    sessionStorage.removeItem("userId"); //userId
-                    sessionStorage.removeItem("token"); //token
-                    sessionStorage.setItem("l-return", location.pathname + location.search);
+                    localStorage.removeItem("userId"); //userId
+                    localStorage.removeItem("token"); //token
+                    localStorage.setItem("l-return", location.pathname + location.search);
                     // 登录
                     let msg = '';
                     if(langType == 'EN'){

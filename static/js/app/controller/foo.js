@@ -63,25 +63,25 @@ define([
       base.hideLoadingSpin();
       let html = `
         <li class="foo-li">
-            <h2 class="foo-en_gj">工具</h2>
+            <h2 class="foo-en_gj">${base.getText('工具')}</h2>
             <ul>
-                <li class="help en-help goHref" data-href="../public/help.html">帮助中心</li>
+                <li class="help en-help goHref" data-href="../public/help.html">${base.getText('帮助中心')}</li>
             </ul>
         </li>
         <li class="foo-li">
-            <h2 class="foo-en_tk">关于我们</h2>
+            <h2 class="foo-en_tk">${base.getText('关于我们')}</h2>
             <ul>
-                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324210756951530028">平台介绍</li>
-                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324210922546490941">联系我们</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324210756951530028">${base.getText('平台介绍')}</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324210922546490941">${base.getText('联系我们')}</li>
             </ul>
         </li>
         <li class="foo-li">
-            <h2 class="foo-en_tk">条款说明</h2>
+            <h2 class="foo-en_tk">${base.getText('条款说明')}</h2>
             <ul>
-                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211009909218167">用户协议</li>
-                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211106413304900">隐私条款</li>
-                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211134448529203">法律声明</li>
-                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211158117569107">费率说明</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211009909218167">${base.getText('用户协议')}</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211106413304900">${base.getText('隐私条款')}</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211134448529203">${base.getText('法律声明')}</li>
+                <li class="goHref foo-en_pt" data-href="../public/help.html?code=WZ20190324211158117569107">${base.getText('费率说明')}</li>
             </ul>
         </li>
       `;

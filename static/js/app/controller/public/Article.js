@@ -15,7 +15,7 @@ define([
         if(langType == 'EN'){
             $('title').text(' blockchain technology application experimental platform');
         }
-        $('title').text('区块链技术应用实验平台');
+        $('title').text(base.getText('区块链技术应用实验平台'));
         $(".aboutUs").html(base.getText('关于我们'));
         $(".introduce").html(base.getText('平台介绍'));
         $(".contact").html(base.getText('联系我们'));

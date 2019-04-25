@@ -60,6 +60,7 @@ define([
         $('.en_wait').text(base.getText('我信任的', langType));
         $('.en_waitme').text(base.getText('信任我的', langType));
         $('.en_nowait').text(base.getText('我屏蔽的', langType));
+        $('.zwgg').text(base.getText('暂无广告'));
     }
 
     // 初始化分页器
@@ -133,7 +134,7 @@ define([
 					    <div class="txt2"><p>${base.formatMoney(item.toUserInfo.userStatistics.totalTradeCountBtc,'','BTC')} + BTC</p><samp>${base.getText('历史交易', langType)}</samp></div>
 					</td>
 					<td>
-					    跟他交易过${item.toUserInfo.userStatistics.betweenTradeTimes}次
+					    ${base.getText('跟他交易过')}${item.toUserInfo.userStatistics.betweenTradeTimes}${base.getText('次')}
                     </td>
 				</tr>`;
         }

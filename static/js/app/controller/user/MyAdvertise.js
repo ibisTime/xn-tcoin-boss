@@ -9,7 +9,7 @@ define([
     'app/controller/public/DealLeft'
 ], function(base, AccountCtr, GeneralCtr, TradeCtr, pagination, Top, Foo, DealLeft) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var type = base.getUrlParam("adverType") || "buy"; // buy: 购买，sell:出售
+    var type = base.getUrlParam("adverType") || "sell"; // buy: 购买，sell:出售
     var coin = base.getUrlParam("coin") || 'BTC'; // wait
     var adsStatusValueList = {}; // 广告狀態
     var config = {
@@ -66,6 +66,7 @@ define([
         $('.en_yj').text(base.getText('溢价比例', langType));
         $('.createDatetime').text(base.getText('创建时间', langType));
         $('.status').text(base.getText('交易状态', langType));
+        $('.zwgg').text(base.getText('暂无广告'));
     }
     // 初始化交易记录分页器
     function initPagination(data) {
@@ -132,7 +133,7 @@ define([
                 //已上架
                 // <div class="am-button am-button-red mr20 doDownBtn" data-code="${item.code}">${base.getText('下架', langType)}</div>
                 if (item.status == '0') {
-                    operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
+                    operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
                 } else if (item.status == "1"){
                   operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
                   tipHtml=`<p style="
@@ -141,15 +142,15 @@ define([
                     font-size: 12px;
                     color: #d83b37;
                     "
-                  >您的出价当前未公开显示,请存入<span class="goHref" style="color: #E9967A;" data-href="../wallet/wallet.html">保证金(${trade_bail})</span></p>`
+                  >${base.getText('您的出价当前未公开显示,请存入')}<span class="goHref" style="color: #E9967A;" data-href="../wallet/wallet.html">${base.getText('保证金')}(${trade_bail})</span></p>`
                 }else if (item.status == "2") {//已下架
-                
+                  operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
                 }
             }
         if (type == 'buy') {
-            operationHtml += `<div class="goHref am-button am-button-red" data-href="../trade/buy-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">查看</div>`
+            operationHtml += `<div class="goHref am-button am-button-red" data-href="../trade/buy-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">${base.getText('查看')}</div>`
         } else if (type == 'sell') {
-            operationHtml += `<div class="goHref  am-button am-button-red" data-href="../trade/sell-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">查看</div>`
+            operationHtml += `<div class="goHref  am-button am-button-red" data-href="../trade/sell-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">${base.getText('查看')}</div>`
         }
         setTimeout(() => {
           if(item.status === "2") {
@@ -172,7 +173,7 @@ define([
         <td class="price">${item.truePrice ? item.truePrice.toFixed(2) : '-'} ${item.truePrice ? item.tradeCurrency : ''} </td>
         <td class="price">${(item.premiumRate * 100).toFixed(2) + '%'}</td>
         <td class="createDatetime">${base.formatDate(item.createDatetime)} </td>
-        <td class="status tc">${item.status=="-1"?base.getText('交谈中', langType) + ','+adsStatusValueList[item.status]:adsStatusValueList[item.status]}</td>
+        <td class="status tc">${item.status=="-1"?base.getText('交谈中') + ','+adsStatusValueList[item.status]:adsStatusValueList[item.status]}</td>
           <td>${operationHtml}</td>
     </tr>`;
 
@@ -202,7 +203,7 @@ define([
                 if(+adsStatus !== 2) {
                   TradeCtr.downAdvertise(adsCode).then(() => {
                     base.hideLoadingSpin();
-                    base.showMsg(base.getText('操作成功', langType));
+                    base.showMsg(base.getText('操作成功'));
                     setTimeout(function() {
                       base.showLoadingSpin();
                       config.start = 1;
@@ -220,7 +221,7 @@ define([
                 base.showLoadingSpin();
                 TradeCtr.upAdvertise(adsCode).then(() => {
                   base.hideLoadingSpin();
-                  base.showMsg(base.getText('操作成功', langType));
+                  base.showMsg(base.getText('操作成功'));
                   setTimeout(function() {
                     base.showLoadingSpin();
                     config.start = 1;

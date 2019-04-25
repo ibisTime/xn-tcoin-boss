@@ -23,19 +23,20 @@ define([
         $('.pj-en_sfhp').text(base.getText('是否好评', langType));
         $('.pj-en_nr').text(base.getText('评价内容', langType));
         $('.pj-en_sj').text(base.getText('评价时间', langType));
+        $('.pj-en_d').html(`${base.getText('对')}</samp><samp class="fl tc_red_i userName"></samp><samp class="fl k-fb pj-en_dpj">${base.getText('的评价')}`);
+        $('.zwpl').html(base.getText('暂无评论'));
 
         if(langType == 'EN'){
             $('.p-zh').addClass('none');
             $('.p-en').removeClass('none');
-            $('title').text('evaluate- blockchain technology application experimental platform');
         }
-        $('title').text('评价-区块链技术应用实验平台');
+        $('title').text(base.getText('评价-区块链技术应用实验平台'));
         base.showLoadingSpin();
         $('.userName').text(nickname);
         $.when(
             userEvaluate()
         ).then((data1, data2) => {
-           
+        
         })
 
     }
@@ -83,7 +84,7 @@ define([
             totalData: data.totalCount,
             jumpIptCls: 'pagination-ipt',
             jumpBtnCls: 'pagination-btn',
-            jumpBtn: base.getText('确定', langType),
+            jumpBtn: base.getText('确定'),
             isHide: true,
             callback: function(_this) {
                 if (_this.getCurrent() != config.start) {

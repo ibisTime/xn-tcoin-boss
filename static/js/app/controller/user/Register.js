@@ -24,9 +24,8 @@ define([
         if(langType == 'EN'){
             $('.login-form').addClass('en-login-form');
             $('.form-item').addClass('en-form-item');
-            $('title').text('Register- blockchain technology application experimental platform');
         }
-        $('title').text('注册-区块链技术应用实验平台');
+        $('title').text(base.getText('注册-区块链技术应用实验平台'));
         $(".head-button-wrap .button-login").removeClass("hidden");
         base.showLoadingSpin();
         $('.title').text(base.getText('注册', langType));
@@ -41,6 +40,12 @@ define([
         $('#mobile').attr('placeholder', base.getText('请输入手机号', langType));
         $('#smsCaptcha').attr('placeholder', base.getText('请输入验证码', langType));
         $('#loginPwd').attr('placeholder', base.getText('请输入6-16位的登录密码', langType));
+        $('#nickname1').attr('placeholder', base.getText('请输入用户名'));
+        $('#email').attr('placeholder', base.getText('请输入邮箱'));
+        $('#captcha').attr('placeholder', base.getText('请输入验证码'));
+        $('#loginPwd1').attr('placeholder', base.getText('请输入6-16位的登录密码'));
+        $('#subBtn1').html( base.getText('注册'));
+        $('.zcxy').html( base.getText('注册协议'));
 
 
 
@@ -71,10 +76,10 @@ define([
                     UserCtr.login(loginParams).then((data) => {
                         base.setSessionUser(data);
                         UserCtr.getUser(true).then((item) => {
-                            sessionStorage.setItem("nickname", item.nickname);
-                            sessionStorage.setItem("googleAuthFlag", item.googleAuthFlag);
-                            sessionStorage.setItem("mobile", item.mobile);
-                            sessionStorage.setItem("inviteCode", item.userId);
+                            localStorage.setItem("nickname", item.nickname);
+                            localStorage.setItem("googleAuthFlag", item.googleAuthFlag);
+                            localStorage.setItem("mobile", item.mobile);
+                            localStorage.setItem("inviteCode", item.userId);
                             base.hideLoadingSpin();
                             setTimeout(() => {
                                 base.showMsg(base.getText('登录成功', langType))
@@ -97,10 +102,10 @@ define([
                 UserCtr.login(loginParams).then((data) => {
                     base.setSessionUser(data);
                     UserCtr.getUser(true).then((item) => {
-                        sessionStorage.setItem("nickname", item.nickname);
-                        sessionStorage.setItem("googleAuthFlag", item.googleAuthFlag);
-                        sessionStorage.setItem("email", item.email ? item.email: '');
-                        sessionStorage.setItem("inviteCode", item.userId);
+                        localStorage.setItem("nickname", item.nickname);
+                        localStorage.setItem("googleAuthFlag", item.googleAuthFlag);
+                        localStorage.setItem("email", item.email ? item.email: '');
+                        localStorage.setItem("inviteCode", item.userId);
                         base.hideLoadingSpin();
                         setTimeout(() => {
                             base.showMsg(base.getText('登录成功', langType))
@@ -150,7 +155,8 @@ define([
         _registerForm1.validate({
             'rules': {
                 "nickname1": {
-                    required: true
+                    required: true,
+                    nickname: true
                 },
                 "email": {
                     required: true,

@@ -29,14 +29,13 @@ define([
         $('.ph-en_aq').text(base.getText('安全设置', langType) + '>');
         $('.ph-en_sj').text(base.getText('手机号', langType));
         $('.title').text(base.getText('绑定手机号', langType));
+        $('.gjxz').text(base.getText('国家选择'));
+        $('.cancelBtn').text(base.getText('关闭'));
         $('#getVerification1').text(base.getText('获取手机验证码', langType));
         $('#subBtn').text(base.getText('确定', langType));
         $('#mobile').attr('placeholder', base.getText('请输入手机号', langType));
         $('#captcha').attr('placeholder', base.getText('手机验证码', langType));
-        if(langType == 'EN'){
-            $('title').text('Cellphone number- blockchain technology application experimental platform');
-        }
-        $('title').text('手机号-区块链技术应用实验平台');
+        $('title').text(base.getText('手机号-区块链技术应用实验平台'));
         getPayCoinList();
         base.hideLoadingSpin();
         addListener();
@@ -58,8 +57,8 @@ define([
       $("#countryCode").attr('data-code', defaultData.code);
       $("#countryCode").css("background-image", `url('${base.getPic(defaultData.pic)}')`);
       $("#interCode").attr('data-code', defaultData.interCode);
-      sessionStorage.setItem('countryCode',$('#countryCode').attr('data-code'));
-      sessionStorage.setItem('interCode',$('#interCode').attr('data-code'));
+      localStorage.setItem('countryCode',$('#countryCode').attr('data-code'));
+      localStorage.setItem('interCode',$('#interCode').attr('data-code'));
       $("#interCode").text(defaultData.interCode);
       
     }, base.hideLoadingSpin);
@@ -69,7 +68,7 @@ define([
         return UserCtr.setCurrencyPhone(params).then(() => {
             base.hideLoadingSpin();
             base.showMsg(base.getText('设置成功', langType))
-            sessionStorage.setItem("mobile", mobile);
+            localStorage.setItem("mobile", mobile);
             setTimeout(function() {
                 base.gohrefReplace("../user/security.html")
             }, 800)
@@ -80,7 +79,7 @@ define([
         return UserCtr.detPhone(params,smsCaptcha).then(() => {
             base.hideLoadingSpin();
             base.showMsg(base.getText('设置成功', langType))
-            sessionStorage.setItem("mobile", mobile);
+            localStorage.setItem("mobile", mobile);
             setTimeout(function() {
                 // base.gohrefReplace("../user/security.html")
             }, 800)
@@ -96,8 +95,8 @@ define([
         $("#countryCode").css("background-image", `url('${base.getPic(_this.attr('data-pic'))}')`);
         $("#interCode").attr('data-code', _this.attr('data-interCode'));
         $("#interCode").text(_this.attr('data-interCode'));
-        sessionStorage.setItem('countryCode',$('#countryCode').attr('data-code'));
-        sessionStorage.setItem('interCode',$('#interCode').attr('data-code'));
+        localStorage.setItem('countryCode',$('#countryCode').attr('data-code'));
+        localStorage.setItem('interCode',$('#interCode').attr('data-code'));
         $("#countryDialog").addClass('hidden')
       });
       $("#getVerification1").stop().click(function () {
@@ -135,8 +134,8 @@ define([
         if($('#mobile').val().trim() !== '' || $('#captcha').val().trim() !== '') {
           base.showLoadingSpin();
           let params = {};
-          params.countryCode = sessionStorage.getItem('countryCode')
-          params.interCode = sessionStorage.getItem('interCode')
+          params.countryCode = localStorage.getItem('countryCode')
+          params.interCode = localStorage.getItem('interCode')
           params.smsCaptcha = $('#captcha').val();
           params.mobile = $('#mobile').val();
           if(type == 1){

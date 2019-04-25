@@ -74,6 +74,9 @@ define([
         $('#commentDialog .fy_cp').html(base.getText('差评'));
         $('#commentDialog #pjText').attr('placeholder', base.getText('快來评价吧'));
         $('#commentDialog .subBtn').html(base.getText('提交'));
+        $('.user-order-list .state').html(base.getText('国家'));
+        $('.user-order-list .zwgg').html(base.getText('暂无广告'));
+        $('.user-order-list .zwjl').html(base.getText('暂无记录'));
     }
 
     // 初始化分页器
@@ -198,10 +201,6 @@ define([
             var tmpl = user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '-';
             photoHtml = `<div class="photo"><div class="noPhoto">${tmpl}</div></div>`
         }
-        // if (item.status != "-1") {
-        //     let countNum = parseFloat(base.formatMoney(item.countString, '', item.tradeCoin));
-        //     quantity = countNum ? ((Math.floor(parseFloat(countNum) * 1000)) / 1000).toFixed(8)  + item.tradeCoin : '-';
-        // }
          $(".orderDetail-operation-btn").html(operationHtml)
         return `<tr data-code="${item.code}">
 					<td class="nickname">
@@ -251,7 +250,7 @@ define([
         })
         // 已结束
         $('.tradeDetail-container .titleStatus .end').click(function() {
-            if($(this).text() === '已结束') {
+            if($(this).text() === base.getText('已结束')) {
               base.gohref("../order/hisorder-list.html");
             }
         });
@@ -260,7 +259,7 @@ define([
         $(document).on("click", ".orderDetail-operation-btn .cancelBtn", function() {
             var orderCode = $(this).attr("data-ocode");
             base.confirm(base.getText('确认取消交易？'), base.getText('取消'), base.getText('确定')).then(() => {
-                base.showLoadingSpin()
+                base.showLoadingSpin();
                 TradeCtr.cancelOrder(orderCode).then(() => {
                     base.hideLoadingSpin();
                     base.showMsg(base.getText('操作成功'));
@@ -276,7 +275,7 @@ define([
         $(document).on("click", ".orderDetail-operation-btn .payBtn", function() {
             var orderCode = $(this).attr("data-ocode");
             base.confirm(base.getText('确认标记打款？'), base.getText('取消'), base.getText('确定')).then(() => {
-                base.showLoadingSpin()
+                base.showLoadingSpin();
                 TradeCtr.payOrder(orderCode).then(() => {
                     base.hideLoadingSpin();
                     if(document.getElementById('audioOrderDetail').muted != false){
@@ -330,7 +329,7 @@ define([
                     $("#arbitrationDialog").addClass("hidden");
                     setTimeout(function() {
                         base.showLoadingSpin();
-                        $("#form-wrapper .textarea-item").val("")
+                        $("#form-wrapper .textarea-item").val("");
                         getPageOrder(true)
                     }, 1500)
                 }, base.hideLoadingSpin)
@@ -349,7 +348,7 @@ define([
         $(document).on("click", ".orderDetail-operation-btn .releaseBtn", function() {
             var orderCode = $(this).attr("data-ocode");
             base.confirm(base.getText('确认解冻货币？'), base.getText('取消'), base.getText('确定')).then(() => {
-                base.showLoadingSpin()
+                base.showLoadingSpin();
                 TradeCtr.releaseOrder(orderCode).then(() => {
                     base.hideLoadingSpin();
 

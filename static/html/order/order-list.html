@@ -11,7 +11,7 @@
 <body>
     <link rel="import" href="../top/top.html?__inline">
     <audio muted src="/images/audio-message2.mp3"  id="audioPay"></audio>
-    <div class="user-container">
+    <div class="user-container user-order-list">
         <div class="bg_fff fr" style="margin-bottom: 60px;">
             <div class="trade-container order-container b_e bg_fff tradeDetail-container">
                 <div class="titleWrap wp100 over-hide b_e_b">
@@ -61,7 +61,7 @@
                                 <div class="arbitration-content">
                                     <form class="form-wrapper form-wrapper-noIcon" id="form-wrapper">
                                         <div class="form-item form-item-textarea b_e">
-                                            <textarea style="resize: none;" class="textarea-item fy_reason" name="reason" placeholder="请填写您申请仲裁的理由"></textarea>
+                                            <textarea style="resize: none;" class="textarea-item fy_reason" name="reason" placeholder=""></textarea>
                                         </div>
                                     </form>
                                 </div>
@@ -112,8 +112,8 @@
                     <div class="fl">
                         <ul class="titleStatus over-hide">
                             <!-- wait -->
-                            <li class="buy on" data-coin="BTC" data-type="buy" data-href="../order/order-list.html?adverType=buy&coin=BTC"></li>
-                            <li class="sell" data-coin="BTC" data-type="sell" data-href="../order/order-list.html?adverType=sell&coin=BTC"></li>
+                            <li class="sell on" data-coin="BTC" data-type="sell" data-href="../order/order-list.html?adverType=sell&coin=BTC"></li>
+                            <li class="buy" data-coin="BTC" data-type="buy" data-href="../order/order-list.html?adverType=buy&coin=BTC"></li>
                         </ul>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                                 <td class="" style="width: 50px;"></td>
                                 <td class="code" ></td>
                                 <td class="fy_type" ></td>
-                                 <td class="state" style="width: 50px;">国家</td>
+                                 <td class="state" style="width: 50px;"></td>
                                 <td class="price en_jg" ></td>
                                 <!--<td class="quantity" style="width: 115px;"></td>-->
                                 <td class="price en_yj"></td>
@@ -141,7 +141,7 @@
                         </table>
                         <div class="no-data hidden">
                             <img src="../../images/no-detail.png" />
-                            <p>暂无广告</p>
+                            <p class="zwgg"></p>
                         </div>
                     </div>
                 </div>
@@ -168,7 +168,7 @@
             </div>
             <div class="no-data hidden">
                 <img src="../../images/no-detail.png" />
-                <p>暂无记录</p>
+                <p class="zwjl"></p>
             </div>
         </div>
     </div>

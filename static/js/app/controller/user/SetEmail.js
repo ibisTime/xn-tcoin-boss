@@ -29,11 +29,7 @@ define([
         $('#subBtn').text(base.getText('确定', langType));
         $('#email').attr('placeholder', base.getText('请输入邮箱', langType));
         $('#captcha').attr('placeholder', base.getText('邮箱验证码', langType));
-
-        if(langType == 'EN'){
-            $('title').text('mailbox-FUNMVP blockchain technology application experimental platform');
-        }
-        $('title').text('邮箱-区块链技术应用实验平台');
+        $('title').text(base.getText('邮箱-区块链技术应用实验平台'));
         base.hideLoadingSpin();
         addListener();
     }
@@ -42,8 +38,8 @@ define([
     function setEmail(email, smsCaptcha) {
         return UserCtr.setEmail(email, smsCaptcha).then(() => {
             base.hideLoadingSpin()
-            base.showMsg(base.getText('设置成功', langType))
-            sessionStorage.setItem("email", email);
+            base.showMsg(base.getText('设置成功', langType));
+          localStorage.setItem("email", email);
             setTimeout(function() {
                 base.gohrefReplace("../user/security.html")
             }, 800)

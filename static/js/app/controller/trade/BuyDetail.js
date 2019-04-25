@@ -14,17 +14,6 @@ define([
     var isDetail = !!base.getUrlParam("isD"); //是否我的广告查看详情
     var userId = '';
     var nickname = '';
-  var bizTypeList = {
-    "0": base.getText('支付宝', langType),
-    "1": base.getText('微信', langType),
-    "2": base.getText('银联转账', langType),
-    "3": base.getText('苹果礼品卡', langType),
-    "4": base.getText('steam礼品卡', langType),
-    "5": base.getText('银行转账', langType),
-    "6": base.getText('尼日利亚银行转账', langType),
-    "7": base.getText('Paypal 贝宝', langType),
-    "8": base.getText('西联', langType)
-  };
     var config = {
         adsCode: code,
         tradePrice: 0
@@ -68,23 +57,47 @@ define([
     }
     function setHtml() {
         $('title').text(base.getText('购买详情') + '-' +base.getText('区块链技术应用实验平台'));
-        $('.en-buy_jy').text(base.getText('交易次数', langType));
-        $('.en-buy_xr').text(base.getText('信任人数', langType));
-        $('.en-buy_hp').text(base.getText('好评率', langType));
-        $('.en-buy_ls').text(base.getText('历史成交', langType));
-        $('.sp-lx').text(base.getText('联系对方', langType));
-        $('.en-buy_bj').text(base.getText('报价', langType) + ':');
-        $('.en-buy_xe').text(base.getText('交易限额', langType) + ':');
-        $('.en-buy_sl').text(base.getText('交易数量', langType) + ':');
-        $('.en-buy_fk').text(base.getText('付款方式', langType) + ':');
-        $('.en-buy_fkqx').text(base.getText('付款期限', langType) + ':');
-        $('.en-buy_mjly').text(base.getText('卖家留言', langType) + ':');
-        $('.en-buy_mmds').text(base.getText('您想购买多少', langType) + '?');
+        $('.en-buy_jy').text(base.getText('交易次数'));
+        $('.en-buy_xr').text(base.getText('信任人数'));
+        $('.en-buy_hp').text(base.getText('好评率'));
+        $('.en-buy_ls').text(base.getText('历史成交'));
+        $('.sp-lx').text(base.getText('联系对方'));
+        $('.en-buy_bj').text(base.getText('报价') + ':');
+        $('.en-buy_xe').text(base.getText('交易限额') + ':');
+        $('.en-buy_sl').text(base.getText('交易数量') + ':');
+        $('.en-buy_fk').text(base.getText('付款方式') + ':');
+        $('.en-buy_fkqx').text(base.getText('付款期限') + ':');
+        $('.en-buy_mjly').text(base.getText('卖家留言') + ':');
+        $('.en-buy_mmds').text(base.getText('您想购买多少') + '?');
         // $('.en-buy_ggsy').text(base.getText('点击此处获得帮助', langType));
-        $('.en-buy_fz').text(base.getText('分钟', langType));
-        $('.en-buy_tx').text(base.getText('交易提醒', langType));
+        $('.en-buy_fz').text(base.getText('分钟'));
+        $('.en-buy_tx').text(base.getText('交易提醒'));
         $('.warnWrap .warn-txt1').html(base.getText('提醒：请确认价格再下单,下单彼此交易的'));
         $('.warnWrap .warn-txt2').html(base.getText('将被托管锁定，请放心购买。'));
+        $('.buy-detail-container .en-buy_ggsy').html(base.getText('点击此处获取帮助'));
+        $('.buy-detail-container .en-buy_poundage').html(base.getText('手续费') + '：0 BTC');
+        $('.buy-detail-container #buyAmount').attr('placeholder', base.getText('请输入您购买的金额'));
+        $('.buy-detail-container #buyEth').attr('placeholder', base.getText('请输入您购买的数量'));
+        $('#buyBtn .buy-now').html(base.getText('立即购买'));
+        $('.buy-detail-container .buy-info .zdj').html(`${base.getText('最低为')}<span class="buy-info-weighter min"></span>`);
+        $('.buy-detail-container .buy-info .zdjy').html(`${base.getText('最大交易')}<span class="buy-info-weighter max"></span>`);
+        $('.buy-detail-container .buy-info .mykq').html(`${base.getText('每一块钱将花费您')}<span class="buy-info-weighter rate"></span>`);
+        $('.buy-detail-container .buy-info .scjg').html(`${base.getText('市场价格为每比特币')}<span class="buy-info-weighter price"></span>（${base.getText('您可以购买任意分之一的比特币')}）`);
+        $('.buy-detail-container .buy-quick-condition .buy-quick-title').html(base.getText('快速出价概览'));
+        $('.buy-detail-container .buy-cjtk .buy-quick-title').html(`<span class="buy-title"></span><span class="goHref" data-href="../public/help.html">${base.getText('社区提示')}</span>`);
+        $('.buy-detail-container .detail-container-right .buy-user-online').html(`${base.getText('已查看')}<span class="interval"></span>${base.getText('前')}`);
+        $('.buy-detail-container .detail-container-right .buy-user-sy').html(`${base.getText('声誉')}<span class="buy-user-sy-plus"></span>/<span class="buy-user-sy-negative"></span>`);
+        $('.buy-detail-container .buy-share-title').html(base.getText('分享该出价') + '：');
+        $('.buy-detail-container .jymm').html(base.getText('交易密码'));
+        $('.buy-detail-container #moneyPow').attr('placeholder', base.getText('请输入交易密码'));
+        $('.buy-detail-container #submitMon .subBtn').html(base.getText('确认'));
+        $('.buy-detail-container #submitMon .closeBtn').html(base.getText('取消'));
+        $('.buy-detail-container .xdqr').html(base.getText('下单确认'));
+        $('.buy-detail-container .gmjg').html(base.getText('购买价格'));
+        $('.buy-detail-container .gmje').html(base.getText('购买金额'));
+        $('.buy-detail-container .gmsl').html(base.getText('购买数量'));
+        $('.buy-detail-container #submitDialog .subBtn').html(base.getText('确认购买'));
+        $('.buy-detail-container #submitDialog .closeBtn').html(base.getText('放弃购买'));
     }
 
     //获取详情
@@ -119,9 +132,9 @@ define([
 
             $("#nickname").html(data.user.nickname);
             if(data.user.idNo){
-                $('.rz').text(base.getText('已认证', langType)).addClass('sp-yrz');
+                $('.rz').text(base.getText('已认证')).addClass('sp-yrz');
             }else{
-                $('.rz').text(base.getText('未认证', langType)).addClass('sp-wrz');
+                $('.rz').text(base.getText('未认证')).addClass('sp-wrz');
             }
             if (data.status == "1" && isDetail) {
                 $("#doDownBtn").removeClass("hidden");
@@ -136,7 +149,6 @@ define([
             $("#leaveMessage").html(data.leaveMessage.replace(/\n/g, '<br>'))
             $("#limit").html(limit);
             $('#countString').html(totalCountString);
-            $("#payType").html(bizTypeList[data.payType])
             $("#payLimit").html(data.payLimit)
 
             $("#truePrice").html(Math.floor(data.truePrice * 100) / 100 + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
@@ -147,19 +159,19 @@ define([
             $('.buy-info .rate').html(data.truePrice + data.tradeCurrency);
             $('.buy-info .price').html(data.marketPrice + data.tradeCurrency);
             $('.buy-cjtk').append(`<span>${data.item}</span>`);
-            $('.buy-cjtk .buy-quick-title .buy-title').html(data.user.nickname + '的出价条款');
+            $('.buy-cjtk .buy-quick-title .buy-title').html(data.user.nickname + base.getText('的出价条款'));
             $('.buy-user-nickname').html(data.user.nickname);
-            $('.buy-talk').html('安全托管+与'+data.user.nickname+'实时交谈');
+            $('.buy-talk').html(base.getText('安全托管') + base.getText('与') +data.user.nickname+base.getText('实时交谈'));
             if(data.fixTrade == '' ||  data.fixTrade == undefined){
-                $('.item-buyAmount').removeClass('hidden')
-                $('.item-selectAmount').addClass('hidden')
+                $('.item-buyAmount').removeClass('hidden');
+                $('.item-selectAmount').addClass('hidden');
                 $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
                 $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
             }else{
-                $('.item-buyAmount').addClass('hidden')
+                $('.item-buyAmount').addClass('hidden');
                 $('.item-selectAmount').removeClass('hidden')
-                $('#buyEth').attr('readonly','true')
-                var selectHtml ='<option value="">请选择</option>';
+                $('#buyEth').attr('readonly','true');
+                var selectHtml =`<option value="">${base.getText('请选择')}</option>`;
                 data.fixTradeList.forEach(function(item) {
                     selectHtml += `<option  value="${item}">${item}</option>`;
                 })
@@ -218,7 +230,7 @@ define([
         tagsHtml += `<span>${tag2}</span>`;
       }
       if(!tag1 && !tag2) {
-        tagsHtml += `<span>暂无</span>`;
+        tagsHtml += `<span>${base.getText('暂无')}</span>`;
       }
       $('.buy-quick-condition').append(tagsHtml);
     }
@@ -280,7 +292,7 @@ define([
                 document.getElementById('audioBuyDetail').muted = false;
             }
             document.getElementById('audioBuyDetail').play();
-                base.showMsg(base.getText('下单成功', langType))
+                base.showMsg(base.getText('下单成功'));
                 setTimeout(function() {
                     base.gohref("../order/order-detail.html?code="+data.code);
                 }, 3000);
@@ -313,14 +325,14 @@ define([
                         // $("#submitDialog").removeClass("hidden")
                         buyETH();
                     } else {
-                        base.showMsg(base.getText('请输入您购买的金额', langType))
+                        base.showMsg(base.getText('请输入您购买的金额'))
                     }
                 }else {
                     if ($("#amounSelect").val() != '') {
                         // $("#submitDialog").removeClass("hidden")
                         buyETH();
                     } else {
-                        base.showMsg(base.getText('请选择您购买的金额', langType))
+                        base.showMsg(base.getText('请选择您购买的金额'))
                     }
                 }
 
@@ -366,12 +378,12 @@ define([
         })
         //下架-点击
         $("#doDownBtn").click(function() {
-            base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType)).then(() => {
+            base.confirm(base.getText('确认下架此广告？'), base.getText('取消'), base.getText('确定')).then(() => {
                 base.showLoadingSpin()
                 TradeCtr.downAdvertise(code).then(() => {
                     base.hideLoadingSpin();
 
-                    base.showMsg(base.getText('操作成功', langType));
+                    base.showMsg(base.getText('操作成功'));
                     $("#doDownBtn").addClass("hidden");
                     setTimeout(function() {
                         base.gohref("./index.html?mod=gm");
@@ -381,12 +393,12 @@ define([
         })
         $(document).on("click", ".buy-operation .doDownBtn", function() {
             var adsCode = $(this).attr("data-code");
-            base.confirm(base.getText('确认下架此广告？', langType), base.getText('取消', langType), base.getText('确定', langType)).then(() => {
+            base.confirm(base.getText('确认下架此广告？'), base.getText('取消'), base.getText('确定')).then(() => {
                 base.showLoadingSpin()
                 TradeCtr.downAdvertise(adsCode).then(() => {
                     base.hideLoadingSpin();
 
-                    base.showMsg(base.getText('操作成功', langType));
+                    base.showMsg(base.getText('操作成功'));
                     setTimeout(function() {
                         base.showLoadingSpin();
                         config.start = 1;

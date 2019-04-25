@@ -28,31 +28,24 @@
                 <div class="hisorder-content">
                     <div class="list">
                         <div class="item ">
-                            <samp class="hb" style="font-size: 14px">订单类型：</samp>
+                            <samp class="hb" style="font-size: 14px"></samp>
                             <select class="payType ml5" id="payType">
-                                <option value="">选择订单类型</option>
-                                <option value="0">买入</option>
-                                <option value="1">卖出</option>
+
                             </select>
                             <i class="icon icon-down"></i>
                         </div>
                         <div805066 class="item ">
-                            <samp class="fkfs" style="font-size: 14px">交易状态：</samp>
+                            <samp class="fkfs jyzt" style="font-size: 14px"></samp>
                             <select class="payStatic ml5" id="payStatic">
-                                <option value="">选择交易状态</option>
-                                <option value="2">待评价</option>
-                                <option value="3">已完成</option>
-                                <option value="4">已取消</option>
-                                <option value="6">仲裁买家胜</option>
-                                <option value="7">仲裁卖家胜</option>
+
                             </select>
                             <i class="icon icon-down"></i>
                         </div805066>
                         <div class="time-item">
-                            <samp class="fkfs">创建时间：</samp>
+                            <samp class="fkfs cjsj"></samp>
                             <div class="form-group">
                                 <div class='input-group date' id='createDatetimeStart' data-date-format="yyyy-mm-dd">
-                                    <input type='text' class="form-control" placeholder="请选择"/>
+                                    <input type='text' class="form-control h_qxz" placeholder=""/>
                                     <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -60,7 +53,7 @@
                             </div>
                             <div class="form-group">
                                 <div class='input-group date' id='createDatetimeEnd' data-date-format="yyyy-mm-dd">
-                                    <input type='text' class="form-control"placeholder="请选择" />
+                                    <input type='text' class="form-control"placeholder="" />
                                     <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -69,9 +62,9 @@
                         </div>
                     </div>
                     <div class="hisorder-btn">
-                        <span class="hisorder-reset-btn">重置</span>
-                        <span class="hisorder-search-btn">搜索</span>
-                        <span class="hisorder-export-btn">导出</span>
+                        <span class="hisorder-reset-btn"></span>
+                        <span class="hisorder-search-btn"></span>
+                        <span class="hisorder-export-btn"></span>
                     </div>
                 </div>
             </div>
@@ -186,9 +179,30 @@
             $(".hisorder-export-btn").click(function () {
               $("#content-order").table2excel({
                 exclude  : ".noExl", //过滤位置的 css 类名
-                filename : "已结束订单-" + new Date().getTime() + ".xls" //文件名称
+                filename : `${getText('已结束订单')}-` + new Date().getTime() + ".xls" //文件名称
               });
             });
+            function getText(text) {
+              let lang = localStorage.getItem('lang') || 'ZH';
+              if(lang == '' || !lang){
+                lang = NOWLANG
+              }
+              var t = LANGUAGE[text] && LANGUAGE[text][lang] ? LANGUAGE[text][lang] : '';
+              if (!LANGUAGE[text] || t == '') {
+                if (!LANGUAGE[text]) {
+                  t = text;
+                  console.log('[' + text + ']没有翻译配置');
+                } else {
+                  if (!LANGUAGE[text]['EN']) {
+                    t = LANGUAGE[text]['ZH_CN']
+                  } else {
+                    t = LANGUAGE[text]['EN'];
+                  }
+                  console.log(lang + ': [' + text + ']没有翻译配置');
+                }
+              }
+              return t;
+            }
           });
       })
   })

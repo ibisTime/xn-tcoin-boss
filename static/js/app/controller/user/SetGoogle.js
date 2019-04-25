@@ -33,10 +33,7 @@ define([
         $('#secret').attr('placeholder', base.getText('密钥', langType));
         $('#googleCaptcha').attr('placeholder', base.getText('谷歌验证码', langType));
 
-        if(langType == 'EN'){
-            $('title').text('Google verification code- blockchain technology application experimental platform');
-        }
-        $('title').text('谷歌验证码-区块链技术应用实验平台');
+        $('title').text(base.getText('谷歌验证码-区块链技术应用实验平台'));
         base.showLoadingSpin();
         if (type == 1) {
             $('#form-wrapper div').eq(0).addClass('none');
@@ -56,7 +53,7 @@ define([
     function openGoogle(params) {
         return UserCtr.openGoogle(params).then(() => {
             base.hideLoadingSpin()
-            sessionStorage.getItem("googleAuthFlag", 'true');
+            localStorage.getItem("googleAuthFlag", 'true');
             base.showMsg(base.getText('开启成功', langType));
             setTimeout(function() {
                 base.gohrefReplace("../user/security.html")
@@ -68,7 +65,7 @@ define([
     function closeGoogle(googleCaptcha, smsCaptcha) {
         return UserCtr.closeGoogle(googleCaptcha, smsCaptcha).then(() => {
             base.hideLoadingSpin()
-            sessionStorage.getItem("googleAuthFlag", 'false');
+            localStorage.getItem("googleAuthFlag", 'false');
             base.showMsg(base.getText('关闭成功', langType))
             setTimeout(function() {
                 base.gohrefReplace("../user/security.html")

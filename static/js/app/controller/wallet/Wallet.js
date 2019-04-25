@@ -117,6 +117,49 @@ define([
         $('.wall-en_ky').text(base.getText('可用', langType));
         $('.wall-en_dj').text(base.getText('冻结', langType));
         $('.wall-en_cz').text(base.getText('操作', langType));
+        $('.wallet-account-wrap .freez-amount').html(`${base.getText('冻结金额')}: <a></a> BTC`);
+        $('.wallet-account-wrap .add-amount').html(`<a href="../index.html">${base.getText('购买比特币')}</a>`);
+        $('.wallet-account-wrap .crbzj').html(`${base.getText('存入')}<a class="accept-bail"></a>BTC${base.getText('保证金')}`);
+        $('.wallet-account-wrap .tip').html(base.getText('就像黄金一样，您的比特币US dollars价值因市场而异，这是正常的，您仍有相同比特币金额'));
+        $('.wallet-account-wrap .send-btc').html(base.getText('发送比特币'));
+        $('.wallet-account-wrap .yxbtb').html(base.getText('以下为您的比特币存款地址'));
+        $('.wallet-account-wrap .copy-address').html(base.getText('复制地址'));
+        $('.tradeRecord-export-btn').html(base.getText('导出'));
+        $('.tradeRecord-time .kssj').html(base.getText('开始时间') + '：');
+        $('.tradeRecord-time .jssj').html(base.getText('结束时间') + '：');
+        $('.tradeRecord-time .form-control').attr('placeholder', base.getText('请选择'));
+        $('.hisorder-btn .tradeRecord-search-btn').html(base.getText('搜索'));
+        $('.hisorder-btn .tradeRecord-reset-btn').html(base.getText('重置'));
+        $('.zwmx').html(base.getText('暂无明细'));
+        $('.zfba').html(`<span class="currency"></span>${base.getText('支付宝')}(<span class="zf-apliy"></span>)`);
+        $('#wAddressDialog .addBtn').html(base.getText('取消支付'));
+        $('#wAddressDialog .subBtn').html(base.getText('标记付款'));
+        $('#addWAddressDialog .tjxdz').html(`${base.getText('添加新')}<span class="currency"></span>${base.getText('地址')}`);
+        $('#addWAddressDialog .bq').html(base.getText('标签') + '：');
+        $('#addWAddressDialog .tbdz').html(base.getText('提币地址') + '：');
+        $('#addWAddressDialog .ggyzm').html(base.getText('谷歌验证码') + '：');
+        $('#addWAddressDialog .yzm').html(base.getText('验证码') + '：');
+        $('#addWAddressDialog .jymm').html(base.getText('交易密码') + '：');
+        $('#getVerification').html(base.getText('获取验证码'));
+        $('#addWAddressDialog .szwrz').html(base.getText('将该账户设置为认证账户'));
+        $('#addWAddressDialog .remark').html(base.getText('向认证账户中提现不再输入交易密码、谷歌验证码'));
+        $('#addWAddressDialog .closeBtn').html(base.getText('关闭'));
+        $('#addWAddressDialog .subBtn').html(base.getText('确认地址'));
+        $('#addWAddressDialog .srbq').attr('placeholder', base.getText('请输入标签'));
+        $('#addWAddressDialog .tbdz').attr('placeholder', base.getText('请输入提币地址'));
+        $('#addWAddressDialog .srggyzm').attr('placeholder', base.getText('请输入谷歌验证码'));
+        $('#addWAddressDialog .sryzm').attr('placeholder', base.getText('请输入验证码'));
+        $('#addWAddressDialog .srjymm').attr('placeholder', base.getText('请输入交易密码'));
+        
+        $('#sendBtcDialog .ctwfs').html(base.getText('从T网钱包发送'));
+        $('#sendBtcDialog .sendBtn').html(base.getText('继续'));
+        $('#sendBtcDialog .wallet-account').html(`${base.getText('可用')} <span>0</span> BTC`);
+        $('#sendBtcDialog .rate').html(`${base.getText('手续费')}:<span>0</span> BTC`);
+        $('#sendBtcDialog .btbje').html(base.getText('比特币金额') + '：');
+        $('#sendBtcDialog .mbbtb').html(base.getText('目标比特币地址') + '：');
+        $('#sendBtcDialog .jymm').html(base.getText('交易密码') + '：');
+        $('#sendBtcDialog .srdfbtb').attr('placeholder', base.getText('输入接收方的比特币地址'));
+        $('#sendBtcDialog .srzjmm').attr('placeholder', base.getText('输入您的资金密码'));
     }
     //总资产
     function getUserAllMoneyX() {
@@ -237,7 +280,7 @@ define([
             let erWm = [];
             data.accountList.map((item, i) => {
                 if(item.currency.toLowerCase() === 'btc') {
-                    sessionStorage.setItem('accountNumber', item.accountNumber);
+                    localStorage.setItem('accountNumber', item.accountNumber);
                   ulElement += buildHtml(item, i);
                   erWm.push(item.address);
                   require(['domReady!'], function (doc) {
@@ -921,7 +964,7 @@ define([
                         var qrcode = new QRCode(`qrcode2`, item);
                         qrcode.makeCode(item);
                     })
-                    sessionStorage.setItem('accountNumber', item.accountNumber);
+                    localStorage.setItem('accountNumber', item.accountNumber);
                 }
             })
         });
@@ -942,7 +985,7 @@ define([
             if (data.tradepwdFlag) {
                 $("#sendBtcDialog").removeClass("hidden");
             } else if (!data.tradepwdFlag) {
-                base.showMsg(base.getText('请先设置交易密码'))
+                base.showMsg(base.getText('请先设置交易密码'));
                 setTimeout(function () {
                     base.gohref("../user/setTradePwd.html?type=1")
                 }, 1800)
@@ -961,7 +1004,7 @@ define([
         params.applyUser = base.getUserId();
         params.applyNote = '提现';
         params.payCardInfo = 'BTC';
-        params.accountNumber = sessionStorage.getItem('accountNumber');
+        params.accountNumber = localStorage.getItem('accountNumber');
         params.amount = base.formatMoneyParse(params.amount, '', params.payCardInfo);
         if(!params.tradePwd && !params.payCardNo) {
             base.showMsg(base.getText('请填写完整', langType));

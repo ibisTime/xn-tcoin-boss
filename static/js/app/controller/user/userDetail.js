@@ -20,8 +20,8 @@ define([
     let payTypeList = [];
     let platTagList = [];
     let tradeTypeList = {
-        '1': '购买',
-        '0': '出售'
+        '1': base.getText('购买'),
+        '0': base.getText('出售')
     }
     var config = {
         start: 1,
@@ -45,10 +45,24 @@ define([
         $('.k-fb').text(base.getText('发布的广告', langType));
         $('.titleWrap .buy').text(base.getText('在线购买', langType));
         $('.titleWrap .sell').text(base.getText('在线出售', langType));
-        // $('.currency').text(base.getText('交易币种', langType));
-        // $('.oayType').text(base.getText('付款方式', langType));
-        // $('.limit').text(base.getText('交易限额', langType));
-        // $('.price').text(base.getText('价格', langType));
+        $('.userDetail-container .yck').html(`${base.getText('已查看')}<i id="interval"></i>`);
+        $('.userDetail-container .zmsy').html(base.getText('正面声誉'));
+        $('.userDetail-container .zxsy').html(base.getText('中性声誉'));
+        $('.userDetail-container .fmsy').html(base.getText('负面声誉'));
+        $('.userDetail-container .user-left-wrap .yz').html(base.getText('验证'));
+        $('.userDetail-container .user-left-wrap .xx').html(base.getText('信息'));
+        $('.userDetail-container .jyhzf').html(`<samp class="jiaoyifangCount"></samp> ${base.getText('个交易合作方')}`);
+        $('.userDetail-container .cjy').html(`<samp class="jiaoYiCount"></samp> ${base.getText('次交易')}`);
+        $('.userDetail-container .jyl').html(`<samp class="tradeCounBtc"></samp> BTC ${base.getText('交易量')}`);
+        $('.userDetail-container .xrf').html(`${base.getText('信任方')} <samp class="beiXinRenCount"></samp> ${base.getText('人')}`);
+        $('.userDetail-container .pbf').html(`${base.getText('屏蔽方')} <samp class="pingBiCount"></samp> ${base.getText('人')}`);
+        $('.userDetail-container .yjr').html(`${base.getText('已加入')} <samp id="registerTime"></samp>`);
+        $('.userDetail-container .title-wrap').html(`${base.getText('向')}<samp class="nickname"></samp><samp id="tradeType"></samp>${base.getText('比特币')}`);
+        $('.userDetail-container .public-container .price').html(base.getText('价格'));
+        $('.userDetail-container .public-container .fanwei').html(base.getText('范围'));
+        $('.userDetail-container .public-container .action').html(base.getText('支付方式'));
+        $('.userDetail-container .public-container .speed').html(base.getText('速度'));
+        $('.zwgg').html(base.getText('暂无广告'));
         $('#tradeType').html(tradeTypeList[tradeType]);
 
         base.showLoadingSpin();
@@ -221,9 +235,9 @@ define([
 
         let speenHtml = '';
         if (item.releaseTime) {
-            speenHtml = item.releaseTime + '分钟';
+            speenHtml = item.releaseTime + base.getText('分钟');
         } else {
-            speenHtml = '<i class="new">新</i>'
+            speenHtml = `<i class="new">${base.getText('新')}</i>`
         }
 
         return `<tr>

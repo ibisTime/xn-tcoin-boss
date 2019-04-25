@@ -41,27 +41,15 @@ define([
     }
 
     function init() {
-        // $('.tradeRecord-wrap-title').text(base.getText('交易明细', langType));
-        // $('.wamx-en_qb').text(base.getText('全部', langType));
-        // $('.wamx-en_cb').text(base.getText('充币', langType));
-        // $('.wamx-en_tb').text(base.getText('提现', langType));
-        // $('.wamx-en_mr').text(base.getText('交易买入', langType));
-        // $('.wamx-en_mc').text(base.getText('交易卖出', langType));
-        // $('.wamx-en_gm').text(base.getText('场外承兑商购买', langType));
-        // $('.wamx-en_cs').text(base.getText('场外承兑商出售', langType));
-        // $('.wamx-en_sxf').text(base.getText('交易手续费', langType));
-        // $('.wamx-en_tx').text(base.getText('提现手续费', langType));
-        // $('.wamx-en_fee').text(base.getText('手续费', langType));
-        // $('.wamx-en_dj').text(base.getText('冻结解冻', langType));
         $('.wamx-en_sj').text(base.getText('日期', langType));
         $('.wamx-en_yue').text(base.getText('余额', langType));
         $('.wamx-en_lx').text(base.getText('金额', langType));
         $('.wamx-en_sm').text(base.getText('描述', langType));
-        if(langType == 'EN'){
+          if(langType == 'EN'){
             $('title').text('order details- blockchain technology application experimental platform');
-        }
-        $('title').text('订单明细-区块链技术应用实验平台');
-
+          }else {
+            $('title').text('订单明细-区块链技术应用实验平台');
+          }
         base.showLoadingSpin();
         $.when(
             GeneralCtr.getDictList({
@@ -72,7 +60,7 @@ define([
                 bizTypeValueList[item.dkey] = item.dvalue
             })
             setTimeout(function(){
-                accountNumber = sessionStorage.getItem('accountNumber');
+                accountNumber = localStorage.getItem('accountNumber');
                 config = {
                     start: 1,
                     limit: 10,
@@ -193,7 +181,7 @@ define([
         var createDatetimeStart =$('#createDatetimeStart input').val();
         var createDatetimeEnd =$('#createDatetimeEnd input').val();
         if( createDatetimeStart == '' || createDatetimeEnd == ''){
-          base.showMsg('请选择完整');
+          base.showMsg(base.getText('请选择完整'));
           return;
         }else {
           createDatetimeStart = base.formateDatetime(createDatetimeStart);

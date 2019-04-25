@@ -7,7 +7,7 @@ define([
     'app/controller/Top',
     'app/controller/foo'
 ], function(base, pagination, GeneralCtr, UserCtr, AccountCtr, Top, Foo) {
-    var inviteCode = sessionStorage.getItem("inviteCode");
+    var inviteCode = localStorage.getItem("inviteCode");
     let langType = localStorage.getItem('langType') || 'ZH';
 
     var config = {
@@ -27,7 +27,6 @@ define([
 
 
         $.when(
-            getInvitationHistory(config),
             getInvitation(),
             getSysConfig(),
             getInvitaFn(),
@@ -44,20 +43,27 @@ define([
 
     function setHtml() {
         $('title').text(base.getText('邀请好友') + '-' +base.getText('区块链技术应用实验平台'));
-        $('.invi-en_yq').text(base.getText('成功邀请', langType));
-        $('.invi-en_sy').text(base.getText('注册分佣奖励', langType));
+        $('.invi-en_yq').text(base.getText('成功邀请'));
+        $('.invi-en_sy').text(base.getText('注册分佣奖励'));
         $('.invi-en_lj').text('交易分佣');
-        $('#qrcodeBtn').text(base.getText('图片邀请', langType));
-        $('#invitationBtn').text(base.getText('文字邀请', langType));
-        $('.sel-span').text(base.getText('邀请记录', langType));
-        $('.invi-en_yhm').text(base.getText('用户名', langType));
-        $('.invi-en_zc').text(base.getText('注册时间', langType));
-        $('.invi-en_jy').text(base.getText('交易总额', langType));
-        $('.fy_ren').text('(' + base.getText('人', langType) + ')');
-        $('.fy_hdgz').text(base.getText('活动规则', langType));
-        $('.fy_smewm').text(base.getText('扫描二维码邀请注册', langType));
-        $('.fy_fzljsm').text(base.getText('复制下面这段文字...', langType));
-        $('.invi-en_yjn').text(`${base.getText('注册分佣奖励')}(FMVP)`);
+        $('#qrcodeBtn').text(base.getText('图片邀请'));
+        $('#invitationBtn').text(base.getText('文字邀请'));
+        $('.sel-span').text(base.getText('邀请记录'));
+        $('.invi-en_yhm').text(base.getText('用户名'));
+        $('.invi-en_zc').text(base.getText('注册时间'));
+        $('.invi-en_jy').text(base.getText('交易总额'));
+        $('.fy_ren').text('(' + base.getText('人') + ')');
+        $('.fy_hdgz').text(base.getText('活动规则'));
+        $('.fy_smewm').text(base.getText('扫描二维码邀请注册'));
+        $('.fy_fzljsm').text(base.getText('复制下面这段文字') + '...');
+        $('.invitation-wrap .zzzzh').text(base.getText('总资产折合'));
+        $('.invitation-wrap .tip').text(base.getText('邀请账户资产转至T网，方可出售或提币。'));
+        $('.invitation-wrap #transferBtn').text(base.getText('转账至T网'));
+        $('.invitation-wrap .zzdtw').text(base.getText('转至T网账户'));
+        $('.invitation-wrap .kyye').html(`${base.getText('可用余额')} <span id="modal_bal" style="color: red;">0</span> BTC`);
+        $('.invitation-wrap #transferMoney').attr('placeholder', base.getText('请输入您转入的资产数量'));
+        $('.invitation-wrap #transfer-btn-qx').text(base.getText('取消'));
+        $('.invitation-wrap #transfer-btn-qd').text(base.getText('确定'));
     }
 
     // 获取邀请好友的链接
@@ -104,13 +110,12 @@ define([
             totalData: data.totalCount,
             jumpIptCls: 'pagination-ipt',
             jumpBtnCls: 'pagination-btn',
-            jumpBtn: base.getText('确定', langType),
+            jumpBtn: base.getText('确定'),
             isHide: true,
             callback: function(_this) {
                 if (_this.getCurrent() != config.start) {
                     base.showLoadingSpin();
                     config.start = _this.getCurrent();
-                    getInvitationHistory(config);
                 }
             }
         });
@@ -130,11 +135,11 @@ define([
             base.hideLoadingSpin();
             $(".invitation-top").html(bannerHtml);
         }, (msg) => {
-            base.showMsg(msg || base.getText('加载失败', langType));
+            base.showMsg(msg || base.getText('加载失败'));
         });
     }
     //获取推荐人历史
-    function getInvitationHistory(refresh) {
+    /*function getInvitationHistory(refresh) {
         return UserCtr.getInvitationHistory(config, refresh).then((data) => {
             if(data.list.length === 0) {
                 $('.no-data').removeClass('hidden');
@@ -148,7 +153,7 @@ define([
                     let tradeAwardCount = base.formatMoney(`${item.tradeAwardCount}`, '', 'FMVP');
                     let regAwardCount = base.formatMoney(`${item.regAwardCount}`, '', 'FMVP');
                     let awardCount = (parseFloat(tradeAwardCount) + parseFloat(regAwardCount)) + ' FMVP ';
-                    let tradeAwardTxt = `(${base.getText('交易佣金', langType)}：${tradeAwardCount})`;
+                    let tradeAwardTxt = `(${base.getText('交易佣金')}：${tradeAwardCount})`;
                     if(item.tradeAwardCount != 0){
                         awardCount += tradeAwardTxt;
                     }
@@ -163,7 +168,7 @@ define([
             config.start == 1 && initPagination(data);
             base.hideLoadingSpin();
         }, base.hideLoadingSpin)
-    }
+    }*/
 
     function addListener() {
         $("#qrcodeBtn").click(function() {
@@ -186,15 +191,15 @@ define([
             let params = {};
             let amount =Number($('.transfer-input input').val());
             if(amount == ''){
-                base.showMsg(base.getText('请输入转入资产数量', langType));
+                base.showMsg(base.getText('请输入转入资产数量'));
                 return;
             }
-            params.applyUser = sessionStorage.getItem("nickname");
+            params.applyUser = localStorage.getItem("nickname");
             params.userId = base.getUserId();
             params.currency = 'BTC';
             params.amount = base.formatMoneyParse(amount, '',  params.currency);
             return GeneralCtr.transferT(params).then((data) => {
-                base.showMsg(base.getText('操作成功', langType));
+                base.showMsg(base.getText('操作成功'));
                 $("#transferDialog").addClass("hidden");
                 $('#transferMoney').val('');
             }, function () {

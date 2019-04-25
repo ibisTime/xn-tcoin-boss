@@ -20,10 +20,7 @@ define([
         $('.finPwd').text(base.getText('忘记密码', langType) + '?');
         $('#loginName').attr('placeholder', base.getText('请输入账号', langType));
         $('#loginPwd').attr('placeholder', base.getText('请输入6-16位的登录密码', langType));
-        if(langType == 'EN'){
-            $('title').text('Login- blockchain technology application experimental platform');
-        }
-        $('title').text('登录-区块链技术应用实验平台');
+        $('title').text(base.getText('登录-区块链技术应用实验平台'));
         initSwiperBanner();
         addListener();
         setTimeout(function() {
@@ -52,11 +49,11 @@ define([
             base.setSessionUser(data);
             base.showMsg(base.getText('登录成功', langType));
             UserCtr.getUser(true).then((item) => {
-                sessionStorage.setItem("nickname", item.nickname);
-                sessionStorage.setItem("googleAuthFlag", item.googleAuthFlag);
-                sessionStorage.setItem("mobile",item.mobile ? item.mobile : '');
-                sessionStorage.setItem("email",item.email ? item.email : '');
-                sessionStorage.setItem("inviteCode", item.userId);
+                localStorage.setItem("nickname", item.nickname);
+                localStorage.setItem("googleAuthFlag", item.googleAuthFlag);
+                localStorage.setItem("mobile",item.mobile ? item.mobile : '');
+                localStorage.setItem("email",item.email ? item.email : '');
+                localStorage.setItem("inviteCode", item.userId);
                 base.hideLoadingSpin();
                 // if (!item.mobile){
                 //     setTimeout(() => {
@@ -66,7 +63,7 @@ define([
                 //         }, 2500)
                 //     }, 1500);
                 // }else{
-                    
+                
                 // }
                 setTimeout(function() {
                     base.goReturn()

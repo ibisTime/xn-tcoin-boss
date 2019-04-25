@@ -64,8 +64,8 @@ var NOWLANG = localStorage.getItem('langType') || 'ZH';
         }
     } else {
         if(gameFlag && userId && token) {
-            sessionStorage.setItem("userId", userId);
-            sessionStorage.setItem("token", token);
+            localStorage.setItem("userId", userId);
+            localStorage.setItem("token", token);
         }
     }
 })();

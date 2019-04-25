@@ -5,7 +5,7 @@ define([
         //更新登录时间
         updateLoginTime() {
             return Ajax.get("805092", {
-                userId: sessionStorage.getItem("userId")
+                userId: localStorage.getItem("userId")
             }, true)
         },
         // 获取已发布币种列表

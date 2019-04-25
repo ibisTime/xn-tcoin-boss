@@ -71,6 +71,26 @@ define([
     $('#commentDialog .fy_cp').html(base.getText('差评'));
     $('#commentDialog #pjText').attr('placeholder', base.getText('快來评价吧'));
     $('#commentDialog .subBtn').html(base.getText('提交'));
+    $('.hisorder-btn .hisorder-reset-btn').html(base.getText('重置'));
+    $('.hisorder-btn .hisorder-search-btn').html(base.getText('搜索'));
+    $('.hisorder-btn .hisorder-export-btn').html(base.getText('导出'));
+    $('.hisorder-wrap .hb').html(base.getText('订单类型') + '<span>：</span>');
+    $('.hisorder-wrap .jyzt').html(base.getText('交易状态') + '<span>：</span>');
+    $('.hisorder-wrap .cjsj').html(base.getText('创建时间') + '<span>：</span>');
+    $('.hisorder-wrap .h_qxz').attr('placeholder', base.getText('请选择'));
+    $('.hisorder-wrap #payType').html(`
+      <option value="">${base.getText('选择订单类型')}</option>
+      <option value="0">${base.getText('买入')}</option>
+      <option value="1">${base.getText('卖出')}</option>
+    `);
+    $('.hisorder-wrap #payStatic').html(`
+      <option value="">${base.getText('选择交易状态')}</option>
+      <option value="2">${base.getText('待评价')}</option>
+      <option value="3">${base.getText('已完成')}</option>
+      <option value="4">${base.getText('已取消')}</option>
+      <option value="6">${base.getText('仲裁买家胜')}</option>
+      <option value="7">${base.getText('仲裁卖家胜')}</option>
+    `);
   }
 
   // 初始化分页器
@@ -215,7 +235,7 @@ define([
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
 					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
                     <td class="operation">
-                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}">聊天</div>
+                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}">${base.getText('聊天')}</div>
                         <samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}"></samp>
 						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}"> ></i>
                     </td>
@@ -264,7 +284,7 @@ define([
 
                 $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
             } else {
-                config.start == 1 && $("#content-order").empty()
+                config.start == 1 && $("#content-order").empty();
                 config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
             }
             config.start == 1 && initPagination(data);
@@ -281,18 +301,18 @@ define([
     })
   //条件重置
     $('.hisorder-reset-btn').click(function () {
-        $('.hisorder-wrap #payType').val('')
-        $('#createDatetimeStart input').val('')
-        $('#createDatetimeEnd input').val('')
-        $('.hisorder-wrap #payStatic').val('')
+        $('.hisorder-wrap #payType').val('');
+        $('#createDatetimeStart input').val('');
+        $('#createDatetimeEnd input').val('');
+        $('.hisorder-wrap #payStatic').val('');
         getPageOrder(config);
     })
   //添加未读消息数
   function addUnreadMsgNum() {
     if (isUnreadList && isOrderList) {
       $("#content-order tr").each(function() {
-        var _this = $(this)
-        var oCode = _this.attr("data-code")
+        var _this = $(this);
+        var oCode = _this.attr("data-code");
         if (unreadMsgList[oCode] && unreadMsgList[oCode] != '0') {
           if (unreadMsgList[oCode] >= 100) {
             _this.find(".unread").html(base.getText('未读') + '(99+)')
@@ -317,7 +337,7 @@ define([
     })
     // 已结束
     $('.tradeDetail-container .titleStatus .progress').click(function() {
-      if($(this).text() === '进行中') {
+      if($(this).text() === base.getText('进行中')) {
         base.gohref("../order/order-list.html");
       }
     });
@@ -342,7 +362,7 @@ define([
     $("#content-order").on("click", ".operation .payBtn", function() {
       var orderCode = $(this).attr("data-ocode");
       base.confirm(base.getText('确认标记打款？'), base.getText('取消'), base.getText('确定')).then(() => {
-        base.showLoadingSpin()
+        base.showLoadingSpin();
         TradeCtr.payOrder(orderCode).then(() => {
           base.hideLoadingSpin();
           base.showMsg(base.getText('操作成功'));
@@ -393,7 +413,7 @@ define([
           $("#arbitrationDialog").addClass("hidden");
           setTimeout(function() {
             base.showLoadingSpin();
-            $("#form-wrapper .textarea-item").val("")
+            $("#form-wrapper .textarea-item").val("");
             getPageOrder(true)
           }, 1500)
         }, base.hideLoadingSpin)
@@ -412,7 +432,7 @@ define([
     $("#content-order").on("click", ".operation .releaseBtn", function() {
       var orderCode = $(this).attr("data-ocode");
       base.confirm(base.getText('确认解冻货币？'), base.getText('取消'), base.getText('确定')).then(() => {
-        base.showLoadingSpin()
+        base.showLoadingSpin();
         TradeCtr.releaseOrder(orderCode).then(() => {
           base.hideLoadingSpin();
 
@@ -440,8 +460,7 @@ define([
               code:code,
               starLevel:comment,
               content:content
-          }
-          console.log(config)
+          };
           TradeCtr.commentOrder(config).then((data) => {
               base.hideLoadingSpin();
               if(data.filterFlag == '2'){

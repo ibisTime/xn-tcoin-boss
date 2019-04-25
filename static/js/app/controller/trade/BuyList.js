@@ -24,6 +24,7 @@ define([
 
     function init() {
         base.showLoadingSpin();
+        $('title').text(base.getText('购买比特币'));
         $.when(
           getCoinList(),
           setHtml(),
@@ -33,7 +34,7 @@ define([
           addListener()
         ).then(() => {
           getPageAdvertise(config);
-          var tipHtml='<p class="tip">来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的<span class="goHref" data-href="../public/help.html">“如何提取（出售）比特币指南”</span>，了解有关如何保持安全的提示。</p>'
+          var tipHtml=`<p class="tip">${base.getText('来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的')}<span class="goHref" data-href="../public/help.html">“${base.getText('如何提取（购买）比特币指南')}”</span>，${base.getText('了解有关如何保持安全的提示')}。</p>`
           $("#content").before(tipHtml);
         });
     }
@@ -93,8 +94,14 @@ define([
         $('buy_sell .sell').text(base.getText('出售比特币'));
         $('.advertisement-wrap .hb').text(base.getText('货币'));
         $('.advertisement-wrap .fkfs').text(base.getText('付款方式'));
-        $('#search-btn .search-txt').text(base.getText('搜索'));
-        $('#bestSearch-btn .search-txt').text(base.getText('请给我最好的'));
+        $('#searchBtn .search-txt').text(base.getText('搜索'));
+        $('#bestSearchBtn .search-txt').text(base.getText('请给我最好的'));
+        $('.advertise-index-left .gmbtb').html(`<i class="icon-check"></i>${base.getText('购买比特币')}`);
+        $('.advertise-index-left .csbtb').html(`<i class="icon-check"></i>${base.getText('出售比特币')}`);
+        $('.advertise-index-left .amount').text(base.getText('输入数额'));
+        $('.zwgg').text(base.getText('暂无广告'));
+        $('.advertise-index-left #payTypeMoney').attr('placeholder', '输入数额');
+        $('.advertise-index-left .nickname').attr('placeholder', '请输入完整用户名');
         if(langType === 'EN'){
             $('.search-wrap .searchType-wrap').css('width', '200px');
             $('.search-wrap .search-con').css('width', '562px');
@@ -335,7 +342,7 @@ define([
         })
 
         $("#searchBtn,#bestSearchBtn").click(function() {
-            if($(this).children('span').text() == '请给我最好的'){
+            if($(this).children('span').text() == base.getText('请给我最好的')){
                 $('#bestSearchBtn').attr('data-type','bestSearch');
             }
             var _searchType = $("#searchTypeWrap .show-wrap").attr("data-type");
