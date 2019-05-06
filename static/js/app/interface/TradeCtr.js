@@ -15,7 +15,6 @@ define([
          * @param config: {start, limit, maxPrice, minPrice,payType,tradeType(0买、1卖),userId,status,coin}
          */
         getPageAdvertiseUser(config, refresh) {
-            config.coin = '';
             return Ajax.post("625225", config, refresh);
         },
         getUserPageAdvertiseUser(config, refresh) {
@@ -107,7 +106,7 @@ define([
         },
         //获取订单详情
         getOrderDetail(code) {
-            return Ajax.get("625251", {
+            return Ajax.post("625251", {
                 code
             }, true);
         },
@@ -141,18 +140,26 @@ define([
         },
         //訂單-评价
         commentOrder(config) {
-            return Ajax.get("625245", config);
+            return Ajax.post("625245", config);
+        },
+        //訂單-修改评价
+        exitCommentOrder(config) {
+          return Ajax.post("625257", config);
         },
         //个人-评价
         userEvaluate(config) {
             return Ajax.get("628279", config);
+        },
+        // 发起投诉 625290
+        userComplaints(config) {
+          return Ajax.post("625290", config);
         },
         /**
          * 申請仲裁
          * @param config{code,reason}
          */
         arbitrationlOrder(config) {
-            return Ajax.get("625246", {
+            return Ajax.post("625246", {
                 applyUser: base.getUserId(),
                 ...config
             });
@@ -192,10 +199,10 @@ define([
         return Ajax.post("625370", name, true);
       },
       // 获取币种行情
-      getMarket(ex_type) {
+      getMarket(ex_type, symbol) {
         return Ajax.post('650101', {
           referCurrency: ex_type,
-          symbol: 'BTC'
+          symbol
         },true);
       },
       // 列表查标签
@@ -213,7 +220,6 @@ define([
       submitAdvertise(config) {
         return Ajax.get("625220", {
           userId: base.getUserId(),
-          tradeCoin: 'BTC',
           ...config
         }, true);
       },
@@ -229,6 +235,9 @@ define([
             return Ajax.post("650102", {
                 ...config
             }, true);
-        }
+        },
+      openOrder(config) {
+          return Ajax.post('625254', config);
+      }
     };
 })

@@ -6,7 +6,6 @@ define([
     if(langType == 'EN'){
         $('title').text('Fiat- blockchain technology application experimental platform');
     }
-    $('title').text(base.getText('场外交易-区块链技术应用实验平台'));
     if (!base.isLogin() && mod != 'gm' && mod != 'cs') {
         base.goLogin();
         return false;

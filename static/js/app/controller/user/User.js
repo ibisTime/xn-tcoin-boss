@@ -63,7 +63,7 @@ define([
         $('#firstName').attr('placeholder', base.getText('请输入名字'));
         $('#lastName').attr('placeholder', base.getText('请输入姓氏'));
         $('#introduce').attr('placeholder', base.getText('您的简介会出现在您的公开资料上'));
-        $('.right-top-wrap .mobile-remind').html(`${base.getText('请设置带国家/地区代码的您的电话号码。')}<samp class="cur-pointer" id="sendCode">${base.getText('发送代码')}</samp>${base.getText('必须是手机号码')}！`);
+        $('.right-top-wrap .mobile-remind').html(`${base.getText('请设置带国家/地区代码的您的电话号码。')}<samp class="cur-pointer" id="sendCode">${base.getText('发送确认码')}</samp>${base.getText('必须是手机号码')}！`);
         $('#setMobileBtn').html(base.getText('提交'));
         $('.right-top-wrap .grzl').html(base.getText('个人资料图片'));
         $('#userInfo-wrapper .xm').html(base.getText('名字'));

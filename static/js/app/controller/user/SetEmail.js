@@ -37,7 +37,7 @@ define([
     //修改/綁定邮箱
     function setEmail(email, smsCaptcha) {
         return UserCtr.setEmail(email, smsCaptcha).then(() => {
-            base.hideLoadingSpin()
+            base.hideLoadingSpin();
             base.showMsg(base.getText('设置成功', langType));
           localStorage.setItem("email", email);
             setTimeout(function() {

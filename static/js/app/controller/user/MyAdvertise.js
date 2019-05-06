@@ -12,19 +12,19 @@ define([
     var type = base.getUrlParam("adverType") || "sell"; // buy: 购买，sell:出售
     var coin = base.getUrlParam("coin") || 'BTC'; // wait
     var adsStatusValueList = {}; // 广告狀態
-    var config = {
+    let adverConfig = {
         start: 1,
         limit: 10,
         tradeType: 1,
         statusList: [0, 1,2],
-        userId: base.getUserId(),
-        coin: coin.toUpperCase()
+        userId: base.getUserId()
     }
     var typeList = {
         "buy": base.getText('购买', langType),
         "sell": base.getText('出售', langType),
     };
-    let trade_bail = '';
+    let trade_btc_bail = '';
+    let trade_usdt_bail = '';
     init();
 
     function init() {
@@ -34,22 +34,25 @@ define([
         type = type.toLowerCase();
         if (type == 'buy') {
             $("#left-wrap .buy-nav-item ." + type.toLowerCase()).addClass("on");
-            config.tradeType = 0;
+          adverConfig.tradeType = 0;
         } else if (type == 'sell') {
             $("#left-wrap .sell-nav-item ." + type.toLowerCase()).addClass("on");
-            config.tradeType = 1;
+          adverConfig.tradeType = 1;
         }
 
         GeneralCtr.getDictList({ "parentKey": "ads_status" }).then((data) => {
             data.forEach(function(item) {
                 adsStatusValueList[item.dkey] = item.dvalue;
             });
-            getPageAdvertise(); // 正式
+            getPageAdvertise(adverConfig); // 正式
         }, base.hideLoadingSpin);
         
         // 获取保证金
-      GeneralCtr.getSysConfig('trade_bail').then(data => {
-        trade_bail = data.cvalue + 'BTC';
+      GeneralCtr.getSysConfig('trade_btc_bail').then(data => {
+        trade_btc_bail = data.cvalue + 'BTC';
+      });
+      GeneralCtr.getSysConfig('trade_usdt_bail').then(data => {
+        trade_usdt_bail = data.cvalue + 'USDT';
       });
         
         addListener();
@@ -72,7 +75,7 @@ define([
     function initPagination(data) {
         $(".myAdvertise #adver-pagination .pagination").pagination({
             pageCount: data.totalPage,
-            showData: config.limit,
+            showData: adverConfig.limit,
             jump: true,
             coping: true,
             prevContent: '<img src="/static/images/arrow---left.png" />',
@@ -84,20 +87,20 @@ define([
             jumpBtn: base.getText('确定', langType),
             isHide: true,
             callback: function(_this) {
-                if (_this.getCurrent() != config.start) {
+                if (_this.getCurrent() != adverConfig.start) {
                     base.showLoadingSpin();
-                    config.start = _this.getCurrent();
-                    getPageAdvertise(config);
+                  adverConfig.start = _this.getCurrent();
+                    getPageAdvertise(adverConfig);
                 }
             }
         });
     }
 
     // 获取广告列表
-    function getPageAdvertise(refresh) {
+    function getPageAdvertise(config, refresh) {
         return TradeCtr.getPageAdvertiseUser(config, refresh).then((data) => {
             var lists = data.list;
-            if (data.list.length) {
+            if (data.list.length > 0) {
                 var html = "";
                 lists.forEach((item, i) => {
                     html += buildHtml(item);
@@ -105,10 +108,10 @@ define([
                 $("#content-adver").html(html);
                 $(".myAdvertise-container .trade-list-wrap .no-data").addClass("hidden")
             } else {
-                config.start == 1 && $("#content-adver").empty()
+              config.start == 1 && $("#content-adver").empty();
                 // config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
             }
-            config.start == 1 && initPagination(data);
+          config.start == 1 && initPagination(data);
             base.hideLoadingSpin();
         }, base.hideLoadingSpin);
 
@@ -121,17 +124,12 @@ define([
 
         //当前用户为买家
             //待发布
-            if (config.statusList == null || config.statusList.length == 1) {
+            if (adverConfig.statusList == null || adverConfig.statusList.length == 1) {
                 operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
         		 			<div class="am-button publish goHref am-button-ghost am-button-out" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('查看', langType)}</div>`
 
                 //已发布
             } else {
-                // 待发布
-                // if(item.status == '0') {
-                //operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&mod=gg&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
-                //已上架
-                // <div class="am-button am-button-red mr20 doDownBtn" data-code="${item.code}">${base.getText('下架', langType)}</div>
                 if (item.status == '0') {
                     operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
                 } else if (item.status == "1"){
@@ -142,29 +140,21 @@ define([
                     font-size: 12px;
                     color: #d83b37;
                     "
-                  >${base.getText('您的出价当前未公开显示,请存入')}<span class="goHref" style="color: #E9967A;" data-href="../wallet/wallet.html">${base.getText('保证金')}(${trade_bail})</span></p>`
+                  >${base.getText('您的出价当前未公开显示,请存入')}<span class="goHref" style="color: #E9967A;" data-href="../wallet/wallet.html">${base.getText('保证金')}(${item.tradeCoin === 'BTC' ? trade_btc_bail : trade_usdt_bail})</span></p>`
                 }else if (item.status == "2") {//已下架
                   operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
                 }
             }
         if (type == 'buy') {
-            operationHtml += `<div class="goHref am-button am-button-red" data-href="../trade/buy-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">${base.getText('查看')}</div>`
+            operationHtml += `<div class="goHref am-button am-button-red" data-href="../trade/buy-detail.html?code=${item.code}&isD=1&statusList=${adverConfig.statusList}&status=${item.status}&coin=${item.tradeCoin}&type=${type}">${base.getText('查看')}</div>`
         } else if (type == 'sell') {
-            operationHtml += `<div class="goHref  am-button am-button-red" data-href="../trade/sell-detail.html?code=${item.code}&isD=1&statusList=${config.statusList}&status=${item.status}&tradeCoin=${item.tradeCoin}&type=${type}">${base.getText('查看')}</div>`
+            operationHtml += `<div class="goHref  am-button am-button-red" data-href="../trade/sell-detail.html?code=${item.code}&isD=1&statusList=${adverConfig.statusList}&status=${item.status}&coin=${item.tradeCoin}&type=${type}">${base.getText('查看')}</div>`
         }
         setTimeout(() => {
           if(item.status === "2") {
             $(`#buyitem${item.code.substring(item.code.length-8)}`).prop('checked', false);
           }
         }, 200);
-        // console.log(operationHtml)
-        // console.log(base.getUrlParam('type'))
-        // if(base.getUrlParam('type') == 'buy'){
-        //     $(".buy-operation").html(operationHtml)
-        // }
-        // if(base.getUrlParam('type') == 'sell'){
-        //     $(".sell-operation").html(operationHtml)
-        // }
         return `<tr>
         <td><label class="switch"><input type="checkbox" id="buyitem${item.code.substring(item.code.length-8)}" checked="${item.status !== '2' ? true : false}" data-status="${item.status}" data-code="${item.code}"><div class="slider round"></div></label></td>
         <td class="code">${item.code.substring(item.code.length-8)} ${tipHtml}</td>
@@ -187,13 +177,13 @@ define([
             base.gohrefReplace("../order/order-list.html?coin=BTC" + "&adverType=" + $(this).attr("data-type").toUpperCase());
             _this.addClass("on").siblings('li').removeClass("on");
             if (_this.hasClass("wait")) {
-                config.statusList = ['0'];
+              adverConfig.statusList = ['0'];
             } else if (_this.hasClass('already')) {
-                config.statusList = ['1', '2', '3'];
+              adverConfig.statusList = ['1', '2', '3'];
             }
-            config.start = 1;
+          adverConfig.start = 1;
             base.showLoadingSpin();
-            getPageAdvertise(true);
+            getPageAdvertise(adverConfig, true);
         });
 
         $(document).on("click", "#content-adver input", function() {
@@ -206,8 +196,8 @@ define([
                     base.showMsg(base.getText('操作成功'));
                     setTimeout(function() {
                       base.showLoadingSpin();
-                      config.start = 1;
-                      getPageAdvertise(true)
+                      adverConfig.start = 1;
+                      getPageAdvertise(adverConfig, true)
                     }, 1000)
                   }, () => {
                     $(this).prop('checked', false);
@@ -224,8 +214,8 @@ define([
                   base.showMsg(base.getText('操作成功'));
                   setTimeout(function() {
                     base.showLoadingSpin();
-                    config.start = 1;
-                    getPageAdvertise(true)
+                    adverConfig.start = 1;
+                    getPageAdvertise(adverConfig, true)
                   }, 1000)
                 }, () => {
                   $(this).prop('checked', true);
@@ -233,6 +223,11 @@ define([
                 })
               }
             }
-        })
+        });
+        $('.adver-select span').click(function() {
+          $(this).addClass('set_sp').siblings().removeClass('set_sp');
+          adverConfig.coin = $(this).attr('data-coin') || '';
+          getPageAdvertise(adverConfig, true);
+        });
     }
 });

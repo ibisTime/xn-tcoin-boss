@@ -7,6 +7,7 @@ define([
     'app/interface/TradeCtr'
 ], function (base, GeneralCtr, AccountCtr, UserCtr, TencentCloudLogin,TradeCtr) {
     let langType = localStorage.getItem('langType') || 'ZH';
+    var coin = base.getUrlParam("coin") || 'BTC'; // 币种
     var firstLoad = true;
     // langPackage 配置文件
 
@@ -14,7 +15,11 @@ define([
     var typeList = {
         "buy":base.getText('出售') ,
         "sell":base.getText('购买'),
-    }
+    };
+      let coinName = {
+        'USDT': 'USDT',
+        'BTC': base.getText('比特币')
+      };
     $(document).ready(function () {
         init();
         getBTC();
@@ -27,11 +32,11 @@ define([
     // 初始化页面
     function init() {
         //中英文切换  先头部切换
-        $('.en_page').text(base.getText('购买比特币'));
-        $('.en_store').text(base.getText('出售比特币'));
+        $('.yj_sell-ul').html(`<li class="nav-cwjy goHref" data-href="../trade/sell-list.html?langType=${langType}&coin=USDT">${base.getText(`出售USDT`)}</li>`);
+        $('.yj_buy-ul').html(`<li class="nav-cwjy goHref" data-href="../index.html?langType=${langType}&coin=USDT">${base.getText(`购买USDT`)}</li>`);
+        $('.en_page').text(base.getText(`购买比特币`));
+        $('.en_store').text(base.getText(`出售比特币`));
         $('.en_deal').text(base.getText('发布广告'));
-        $('.nav-cwjy').text(base.getText('场外交易'));
-        $('.nav-bbjy').text(base.getText('币币交易'));
         $('.en_bzzx').text(base.getText('帮助中心'));
         $('#head-button-wrap .button-login').text(base.getText('登录'));
         $('#head-button-wrap .button-register').text(base.getText('注册'));
@@ -55,7 +60,7 @@ define([
         $('.store_ye').text(base.getText('游戏余额'));
         $('.active-news .hyxx').html('您有活跃消息');
         $('.active-news .bt').html('标题');
-        $('.active-news .mj').html('买家');
+        $('.active-news .maij').html('买家');
         $('.active-news .jg').html('价格');
         $('.active-news .sl').html('数量');
         $('.active-news .mj').html('卖家');
@@ -111,15 +116,30 @@ define([
             let msg_num = +taget.text() > 0 ? +taget.text() : '';
             taget.show();
             taget.text(msg_num + (item.length > 0 ? item.length : ''));
+            if(!msg_num && !item.length) {
+              taget.addClass('hidden');
+            }else {
+              taget.removeClass('hidden');
+            }
             let messageHtml = '';
             item.forEach(function (data) {
-                messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
-                    <img src="${data.smsInfo.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
+                if(data.smsInfo.title !== '到币通知') {
+                  messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}&coin=${data.smsInfo.symbol}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
+                    <img src="${data.smsInfo.type === 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                     <div class="message-text">
                         <p class="message-title">${data.smsInfo.title}</p>
                         <span class="message-content">${data.smsInfo.content}</span>
                     </div>
                 </li>`;
+                }else {
+                  messageHtml = `<li class="goMessageHref" data-href="../wallet/wallet.html" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
+                    <img src="${data.smsInfo.type === 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
+                    <div class="message-text">
+                        <p class="message-title">${data.smsInfo.title}</p>
+                        <span class="message-content">${data.smsInfo.content}</span>
+                    </div>
+                </li>`;
+                }
                 $('.down-wrap-message ul').prepend(messageHtml);
             })
         })
@@ -129,8 +149,8 @@ define([
      */
     function initSocket() {
         // var ws = new WebSocket('ws://localhost:2802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 线上
-        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
-        // var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 测试
+        // var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
+        var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 测试
         ws.onopen = function (event) {
             // ws.send('你好啊')
         }
@@ -158,7 +178,7 @@ define([
                     })
                 }
                 if(item.isNew == 0){
-                    messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}" data-refNo="${item.refNo}" data-readId="${item.readId}">
+                    messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}&coin=${item.symbol}" data-refNo="${item.refNo}" data-readId="${item.readId}">
                             <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                             <div class="message-text">
                                 <p class="message-title">${item.title}</p>
@@ -167,7 +187,7 @@ define([
                         </li>`;
                     $('.down-wrap-message ul .messge-content').prepend(messageHtml);
                 }else{
-                    messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}" data-refNo="${item.refNo}" data-readId="${item.readId}">
+                    messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}&coin=${item.symbol}" data-refNo="${item.refNo}" data-readId="${item.readId}">
                             <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                             <div class="message-text">
                                 <p class="message-title">${item.title}</p>
@@ -189,7 +209,7 @@ define([
                             document.getElementById('audio-message2').play();
                         }, 1000);
                         TradeCtr.getOrderDetail(refNo).then((data) => {
-                            activeNewsHtml =`<li class="goMessageHref" data-href="../order/order-detail.html?code=${refNo}" data-readId="${readId}">
+                            activeNewsHtml =`<li class="goMessageHref" data-href="../order/order-detail.html?code=${refNo}&coin=${data.tradeCoin}" data-readId="${readId}">
                             <span> <button style="border: none;padding: 0px;">${base.getText('聊天')}</button></span>
                             <span>${data.buyUserInfo.nickname}</span>
                             <span>${data.tradeAmount}  ${data.tradeCurrency}</span>
@@ -296,9 +316,9 @@ define([
             payTypeMoney ='USD'
         }
         params.referCurrency = payTypeMoney;
-        params.symbol = 'BTC';
+        params.symbol = coin;
         TradeCtr.getBtc(params).then((data) => {
-            $('.market-price').html(base.getText('目前比特币市场价')+data.mid +'USD')
+            $('.market-price').html(base.getText(`目前${coinName[coin]}市场价`)+data.mid +'USD')
         });
     }
     function addListener() {
@@ -307,8 +327,9 @@ define([
             base.logout()
         })
         $(".am-modal-mask").on('click', function () {
-            $(this).parent(".dialog").addClass("hidden")
-        })
+          $("#arbitrationform-wrapper .textarea-item").val("");
+          $(this).parent(".dialog").addClass("hidden");
+        });
 
         $("#head .advertise .goHref").off("click").click(function () {
             if (!base.isLogin()) {
@@ -353,20 +374,6 @@ define([
             base.gohref('../trade/advertise.html')
           }
         });
-
-        // $("#head .trade .goHref").off("click").click(function () {
-            // var thishref = $(this).attr("data-href");
-            // if ($(this).text() == '币币交易') {
-            //     base.gohref(thishref);
-            //     return false;
-            // }
-            // if (!base.isLogin()) {
-            //     base.goLogin();
-            //     return false;
-            // } else {
-            //     base.gohref(thishref)
-            // }
-        // })
 
         $("body").on('click','.isTradePwdFlag', function () {
             var _this = $(this);
@@ -441,6 +448,11 @@ define([
             $(this).siblings().removeClass('sel-li');
         });
 
-
+        $('.jybuy-list').click(function() {
+          base.gohref('../index.html');
+        });
+      $('.jysell-list').click(function() {
+        base.gohref('../trade/sell-list.html');
+      })
     }
 });

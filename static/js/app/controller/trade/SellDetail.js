@@ -26,6 +26,11 @@ define([
     var limit = '';
     var tradeCoin = 'ETH';
     let tradeCurrency = 'CNY';
+    let coin = base.getUrlParam("coin") || 'BTC';
+    let coinName = {
+      'BTC': '比特币',
+      'USDT': 'USDT'
+    };
 
     let platTagList = [];
 
@@ -65,14 +70,10 @@ define([
         $('.en-buy_jy').text(base.getText('交易次数'));
         $('.en-buy_xr').text(base.getText('信任人数'));
         $('.en-buy_hp').text(base.getText('好评率'));
-        $('.en-buy_ls').text(base.getText('历史成交'));
-        $('.sp-lx').text(base.getText('联系对方'));
         $('.en-buy_bj').text(base.getText('报价') + ':');
         $('.en-buy_xe').text(base.getText('交易限额') + ':');
         $('.en-buy_sl').text(base.getText('交易数量') + ':');
         $('.en-buy_fk').text(base.getText('付款方式') + ':');
-        $('.en-buy_fkqx').text(base.getText('付款期限') + ':');
-        $('.en-sell_mjly').text(base.getText('买家留言') + ':');
         $('.en-buy_csds').text(base.getText('你想出售多少') + '?');
         $('.en-buy_kyyy span').text(base.getText('账户可用余额') + ':' + '');
         $('.en-buy_fz').text(base.getText('分钟'));
@@ -84,12 +85,12 @@ define([
         $('.sell-detail-container #buyAmount').attr('placeholder', base.getText('请输入您想获得的金额'));
         $('.sell-detail-container #buyEth').attr('placeholder', base.getText('请输入您想获得的金额'));
         $('.sell-detail-container #buyBtn .buy-now').html(base.getText('立即出售'));
-        $('.sell-detail-container .buy-check-email .check-email-tips').html(base.getText('要购买比特币，您需要先确认您的电子邮件'));
+        $('.sell-detail-container .buy-check-email .check-email-tips').html(base.getText(`要购买${coinName[coin]}，您需要先确认您的电子邮件`));
         $('.sell-detail-container .buy-check-email .check-email-btn').html(base.getText('重新发送确认电子邮件'));
       $('.sell-detail-container .buy-info .zdj').html(`${base.getText('最低为')}<span class="buy-info-weighter min"></span>`);
       $('.sell-detail-container .buy-info .zdjy').html(`${base.getText('最大交易')}<span class="buy-info-weighter max"></span>`);
       $('.sell-detail-container .buy-info .mykq').html(`${base.getText('每一块钱将花费您')}<span class="buy-info-weighter rate"></span>`);
-      $('.sell-detail-container .buy-info .scjg').html(`${base.getText('市场价格为每比特币')}<span class="buy-info-weighter price"></span>（${base.getText('您可以购买任意分之一的比特币')}）`);
+      $('.sell-detail-container .buy-info .scjg').html(`${base.getText(`市场价格为每${coinName[coin]}`)}<span class="buy-info-weighter price"></span>（${base.getText(`您可以购买任意分之一的${coinName[coin]}`)}）`);
       $('.sell-detail-container .buy-cjtk .buy-quick-title').html(`<span class="buy-title"></span><span class="goHref" data-href="../public/help.html">${base.getText('社区提示')}</span>`);
       $('.sell-detail-container .detail-container-right .buy-user-online').html(`${base.getText('已查看')}<span class="interval"></span>${base.getText('前')}`);
       $('.sell-detail-container .detail-container-right .buy-user-sy').html(`${base.getText('声誉')}<span class="buy-user-sy-plus"></span>/<span class="buy-user-sy-negative"></span>`);
@@ -115,7 +116,7 @@ define([
             $('#limit').next().text(tradeCurrency);
             var user = data.user;
             userName = user.nickname;
-            tradeCoin = data.tradeCoin ? data.tradeCoin : 'ETH';
+            tradeCoin = data.tradeCoin ? data.tradeCoin : 'BTC';
             let totalCountString = base.formatMoney(data.totalCountString, '', tradeCoin);
             if (user.photo) {
                 tradePhoto = '<div class="photo goHref" data-href="../user/user-detail.html?coin=' + tradeCoin + '&userId=' + user.userId + ` style="background-image:url(${base.getAvatar(user.photo)})"></div>`
@@ -198,17 +199,7 @@ define([
 
           $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
           $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
-
-            // var code=base.getUrlParam('code');
-            // var status=base.getUrlParam('status');
-            // var tradeCoin=base.getUrlParam('tradeCoin');
-            // var type=base.getUrlParam('type');
-            // var operationHtml = ''
-            // if (status == '0') {
-            //     operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}&type=${type}">${base.getText('编辑')}</div>
-            //                      <div class="am-button am-button-red mr20 doDownBtn" data-code="${code}">${base.getText('下架')}</div>`
-            // }
-            // $('.sell-operation').html(operationHtml)
+          
           $.when(
                 getAccount(data.tradeCoin),
                 getUser()
@@ -302,7 +293,7 @@ define([
           }
         document.getElementById('sellOrder').play();
         setTimeout(function() {
-            base.gohref("../order/order-detail.html?code=" + data.code + "&type=sell&status=0" + "&buyUser=" + userId);
+            base.gohref("../order/order-detail.html?code=" + data.code + "&type=sell&status=0" + "&buyUser=" + userId + '&coin=' + coin, '_bank');
         }, 2000);
         base.hideLoadingSpin();
       }, base.hideLoadingSpin)

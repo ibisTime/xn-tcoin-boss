@@ -14,14 +14,12 @@ var ZENDESK_LABEL = 'search';
 var FOOT_TETUI = 'Bcoin Exchange';
 var FOOT_EMAIL = 'contact@bcoin.im';
 var COIN_DEFAULTDATA = {
-    "FMVP": { "id": "1", "coin": "FMVP", "unit": "1e18", "name": "FMVP币", "type": "0T" },
     "BTC": { "id": "2", "coin": "BTC", "unit": "1e8", "name": "比特币", "type": "1" },
-    "ETH": { "id": "3", "coin": "ETH", "unit": "1e18", "name": "以太坊", "type": "0"}
+    "USDT": { "id": "3", "coin": "USDT", "unit": "1e8", "name": "泰达币", "type": "0"}
 };
 var COIN_DEFAULTDATALIST = [
-    { "id": "1", "coin": "FMVP", "unit": "1e18", "name": "FMVP币", "type": "0T" },
     { "id": "2", "coin": "BTC", "unit": "1e8", "name": "比特币", "type": "1" },
-    { "id": "3", "coin": "ETH", "unit": "1e18", "name": "以太坊", "type": "0"}
+    { "id": "3", "coin": "USDT", "unit": "1e8", "name": "泰达币", "type": "0"}
 ];
 
 // 当前langType

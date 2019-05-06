@@ -18,13 +18,19 @@ define([
     var payTypeMoneyList = [];
   let payTypeList = [];
   let platTagList = [];
-  let tradeType = 'buy';
+  let coinName = {
+    'USDT': 'USDT',
+    'BTC': base.getText('比特币')
+  };
+  let toCoin = coin === 'BTC' ? 'USDT' : 'BTC';
 
     init();
 
     function init() {
         base.showLoadingSpin();
-        $('title').text(base.getText('购买比特币'));
+        $('title').text(base.getText(`购买${coinName[coin]}`));
+      $('.jybuy-list').attr('data-href', `../index.html?langType=${langType}&coin=${coin}`);
+      $('.yj_buy-ul').html(`<li class="nav-cwjy">${base.getText(`购买${coinName[toCoin]}`)}</li>`);
         $.when(
           getCoinList(),
           setHtml(),
@@ -34,14 +40,13 @@ define([
           addListener()
         ).then(() => {
           getPageAdvertise(config);
-          var tipHtml=`<p class="tip">${base.getText('来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的')}<span class="goHref" data-href="../public/help.html">“${base.getText('如何提取（购买）比特币指南')}”</span>，${base.getText('了解有关如何保持安全的提示')}。</p>`
+          var tipHtml=`<p class="tip">${base.getText('来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的')}<span class="goHref" data-href="../public/help.html">“${base.getText(`如何提取（购买）${coinName[coin]}指南`)}”</span>，${base.getText('了解有关如何保持安全的提示')}。</p>`
           $("#content").before(tipHtml);
         });
     }
     // 支付方式
     function getPayTypeList() {
-      return TradeCtr.getPayTypeList({ status: 1, tradeType: 1 }).then((res) => {
-        console.log(res);
+      return TradeCtr.getPayTypeList({ status: 1, tradeType: 1, symbol: coin }).then((res) => {
         base.hideLoadingSpin();
         res.map((item) => {
           payTypeList.push({
@@ -83,6 +88,7 @@ define([
     }
     function setHtml() {
         base.getDealLeftText();
+      $('.en_page').text(base.getText(`购买${coinName[coin]}`));
         $('.head-nav-wrap .index').addClass('active');
         $('.en_buyer').text(base.getText('卖家'));
         $('.en_pay').text(base.getText('支付方式'));
@@ -90,14 +96,14 @@ define([
         // $('.en_xe').text(base.getText('限额'));
         $('.en_price').text(base.getText('每个比特币的价格'));
         $('.show-search').text(base.getText('全部货币，全部付款方式'));
-        $('buy_sell .buy').text(base.getText('购买比特币'));
-        $('buy_sell .sell').text(base.getText('出售比特币'));
+        $('buy_sell .buy').text(base.getText(`购买${coinName[coin]}`));
+        $('buy_sell .sell').text(base.getText(`出售${coinName[coin]}`));
         $('.advertisement-wrap .hb').text(base.getText('货币'));
         $('.advertisement-wrap .fkfs').text(base.getText('付款方式'));
         $('#searchBtn .search-txt').text(base.getText('搜索'));
         $('#bestSearchBtn .search-txt').text(base.getText('请给我最好的'));
-        $('.advertise-index-left .gmbtb').html(`<i class="icon-check"></i>${base.getText('购买比特币')}`);
-        $('.advertise-index-left .csbtb').html(`<i class="icon-check"></i>${base.getText('出售比特币')}`);
+        $('.advertise-index-left .gmbtb').html(`<i class="icon-check"></i>${base.getText(`购买${coinName[coin]}`)}`);
+        $('.advertise-index-left .csbtb').html(`<i class="icon-check"></i>${base.getText(`出售${coinName[coin]}`)}`);
         $('.advertise-index-left .amount').text(base.getText('输入数额'));
         $('.zwgg').text(base.getText('暂无广告'));
         $('.advertise-index-left #payTypeMoney').attr('placeholder', '输入数额');
@@ -161,10 +167,11 @@ define([
 
     //分页查询广告
     function getPageAdvertise(config) {
+      console.log(config);
         return TradeCtr.getPageAdvertise(config, true).then((data) => {
             var lists = data.list;
             if($('#bestSearchBtn').attr('data-type') == 'bestSearch'){
-                base.gohref('../trade/sell-detail.html?code='+lists[0].code);
+                base.gohref('../trade/sell-detail.html?code='+lists[0].code+'&coin='+coin);
             }
             if (data.list.length) {
                 var html = "";
@@ -172,7 +179,7 @@ define([
                     html += buildHtml(item);
                 });
                 $("#content").html(html);
-                $(".trade-list-wrap .no-data").addClass("hidden")
+                $(".trade-list-wrap .no-data").addClass("hidden");
 
                 $("#content .operation .goHref").off("click").click(function() {
                     if (!base.isLogin()) {
@@ -193,7 +200,7 @@ define([
                     }
                 })
             } else {
-                config.start == 1 && $("#content").empty()
+                config.start == 1 && $("#content").empty();
                 config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
             }
             config.start == 1 && initPagination(data);
@@ -215,9 +222,9 @@ define([
         //登录状态
         var loginStatus = '';
         var time = base.calculateDays(item.user.lastLogin, new Date())
-        if (time <= 10) {
+        if (time < 10) {
             loginStatus = 'green'
-        } else if (time <= 30) {
+        } else if (time < 30) {
             loginStatus = 'yellow'
         } else {
             loginStatus = 'gray'
@@ -228,7 +235,7 @@ define([
         if (item.userId == base.getUserId()) {
             operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/advertise.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
         } else {
-            operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/buy-detail.html?code=${item.code}">${base.getText('购买', langType)}</div>`;
+            operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买', langType)}</div>`;
         }
         let hpCount = 0;
         if (item.userStatistics.beiPingJiaCount != 0) {
@@ -262,14 +269,14 @@ define([
         let interval = base.fun(Date.parse(item.user.lastLogin), new Date());
         return `<tr>
 					<td class="nickname" style="padding-left: 20px;">
-                        <p class="pfirst goHref" data-href="../user/user-detail.html?userId=${item.user.userId}&tradeType=1">
+                        <p class="pfirst goHref" data-href="../user/user-detail.html?userId=${item.user.userId}&tradeType=1&coin=${item.tradeCoin}">
                             ${countryHtml}
                             <span class="dot ${loginStatus}"></span>
                             <span class="name">${item.user.nickname ? item.user.nickname : '-'}</span>
                             <span class="num">+${item.userStatistics.beiHaoPingCount}</span>
                         </p>
                         <p class="n-dist goHref" data-href="../user/user-detail.html?userId=${item.user.userId}&tradeType=1">
-                            <samp><i>${interval}前查看过</i></samp>
+                            <samp><i>${interval}${base.getText('前查看过')}</i></samp>
                         </p>
 					</td>
                     <td class="payType">
@@ -281,53 +288,14 @@ define([
                         </p>
                     </td>
                     <td class="limit">${item.minTrade}-${item.maxTrade} ${item.tradeCurrency}</td>
+                    <td >$ ${item.discount}</td>
                     <td class="price">${item.truePrice.toFixed(2)} ${item.tradeCurrency}</td>
 					<td class="operation">
 						${operationHtml}
 					</td>
 				</tr>`
     }
-
-    //用户昵称查询广告
-    function getListAdvertiseNickname(nickName) {
-        return TradeCtr.getListAdvertiseNickname(nickName, true).then((data) => {
-            var lists = data;
-            if (lists.length) {
-                var html = "";
-                lists.forEach((item, i) => {
-                    if (item.tradeType == '1') {
-                        html += buildHtml(item);
-                    }
-                });
-                $("#content").append(html);
-                $(".trade-list-wrap .no-data").addClass("hidden")
-
-                $("#content .operation .goHref").off("click").click(function() {
-                    if (!base.isLogin()) {
-                        base.goLogin();
-                        return false;
-                    } else {
-                        var thishref = $(this).attr("data-href");
-                        base.gohref(thishref)
-                    }
-                })
-                $("#content .photoWrap").off("click").click(function() {
-                    if (!base.isLogin()) {
-                        base.goLogin();
-                        return false;
-                    } else {
-                        var thishref = $(this).attr("data-href");
-                        base.gohref(thishref)
-                    }
-                })
-            } else {
-                $("#content").empty();
-                $(".trade-list-wrap .no-data").removeClass("hidden")
-            }
-            base.hideLoadingSpin();
-        }, base.hideLoadingSpin)
-
-    }
+    
     function addListener() {
 
         $("#searchTypeWrap .select-ul li").click(function() {
@@ -390,44 +358,6 @@ define([
                   payType,
                   coin: coin.toUpperCase()
               };
-            switch(payType) {
-              case '0':
-                $("#searchConWrap .payType").val('0');
-                $('#left-wrap .en_zf01').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '1':
-                $("#searchConWrap .payType").val('1');
-                $('#left-wrap .en_zf02').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '2':
-                $("#searchConWrap .payType").val('2');
-                $('#left-wrap .en_zf03').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '3':
-                $("#searchConWrap .payType").val('3');
-                $('#left-wrap .en_zf04').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '4':
-                $("#searchConWrap .payType").val('4');
-                $('#left-wrap .en_zf05').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '5':
-                $("#searchConWrap .payType").val('5');
-                $('#left-wrap .en_zf06').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '6':
-                $("#searchConWrap .payType").val('6');
-                $('#left-wrap .en_zf07').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '7':
-                $("#searchConWrap .payType").val('7');
-                $('#left-wrap .en_zf08').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-              case '8':
-                $("#searchConWrap .payType").val('8');
-                $('#left-wrap .en_zf09').addClass('sel-nav_item').parents().siblings().children().removeClass('sel-nav_item');
-                break;
-            }
             base.showLoadingSpin();
             getPageAdvertise(payConfig);
         }));
@@ -435,6 +365,11 @@ define([
         //币种点击
         $("#coin-top ul li").click(function() {
             base.gohref("../trade/buy-list.html?coin=" + $(this).attr("data-coin").toUpperCase() + "&mod=gm")
+        });
+        
+        $('.yj_buy-ul li').click(function(e) {
+          e.stopPropagation();
+          base.gohref(`../index.html?langType=${langType}&coin=${toCoin}`);
         });
 
         $('.show-search').click(() => {
@@ -444,45 +379,12 @@ define([
             } else {
                 $('.search-wrap').addClass('none');
             }
-        })
-      // 切换购买比特币/出售比特币
-
-      // $('.buy_sell div').on('click', (e) => {
-      //   let target = e.target;
-      //   if (!$(target).hasClass("on")) {
-      //     if($(target).hasClass('buy')) {
-      //       tradeType = 'buy';
-      //     } else {
-      //       tradeType = 'sell';
-      //     }
-      //     $(target).addClass('on').siblings().removeClass('on');
-      //   } else {
-      //     if($(target).hasClass('buy')) {
-      //       tradeType = 'sell';
-      //     } else {
-      //       tradeType = 'buy';
-      //     }
-      //     $(target).removeClass('on').siblings().addClass('on');
-      //   }
-      // })
-      $('.buy_sell div').on('click', (e) => {
-        let target = e.target;
-        e.stopPropagation();
-        if($(target).hasClass('sell')) {
-          base.gohref("../trade/sell-list.html");
-        }
-      });
-        $('.buy_sell .buy i').on('click', (e) => {
-            let target = e.target;
-            if($(target).parents('div').hasClass('buy')) {
-                base.gohref("../index.html");
-            }
         });
-        $('.buy_sell .sell i').on('click', (e) => {
-            let target = e.target;
-            if($(target).parents('div').hasClass('sell')) {
-                base.gohref("../trade/sell-list.html");
-            }
+        $('.buy_sell .buy').on('click', (e) => {
+          base.gohref(`../index.html?langType=${langType}&coin=${coin}`);
+        });
+        $('.buy_sell .sell').on('click', (e) => {
+          base.gohref(`../trade/sell-list.html?langType=${langType}&coin=${coin}`);
         });
 
     }

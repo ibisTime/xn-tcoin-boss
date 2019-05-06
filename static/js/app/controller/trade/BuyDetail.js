@@ -24,8 +24,13 @@ define([
     var userName = '',
         myName = '';
     var limit = '';
-    var tradeCoin = 'ETH';
+    var tradeCoin = 'BTC';
     let tradeCurrency = 'CNY';
+    let coin = base.getUrlParam("coin") || 'BTC';
+    let coinName = {
+      'BTC': '比特币',
+      'USDT': 'USDT'
+    };
 
     let platTagList = [];
 
@@ -60,29 +65,25 @@ define([
         $('.en-buy_jy').text(base.getText('交易次数'));
         $('.en-buy_xr').text(base.getText('信任人数'));
         $('.en-buy_hp').text(base.getText('好评率'));
-        $('.en-buy_ls').text(base.getText('历史成交'));
         $('.sp-lx').text(base.getText('联系对方'));
         $('.en-buy_bj').text(base.getText('报价') + ':');
         $('.en-buy_xe').text(base.getText('交易限额') + ':');
         $('.en-buy_sl').text(base.getText('交易数量') + ':');
         $('.en-buy_fk').text(base.getText('付款方式') + ':');
-        $('.en-buy_fkqx').text(base.getText('付款期限') + ':');
-        $('.en-buy_mjly').text(base.getText('卖家留言') + ':');
         $('.en-buy_mmds').text(base.getText('您想购买多少') + '?');
-        // $('.en-buy_ggsy').text(base.getText('点击此处获得帮助', langType));
         $('.en-buy_fz').text(base.getText('分钟'));
         $('.en-buy_tx').text(base.getText('交易提醒'));
         $('.warnWrap .warn-txt1').html(base.getText('提醒：请确认价格再下单,下单彼此交易的'));
         $('.warnWrap .warn-txt2').html(base.getText('将被托管锁定，请放心购买。'));
         $('.buy-detail-container .en-buy_ggsy').html(base.getText('点击此处获取帮助'));
-        $('.buy-detail-container .en-buy_poundage').html(base.getText('手续费') + '：0 BTC');
+        $('.buy-detail-container .en-buy_poundage').html(base.getText('手续费') + '：0 ' + coinName[coin]);
         $('.buy-detail-container #buyAmount').attr('placeholder', base.getText('请输入您购买的金额'));
         $('.buy-detail-container #buyEth').attr('placeholder', base.getText('请输入您购买的数量'));
         $('#buyBtn .buy-now').html(base.getText('立即购买'));
         $('.buy-detail-container .buy-info .zdj').html(`${base.getText('最低为')}<span class="buy-info-weighter min"></span>`);
         $('.buy-detail-container .buy-info .zdjy').html(`${base.getText('最大交易')}<span class="buy-info-weighter max"></span>`);
         $('.buy-detail-container .buy-info .mykq').html(`${base.getText('每一块钱将花费您')}<span class="buy-info-weighter rate"></span>`);
-        $('.buy-detail-container .buy-info .scjg').html(`${base.getText('市场价格为每比特币')}<span class="buy-info-weighter price"></span>（${base.getText('您可以购买任意分之一的比特币')}）`);
+        $('.buy-detail-container .buy-info .scjg').html(`${base.getText(`市场价格为每${coinName[coin]}`)}<span class="buy-info-weighter price"></span>（${base.getText(`您可以购买任意分之一的${coinName[coin]}`)}）`);
         $('.buy-detail-container .buy-quick-condition .buy-quick-title').html(base.getText('快速出价概览'));
         $('.buy-detail-container .buy-cjtk .buy-quick-title').html(`<span class="buy-title"></span><span class="goHref" data-href="../public/help.html">${base.getText('社区提示')}</span>`);
         $('.buy-detail-container .detail-container-right .buy-user-online').html(`${base.getText('已查看')}<span class="interval"></span>${base.getText('前')}`);
@@ -284,8 +285,7 @@ define([
             config.tradeAmount = $("#buyAmount").val();
         }
         config.count = base.formatMoneyParse($("#buyEth").val(), '', $('.buy-detail-formwrapper #coin').text());
-        console.log(tradeCoin )
-        // config.交易密码 = $('#moneyPow').val();
+        
         base.showLoadingSpin();
         return TradeCtr.buyETH(config).then((data) => {
             if(document.getElementById('audioBuyDetail').muted != false){
@@ -294,7 +294,7 @@ define([
             document.getElementById('audioBuyDetail').play();
                 base.showMsg(base.getText('下单成功'));
                 setTimeout(function() {
-                    base.gohref("../order/order-detail.html?code="+data.code);
+                    base.gohref("../order/order-detail.html?code="+data.code+'&coin='+coin, '_bank');
                 }, 3000);
                 base.hideLoadingSpin();
             }, base.hideLoadingSpin) //

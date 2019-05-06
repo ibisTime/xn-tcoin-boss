@@ -62,8 +62,8 @@ define([
         $('.invitation-wrap .zzdtw').text(base.getText('转至T网账户'));
         $('.invitation-wrap .kyye').html(`${base.getText('可用余额')} <span id="modal_bal" style="color: red;">0</span> BTC`);
         $('.invitation-wrap #transferMoney').attr('placeholder', base.getText('请输入您转入的资产数量'));
-        $('.invitation-wrap #transfer-btn-qx').text(base.getText('取消'));
-        $('.invitation-wrap #transfer-btn-qd').text(base.getText('确定'));
+        $('.invitation-wrap .transfer-btn-qx').text(base.getText('取消'));
+        $('.invitation-wrap .transfer-btn-qd').text(base.getText('确定'));
     }
 
     // 获取邀请好友的链接

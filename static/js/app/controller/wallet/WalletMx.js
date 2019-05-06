@@ -8,8 +8,8 @@ define([
     'app/controller/foo'
 ], function (base, pagination, AccountCtr, GeneralCtr, UserCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var config='';
-    var accountNumber =''
+    var config={};
+    var accountNumber ='';
     var bizTypeList = {
         '0': [],
         '1': ['charge'],
@@ -58,7 +58,7 @@ define([
         ).then((data1, data2) => {
             data1.forEach(function (item) {
                 bizTypeValueList[item.dkey] = item.dvalue
-            })
+            });
             setTimeout(function(){
                 accountNumber = localStorage.getItem('accountNumber');
                 config = {
@@ -124,8 +124,8 @@ define([
         return `<tr class="list-item">
 					<td>${base.formateDatetime(item.createDatetime)}</td>
 					<td>${item.bizNote}</td>
-					<td>${base.formatMoney(item.transAmountString,'',item.currency)}BTC</td>
-					<td>${base.formatMoney(item.postAmountString,'',item.currency)}BTC</td>
+					<td>${base.formatMoney(item.transAmountString,'',item.currency)} ${item.currency}</td>
+					<td>${base.formatMoney(item.postAmountString,'',item.currency)} ${item.currency}</td>
 				</tr>`
     }
 
@@ -193,7 +193,7 @@ define([
           type:0,
           accountNumber: accountNumber,
           dateStart: createDatetimeStart,
-          dataEnd: createDatetimeEnd
+          dateEnd: createDatetimeEnd
         };
         base.showLoadingSpin();
         getPageFlow(config);

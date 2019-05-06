@@ -86,6 +86,10 @@ define([
         // 出售FMVP币
         sellX(config) {
             return Ajax.post('625271', config);
-        }
+        },
+      // 查询是否为内部转账
+      internalTransfer(address) {
+        return Ajax.post('802506', {address});
+      }
     };
 })

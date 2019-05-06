@@ -22,7 +22,11 @@ define([
     let tradeTypeList = {
         '1': base.getText('购买'),
         '0': base.getText('出售')
-    }
+    };
+    let coinName = {
+        'BTC': '比特币',
+        'USDT': 'USDT'
+    };
     var config = {
         start: 1,
         limit: 10,
@@ -53,11 +57,11 @@ define([
         $('.userDetail-container .user-left-wrap .xx').html(base.getText('信息'));
         $('.userDetail-container .jyhzf').html(`<samp class="jiaoyifangCount"></samp> ${base.getText('个交易合作方')}`);
         $('.userDetail-container .cjy').html(`<samp class="jiaoYiCount"></samp> ${base.getText('次交易')}`);
-        $('.userDetail-container .jyl').html(`<samp class="tradeCounBtc"></samp> BTC ${base.getText('交易量')}`);
+        $('.userDetail-container .jyl').html(`<samp class="tradeCounBtc"></samp> ${currency} ${base.getText('交易量')}`);
         $('.userDetail-container .xrf').html(`${base.getText('信任方')} <samp class="beiXinRenCount"></samp> ${base.getText('人')}`);
         $('.userDetail-container .pbf').html(`${base.getText('屏蔽方')} <samp class="pingBiCount"></samp> ${base.getText('人')}`);
         $('.userDetail-container .yjr').html(`${base.getText('已加入')} <samp id="registerTime"></samp>`);
-        $('.userDetail-container .title-wrap').html(`${base.getText('向')}<samp class="nickname"></samp><samp id="tradeType"></samp>${base.getText('比特币')}`);
+        $('.userDetail-container .title-wrap').html(`${base.getText('向')}<samp class="nickname"></samp><samp id="tradeType"></samp>${base.getText(coinName[currency])}`);
         $('.userDetail-container .public-container .price').html(base.getText('价格'));
         $('.userDetail-container .public-container .fanwei').html(base.getText('范围'));
         $('.userDetail-container .public-container .action').html(base.getText('支付方式'));
@@ -88,7 +92,7 @@ define([
     }
     // 支付方式
     function getPayTypeList() {
-        return TradeCtr.getPayTypeList({ status: 1, tradeType: 1 }).then((res) => {
+        return TradeCtr.getPayTypeList({ status: 1, tradeType: 1, symbol: currency }).then((res) => {
             base.hideLoadingSpin();
             res.map((item) => {
                 payTypeList.push({
@@ -124,7 +128,7 @@ define([
     // 获取用户详情
     function getUserDetail() {
         return UserCtr.getUser(true, userId).then((data) => {
-            var photoHtml = ""
+            var photoHtml = "";
                 // 头像
             if (data.photo) {
                 photoHtml = `<div class="photo" style="background-image:url('${base.getAvatar(data.photo)}')"></div>`
@@ -162,7 +166,7 @@ define([
             $('#beiHaoPingCount').html(data.userStatistics.beiHaoPingCount);
             $('#beiZhongPingCount').html(data.userStatistics.beiZhongPingCount);
             $('#beiChaPingCount').html(data.userStatistics.beiChaPingCount);
-            $('#userStatistics .tradeCounBtc').html(data.userStatistics.tradeCounBtc);
+            $('#userStatistics .tradeCounBtc').html(currency === 'BTC' ? data.userStatistics.tradeCountBtc : data.userStatistics.tradeCountUsdt);
             $('#introduce').html(data.introduce);
             base.hideLoadingSpin();
         }, () => {});
@@ -170,6 +174,7 @@ define([
 
     // 分页查广告
     function getPageAdvertise() {
+        console.log('config', config);
         TradeCtr.getPageAdvertiseUser(config, true).then((data) => {
             var lists = data.list;
             if (data.list.length) {

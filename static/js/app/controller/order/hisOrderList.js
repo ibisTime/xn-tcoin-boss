@@ -11,25 +11,41 @@ define([
   'app/controller/public/DealLeft'
 ], function(base, pagination, Validate, GeneralCtr, UserCtr, TradeCtr, TencentCloudLogin, Top, Foo, DealLeft) {
   let langType = localStorage.getItem('langType') || 'ZH';
-  var coin = base.getUrlParam("orderCoin") || 'end';
+  var coin = base.getUrlParam("coin") || '';
   var typeList = {
       "buy": base.getText('购买'),
-      "sell": base.getText('出售'),
+      "sell": base.getText('出售')
+    },
+    orderTypeList = {
+      "buy": base.getText('买入'),
+      "sell": base.getText('卖出')
     },
     statusValueList = {};
   var config = {
     start: 1,
     limit: 10,
-    statusList: ["2", "3", "4", "6", "7"]
+    statusList: ["2", "3", "4", "6", "7", '8'],
+    tradeCoin: coin
+  };
+  let colors = {
+    '7': '#D53D3D',
+    '6': '#f19348',
+    '9': '#333',
+    '2': '#333',
+    '3': '#999',
+    '4': '#999',
+    '8': '#999',
+    '10': '#999'
   };
   var unreadMsgList = {},
     lists = [];
   var isUnreadList = false,
     isOrderList = false;
+  var tradeCoin = '';
   init();
 
   function init() {
-      $(".tradeDetail-container .titleStatus li." + coin.toLowerCase()).addClass("on").siblings('li').removeClass('on');
+      $(".tradeDetail-container .titleStatus li.end").addClass("on");
       base.showLoadingSpin();
     setHtml();
     TencentCloudLogin.goLogin(function(list) {
@@ -85,7 +101,7 @@ define([
     `);
     $('.hisorder-wrap #payStatic').html(`
       <option value="">${base.getText('选择交易状态')}</option>
-      <option value="2">${base.getText('待评价')}</option>
+      <option value="2">${base.getText('已解决待评价')}</option>
       <option value="3">${base.getText('已完成')}</option>
       <option value="4">${base.getText('已取消')}</option>
       <option value="6">${base.getText('仲裁买家胜')}</option>
@@ -228,16 +244,16 @@ define([
 						</div>
 						<samp class="name k-name">${user.nickname ? user.nickname : '-'}</samp>
 					</td>
-					<td class="code">${item.code.substring(item.code.length-8)}</td>
-					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
+					<td class="code">${item.code.substring(item.code.length-8)}<i>(${orderTypeList[item.type]})</i></td>
+					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'BTC'}</td>
 					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
 					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
-					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
+					<td class="status" style="color: ${colors[item.status]}">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
                     <td class="operation">
-                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}">${base.getText('聊天')}</div>
-                        <samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}"></samp>
-						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}"> ></i>
+                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}">${base.getText('聊天')}</div>
+                        <samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}"></samp>
+						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}"> ></i>
                     </td>
 				</tr>`;
   }
@@ -245,12 +261,13 @@ define([
 
   //按条件查找已结束订单
     $('.hisorder-search-btn').click(function () {
+      base.showLoadingSpin();
       var data;
-      var type =$('.hisorder-wrap #payType option:selected').val();
-      var createDatetimeStart =$('#createDatetimeStart input').val();
-      var createDatetimeEnd =$('#createDatetimeEnd input').val();
-      if( createDatetimeStart == '' || createDatetimeEnd == ''){
-          createDatetimeStart = ''
+      var type = $('.hisorder-wrap #payType option:selected').val();
+      var createDatetimeStart = $('#createDatetimeStart input').val();
+      var createDatetimeEnd = $('#createDatetimeEnd input').val();
+      if( createDatetimeStart === '' || createDatetimeEnd === ''){
+          createDatetimeStart = '';
           createDatetimeEnd =''
       }else {
           createDatetimeStart = base.formateDatetime(createDatetimeStart);
@@ -258,7 +275,7 @@ define([
       }
       var statusList = [];
       var payStatic =  $('.hisorder-wrap #payStatic option:selected').val();
-      if(payStatic == ""){
+      if(payStatic === ""){
           statusList = ['2','3','4','6','7'];
       }else {
           statusList.push(payStatic)
@@ -266,7 +283,8 @@ define([
         data={
           start: 1,
           limit: 10,
-          type: type === '0' ? 'buy' : 'sell',
+          tradeCoin,
+          type: type && (type === '0' ? 'buy' : 'sell'),
           statusList:statusList,
           createDatetimeStart:createDatetimeStart || undefined,
           createDatetimeEnd:createDatetimeEnd || undefined
@@ -443,7 +461,7 @@ define([
           }, 1500)
         }, base.hideLoadingSpin)
       }, base.emptyFun)
-    })
+    });
 
     //评价
     $("#commentDialog .comment-Wrap .item").click(function() {
@@ -472,7 +490,18 @@ define([
               $("#commentDialog").addClass("hidden");
               $("#commentDialog .comment-Wrap .item").eq(0).addClass("on").siblings(".item").removeClass("on");
           }, base.hideLoadingSpin)
-      })
+      });
+    $('.coin-select span').click(function() {
+      base.showLoadingSpin();
+      $('.hisorder-wrap #payType').val('');
+      $('#createDatetimeStart input').val('');
+      $('#createDatetimeEnd input').val('');
+      $('.hisorder-wrap #payStatic').val('');
+      $(this).addClass('set_sp').siblings().removeClass('set_sp');
+      tradeCoin = $(this).attr('data-coin') || '';
+      config.tradeCoin = tradeCoin;
+      getPageOrder(true);
+    });
       // 自动刷新页面
       function auSx() {
           window.location.reload();

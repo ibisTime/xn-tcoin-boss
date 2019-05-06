@@ -11,28 +11,26 @@ define([
     'app/controller/public/DealLeft'
 ], function(base, pagination, Validate, GeneralCtr, UserCtr, TradeCtr, TencentCloudLogin, Top, Foo, DealLeft) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var coin = base.getUrlParam("orderCoin") || 'progress';
-    var statusList = {
-            "progress": ["-1", "0", "1", "5"]
-        },
-        typeList = {
+    let coin = base.getUrlParam("coin") || '';
+    let typeList = {
             "buy": base.getText('购买'),
             "sell": base.getText('出售'),
         },
         statusValueList = {};
-    var config = {
+    let config = {
         start: 1,
         limit: 10,
-        statusList: statusList[coin.toLowerCase()]
+        statusList: ["-1", "0", "1", "5"],
+        tradeCoin: ''
     };
-    var unreadMsgList = {},
+    let unreadMsgList = {},
         lists = [];
-    var isUnreadList = false,
+    let isUnreadList = false,
         isOrderList = false;
     init();
 
     function init() {
-        $(".tradeDetail-container .titleStatus li." + coin.toLowerCase()).addClass("on").siblings('li').removeClass('on');
+        $(".tradeDetail-container .titleStatus li.progress").addClass("on");
         base.showLoadingSpin();
         setHtml();
         TencentCloudLogin.goLogin(function(list) {
@@ -108,18 +106,16 @@ define([
     function getPageOrder(refresh) {
         return TradeCtr.getPageOrder(config, refresh).then((data) => {
             lists = data.list;
-            if (data.list.length) {
+            if (data.list.length > 0) {
                 var html = "";
                 lists.forEach((item, i) => {
                     html += buildHtml(item,data);
                 });
                 $("#content-order").html(html);
                 isOrderList = true;
-                // addUnreadMsgNum();
-
                 $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
             } else {
-                config.start == 1 && $("#content-order").empty()
+                config.start == 1 && $("#content-order").empty();
                 // config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
             }
             config.start == 1 && initPagination(data);
@@ -216,7 +212,7 @@ define([
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
 					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}
 					<samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}"></samp>
-						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${item.buyUser}&status=${item.status}&type=${item.type}&adsCode=${item.adsCode}&buyUserInfo=${item.buyUserInfo}"> ></i></td>
+						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${item.buyUser}&status=${item.status}&type=${item.type}&adsCode=${item.adsCode}&buyUserInfo=${item.buyUserInfo}&coin=${item.tradeCoin}"> ></i></td>
 				</tr>`;
     }
 
@@ -359,11 +355,17 @@ define([
                     }, 1500)
                 }, base.hideLoadingSpin)
             }, base.emptyFun)
-        })
+        });
 
         //评价
         $("#commentDialog .comment-Wrap .item").click(function() {
             $(this).addClass("on").siblings(".item").removeClass("on")
-        })
+        });
+        
+        $('.order_list-select span').click(function() {
+            $(this).addClass('set_sp').siblings().removeClass('set_sp');
+            config.tradeCoin = $(this).attr('data-coin') || '';
+          getPageOrder(true);
+        });
     }
 });

@@ -18,7 +18,7 @@ define([
         getUser();
         addListener();
     }
-
+设置
     function setHtml() {
         $('title').text(base.getText('安全设置') + '-' +base.getText('区块链技术应用实验平台'));
         $('.left-title').text(base.getText('用户中心'));

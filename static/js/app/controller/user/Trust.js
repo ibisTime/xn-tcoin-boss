@@ -125,13 +125,13 @@ define([
 						<div class="txt2"><p>${item.toUserInfo.userStatistics.jiaoYiCount}</p><samp>${base.getText('交易次数', langType)}</samp></div>
 					</td>
 					<td>
-						<div class="txt2"><p>${item.toUserInfo.userStatistics.beiXinRenCount}</p><samp>${base.getText('信任人数', langType)}</samp></div>
+						<div class="txt2"><p>${item.toUserInfo.userStatistics.beiXinRenCount}</p><samp>${base.getText('被信任人数', langType)}</samp></div>
 					</td>
 					<td>
 						<div class="txt2"><p>${base.getPercentum(item.toUserInfo.userStatistics.beiHaoPingCount,item.toUserInfo.userStatistics.beiPingJiaCount)}</p><samp>${base.getText('好评率', langType)}</samp></div>
 					</td>
 					<td>
-					    <div class="txt2"><p>${base.formatMoney(item.toUserInfo.userStatistics.totalTradeCountBtc,'','BTC')} + BTC</p><samp>${base.getText('历史交易', langType)}</samp></div>
+					    <div class="txt2"><p>${base.formatMoney(item.toUserInfo.userStatistics.totalTradeCountBtc,'','BTC')} BTC/${base.formatMoney(item.toUserInfo.userStatistics.totalTradeCountUsdt,'','USDT')} USDT</p><samp>${base.getText('历史交易', langType)}</samp></div>
 					</td>
 					<td>
 					    ${base.getText('跟他交易过')}${item.toUserInfo.userStatistics.betweenTradeTimes}${base.getText('次')}

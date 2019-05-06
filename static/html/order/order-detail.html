@@ -16,7 +16,7 @@
     <div class="order-detail-container">
         <div class="orderDetail-out-container">
             <div class="orderDetail-container chat-container">
-                <div class="orderDetailBox-left">
+                <div class="orderDetailBox-left" style="max-width: 50%;">
                     <div class="orderDetail-left hidden wait">
                         <div class="orderDetail-left-tips">
                             <p class="orderDetail-left-tips-content"></p>
@@ -89,6 +89,7 @@
                                     <p class="arbitrate-title"></p>
                                     <p class="arbitrate-tips"></p>
                                     <span class="arbitrate-btn"></span>
+                                    <span class="cancel-btn">取消订单</span>
                                 </div>
                             </div>
                             <div class="orderDetail-arbitration-after">
@@ -138,7 +139,12 @@
                             </div>
                             <div class="orderDetail-left-release">
                                 <span class="release-btn"></span>
+                                <span class="sqzc">申请仲裁</span>
                                 <p class="release-warning"></p>
+                            </div>
+                            <div class="cljf-box">
+                                <span class="orderDetail-tip"></span>
+                                <span class="wxdx"></span>
                             </div>
                             <div class="orderDetail-left-zs">
                                 <div class="zs-title"></div>
@@ -178,7 +184,7 @@
                             <i class="finished-top-icon"></i>
                             <i class="failure-top-icon hidden"></i>
                             <div class="finished-top-status"></div>
-                            <div class="commentDialog" style="display: none">
+                            <div class="commentDialog hidden">
                                 <div class="am-modal-content">
                                     <div class="am-modal-body">
                                         <div class="comment-Wrap">
@@ -203,6 +209,24 @@
                                         <div class="am-button am-button-red subBtn"></div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="comment_pjts hidden">
+                                <div class="am-modal-footer">
+                                    <span class="comment_pj">评价</span>
+                                    <span class="comment_ts" style="margin-left: 30px;">投诉</span>
+                                    <span class="comment_yts hidden" style="margin-left: 30px;">已投诉</span>
+                                </div>
+                            </div>
+                            <div class="comment_yhts hidden">
+                                <div class="com-content">
+                                    <textarea name="" id="tsText" placeholder="请输入您投诉的理由"></textarea>
+                                </div>
+                                <div class="am-modal-footer">
+                                    <span class="ts_btn">提交</span>
+                                </div>
+                            </div>
+                            <div class="jyycs hidden">
+                                <span class="sp_cxdk">重新打开</span>
                             </div>
                         </div>
                         <div class="finished-bottom">
@@ -274,11 +298,15 @@
                                 <div class="msgflow" id="msgflow" style="height: 88%"></div>
                                 <div class="btnWrap">
                                     <textarea type="text" id="msgedit" class="msgedit" placeholder=""></textarea>
+                                    <button id="phrase" class="phrase"></button>
                                     <button id="msgImg" class="msgImg"></button>
                                     <button id="openPic" class="openPic"></button>
                                     <button id="send" class="am-button am-button-red send"></button>
                                     <div class="emotionUL-wrap hidden">
                                         <ul id="emotionUL" class="wp100"></ul>
+                                    </div>
+                                    <div class="phraseUL-warp hidden">
+                                        <ul id="phraseUL"></ul>
                                     </div>
                                 </div>
                             </div>
