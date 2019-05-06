@@ -101,7 +101,7 @@ define([
     `);
     $('.hisorder-wrap #payStatic').html(`
       <option value="">${base.getText('选择交易状态')}</option>
-      <option value="2">${base.getText('已解决待评价')}</option>
+      <option value="2">${base.getText('已解冻待评价')}</option>
       <option value="3">${base.getText('已完成')}</option>
       <option value="4">${base.getText('已取消')}</option>
       <option value="6">${base.getText('仲裁买家胜')}</option>

@@ -149,8 +149,8 @@ define([
      */
     function initSocket() {
         // var ws = new WebSocket('ws://localhost:2802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 线上
-        // var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
-        var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 测试
+        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
+        // var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 测试
         ws.onopen = function (event) {
             // ws.send('你好啊')
         }
