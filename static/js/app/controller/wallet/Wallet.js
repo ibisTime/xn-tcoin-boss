@@ -28,14 +28,17 @@ define([
             currency: currency
         };
     let changeCoinText = {
-        'BTC': '切换USDT',
-        'USDT': '切换BTC'
+        'BTC': 'USDT',
+        'USDT': 'BTC'
     };
     
     let coinName = {
         'BTC': '比特币',
         'USDT': 'USDT'
     };
+    let toCurrencyMoney = '';
+    
+    let usdMarket = 0;
 
     var addAddressWrapperRules = {
             "label": {
@@ -96,6 +99,9 @@ define([
          * 获取余额
          */
         getAmount();
+        TradeCtr.getNumberMoney(currency, 'USD').then(data => {
+          usdMarket = data.mid;
+        });
     }
 
     function setHtml() {
@@ -148,7 +154,7 @@ define([
         $('#sendBtcDialog .jymm').html(base.getText('交易密码') + '：');
         $('#sendBtcDialog .srdfbtb').attr('placeholder', base.getText(`输入接收方的${coinName[currency]}地址`));
         $('#sendBtcDialog .srzjmm').attr('placeholder', base.getText('输入您的资金密码'));
-        $('.change_coin').html(base.getText(changeCoinText[currency]));
+        $('.change_coin .coin').html(changeCoinText[currency]);
         $('#sendBtc-form .unit').html(currency);
     }
     
@@ -416,10 +422,11 @@ define([
             let bail_crash_space_minutes = +ruleData.bail_crash_space_minutes * 60 * 1000;
             accountData.accountList.forEach(item => {
               if (item.currency === currency) {
+                  let money = base.formatMoney((item.amount - item.frozenAmount),'',item.currency);
                   let bailTime = !!item.bailDatetimeStr && !!(new Date().getTime() - new Date(item.bailDatetimeStr).getTime() > bail_crash_space_minutes);
-                $(".wallet-account-wrap .s-bb").text(base.formatMoney(item.amount,'',item.currency) + ' ' + item.currency);
-                $(".wallet-account-wrap .y-amount").text(' ≈ ' + item.amountUSD + ' USD');
-                $('.wallet-account-wrap .freez-amount a').text(base.formatMoney(item.frozenAmount,'',item.currency));
+                $(".wallet-account-wrap .s-bb").text(money);
+                $(".wallet-account-wrap .y-amount").text(' ≈ ' + (usdMarket * money).toFixed(2) + ' USD');
+                $('.wallet-account-wrap .freez-amount a').text(base.formatMoney(item.frozenAmount - (+item.bailAmount),'',item.currency));
                 $('.sendBtc-form-wrap .wallet-account span').text(bailTime ? base.formatMoney((item.amount - item.frozenAmount) + (+item.bailAmount),'',item.currency) : base.formatMoney((item.amount - item.frozenAmount),'',item.currency));
                 $('#address-BTC').val(item.address);
                 var  erWn =[];
@@ -430,6 +437,9 @@ define([
                 });
                 getRate();
                 localStorage.setItem('accountNumber', item.accountNumber);
+              }else {
+                toCurrencyMoney = base.formatMoney((item.amount - item.frozenAmount),'',item.currency);
+                $('.change_coin .coin-ye').html(`${base.getText('余额')}${toCurrencyMoney}` + changeCoinText[currency]);
               }
             });
           });
@@ -468,7 +478,7 @@ define([
         let formData = $('#sendBtc-form').serializeArray();
         formData.forEach(item => {
             params[item.name] = item.value;
-        })
+        });
         params.applyUser = base.getUserId();
         params.applyNote = '提现';
         params.payCardInfo = currency;

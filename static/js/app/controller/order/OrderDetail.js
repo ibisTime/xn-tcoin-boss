@@ -281,10 +281,7 @@ define([
               'background-color': '#F19348'
             });
           }else {
-            $('.orderDetail-left-release .sqzc').css({
-              'cursor': 'default',
-              'background-color': '#CCCCCC'
-            });
+            $('.orderDetail-left-release .sqzc').addClass('hidden');
           }
           localStorage.setItem('orderDetailStatus',data.status);
           getAdvertiseDetail();
@@ -316,7 +313,7 @@ define([
           }
           setInterTime = setInterval(getCountDown, 1000);
           //待支付
-          if(data.buyUser === base.getUserId()) {
+          if(data.buyUser === userId) {
             toUserId = data.sellUserInfo.userId;
             document.querySelector('title').innerText = data.sellUserInfo.nickname;
             let interval = base.fun(Date.parse(data.sellUserInfo.lastLogin), new Date());
@@ -372,11 +369,14 @@ define([
               $('.finished-top .finished-top-status').text(base.getText('仲裁已完成'));
             }else if(data.status === '8') {
               $('.jyycs').removeClass('hidden');
-            }else if(data.status === '4') {
-              $('.finished .finished-top-icon').removeClass('hidden');
-              $('.finished .failure-top-icon').addClass('hidden');
-              $('.jyycs').addClass('hidden');
             }
+          }
+          if(data.status == '4') {
+            //取消状态
+            $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
+            $('.finished-top .finished-top-status').text(base.getText('交易已取消'));
+            $('.finished .remove-top-icon').removeClass('hidden').siblings('.top-icon').addClass('hidden');
+            $('.jyycs').addClass('hidden');
           }
           if(data.status === '8') {
             $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
@@ -388,19 +388,19 @@ define([
             // 待评价
             let comment = 0;
             // 未评价
-            if(data.buyUser == base.getUserId() && !data.bsComment) {
+            if(data.buyUser == userId && !data.bsComment) {
               comment = 1;
-            } else if(data.buyUser != base.getUserId() && !data.sbComment) {
+            } else if(data.buyUser != userId && !data.sbComment) {
               comment = 1;
             }
             // 已评价
             let index = 0, pjtext = '';
-            if(data.buyUser === base.getUserId() && data.bsComment) {
+            if(data.buyUser === userId && data.bsComment) {
               comment = 2;
               index = 2 - (+data.bsComment);
               pjtext = data.bsCommentContent;
             }
-            if(data.buyUser !== base.getUserId() && data.sbComment) {
+            if(data.buyUser !== userId && data.sbComment) {
               comment = 2;
               index = 2 - (+data.sbComment);
               pjtext = data.sbCommentContent;
@@ -428,10 +428,6 @@ define([
             }
             // 待评价和已完成状态
             $('.orderDetail-container .finished').removeClass('hidden').siblings('.orderDetail-left').addClass('hidden');
-          }else if (data.status == '4'){
-              //取消状态
-              $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
-              $('.finished-top .finished-top-status').text(base.getText('交易已取消'));
           }
           payTypeList.map((item) => {
             if(item.key === data.payType) {
@@ -482,7 +478,7 @@ define([
           } else {
             $('.orderDetail-left-time .text .left-time-minute').html('0' + base.getText('分钟'));
           }
-          if(data.buyUser == base.getUserId()) {
+          if(data.buyUser == userId) {
             // 对面是卖家
               let showPhoto = data.sellUserInfo.nickname.substring(0, 1);
               if(!!data.sellUserInfo.photo) {
@@ -541,7 +537,7 @@ define([
             toUserName = data.buyUserInfo.nickname;
               $('.orderDetail-right .orderDetail-right-user-info .user-info .name').html(data.buyUserInfo.nickname);
               $('.orderDetail-right .more-info').attr('userId',data.buyUserInfo.userId);
-              getUser(data.buyUserInfo.userId)
+              getUser(data.buyUserInfo.userId);
               if( data.buyUserInfo.email != undefined){
                   $('.orderDetail-right .orderDetail-right-user-info  .yz span:last-child span').html(base.getText('电子邮件已验证'));
               }else{
@@ -568,7 +564,7 @@ define([
             //卖家/买家信息
             $(".btn-wrap .am-button").addClass("hidden");
             //当前用户为买家，显示卖家信息
-            if (data.buyUser == base.getUserId()) {
+            if (data.buyUser == userId) {
                 tradeType = '0';
                 var user = data.sellUserInfo;
                 var myInfo = data.buyUserInfo;
@@ -613,13 +609,13 @@ define([
             if (data.status == "-1") {
                 $(".orderDetail-info .info-wrap").addClass("hidden");
                 if(data.type == 'buy'){
-                    if(data.buyUser == base.getUserId()){
+                    if(data.buyUser == userId){
                         $(".orderDetail-info .title").html('<i class="icon icon-order"></i>' + base.getText('购买订单'));
                         $(".goBuyDetailBtn").removeClass("hidden");
                     }
                 }
                 if(data.type == 'sell'){
-                    if(data.sellUser == base.getUserId()){
+                    if(data.sellUser == userId){
                         $(".orderDetail-info .title").html('<i class="icon icon-order"></i>' + base.getText('出售订单'));
                         $(".goSellDetailBtn").removeClass("hidden");
                     }
@@ -1046,17 +1042,25 @@ define([
 
     // 发送-校验
     function onSendMsg(msgContent, suc) {
+      let msg = '';
+      if(msgContent.search(/^WE_B:/) === 0) {
+        msg = msgContent.substring(5);
+      };
+      if(msg.trim() !== "") {
         let msgLen = webim.Tool.getStrBytes(msgContent);
         let maxLen = webim.MSG_MAX_LENGTH.GROUP;
         if (msgLen > maxLen) {
-            if(langType == 'EN'){
-                base.showMsg('Message length exceeded limit (up to' + Math.round(maxLen / 3) + 'characters)');
-            }else{
-                base.showMsg(`${base.getText('消息长度超出限制')}(${base.getText('最多')}` + Math.round(maxLen / 3) + `${base.getText('汉字')})`);
-            }
-            return;
+          if(langType == 'EN'){
+            base.showMsg('Message length exceeded limit (up to' + Math.round(maxLen / 3) + 'characters)');
+          }else{
+            base.showMsg(`${base.getText('消息长度超出限制')}(${base.getText('最多')}` + Math.round(maxLen / 3) + `${base.getText('汉字')})`);
+          }
+          return;
         }
         handleMsgSend(msgContent, suc);
+      }else {
+        $('#msgedit').val('');
+      }
     }
 
     // 发送-解析发送
@@ -1159,11 +1163,11 @@ define([
         
         //系統消息 //昵称  消息时间
         if (fromAccount === 'admin') {
-            msghead.innerHTML = base.getText(adminMsg) + '<samp>(' + webim.Tool.formatText2Html(webim.Tool.formatTimeStamp(msg.getTime())) + ")</samp>";
+            msghead.innerHTML = base.getText(adminMsg) + '<samp style="color: #999;">(' + webim.Tool.formatText2Html(webim.Tool.formatTimeStamp(msg.getTime())) + ")</samp>";
             onemsg.setAttribute('class', 'onemsg admin');
             showTimeName = base.getText('系統消息');
           // 客服消息
-        }else if (fromAccount !== toUserId && fromAccount !== base.getUserId()) {
+        }else if (fromAccount !== toUserId && fromAccount !== userId) {
           msghead.innerHTML = `<div class='photoWrap'><div class='photo'><div class='noPhoto'>${base.getText('客')}</div></div></div><div class='nameWrap'><samp class='name'>${base.getText('客服')}</samp><samp>` + webim.Tool.formatText2Html(webim.Tool.formatTimeStamp(msg.getTime())) + '</samp></div>';
           onemsg.setAttribute('class', 'onemsg user');
           showTimeName = base.getText('客服消息');
@@ -1175,18 +1179,22 @@ define([
           msgbody.className = "msgbody_ta";
           showTimeName = toUserName;
             //我的消息
-        } else if(fromAccount === base.getUserId()) {
+        } else if(fromAccount === userId) {
             msghead.innerHTML = "<div class='photoWrap'>" + tradePhotoMy + "</div><div class='nameWrap'><samp class='name'>" + webim.Tool.formatText2Html(myName) + "</samp><samp>" + webim.Tool.formatText2Html(webim.Tool.formatTimeStamp(msg.getTime())) + '</samp></div>';
             onemsg.setAttribute('class', 'onemsg my');
           msgbody.className = "msgbody_my";
         }
-        if(fromAccount !== base.getUserId()) {
-          if(document.getElementById('audioBuyDetail').muted != false){
-            document.getElementById('audioBuyDetail').muted = false;
+        try {
+          if(fromAccount !== userId) {
+            if(document.getElementById('audioBuyDetail').muted !== false){
+              document.getElementById('audioBuyDetail').muted = false;
+            }
+            document.getElementById('audioBuyDetail').play();
           }
-          document.getElementById('audioBuyDetail').play();
+        }catch (e) {
+          console.log(e);
         }
-        if(fromAccount !== base.getUserId() && isNewMsg) {
+        if(fromAccount !== userId && isNewMsg) {
           settimeout = true;
           isNewMsg = false;
           timeout();
@@ -1414,7 +1422,7 @@ define([
     function uploadPicLowIE() {
         var uploadFile = $('#updli_file')[0];
         var file = uploadFile.files[0];
-        var fileSize = file.size;
+        var fileSize = 50;
         //先检查图片类型和大小
         if (!checkPic(uploadFile, fileSize)) {
             return;
@@ -1458,15 +1466,23 @@ define([
     //单击图片事件
     function imageClick(imgObj) {
         var imgUrls = imgObj.src;
-        var imgUrlArr = imgUrls.split("#"); //字符分割
-        var smallImgUrl = imgUrlArr[0]; //小图
-        var bigImgUrl = imgUrlArr[1]; //大图
-        var oriImgUrl = imgUrlArr[2]; //原图
-        var bigPicDiv = document.getElementById('bigPicDiv');
-        bigPicDiv.innerHTML = '';
-        var span = document.createElement('span');
-        span.innerHTML = '<img class="img-thumbnail" src="' + bigImgUrl + '" />';
-        bigPicDiv.insertBefore(span, null);
+        if(imgUrls.includes('data:image/gif;base64')) {
+          let bigPicDiv = document.getElementById('bigPicDiv');
+          bigPicDiv.innerHTML = '';
+          let span = document.createElement('span');
+          span.innerHTML = '<img class="img-thumbnail" src="' + imgUrls + '" />';
+          bigPicDiv.insertBefore(span, null);
+        }else {
+          let imgUrlArr = imgUrls.split("#"); //字符分割
+          let smallImgUrl = imgUrlArr[0]; //小图
+          let bigImgUrl = imgUrlArr[1]; //大图
+          let oriImgUrl = imgUrlArr[2]; //原图
+          let bigPicDiv = document.getElementById('bigPicDiv');
+          bigPicDiv.innerHTML = '';
+          let span = document.createElement('span');
+          span.innerHTML = '<img class="img-thumbnail" src="' + bigImgUrl + '" />';
+          bigPicDiv.insertBefore(span, null);
+        }
         $('#click_pic_dialog').show();
     }
     //弹出发图对话框
@@ -1514,10 +1530,12 @@ define([
             //     }
             // });
         $(document).keyup(function(event) {
-            if (event.keyCode == 13) {
-                if ($('#msgedit').val() != "" && $('#msgedit').val()) {
+            if (event.keyCode === 13 && $('#msgedit').val().trim() !== "" ) {
+                if ($('#msgedit').val()) {
                     onSendMsg('WE_B:' + $('#msgedit').val());
                     $('#msgedit').val('')
+                }else {
+                  return;
                 }
             }
         });
@@ -1646,7 +1664,7 @@ define([
       $('.jyycs .sp_cxdk').click(function() {
         base.showLoadingSpin();
         TradeCtr.openOrder({
-          updater: base.getUserId(),
+          updater: userId,
           code
         }).then(() => {
           base.hideLoadingSpin();
@@ -1769,7 +1787,7 @@ define([
           return;
         }
         var config={
-          updater: base.getUserId(),
+          updater: userId,
           code:code,
           reason
         };
@@ -1787,7 +1805,7 @@ define([
             var content = $('#pjText').val();
             var code = base.getUrlParam("code");
             var config={
-                updater: base.getUserId(),
+                updater: userId,
                 code:code,
                 starLevel:comment,
                 content:content

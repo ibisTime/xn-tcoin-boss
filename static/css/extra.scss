@@ -435,10 +435,10 @@ table {
             background: $red-color;
             color: #fff;
             font-size: 10px;
-            padding: 3px;
+            padding: 5px 10px 3px;
             border-radius: 100%;
             position: absolute;
-            right: 2px;
+            right: -2px;
             top: -5px;
             transform: scale(0.5);
             display: none;
@@ -471,10 +471,8 @@ table {
             line-height: 1;
         }
         .down-wrap-message {
-            //width: 0;
-            //height: 0;
+            overflow: hidden;
             opacity: 0;
-            overflow: scroll;
             position: absolute;
             top: 15px;
             left: -150px;
@@ -487,6 +485,7 @@ table {
             max-height: 650px;
             ul{
                 display: none;
+                overflow-x: hidden;
             }
             .message-text {
                 font-size: 12px;
@@ -936,7 +935,7 @@ table {
     box-sizing: border-box;
     background-color: #333;
     position: relative;
-    z-index: 990;
+    z-index: 90;
     display: flex;
     align-items: center;
     .foo-con-flex {
@@ -2627,15 +2626,36 @@ table {
         position: relative;
         .change_coin{
             position: absolute;
+            display: flex;
             top: 32px;
             right: 64px;
-            border: 1px solid #D53D3D;
             color: #D53D3D;
-            padding: 8px 18px;
-            -webkit-border-radius: 3px;
-            -moz-border-radius: 3px;
-            border-radius: 3px;
             cursor: pointer;
+            .left {
+                background-image: url("/static/images/zhuanhuna.png");
+                -webkit-background-size: (100% 100%);
+                background-size: (100% 100%);
+                width: 32px;
+                height: 32px;
+                margin-right: 6px;
+            }
+            .right{
+                font-family: PingFang-SC-Medium;
+                font-size: 12px;
+                letter-spacing: 0.1px;
+                display: flex;
+                flex-direction: column;
+                align-content: space-between;
+                p{
+                    margin: 0;
+                }
+                .coin{
+                    color: #333333;
+                }
+                .coin-ye{
+                    color: #999999;
+                }
+            }
         }
         .yue {
             font-size: 16px;
@@ -4189,15 +4209,15 @@ table {
                 height: 100%;
                 line-height: 38px;
             }
-            #searchBtn,#bestSearchBtn {
+            #searchBtn,#bestSearchBtn, #resetSearchBtn {
                 border: 1px solid $red-color;
                 border-radius: 2px;
                 padding: 0 25px;
                 font-size: 14px;
                 height: 38px;
             }
-            #bestSearchBtn {
-                margin-left: 40px;
+            #searchBtn,#bestSearchBtn {
+                margin-left: 20px;
             }
         }
     }
@@ -5048,16 +5068,16 @@ table {
       padding: 52px 100px;
       .advertise-step1-bigbigTitle,.advertise-step2-bigbigTitle,.advertise-step3-bigbigTitle {
         text-align: center;
-        margin-bottom: 54px;
+        margin-bottom: 50px;
         .title {
           color: #333;
-          font-size: 48px;
+          font-size: 36px;
           line-height: 67px;
           margin-bottom: 20px;
         }
         .text {
           color: #999;
-          font-size: 24px;
+          font-size: 20px;
           line-height: 33px;
           .change {
             color: #edb88b;
@@ -5069,10 +5089,9 @@ table {
       }
       .step1-title,.step2-title,.step3-title {
         color: #327BCA;
-        font-size: 24px;
+        font-size: 22px;
         line-height: 33px;
         margin-bottom: 30px;
-        margin-top: 40px;
         display: inline-block;
       }
       .step2-border {
@@ -5103,17 +5122,21 @@ table {
         }
       .advertise-step1-bigTitle,.advertise-step2-bigTitle,.advertise-step3-bigTitle {
         text-align: center;
-        margin-bottom: 54px;
+        margin-bottom: 50px;
           .tip{
-              margin-bottom: 80px;
+              margin-bottom: 54px;
               span{
                   display: inline-block;
                   position: relative;
-                  top: 35px;
+                  top: 24px;
                   samp{
                       display: block;
                       margin-bottom: 10px;
                       color:#999 ;
+                      font-size: 14px;
+                  }
+                  img{
+                      width: 30px;
                   }
               }
               span:first-child{
@@ -5133,7 +5156,7 @@ table {
               }
           }
         p {
-          font-size: 32px;
+          font-size: 20px;
           line-height: 45px;
           .step1,.step2,.step3 {
             color: $red-color;
@@ -5148,9 +5171,9 @@ table {
         margin-bottom: 80px;
         .tab-item {
           width: 200px;
-          height: 108px;
+          height: 90px;
           font-size: 17px;
-          line-height: 108px;
+          line-height: 90px;
           text-align: center;
           color: #333;
           border-right:1px solid #ccc;
@@ -5215,7 +5238,7 @@ table {
               display: flex;
               align-items: center;
               justify-content: space-between;
-              padding: 19px 23px;
+              padding: 14px 23px;
               border-bottom: 1px solid #ccc;
               font-size: 16px;
               line-height: 22px;
@@ -5242,7 +5265,7 @@ table {
         }
       }
       .advertise-step1-my-trade-coin {
-          margin-bottom: 98px;
+          margin-bottom: 80px;
           .form-wrapper {
               margin-bottom:23px;
               select {
@@ -6328,6 +6351,15 @@ table {
           margin-top: 38px;
           margin-bottom: 21px;
         }
+      .remove-top-icon {
+          display: inline-block;
+          width: 66px;
+          height: 66px;
+          background-image: url("../images/qxccc.png");
+          background-size: 100% 100%;
+          margin-top: 38px;
+          margin-bottom: 21px;
+      }
       .failure-top-icon {
           display: inline-block;
           width: 66px;
@@ -6647,7 +6679,7 @@ table {
       }
       .content-wrap {
         //background-color: #f7f7f7;
-        height: 82%;
+        height: 86%;
         .userInfo-wrap {
           padding: 30px;
           .photoWrap {
@@ -7116,7 +7148,7 @@ table {
         }
         .msgedit {
             height: 40px;
-            padding: 8px 100px 8px 20px;
+            padding: 8px 10px 8px 20px;
             margin-top: 10px;
             font-size: 14px;
             line-height: 24px;
@@ -7134,19 +7166,19 @@ table {
         .msgImg {
             width: 30px;
             background-image: url('../images/fsbq.png');
-            right: 184px;
+            right: 194px;
             background-size: 30px;
         }
         .openPic {
             width: 30px;
             background-image: url('../images/tj.png');
-            right: 110px;
+            right: 113px;
             background-size: 30px;
         }
         .phrase{
             width: 30px;
             background-image: url('../images/changyongyu.png');
-            right: 148px;
+            right: 153px;
             margin-top: 1px;
             background-size: 30px;
         }
@@ -7246,16 +7278,17 @@ table {
                 overflow: hidden;
                 .msgcon {
                     max-width: 400px;
+                    width: auto;
                     overflow: hidden;
-                    background-color: #fff;
-                    border: 1px solid $border-color;
+                    background-color: #4D4D4D;
+                    color: #fff;
                     float: right;
                     padding: 10px 15px;
                     font-size: 13px;
                     line-height: 1.8;
                     word-break: break-word;
                     img {
-                        max-width: 100%;
+                        width: 40px;
                         vertical-align: bottom;
                     }
                 }
@@ -7265,17 +7298,17 @@ table {
                 overflow: hidden;
                 .msgcon {
                     max-width: 400px;
+                    width: auto;
                     overflow: hidden;
-                    background-color: #000;
+                    background-color: #58748B;
                     color: #fff;
-                    border: 1px solid $border-color;
                     float: left;
                     padding: 10px 15px;
                     font-size: 13px;
                     line-height: 1.8;
                     word-break: break-word;
                     img {
-                        max-width: 100%;
+                        width: 40px;
                         vertical-align: bottom;
                     }
                 }
@@ -7285,28 +7318,27 @@ table {
                 overflow: hidden;
                 .msgcon {
                     max-width: 400px;
+                    width: auto;
                     overflow: hidden;
-                    background-color: red;
-                    color: #fff;
-                    border: 1px solid $border-color;
+                    background-color: #E6E6E6;
+                    color: #333;
                     float: left;
                     padding: 6px 15px;
                     font-size: 14px;
                     line-height: 1.8;
                     word-break: break-word;
                     img {
-                        max-width: 100%;
+                        width: 40px;
                         vertical-align: bottom;
                     }
                 }
             }
             &.admin {
                 text-align: center;
-                font-size: 12px;
-                color: #484848;
+                font-size: 14px;
+                color: #F19842;
                 padding: 10px 0;
                 p samp {
-                    color: #999;
                     display: inline-block;
                     margin-left: 5px;
                 }
@@ -7382,6 +7414,7 @@ table {
       #bigPicDiv{
         text-align: center;
         img{
+            min-height: 300px;
           max-height: 450px;
         }
       }
@@ -8192,7 +8225,7 @@ input:checked + .slider:before {
 }
 .coin-list{
     text-align: left;
-    margin-bottom: 80px;
+    margin-bottom: 75px;
     .advertise-coin-title{
         background: #f0f0f0;
         color: #999;
@@ -8220,7 +8253,7 @@ input:checked + .slider:before {
             -moz-box-pack: justify;
             -ms-flex-pack: justify;
             justify-content: space-between;
-            padding: 19px 23px;
+            padding: 14px 23px;
             border-bottom: 1px solid #ccc;
             font-size: 16px;
             line-height: 22px;
@@ -8234,6 +8267,35 @@ input:checked + .slider:before {
             }
         }
     }
+}
+
+.sms-info{
+    color: #D53D3D;
+    cursor: pointer;
+}
+.user-pj_table td{
+    text-align: left !important;
+}
+.user-pj_table thead td{
+    color: #333 !important;
+}
+.user-pj_table tbody td{
+    border-color: #eee;
+}
+.user-pj_table tbody .currency{
+    color: #333;
+}
+.user-pj_table tbody .payType{
+    color: #999;
+}
+.user-pj_table .user-pj_table {
+    width: 23% !important;
+}
+.user-pj_table .pj-en_sfhp {
+    width: 54% !important;
+}
+.user-pj_table .pj-en_sj {
+    width: 23% !important;
 }
 
 /* Rounded sliders */

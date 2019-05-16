@@ -81,8 +81,6 @@ define([
                     changeLanguageFn($(document))
                 }
             }, 1);
-        }else{
-            base.hideLoadingSpin();
         }
 
         $('.lang_select').change(function(){
@@ -111,36 +109,44 @@ define([
      * 获取未读消息
      */
     function getUnreadList() {
-        TradeCtr.getUnreadDetail(base.getUserId(),0).then((item) => {
-            let taget = $('#head-user-wrap .head-user .msg_num');
-            let msg_num = +taget.text() > 0 ? +taget.text() : '';
+        TradeCtr.getNotUnread(base.getUserId()).then(notMsg => {
+        
+        });
+        TradeCtr.getUnreadDetail(base.getUserId(), 0, 5).then((msgData) => {
+          let taget = $('#head-user-wrap .head-user .msg_num');
+          let msg_num = +taget.text() > 0 ? +taget.text() : '';
+          taget.show();
+          taget.text(msg_num + (msgData.unreadNum > 0 ? msgData.unreadNum : ''));
+          if(!msg_num && !msgData.unreadNum) {
+            taget.hide();
+          }else {
             taget.show();
-            taget.text(msg_num + (item.length > 0 ? item.length : ''));
-            if(!msg_num && !item.length) {
-              taget.addClass('hidden');
-            }else {
-              taget.removeClass('hidden');
-            }
+          }
+            let item = msgData.list, msgLen = msgData.list.length - 1;
             let messageHtml = '';
-            item.forEach(function (data) {
-                if(data.smsInfo.title !== '到币通知') {
-                  messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}&coin=${data.smsInfo.symbol}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
+            item.forEach((data, itemIndex) => {
+              if(+data.smsInfo.type !== 4) {
+                messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}&coin=${data.smsInfo.symbol}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
                     <img src="${data.smsInfo.type === 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                     <div class="message-text">
                         <p class="message-title">${data.smsInfo.title}</p>
                         <span class="message-content">${data.smsInfo.content}</span>
                     </div>
                 </li>`;
-                }else {
-                  messageHtml = `<li class="goMessageHref" data-href="../wallet/wallet.html" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
+              }else {
+                messageHtml = `<li class="goMessageHref" data-href="../wallet/wallet.html" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
                     <img src="${data.smsInfo.type === 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                     <div class="message-text">
                         <p class="message-title">${data.smsInfo.title}</p>
                         <span class="message-content">${data.smsInfo.content}</span>
                     </div>
                 </li>`;
+              }
+                $('.down-wrap-message ul').append(messageHtml);
+                if(itemIndex === msgLen) {
+                  messageHtml = `<li class="goHref" data-href="../user/user-pj.html" style="font-size: 12px; color: #999;text-align: center;display: block;">查看全部</li>`;
+                  $('.down-wrap-message ul').append(messageHtml);
                 }
-                $('.down-wrap-message ul').prepend(messageHtml);
             })
         })
     }
@@ -148,7 +154,7 @@ define([
      * 初始化Socket链接
      */
     function initSocket() {
-        // var ws = new WebSocket('ws://localhost:2802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 线上
+        // var ws = new WebSocket('wss://www.tychely.com/ws?userId='+ localStorage.getItem('userId')); // 线上
         var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
         // var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 测试
         ws.onopen = function (event) {
@@ -159,7 +165,7 @@ define([
             // data = data.replace(/\"\{/, '{').replace(/\}\"/, '}').replace(/\'/g, '"');
             data = JSON.parse(data);
             let taget = $('#head-user-wrap .head-user .msg_num');
-            let msg_num = +taget.text()
+            let msg_num = +taget.text();
             taget.show();
             taget.text(msg_num + data.length);
             let messageHtml = '';
@@ -185,7 +191,11 @@ define([
                                 <span class="message-content">${item.content}</span>
                             </div>
                         </li>`;
-                    $('.down-wrap-message ul .messge-content').prepend(messageHtml);
+                    $('.down-wrap-message ul').prepend(messageHtml);
+                    let liLength = $('.down-wrap-message ul li').length;
+                  if(liLength > 6) {
+                    $('.down-wrap-message ul').find('li')[5].remove();
+                  }
                 }else{
                     messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${item.refNo}&coin=${item.symbol}" data-refNo="${item.refNo}" data-readId="${item.readId}">
                             <img src="${data.type == 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
@@ -194,7 +204,11 @@ define([
                                 <span class="message-content">${item.content}</span>
                             </div>
                         </li>`;
-                    $('.down-wrap-message ul .messge-content').prepend(messageHtml);
+                    $('.down-wrap-message ul').prepend(messageHtml);
+                      let liLength = $('.down-wrap-message ul li').length;
+                      if(liLength > 6) {
+                        $('.down-wrap-message ul').find('li')[5].remove();
+                      }
                     if(item.type == 1){
                         var refNo;
                         var readId;
@@ -220,6 +234,9 @@ define([
                         </li>`;
                             $('.active-news').show();
                             $('.active-news ul').prepend(activeNewsHtml);
+                            setTimeout(() => {
+                              $('.active-news').hide();
+                            }, 50000);
                         });
                     }else if(item.type == 2){
                         setTimeout(() => {
@@ -325,7 +342,7 @@ define([
 
         $("#headLogout").click(function () {
             base.logout()
-        })
+        });
         $(".am-modal-mask").on('click', function () {
           $("#arbitrationform-wrapper .textarea-item").val("");
           $(this).parent(".dialog").addClass("hidden");
@@ -393,7 +410,7 @@ define([
          * 消息阅读
          */
         $("body").on('click', '.down-wrap-message ul li',function () {
-            if($(this).length == 0){
+            if($(this).length === 0){
                 $('#head-user-wrap .head-user .msg_num').hide();
             }
             var readId = $(this).attr('data-readid');
@@ -408,13 +425,13 @@ define([
                 }
 
             });
-        })
+        });
         $("body").on('click', '.active-news ul li',function () {
-            if($(this).length == 0){
+            if($(this).length === 0){
                 $('#head-user-wrap .head-user .msg_num').hide();
             }
             var readId = $(this).attr('data-readId');
-            var params ={"id":readId}
+            var params ={"id":readId};
             TradeCtr.readNews(params).then((data) => {
                 if (!base.isLogin()) {
                     base.goLogin();

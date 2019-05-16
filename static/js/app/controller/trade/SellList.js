@@ -181,7 +181,6 @@ define([
             var lists = data.list;
             if (data.list.length) {
                 var html = "";
-                console.log(lists)
                 if($('#bestSearchBtn').attr('data-type') == 'bestSearch'){
                     base.gohref('../trade/sell-detail.html?code='+lists[0].code+'&coin='+coin);
                 }
@@ -189,28 +188,7 @@ define([
                     html += buildHtml(item);
                 });
                 $("#content").html(html);
-                $(".trade-list-wrap .no-data").addClass("hidden")
-
-
-                $("#content .operation .goHref").off("click").click(function() {
-                    if (!base.isLogin()) {
-                        base.goLogin();
-                        return false;
-                    } else {
-                        var thishref = $(this).attr("data-href");
-                        base.gohref(thishref)
-                    }
-                })
-
-                $("#content .photoWrap").off("click").click(function() {
-                    if (!base.isLogin()) {
-                        base.goLogin();
-                        return false;
-                    } else {
-                        var thishref = $(this).attr("data-href");
-                        base.gohref(thishref)
-                    }
-                })
+                $(".trade-list-wrap .no-data").addClass("hidden");
             } else {
                 config.start == 1 && $("#content").empty()
                 config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
@@ -243,7 +221,7 @@ define([
         var operationHtml = '';
 
         if (item.userId == base.getUserId()) {
-            operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/advertise.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
+            operationHtml = `<div class="am-button am-button-ghost goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
         } else {
             operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`;
         }

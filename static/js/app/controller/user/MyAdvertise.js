@@ -125,15 +125,15 @@ define([
         //当前用户为买家
             //待发布
             if (adverConfig.statusList == null || adverConfig.statusList.length == 1) {
-                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
+                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
         		 			<div class="am-button publish goHref am-button-ghost am-button-out" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('查看', langType)}</div>`
 
                 //已发布
             } else {
                 if (item.status == '0') {
-                    operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
+                    operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
                 } else if (item.status == "1"){
-                  operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
+                  operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
                   tipHtml=`<p style="
                     position: absolute;
                     width: 300px;
@@ -142,7 +142,7 @@ define([
                     "
                   >${base.getText('您的出价当前未公开显示,请存入')}<span class="goHref" style="color: #E9967A;" data-href="../wallet/wallet.html">${base.getText('保证金')}(${item.tradeCoin === 'BTC' ? trade_btc_bail : trade_usdt_bail})</span></p>`
                 }else if (item.status == "2") {//已下架
-                  operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
+                  operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
                 }
             }
         if (type == 'buy') {

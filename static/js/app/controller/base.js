@@ -10,7 +10,7 @@ define([
         $("body").on("click", ".goHref", function() {
             var thishref = $(this).attr("data-href");
             var tzType = $(this).attr('href-type') || null;
-            if (thishref != "" && thishref) {
+            if (thishref !== "" && thishref) {
                 if (Base.isLogin()) {
                     Base.updateLoginTime();
                 }

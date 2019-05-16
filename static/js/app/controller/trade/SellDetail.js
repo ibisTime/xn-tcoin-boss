@@ -17,7 +17,7 @@ define([
     var config = {
         adsCode: code,
         tradePrice: 0
-    }
+    };
 
     var tradePhoto = '';
     var tradePhotoMy = '';
@@ -31,6 +31,13 @@ define([
       'BTC': '比特币',
       'USDT': 'USDT'
     };
+    let amountObj = '';
+    let marketPrice = '';
+    let kyAmount = '';
+    let fixTradeList = [];
+    let fixTradeMin = 0;
+    let fixTradeMax = 0;
+    let isSellOk = true;
 
     let platTagList = [];
 
@@ -83,7 +90,7 @@ define([
         $('.warnWrap .warn-txt2').html(base.getText('将被托管锁定，请放心购买。'));
         $('.sell-detail-container .titleWrap-left .small').html(`<span class="tit goHref en-buy_ggsy" data-href="/public/help.html">${base.getText('点击此处获取帮助')}</span>`);
         $('.sell-detail-container #buyAmount').attr('placeholder', base.getText('请输入您想获得的金额'));
-        $('.sell-detail-container #buyEth').attr('placeholder', base.getText('请输入您想获得的金额'));
+        $('.sell-detail-container #buyEth').attr('placeholder', base.getText('请输入您想要出售的数量'));
         $('.sell-detail-container #buyBtn .buy-now').html(base.getText('立即出售'));
         $('.sell-detail-container .buy-check-email .check-email-tips').html(base.getText(`要购买${coinName[coin]}，您需要先确认您的电子邮件`));
         $('.sell-detail-container .buy-check-email .check-email-btn').html(base.getText('重新发送确认电子邮件'));
@@ -132,7 +139,6 @@ define([
                 var photoHtml = `<div class="noPhoto">${tmpl}</div>`
                 $("#photo").html(photoHtml)
             }
-            console.log(data)
             config.tradePrice = Math.floor(data.truePrice * 100) / 100;
             limit = data.minTrade + '-' + data.maxTrade
             $("#nickname").html(data.user.nickname);
@@ -160,7 +166,7 @@ define([
             $("#submitDialog .tradePrice").html(config.tradePrice + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             $("#leftCountString").html(base.formatMoney(data.leftCountString, '', tradeCoin))
             $("#coin").text(tradeCoin);
-
+          marketPrice = data.marketPrice;
           $('.buy-info .rate').html(data.truePrice + data.tradeCurrency);
           $('.buy-info .price').html(data.marketPrice + data.tradeCurrency);
           $('.buy-cjtk').append(`<span>${data.item}</span>`);
@@ -172,17 +178,17 @@ define([
                 $('.item-selectAmount').addClass('hidden')
                 $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
                 $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
+              fixTradeMin = data.minTrade;
+              fixTradeMax = data.maxTrade;
             }else{
                 $('.item-buyAmount').addClass('hidden')
                 $('.item-selectAmount').removeClass('hidden')
                 $('#buyEth').attr('readonly','true')
-                var selectHtml =`<option value="">${base.getText('请选择')}</option>`;
-                data.fixTradeList.forEach(function(item) {
-                    selectHtml += `<option  value="${item}">${item}</option>`;
-                })
-                $('.item-selectAmount #amounSelect').html(selectHtml)
+              fixTradeList = data.fixTradeList;
                 $('.buy-info .min').html(data.fixTradeList[0] + '' + data.tradeCurrency);
                 $('.buy-info .max').html(data.fixTradeList[data.fixTradeList.length - 1] + '' + data.tradeCurrency);
+              fixTradeMin = data.fixTradeList[0];
+              fixTradeMax = data.fixTradeList[data.fixTradeList.length - 1];
 
             }
   
@@ -235,17 +241,27 @@ define([
           if (data.accountList) {
                 data.accountList.forEach(function(item) {
                     if (item.currency == currency) {
-                        $(".accountLeftCountString").attr('data-amount', base.formatMoneySubtract(item.amountString, item.frozenAmountString, currency));
+                      kyAmount = base.formatMoneySubtract(item.amount.toString(), item.frozenAmount.toString(), currency);
+                      amountObj = +((Math.floor(kyAmount * marketPrice * 10000) / 10000).toFixed(2));
+                      if(fixTradeMin > amountObj) {
+                        $('#buyBtn').css({
+                          'background-color': '#aaa',
+                          'color': '#fff',
+                          'cursor': 'default'
+                        });
+                        isSellOk = false;
+                      }
+                      $(".accountLeftCountString").attr('data-amount', kyAmount);
+                      var selectHtml =`<option value="">${base.getText('请选择')}</option>`;
+                      fixTradeList.forEach(function(item) {
+                        if(item < amountObj || item === amountObj) {
+                          selectHtml += `<option  value="${item}">${item}</option>`;
+                        }
+                      });
+                      $('.item-selectAmount #amounSelect').html(selectHtml);
                     }
-                })
+                });
             }
-
-            // data.forEach(function(item) {
-            //     if (item.currency == currency) {
-            //         $(".accountLeftCountString").attr('data-amount', base.formatMoneySubtract(`${item.amount}`, `${item.frozenAmount}`, currency));
-            //     }
-            // })
-
             $(".accountLeftCountString").text($(".accountLeftCountString").attr('data-amount'))
         }, base.hideLoadingSpin)
     }
@@ -294,7 +310,10 @@ define([
         document.getElementById('sellOrder').play();
         setTimeout(function() {
             base.gohref("../order/order-detail.html?code=" + data.code + "&type=sell&status=0" + "&buyUser=" + userId + '&coin=' + coin, '_bank');
-        }, 2000);
+        }, 1000);
+        setTimeout(function() {
+          base.gohref(`./sell-list.html?coin=${coin}`);
+        }, 1500);
         base.hideLoadingSpin();
       }, base.hideLoadingSpin)
 
@@ -318,16 +337,12 @@ define([
 
         //立即下单点击
         $("#buyBtn").click(function() {
+          if(!isSellOk) {
+            return false;
+          }
             $('.bb-m').text(tradeCoin);
             $("#submitDialog .tradeAmount").html($("#buyAmount").val() + tradeCurrency);
             $("#submitDialog .count").html($("#buyEth").val() + tradeCoin);
-            // if (_formWrapper.valid()) {
-                // if ($("#buyAmount").val() != '' && $("#buyAmount").val()) {
-                //     $("#submitDialog").removeClass("hidden")
-                // } else {
-                //     base.showMsg("请输入您购买的金額")
-                // }
-            // }
             UserCtr.getUser().then((data) => {
               if (_formWrapper.valid()) {
                 if($('.item-selectAmount').hasClass('hidden')){
@@ -378,24 +393,38 @@ define([
       });
         
         $("#buyEth").keyup(function() {
-            if(config.tradePrice > 0){
-                $("#buyAmount").val(Number($("#buyEth").val() * config.tradePrice).toFixed(2));
+            if(marketPrice > 0){
+                $("#buyAmount").val(Number($("#buyEth").val() * marketPrice).toFixed(2));
             }else{
                 $("#buyAmount").val(Number($("#buyEth").val()).toFixed(2));
             }
+          if(+($(this).val()) > kyAmount) {
+            base.showMsg(`可用余额为${kyAmount}${coin}`);
+            $(this).val(kyAmount);
+            if(config.tradePrice > 0) {
+              $("#buyAmount").val(Number(+kyAmount * marketPrice).toFixed(2));
+            }else {
+              $("#buyAmount").val(Number(kyAmount).toFixed(2));
+            }
+          }
         })
         $("#buyAmount").keyup(function() {
-            if(config.tradePrice > 0){
-                $("#buyEth").val(Number($("#buyAmount").val() / config.tradePrice).toFixed(8));
+            if(marketPrice > 0){
+                $("#buyEth").val(Number($("#buyAmount").val() / marketPrice).toFixed(8));
             }else{
                 $("#buyEth").val(Number($("#buyAmount").val()).toFixed(8));
             }
-        })
+            if(+($(this).val()) > amountObj) {
+              base.showMsg(`可用余额为${amountObj}${tradeCurrency}`);
+              $(this).val(Number(+kyAmount * marketPrice).toFixed(2));
+              $("#buyEth").val(Number(kyAmount).toFixed(8));
+            }
+        });
         $("#amounSelect").change(function() {
             if($("#amounSelect").val() == ''){
                 $("#buyEth").val('')
             }else {
-                $("#buyEth").val(($("#amounSelect option:selected").text() / config.tradePrice).toFixed(8));
+                $("#buyEth").val(($("#amounSelect option:selected").text() / marketPrice).toFixed(8));
             }
         })
             //下架-点击

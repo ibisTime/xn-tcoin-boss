@@ -53,7 +53,7 @@ define([
         let listeners = {
             'onConnNotify': onConnNotify,
             'onMsgNotify': onMsgNotify,
-            'onKickedEventCall': onKickedEventCall,
+            // 'onKickedEventCall': onKickedEventCall,
             'jsonpCallback': jsonpCallback //IE9(含)以下浏览器用到的jsonp回调函数，
         };
         let options = {

@@ -111,12 +111,19 @@ define([
             }, true);
         },
         //获取未读消息
-        getUnreadDetail(userId,status) {
-            return Ajax.get("805316", {
+        getUnreadDetail(userId, start = 0, limit = 5) {
+            return Ajax.get("805315", {
                 userId,
-                status
+                start,
+                limit
             }, true);
         },
+      getNotUnread(userId) {
+        return Ajax.get("805316", {
+          userId,
+          status: 0
+        }, true);
+      },
         //訂單-取消交易
         cancelOrder(code) {
             return Ajax.get("625242", {

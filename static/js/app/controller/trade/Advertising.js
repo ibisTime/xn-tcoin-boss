@@ -110,13 +110,13 @@ define([
         var type=base.getUrlParam("type");
         if(type != "buy") {
             $(".advertise-step1-bigbigTitle .change").removeClass('sell').addClass('buy');
-            $('.advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的货币以获得利润`));
-            $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText(`想要获得货币吗？`)}<span class="change sell">${base.getText(`创建一个出价来购买货币`)}</span></p>`);
+            $('.advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的数字货币以获得利润`));
+            $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText(`想要获得数字货币吗？`)}<span class="change sell">${base.getText(`创建一个出价来购买数字货币`)}</span></p>`);
             tradeType = 1;
         } else {
             $(".advertise-step1-bigbigTitle .change").removeClass('buy').addClass('sell');
-            $('.advertise-step1-bigbigTitle .title').html(base.getText('购买货币'));
-            $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText('想要出售货币吗？')}<span class="change buy">${base.getText('去出售货币')}</span></p>`);
+            $('.advertise-step1-bigbigTitle .title').html(base.getText('购买数字货币'));
+            $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText('想要出售数字货币吗？')}<span class="change buy">${base.getText('去出售数字货币')}</span></p>`);
             tradeType = 0;
         }
       localStorage.setItem('tradeCoin', 'CNY');
@@ -144,12 +144,34 @@ define([
         $('.step2-zq-tips .step2-za-tip-amount .step2-zq-tip-weighter').html(amountWeight);
     }
     //step2 -计算每笔销售
-    $('#zqInput').change(function(){
-        salesCalculation()
-    })
+  let timeout = null;
+    $('#zqInput').keyup(function(){
+      if(timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(() => {
+        salesCalculation();
+      }, 300);
+    });
+    if($('#zqInput').length > 0) {
+      $('#zqInput').mousewheel(stopScrollFun);
+      function stopScrollFun(evt) {
+        evt = evt || window.event;
+        if(evt.preventDefault) {
+          // Firefox  
+          evt.preventDefault();
+          evt.stopPropagation();
+        } else {
+          // IE  
+          evt.cancelBubble=true;
+          evt.returnValue = false;
+        }
+        return false;
+      }
+    }
   // step2 - 初始化方法
   function step2Init() {
-    $('.advertise-step2-bigbigTitle .title').html(base.getText(`卖出您的货币以获得利润`));
+    $('.advertise-step2-bigbigTitle .title').html(base.getText(`卖出您的数字货币以获得利润`));
     $('.advertise-step2-bigTitle .zffs').html(base.getText('支付方式'));
     $('.advertise-step2-bigTitle .tksm').html(base.getText('条款和说明'));
     $('.advertise-step2-bigTitle .llzd').html(base.getText('利润率和最低/最高金额'));
@@ -164,7 +186,7 @@ define([
     $('.advertise-step2-jyxe .zdjye').html(base.getText('最低交易金额'));
     $('.advertise-step2-jyxe .zgjye').html(base.getText('最高交易金额'));
     $('.advertise-step2-jyxe .jyxe-tip1').html(base.getText('借助这些限额，人们可以在最低交易金额到最高交易金额范围内与您交易。'));
-    $('.advertise-step2-jyxe .jyxe-tip2').html(base.getText(`当交易开始时，等额的${coinName[tradeCoin001]}将转到托管中。例如，当50USD的交易开始时，相应金额的比特币（0，0126063）将转入托管。`));
+    $('.advertise-step2-jyxe .jyxe-tip2').html(base.getText(`当交易开始时，等额的${coinName[tradeCoin001]}将转到托管中。例如，当50USD的交易开始时，相应金额的${coinName[tradeCoin001]}将转入托管。`));
     $('.advertise-step2-jyxe .jyxe-tip3').html(`${base.getText('出价当前未公开显示。若要使其可见，请执行以下操作： 存入')} <span class="coin_bzj"></span> ${base.getText('保证金，或者请获得验证')}`);
     $('.advertise-setp2-cancel-transcation .advertise-step2-title').html(base.getText('如果买家不在以下时间内支付'));
     $('.advertise-setp2-cancel-transcation .fz').html(base.getText('分钟'));
@@ -182,7 +204,12 @@ define([
         trade_btc_bail = data4.trade_btc_bail;
         trade_usdt_bail = data4.trade_usdt_bail;
         base.hideLoadingSpin();
-        cancelTimeInput = data2.cvalue;
+        let timeInput = localStorage.getItem('cancelTime') || '';
+        if(timeInput) {
+          cancelTimeInput = timeInput;
+        }else {
+          cancelTimeInput = data2.cvalue;
+        }
         $('#cancelTimeInput').val(cancelTimeInput);
         $('.step2-zq-tips .step2-za-tip-market-price .step2-zq-tip-weighter').html(data1[0].lastPrice);
         $('.step2-zq-tips .step2-zq-tip-unit ,.advertise-step2-jyxe .step2-input .step2-input-tip,.min-price .step2-input-tip').html(data1[0].referCurrency);
@@ -205,9 +232,9 @@ define([
       }, base.hideLoadingSpin);
       let type = base.getUrlParam('type');
       if(type === 'buy') {
-        $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`购买货币`));
+        $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`购买数字货币`));
       }else{
-        $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`卖出您的货币以获得利润`));
+        $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`卖出您的数字货币以获得利润`));
       }
     }
     function accuracyTags(step2SelectedData) {
@@ -223,7 +250,7 @@ define([
   // step3 - 初始化方法
   function step3Init() {
     setHtml();
-    $('.advertise-step3-bigbigTitle .title').html(base.getText('卖出您的货币以获得利润'));
+    $('.advertise-step3-bigbigTitle .title').html(base.getText('卖出您的数字货币以获得利润'));
     $('.advertise-step3-bigTitle .zffs').html(base.getText('支付方式'));
     $('.advertise-step3-bigTitle .mjtk').html(base.getText('条款和说明'));
     $('.advertise-step3-bigTitle .llv').html(base.getText('利润率和最低/最高金额'));
@@ -280,9 +307,9 @@ define([
     addListener();
     let type = base.getUrlParam('type');
     if(type === 'buy') {
-      $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`购买货币`));
+      $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`购买数字货币`));
     }else {
-      $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`卖出您的货币以获得利润`));
+      $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`卖出您的数字货币以获得利润`));
     }
   }
   function select2WithData(step3SelectedData) {
@@ -352,17 +379,17 @@ define([
         $('.fy_gjsz').html(base.getText('高级选项'));
         $('.fy_xsgjsz').html(base.getText('高级选项') + '...');
         $('.advertise-step3-btn').html(base.getText('立即发布'));
-        $('.advertise-out-container .advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的货币以获得利润`));
+        $('.advertise-out-container .advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的数字货币以获得利润`));
         $('.advertise-out-container .advertise-step1-bigTitle .zffs').html(base.getText('支付方式'));
         $('.advertise-out-container .advertise-step1-bigTitle .mjtk').html(base.getText('条款和说明'));
         $('.advertise-out-container .advertise-step1-bigTitle .llv').html(base.getText('利润率和最低/最高金额'));
         $('.advertise-out-container .advertise-step1-bigTitle .ndkh').html(`<span class="step1">Step1：</span>${base.getText('您的客户将以哪种方式向您付款？')}`);
-        $('.advertise-out-container .advertise-step1-bigbigTitle .text').html(`${base.getText(`想要获得货币吗？`)}<span class="change sell"> ${base.getText(`创建一个出价来购买货币`)}</span>`);
+        $('.advertise-out-container .advertise-step1-bigbigTitle .text').html(`${base.getText(`想要获得数字货币吗？`)}<span class="change sell"> ${base.getText(`创建一个出价来购买数字货币`)}</span>`);
         $('.advertise-out-container #tradeCurrency').attr('placeHolder', base.getText('在所有支付方式中搜索'));
         $('.advertise-out-container .advertise-step1-title').html(base.getText('支付方式'));
         $('.advertise-out-container .advertise-payType-title').html(base.getText('选择下面的支付方式'));
-        $('.advertise-out-container .advertise-step1-title').html(base.getText('我将以如下货币交易'));
-        $('.advertise-out-container .step1-my-trade-coin-tips').html(base.getText(`您的出价将以选定货币${adverTypeObj[adverType]}。例如，如果您选择美元，则您的出价将对希望以美元购买的所有人可见。`));
+        $('.advertise-out-container .advertise-step1-title').html(base.getText('我将以如下数字货币交易'));
+        $('.advertise-out-container .step1-my-trade-coin-tips').html(base.getText(`您的出价将以选定数字货币${adverTypeObj[adverType]}。例如，如果您选择美元，则您的出价将对希望以美元购买的所有人可见。`));
         $('.advertise-out-container .advertise-step1-btn').html(base.getText('下一步'));
     }
 
@@ -384,6 +411,13 @@ define([
             if($('.advertise-coin-container').length > 0) {
               tradeCoin001 = tradeCoin;
               $(`.icon_${tradeCoin001}`).addClass('icon-step1-selected');
+              //币种
+              if(data.tradeCurrency == 'CNY'){
+                $("#tradeCoin").val(base.getText('人民币'))
+              }else{
+                $("#tradeCoin").val(base.getText('美元'))
+              }
+              localStorage.setItem('tradeCoin', data.tradeCurrency);
               localStorage.setItem('tradeCoin001', tradeCoin);
             }
             data.totalCount = base.formatMoney(data.totalCountString, '', tradeCoin);
@@ -404,13 +438,6 @@ define([
                 }
               });
             }
-            //币种
-            if(data.tradeCurrency == 'CNY'){
-                $("#tradeCoin").val(base.getText('人民币'))
-            }else{
-                $("#tradeCoin").val(base.getText('美元'))
-            }
-            localStorage.setItem('tradeCoin', data.tradeCurrency);
 
             $("#coin").text($("#tradeCoin").val());
             $("#price").attr("data-coin", $("#tradeCoin").val());
@@ -419,13 +446,13 @@ define([
             var type =base.getUrlParam('type');
             if(type == 'sell') {
                 $('.advertise-step1-bigbigTitle .text').removeClass('buy').addClass('sell');
-                $('.advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的货币以获得利润`));
-                $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText(`想要获得货币吗？`)}<span class="change sell">${base.getText(`创建一个出价来购买货币`)}</span></p>`);
+                $('.advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的数字货币以获得利润`));
+                $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText(`想要获得数字货币吗？`)}<span class="change sell">${base.getText(`创建一个出价来购买数字货币`)}</span></p>`);
                 tradeType = 1;
             } else {
                 $('.advertise-step1-bigbigTitle .text').removeClass('sell').addClass('buy');
-                $('.advertise-step1-bigbigTitle .title').html(base.getText(`购买货币`));
-                $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText(`想要出售货币吗？`)}<span class="change buy">${base.getText(`去出售货币`)}</span></p>`);
+                $('.advertise-step1-bigbigTitle .title').html(base.getText(`购买数字货币`));
+                $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText(`想要出售数字货币吗？`)}<span class="change buy">${base.getText(`去出售数字货币`)}</span></p>`);
                 tradeType = 0;
             }
 
@@ -529,7 +556,7 @@ define([
                 $("#protectPrice").attr('placeholder', base.getText('广告最低可成交的价格'));
                 $("#totalCountExp").siblings('.txt').text(base.getText('出售总量') + '：');
                 $("#totalCount").attr('placeholder', base.getText('请输入售卖币的总量'));
-              $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`卖出您的货币以获得利润`));
+              $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText(`卖出您的数字货币以获得利润`));
             }
 
             $("#protectPriceExp").html(data['protectPrice'+langText]);
@@ -587,6 +614,7 @@ define([
           tradeCoin: localStorage.getItem('tradeCoin001'),
           isAllowProxy: isAllowProxy || 1
         }).then((res) => {
+          localStorage.removeItem('cancelTime');
           base.showMsg(base.getText('操作成功'));
           if (parseInt(localStorage.getItem('tradeType')) === 0) {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
@@ -921,15 +949,15 @@ define([
         let target = e.target;
         if($(target).hasClass('buy')) {
           $(target).removeClass('buy').addClass('sell');
-          $('.advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的货币以获得利润`));
-          $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText('想要获得货币吗？')}<span class="change sell">${base.getText('创建一个出价来购买比特币')}</span></p>`);
-          $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText('卖出您的货币以获得利润'));
+          $('.advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的数字货币以获得利润`));
+          $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText('想要获得数字货币吗？')}<span class="change sell">${base.getText('创建一个出价来购买数字货币')}</span></p>`);
+          $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText('卖出您的数字货币以获得利润'));
             tradeType = 1;
         } else {
           $(target).removeClass('sell').addClass('buy');
-          $('.advertise-step1-bigbigTitle .title').html(base.getText('购买货币'));
-          $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText('想要出售货币吗？')}<span class="change buy">${base.getText('去出售货币')}</span></p>`);
-          $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText('购买货币'));
+          $('.advertise-step1-bigbigTitle .title').html(base.getText('购买数字货币'));
+          $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText('想要出售数字货币吗？')}<span class="change buy">${base.getText('去出售数字货币')}</span></p>`);
+          $('.advertise-step2-bigbigTitle .title,.advertise-step3-bigbigTitle .title').text(base.getText('购买数字货币'));
           tradeType = 0;
         }
       });
@@ -1007,6 +1035,7 @@ define([
             tradeType: Number(localStorage.getItem('tradeType')),
             isAllowProxy: isAllowProxy || 1
         }).then((res) => {
+            localStorage.removeItem('cancelTime');
             base.showMsg(base.getText('操作成功'));
             if (Number(localStorage.getItem('tradeType')) == '0') {
                 base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');

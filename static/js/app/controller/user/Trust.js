@@ -111,10 +111,10 @@ define([
         var photoHtml = "";
         if (item.toUserInfo) {
             if (item.toUserInfo.photo) {
-                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.toUserInfo.photo)}')" data-href="../user/user-detail.html?userId=${item.toUserInfo.userId}"></div>`
+                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.toUserInfo.photo)}'); line-height: 40px;" data-href="../user/user-detail.html?userId=${item.toUserInfo.userId}"></div>`
             } else {
                 var tmpl = item.toUserInfo.nickname.substring(0, 1).toUpperCase();
-                photoHtml = `<div class="photo"><div class="noPhoto goHref" data-href="../user/user-detail.html?userId=${item.toUserInfo.userId}">${tmpl}</div></div>`
+                photoHtml = `<div class="photo"><div class="noPhoto goHref" style="line-height: 40px;" data-href="../user/user-detail.html?userId=${item.toUserInfo.userId}">${tmpl}</div></div>`
             }
             return `<tr>
 					<td>
@@ -141,10 +141,10 @@ define([
 
         if (item.fromUserInfo) {
             if (item.fromUserInfo.photo) {
-                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.fromUserInfo.photo)}')" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}"></div>`
+                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.fromUserInfo.photo)}');line-height: 40px;" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}"></div>`
             } else {
                 var tmpl = item.fromUserInfo.nickname.substring(0, 1).toUpperCase();
-                photoHtml = `<div class="photo"><div class="noPhoto goHref" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}">${tmpl}</div></div>`
+                photoHtml = `<div class="photo"><div class="noPhoto goHref" style="line-height: 40px;" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}">${tmpl}</div></div>`
             }
             return `<tr>
 					<td>

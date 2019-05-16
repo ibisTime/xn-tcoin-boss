@@ -1,99 +1,84 @@
 define([
     'app/controller/base',
-    'pagination',
     'app/interface/TradeCtr',
+    'app/interface/GeneralCtr',
     'app/controller/Top',
     'app/controller/foo'
-], function(base, pagination, TradeCtr, Top, Foo) {
+], function(base, TradeCtr, GeneralCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var userId = base.getUrlParam('userId');
-    var nickname = base.getUrlParam('nickname');
-    var isGood = {
-        '0': base.getText('否', langType),
-        '2': base.getText('是', langType)
-    }
-    var config = {
-        start: 1,
-        limit: 10,
-        objectUserId: userId
-    }
+    let userId = base.getUserId();
+    let smsType = {};
+    let docTimer = null;
+    let docIndex = 0;
     init();
     function init() {
-        $('.pj-en_pr').text(base.getText('评价人', langType));
-        $('.pj-en_sfhp').text(base.getText('是否好评', langType));
-        $('.pj-en_nr').text(base.getText('评价内容', langType));
-        $('.pj-en_sj').text(base.getText('评价时间', langType));
-        $('.pj-en_d').html(`${base.getText('对')}</samp><samp class="fl tc_red_i userName"></samp><samp class="fl k-fb pj-en_dpj">${base.getText('的评价')}`);
-        $('.zwpl').html(base.getText('暂无评论'));
-
-        if(langType == 'EN'){
-            $('.p-zh').addClass('none');
-            $('.p-en').removeClass('none');
-        }
-        $('title').text(base.getText('评价-区块链技术应用实验平台'));
-        base.showLoadingSpin();
-        $('.userName').text(nickname);
-        $.when(
-            userEvaluate()
-        ).then((data1, data2) => {
+        $('.pj-en_pr').text(base.getText('类型', langType));
+        $('.pj-en_sfhp').text(base.getText('消息', langType));
+        $('.pj-en_sj').text(base.getText('时间', langType));
         
-        })
-
-    }
-
-   // 查询用户评价
-   function userEvaluate(){
-       return TradeCtr.userEvaluate(config).then(data => {
-        var lists = data.list;
-        if (data.list.length) {
-            var html = "";
-            lists.forEach((item, i) => {
-                html += buildHtml(item);
+        $('title').text(base.getText('全部消息'));
+        $.when(
+          TradeCtr.getUnreadDetail(userId, docIndex, 20),
+          GeneralCtr.getDictList({parentKey: 'sms_type'})
+        ).then((data1, data2) => {
+            let m_html = '';
+            data2.forEach(item => {
+              smsType[item.dkey] = [item.dvalue];
             });
-            $("#content").html(html);
-            $(".trade-list-wrap .no-data").addClass("hidden");
-        } else {
-            config.start == 1 && $("#content").empty()
-            config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
-        }
-        config.start == 1 && initPagination(data);
-        base.hideLoadingSpin();
+          data1.list.forEach(item => {
+              m_html += buildHtml(item);
+          });
+          $('#content').html(m_html);
+          base.hideLoadingSpin();
         }, base.hideLoadingSpin);
-   }
-
-    function buildHtml(item) {
-        return `<tr>
-					<td class="currency">${item.user.nickname}</td>
-                    <td class="payType">${isGood[item.starLevel]}</td>
-					<td class="limit" colspan="2">${item.content ? item.content : '-'}</td>
-                    <td class="payType">${base.formateDatetime(item.commentDatetime)}</td>
-				</tr>`
-
-    }
-
-    // 初始化交易记录分页器
-    function initPagination(data) {
-        $("#pagination .pagination").pagination({
-            pageCount: data.totalPage,
-            showData: config.limit,
-            jump: true,
-            coping: true,
-            prevContent: '<img src="/static/images/arrow---left.png" />',
-            nextContent: '<img src="/static/images/arrow---right.png" />',
-            keepShowPN: true,
-            totalData: data.totalCount,
-            jumpIptCls: 'pagination-ipt',
-            jumpBtnCls: 'pagination-btn',
-            jumpBtn: base.getText('确定'),
-            isHide: true,
-            callback: function(_this) {
-                if (_this.getCurrent() != config.start) {
-                    base.showLoadingSpin();
-                    config.start = _this.getCurrent();
-                    userEvaluate();
-                }
+        $(document).scroll(function() {
+            if(Math.floor($(this).scrollTop() / 500) === (docIndex + 1)) {
+              docIndex ++;
+              TradeCtr.getUnreadDetail(userId, docIndex, 20).then(data => {
+                let m_html = '';
+                data.list.forEach(item => {
+                  m_html += buildHtml(item);
+                });
+                $('#content').append(m_html);
+              });
             }
         });
+      addEventer();
+    }
+    
+    function buildHtml(item) {
+        let trHtml = '';
+        if(+item.smsInfo.type !== 4) {
+            trHtml = `<tr>
+					<td class="currency">${smsType[item.smsInfo.type]}</td>
+                    <td class="sms-info" data-href="../order/order-detail.html?code=${item.smsInfo.refNo}&coin=${item.smsInfo.symbol}" data-readId="${item.id}">${item.smsInfo.content}</td>
+                    <td class="payType">${base.formateDatetime(item.createDatetime)}</td>
+				</tr>`;
+        }else {
+          trHtml = `<tr>
+					<td class="currency">${smsType[item.smsInfo.type]}</td>
+                    <td class="sms-info" data-href="../wallet/wallet.html?coin=BTC" data-readId="${item.id}">${item.smsInfo.content}</td>
+                    <td class="payType">${base.formateDatetime(item.createDatetime)}</td>
+				</tr>`;
+        }
+        return trHtml;
+
+    }
+    
+    function addEventer() {
+      $('#content').on('click', '.sms-info', function() {
+        var readId = $(this).attr('data-readid');
+        var params ={"id": readId};
+        TradeCtr.readNews(params).then(() => {
+          if (!base.isLogin()) {
+            base.goLogin();
+            return false;
+          } else {
+            var thishref = $(this).attr("data-href");
+            base.gohref(thishref, '_blank')
+          }
+        });
+      });
     }
 
 });

@@ -3,9 +3,10 @@ define([
     'swiper',
     'app/module/validate',
     'app/interface/UserCtr',
+  'app/interface/AccountCtr',
     'app/controller/Top',
     'app/controller/foo'
-], function(base, Swiper, Validate, UserCtr, Top, Foo) {
+], function(base, Swiper, Validate, UserCtr, AccountCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
     if (base.isLogin()) {
         base.gohref("../user/user.html")
@@ -55,17 +56,8 @@ define([
                 localStorage.setItem("email",item.email ? item.email : '');
                 localStorage.setItem("inviteCode", item.userId);
                 base.hideLoadingSpin();
-                // if (!item.mobile){
-                //     setTimeout(() => {
-                //         base.showMsg('请绑定手机号');
-                //         setTimeout(() => {
-                //             base.gohrefReplace("../user/setPhone.html");
-                //         }, 2500)
-                //     }, 1500);
-                // }else{
-                
-                // }
                 setTimeout(function() {
+                    AccountCtr.getAccount();
                     base.goReturn()
                 }, 800)
             })

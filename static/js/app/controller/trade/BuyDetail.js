@@ -33,6 +33,11 @@ define([
     };
 
     let platTagList = [];
+      let availableBalanceString = '';
+      let marketPrice = '';
+      let amountAll = 0;
+      let feeRate = 0;
+    let isSellOk = true;
 
     if (!base.isLogin()) {
         base.goLogin();
@@ -104,6 +109,7 @@ define([
     //获取详情
     function getAdvertiseDetail() {
         return TradeCtr.getAdvertiseDetail(code).then((data) => {
+          feeRate = data.feeRate;
             userId = data.user.userId;
             nickname = data.user.nickname;
             tradeCurrency = data.tradeCurrency;
@@ -150,32 +156,54 @@ define([
             $("#leaveMessage").html(data.leaveMessage.replace(/\n/g, '<br>'))
             $("#limit").html(limit);
             $('#countString').html(totalCountString);
-            $("#payLimit").html(data.payLimit)
+            $("#payLimit").html(data.payLimit);
 
             $("#truePrice").html(Math.floor(data.truePrice * 100) / 100 + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             $("#submitDialog .tradePrice").html(config.tradePrice + '&nbsp;'+ tradeCurrency +'/' + tradeCoin)
             // $("#leftCountString").html(base.formatMoney(data.leftCountString, '', tradeCoin))
             $("#coin").text(tradeCoin);
-
+          availableBalanceString = +base.formatMoney(data.availableBalanceString, '', tradeCoin);
+          marketPrice = data.marketPrice;
+          amountAll = (Math.floor(+(marketPrice * availableBalanceString) * 10000) / 10000).toFixed(2);
             $('.buy-info .rate').html(data.truePrice + data.tradeCurrency);
             $('.buy-info .price').html(data.marketPrice + data.tradeCurrency);
             $('.buy-cjtk').append(`<span>${data.item}</span>`);
             $('.buy-cjtk .buy-quick-title .buy-title').html(data.user.nickname + base.getText('的出价条款'));
             $('.buy-user-nickname').html(data.user.nickname);
             $('.buy-talk').html(base.getText('安全托管') + base.getText('与') +data.user.nickname+base.getText('实时交谈'));
-            if(data.fixTrade == '' ||  data.fixTrade == undefined){
+            if(data.fixTrade === '' ||  data.fixTrade === undefined){
                 $('.item-buyAmount').removeClass('hidden');
                 $('.item-selectAmount').addClass('hidden');
                 $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
                 $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
+                if(amountAll < +data.minTrade ) {
+                  $('#buyBtn').css({
+                    'background-color': '#aaa',
+                    'color': '#fff',
+                    'cursor': 'default'
+                  });
+                  isSellOk = false;
+                }
             }else{
                 $('.item-buyAmount').addClass('hidden');
-                $('.item-selectAmount').removeClass('hidden')
+                $('.item-selectAmount').removeClass('hidden');
                 $('#buyEth').attr('readonly','true');
-                var selectHtml =`<option value="">${base.getText('请选择')}</option>`;
+                let selectHtml =`<option value="">${base.getText('请选择')}</option>`;
+                let slen = 0;
                 data.fixTradeList.forEach(function(item) {
-                    selectHtml += `<option  value="${item}">${item}</option>`;
-                })
+                    if(+item < amountAll || +item === amountAll) {
+                      selectHtml += `<option  value="${item}">${item}</option>`;
+                      slen ++;
+                    }
+                });
+                if(slen === 0) {
+                  $('#buyBtn').css({
+                    'background-color': '#aaa',
+                    'color': '#fff',
+                    'cursor': 'default'
+                  });
+                  isSellOk = false;
+                }
                 $('.item-selectAmount #amounSelect').html(selectHtml)
                 $('.buy-info .min').html(data.fixTradeList[0] + '' + data.tradeCurrency);
                 $('.buy-info .max').html(data.fixTradeList[data.fixTradeList.length - 1] + '' + data.tradeCurrency);
@@ -194,18 +222,6 @@ define([
 
           $('.buy-user-sy-plus').html(`+${data.userStatistics.beiHaoPingCount}`);
           $('.buy-user-sy-negative').html(`-${data.userStatistics.beiChaPingCount}`);
-          //
-          //   var code=base.getUrlParam('code');
-          //   var status=base.getUrlParam('status');
-          //   var tradeCoin=base.getUrlParam('tradeCoin');
-          //   var type=base.getUrlParam('type');
-          //   var operationHtml = ''
-          //   if (status == '0') {
-          //       operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${code}&mod=gg&coin=${tradeCoin}&type=${type}">${base.getText('编辑', langType)}</div>
-          //                        <div class="am-button am-button-red mr20 doDownBtn" data-code="${code}">${base.getText('下架', langType)}</div>`
-          //   }
-          //   $('.buy-operation').html(operationHtml)
-
           $.when(
                 getAccount(data.tradeCoin),
                 getUser()
@@ -241,12 +257,11 @@ define([
             if (data.accountList) {
                 data.accountList.forEach(function(item) {
                     if (item.currency == currency) {
-                        $(".accountLeftCountString").attr('data-amount', base.formatMoneySubtract(item.amountString, item.frozenAmountString, currency));
+                        let dmoney = +base.formatMoneySubtract(item.amount.toString(), item.frozenAmount.toString(), currency);
                     }
                 })
 
             }
-            $(".accountLeftCountString").text($(".accountLeftCountString").attr('data-amount'))
         }, base.hideLoadingSpin)
     }
 
@@ -295,7 +310,10 @@ define([
                 base.showMsg(base.getText('下单成功'));
                 setTimeout(function() {
                     base.gohref("../order/order-detail.html?code="+data.code+'&coin='+coin, '_bank');
-                }, 3000);
+                }, 1000);
+              setTimeout(function() {
+                base.gohref(`../index.html?coin=${coin}`);
+              }, 1500);
                 base.hideLoadingSpin();
             }, base.hideLoadingSpin) //
 
@@ -316,13 +334,15 @@ define([
 
         //立即下单点击
         $(document).on('click','#buyBtn',function() {
+            if(!isSellOk) {
+                return false;
+            }
             $('.bb-m').text(tradeCoin);
-            $("#submitDialog .tradeAmount").html($("#buyAmount").val() + tradeCurrency)
+            $("#submitDialog .tradeAmount").html($("#buyAmount").val() + tradeCurrency);
             $("#submitDialog .count").html($("#buyEth").val() + tradeCoin);
             UserCtr.getUser().then((data) => {
                 if($('.item-selectAmount').hasClass('hidden')){
                     if ($("#buyAmount").val() != '') {
-                        // $("#submitDialog").removeClass("hidden")
                         buyETH();
                     } else {
                         base.showMsg(base.getText('请输入您购买的金额'))
@@ -335,19 +355,6 @@ define([
                         base.showMsg(base.getText('请选择您购买的金额'))
                     }
                 }
-
-                // else if (!data.tradepwdFlag) {
-                //     base.showMsg(base.getText('请先设置交易密码', langType))
-                //     setTimeout(function() {
-                //         base.gohref("../user/setTradePwd.html?type=1")
-                //     }, 1800)
-                // }
-                // else if (!data.realName) {
-                //     base.showMsg("请先进行身份验证")
-                //     setTimeout(function() {
-                //         base.gohref("../user/identity.html")
-                //     }, 1800)
-                // }
             }, base.hideLoadingSpin);
         });
       
@@ -362,12 +369,21 @@ define([
       });
 
         $("#buyEth").keyup(function() {
-            let truePrice = $("#buyEth").val() * config.tradePrice;
+            let truePrice = $("#buyEth").val() * marketPrice;
             $("#buyAmount").val((Math.floor(truePrice * 100) / 100).toFixed(2));
-
-        })
+            if(+$(this).val() > availableBalanceString * (1 - feeRate)) {
+              base.showMsg(base.getText('对方余额不足'));
+              $(this).val((availableBalanceString * (1 - feeRate)).toFixed(8));
+              $("#buyAmount").val((availableBalanceString * marketPrice * (1 - feeRate)).toFixed(2));
+            }
+        });
         $("#buyAmount").keyup(function() {
-            $("#buyEth").val(($("#buyAmount").val() / config.tradePrice).toFixed(8));
+            $("#buyEth").val(($("#buyAmount").val() / marketPrice).toFixed(8));
+            if(+$(this).val() > amountAll * (1 - feeRate)) {
+                base.showMsg(base.getText('对方余额不足'));
+                $(this).val((availableBalanceString * marketPrice * (1 - feeRate)).toFixed(2));
+              $("#buyEth").val((availableBalanceString * (1 - feeRate)).toFixed(8));
+            }
         })
         $("#amounSelect").change(function() {
             if($("#amounSelect").val() == ''){

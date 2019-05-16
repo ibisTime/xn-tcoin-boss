@@ -207,12 +207,18 @@ define([
 					</td>
 					<td class="code">${item.code.substring(item.code.length-8)}</td>
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'BTC'}</td>
-					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
 					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
+					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
 					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}
 					<samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}"></samp>
-						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${item.buyUser}&status=${item.status}&type=${item.type}&adsCode=${item.adsCode}&buyUserInfo=${item.buyUserInfo}&coin=${item.tradeCoin}"> ></i></td>
+						<i
+						class="icon icon-detail goHref fr"
+						href-type="_blank"
+						data-href="../order/order-detail.html?code=${item.code}&buyUser=${item.buyUser}&status=${item.status}&type=${item.type}&adsCode=${item.adsCode}&buyUserInfo=${item.buyUserInfo}&coin=${item.tradeCoin}">
+						    >
+						</i>
+                    </td>
 				</tr>`;
     }
 

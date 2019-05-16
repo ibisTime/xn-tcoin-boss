@@ -104,6 +104,7 @@ define([
       <option value="2">${base.getText('已解冻待评价')}</option>
       <option value="3">${base.getText('已完成')}</option>
       <option value="4">${base.getText('已取消')}</option>
+      <option value="8">${base.getText('超时取消')}</option>
       <option value="6">${base.getText('仲裁买家胜')}</option>
       <option value="7">${base.getText('仲裁卖家胜')}</option>
     `);
@@ -246,14 +247,14 @@ define([
 					</td>
 					<td class="code">${item.code.substring(item.code.length-8)}<i>(${orderTypeList[item.type]})</i></td>
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'BTC'}</td>
-					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
 					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
+					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
 					<td class="status" style="color: ${colors[item.status]}">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
                     <td class="operation">
-                        <div class="am-button am-button-red goHref " data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}">${base.getText('聊天')}</div>
-                        <samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}"></samp>
-						<i class="icon icon-detail goHref fr" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}"> ></i>
+                        <div class="am-button am-button-red goHref" href-type="_blank" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}">${base.getText('聊天')}</div>
+                        <samp class="unread goHref fl hidden" href-type="_blank" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}"></samp>
+						<i class="icon icon-detail goHref fr" style="margin-top: 7px;" href-type="_blank" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}"> ></i>
                     </td>
 				</tr>`;
   }
@@ -276,7 +277,7 @@ define([
       var statusList = [];
       var payStatic =  $('.hisorder-wrap #payStatic option:selected').val();
       if(payStatic === ""){
-          statusList = ['2','3','4','6','7'];
+          statusList = ['2','3','4','6','7','8'];
       }else {
           statusList.push(payStatic)
       }
