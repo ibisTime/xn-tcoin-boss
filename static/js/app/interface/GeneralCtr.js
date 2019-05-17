@@ -105,6 +105,9 @@ define([
         //转账至T网
         transferT(config){
             return Ajax.post("802800",config)
-        }
+        },
+      rateList() {
+            return Ajax.post('625391');
+      }
     };
 });

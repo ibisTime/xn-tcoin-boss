@@ -38,6 +38,8 @@ define([
     var mj_time = 0;
     var setInterTime = null;
     var isFqzc = false;
+    let loginStatus = '';
+    let getPicData = [];
 
   let payTypeList = [];
   let platTagList = [];
@@ -45,6 +47,7 @@ define([
   let orderPjStatus = false;
   
   let isWebUser = 1;
+  let setImgIndex = null;
   
   let coinName = {
     'BTC': '比特币',
@@ -291,7 +294,6 @@ define([
           var msg;
           getCountDown();
           function getCountDown() {
-            console.log(maxtime);
             if (maxtime > 0) {
               minutes = Math.floor(maxtime / 60);
               seconds = Math.floor(maxtime % 60);
@@ -316,6 +318,15 @@ define([
           if(data.buyUser === userId) {
             toUserId = data.sellUserInfo.userId;
             document.querySelector('title').innerText = data.sellUserInfo.nickname;
+            let time = base.calculateDays(data.sellUserInfo.lastLogin, new Date());
+            if (time <= 10) {
+              loginStatus = 'green'
+            } else if (time <= 30) {
+              loginStatus = 'yellow'
+            } else {
+              loginStatus = 'gray'
+            }
+            $('.user_loginTime').addClass(loginStatus);
             let interval = base.fun(Date.parse(data.sellUserInfo.lastLogin), new Date());
             $('.orderDetail-right-user-info .user-info .time .interval').html(interval);
             if(data.status == '0') {
@@ -341,6 +352,15 @@ define([
           } else {
             toUserId = data.buyUserInfo.userId;
             document.querySelector('title').innerText = data.buyUserInfo.nickname;
+            let time = base.calculateDays(data.buyUserInfo.lastLogin, new Date());
+            if (time <= 10) {
+              loginStatus = 'green'
+            } else if (time <= 30) {
+              loginStatus = 'yellow'
+            } else {
+              loginStatus = 'gray'
+            }
+            $('.user_loginTime').addClass(loginStatus);
             let interval = base.fun(Date.parse(data.buyUserInfo.lastLogin), new Date());
             $('.orderDetail-right-user-info .user-info .time .interval').html(interval);
             $('.cljf-box').hide();
@@ -1302,7 +1322,9 @@ define([
         }
     }
     //解析图片消息元素
+  let picTime = null;
     function convertImageMsgToHtml(content, imageName) {
+        let UUID = content.UUID;
         isWebUser = 1;
         var smallImage = content.getImage(webim.IMAGE_TYPE.SMALL); // 小图
         var bigImage = content.getImage(webim.IMAGE_TYPE.LARGE); // 大图
@@ -1313,7 +1335,25 @@ define([
         if (!oriImage) {
             oriImage = smallImage;
         }
-        return "<img name='" + imageName + "' src='" + smallImage.getUrl() + "#" + bigImage.getUrl() + "#" + oriImage.getUrl() + "' style='cursor: pointer;' id='" + content.getImageId() + "' bigImgUrl='" + bigImage.getUrl() + "' />";
+      let len = getPicData.length;
+      getPicData.push({
+        imgUrls: smallImage.getUrl(),
+        uuid: UUID
+      });
+        if(picTime) {
+          clearTimeout(picTime);
+        }
+        picTime = setTimeout(() => {
+          let doc = document;
+          let bigPicDiv = doc.getElementById('bigPicDiv');
+          bigPicDiv.innerHTML = '';
+          let span = '';
+          getPicData.forEach((item, index) => {
+            span += `<span class="${item.uuid}${index}" data-index="${index}"><img class="img-thumbnail" src="${item.imgUrls}" /></span>`;
+          });
+          bigPicDiv.innerHTML = span;
+        }, 1000);
+        return `<img name='${imageName}' src='${smallImage.getUrl()}#${bigImage.getUrl()}#${oriImage.getUrl()}' style='cursor: pointer;' id='${content.getImageId()}' bigImgUrl='${bigImage.getUrl()}' data-index="${len}" />`;
     }
 
     // picUpload
@@ -1323,26 +1363,30 @@ define([
             console.log(base.getText('您的浏览器不支持') + "File Api");
             return;
         }
-        var file = uploadFile.files[0];
-        var fileSize = file.size;
-        //先检查图片类型和大小
-        if (!checkPic(uploadFile, fileSize)) {
-            return;
+        let fileList = Array.from(uploadFile.files);
+        let preDiv = document.getElementById('previewPicDiv');
+        let span = document.createElement('span');
+        if(fileList.length > 5) {
+          base.showMsg('一次性上传不得超过5张');
+          fileList.length = 5;
         }
-        //预览图片
-        var reader = new FileReader();
-        var preDiv = document.getElementById('previewPicDiv');
-        reader.onload = (function(file) {
-            return function(e) {
-                preDiv.innerHTML = '';
-                var span = document.createElement('span');
-                span.innerHTML = '<img class="img-responsive" src="' + this.result + '" alt="' + file.name + '" />';
-                //span.innerHTML = '<img class="img-thumbnail" src="' + this.result + '" alt="' + file.name + '" />';
-                preDiv.insertBefore(span, null);
+        fileList.forEach(file => {
+          let reader = new FileReader();
+          let fileSize = file.size;
+          //先检查图片类型和大小
+          if (!checkPic(uploadFile, fileSize)) {
+            return;
+          }
+          //预览图片
+          reader.onload = (function(file) {
+            return function() {
+              span.innerHTML += '<img class="img-responsive" src="' + this.result + '" alt="' + file.name + '" />';
             };
-        })(file);
-        //预览图片
-        reader.readAsDataURL(file);
+          })(file);
+          //预览图片
+          reader.readAsDataURL(file);
+        });
+        preDiv.insertBefore(span, null);
     }
 
     //上传图片进度条回调函数
@@ -1355,28 +1399,33 @@ define([
 
     //上传图片
     function uploadPic() {
-        var uploadFiles = document.getElementById('upd_pic');
-        var file = uploadFiles.files[0];
-        var businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.GROUP_MSG;
+        let uploadFiles = document.getElementById('upd_pic');
+        let fileList = Array.from(uploadFiles.files);
+        if(fileList.length > 5) {
+          fileList.length = 5;
+        }
+      fileList.forEach(file => {
+        let businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.GROUP_MSG;
         //封装上传图片请求
-        var opt = {
-            'file': file, //图片对象
-            'onProgressCallBack': onProgressCallBack, //上传图片进度条回调函数
-            //'abortButton': document.getElementById('upd_abort'), //停止上传图片按钮
-            'To_Account': groupId, //接收者
-            'businessType': businessType //业务类型
+        let opt = {
+          'file': file, //图片对象
+          'onProgressCallBack': onProgressCallBack, //上传图片进度条回调函数
+          //'abortButton': document.getElementById('upd_abort'), //停止上传图片按钮
+          'To_Account': groupId, //接收者
+          'businessType': businessType //业务类型
         };
         //上传图片
         webim.uploadPic(opt,
-            function(resp) {
-                //上传成功发送图片
-                sendPic(resp, file.name);
-                $('#upload_pic_dialog').hide();
-            },
-            function(err) {
-                console.log(err.ErrorInfo);
-            }
+          function(resp) {
+            //上传成功发送图片
+            sendPic(resp, file.name);
+            $('#upload_pic_dialog').hide();
+          },
+          function(err) {
+            console.log(err.ErrorInfo);
+          }
         );
+      });
     }
     //发送图片消息
     function sendPic(images, imgName) {
@@ -1465,24 +1514,11 @@ define([
     }
     //单击图片事件
     function imageClick(imgObj) {
-        var imgUrls = imgObj.src;
-        if(imgUrls.includes('data:image/gif;base64')) {
-          let bigPicDiv = document.getElementById('bigPicDiv');
-          bigPicDiv.innerHTML = '';
-          let span = document.createElement('span');
-          span.innerHTML = '<img class="img-thumbnail" src="' + imgUrls + '" />';
-          bigPicDiv.insertBefore(span, null);
-        }else {
-          let imgUrlArr = imgUrls.split("#"); //字符分割
-          let smallImgUrl = imgUrlArr[0]; //小图
-          let bigImgUrl = imgUrlArr[1]; //大图
-          let oriImgUrl = imgUrlArr[2]; //原图
-          let bigPicDiv = document.getElementById('bigPicDiv');
-          bigPicDiv.innerHTML = '';
-          let span = document.createElement('span');
-          span.innerHTML = '<img class="img-thumbnail" src="' + bigImgUrl + '" />';
-          bigPicDiv.insertBefore(span, null);
-        }
+        let imgId = imgObj.id;
+        let imgIndex = $(imgObj).attr('data-index');
+        let imgClass = '.' + imgId + imgIndex;
+        setImgIndex = imgIndex;
+        $(imgClass).show(300).siblings().hide(200);
         $('#click_pic_dialog').show();
     }
     //弹出发图对话框
@@ -1949,6 +1985,31 @@ define([
           $('#bigPicDiv').css('overflow', 'scroll');
         }, 100);
       });
+      $('.am-modal-body').click(function(e) {
+        e.stopPropagation();
+        let target = e.target;
+        if($(target).hasClass('pic-left')) {
+          if(setImgIndex === 0) {
+            setImgIndex = getPicData.length - 1
+          }else {
+            setImgIndex --;
+          }
+          $('#bigPicDiv').children().eq(setImgIndex).show(100).siblings().hide();
+          $('#bigPicDiv').children().eq(setImgIndex).children('img').css('transform', 'scale(1)');
+          scaleIndex = 1;
+        }
+        if($(target).hasClass('pic-right')) {
+          if(setImgIndex === getPicData.length - 1) {
+            setImgIndex = 0
+          }else {
+            setImgIndex ++;
+          }
+          $('#bigPicDiv').children().eq(setImgIndex).show(100).siblings().hide();
+          $('#bigPicDiv').children().eq(setImgIndex).children('img').css('transform', 'scale(1)');
+          scaleIndex = 1;
+        }
+      });
+      
       $('#click_pic_dialog .jian').click(function() {
         if(scaleIndex > 1) {
           scaleIndex -= 0.2;
@@ -1966,7 +2027,9 @@ define([
           $('#bigPicDiv').css('overflow', 'scroll');
         }, 100);
       });
-
+      $('#click_pic_dialog').click(function() {
+        $('#click_pic_dialog').hide();
+      });
         // 自动刷新页面
         function auSx() {
             window.location.reload();

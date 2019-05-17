@@ -40,6 +40,23 @@ define([
         getPayTypeMoneyList(),
         addListener(),
       ).then(() => {
+        let sellSearchConfig = localStorage.getItem('sellSearchConfig') || '';
+        if(sellSearchConfig) {
+          config = JSON.parse(sellSearchConfig);
+          let payType = config.payType || '';
+          let price = config.price || '';
+          let tradeCurrency = config.tradeCurrency || '';
+          if(payType) {
+            $(`#left-wrap .${config.payType}`).addClass('pay-active');
+            $('#searchConWrap .payType').val(config.payType);
+          }
+          if(price) {
+            $('#payTypeMoney').val(price);
+          }
+          if(tradeCurrency) {
+            $('#searchConWrap .payTypeMoney').val(tradeCurrency);
+          }
+        }
         getPageAdvertise(config);
         $('.buy_sell .buy').removeClass('on').siblings().addClass('on');
         var tipHtml=`<p class="tip">${base.getText('来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的')}<span class="goHref" data-href="../public/help.html">“${base.getText(`如何提取（出售）${coinName[coin]}指南`)}”</span>，${base.getText('了解有关如何保持安全的提示')}。</p>`;
@@ -111,6 +128,7 @@ define([
         $('.advertise-index-left #payTypeMoney').attr('placeholder', '输入数额');
         $('.advertise-index-left .nickname').attr('placeholder', '请输入完整用户名');
         $('#searchBtn .search-txt').text(base.getText('搜索'));
+        $('#resetSearchBtn .search-txt').text(base.getText('重置'));
         $('#bestSearchBtn .search-txt').text(base.getText('请给我最好的'));
         $('.kfjg').text(base.getText('开放出价'));
         $('.csrhbf').text(base.getText('您可以出售任何部分'));
@@ -167,7 +185,6 @@ define([
             isHide: true,
             callback: function(_this) {
                 if (_this.getCurrent() != config.start) {
-                    base.showLoadingSpin();
                     config.start = _this.getCurrent();
                     getPageAdvertise(config);
                 }
@@ -177,6 +194,8 @@ define([
 
     //分页查询广告
     function getPageAdvertise(config) {
+      base.showLoadingSpin();
+      localStorage.setItem('sellSearchConfig', JSON.stringify(config));
       return TradeCtr.getPageAdvertise(config, true).then((data) => {
             var lists = data.list;
             if (data.list.length) {
@@ -209,8 +228,8 @@ define([
     }
     function buildHtml(item) {
         // 登录状态
-        var loginStatus = '';
-        var time = base.calculateDays(item.user.lastLogin, new Date())
+        let loginStatus = '';
+        let time = base.calculateDays(item.user.lastLogin, new Date());
         if (time <= 10) {
             loginStatus = 'green'
         } else if (time <= 30) {
@@ -322,28 +341,30 @@ define([
             // config.price = $('#payTypeMoney').val() * 1000;
             config.start = 1;
             config.tradeType = tradeType === 'buy' ? '0' : '1';
-            base.showLoadingSpin();
     
             getPageAdvertise(config);
         });
     // 点击所以筛选数据
     $('#left-wrap').on('click','.en_cwai',function () {
         getPageAdvertise(config);
-        base.showLoadingSpin();
     });
       // 点击付款方式筛选数据
      $('.left-item-group').on('click', '.left-item', (function(ev) {
-        let payType = $(this).attr('data-value');
-        $('#searchConWrap .payType').val(payType);
-        let payConfig = {
-          start: 1,
-          limit: 10,
-          tradeType: 0,
-          payType,
-          coin: coin.toUpperCase()
-        };
-        
-        base.showLoadingSpin();
+       let payType = $(this).attr('data-value');
+       let price = $('#payTypeMoney').val();
+       let tradeCurrency = $('#searchConWrap .payTypeMoney').val();
+       $('#searchConWrap .payType').val(payType);
+       let payConfig = {
+         start: 1,
+         limit: 10,
+         tradeType: 0,
+         payType,
+         tradeCurrency,
+         coin: coin.toUpperCase()
+       };
+       if(price) {
+         payConfig.price = price;
+       }
         getPageAdvertise(payConfig);
       }));
 
@@ -371,6 +392,19 @@ define([
       });
       $('.buy_sell .sell').on('click', (e) => {
         base.gohref(`../trade/sell-list.html?langType=${langType}&coin=${coin}`);
+      });
+      $('#resetSearchBtn').click(function() {
+        $('#payTypeMoney').val('');
+        $('#searchConWrap .payTypeMoney').val('');
+        $('#searchConWrap .payType').val('');
+        $('#left-wrap .left-item').removeClass('pay-active');
+        config = {
+          start: 1,
+          limit: 10,
+          tradeType: 0,
+          coin: coin.toUpperCase()
+        };
+        getPageAdvertise(config);
       });
     }
 });

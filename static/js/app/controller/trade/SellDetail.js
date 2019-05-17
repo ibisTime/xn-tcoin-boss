@@ -38,6 +38,7 @@ define([
     let fixTradeMin = 0;
     let fixTradeMax = 0;
     let isSellOk = true;
+    let loginStatus = '';
 
     let platTagList = [];
 
@@ -199,7 +200,15 @@ define([
             $('.icon-user-photo').text(nick);
           }
           buildTagsHtml(data.platTag, data.customTag);
-
+          let time = base.calculateDays(data.user.lastLogin, new Date());
+          if (time <= 10) {
+            loginStatus = 'green'
+          } else if (time <= 30) {
+            loginStatus = 'yellow'
+          } else {
+            loginStatus = 'gray'
+          }
+          $('.user_loginTime').addClass(loginStatus);
           let interval = base.fun(Date.parse(data.user.lastLogin), new Date());
           $('.detail-container-right .buy-user-info .buy-user-online .interval').html(interval);
 

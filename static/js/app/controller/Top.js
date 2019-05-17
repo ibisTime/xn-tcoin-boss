@@ -22,6 +22,8 @@ define([
       };
     $(document).ready(function () {
         init();
+      localStorage.removeItem('sellSearchConfig');
+      localStorage.removeItem('buySearchConfig');
         getBTC();
         if(base.isLogin()){
             initSocket();
@@ -54,9 +56,6 @@ define([
         $('#head-user-wrap .fy_top_yqhy').text(base.getText('邀请好友'));
         $('#head-user-wrap .fy_top_tcdl').text(base.getText('退出登录'));
         $('.en_yqhy').text(base.getText('邀请好友'));
-        $('.store_en').text(base.getText('商城'));
-        $('.store_gm').text(base.getText('区块链游戏'));
-        $('.store_car').text(base.getText('二手车兑换'));
         $('.store_ye').text(base.getText('游戏余额'));
         $('.active-news .hyxx').html('您有活跃消息');
         $('.active-news .bt').html('标题');
@@ -85,7 +84,7 @@ define([
 
         $('.lang_select').change(function(){
             switch($(this).val()){
-                case 'zh': localStorage.clear('langType');break;
+                case 'zh': localStorage.removeItem('langType');break;
                 case 'en': localStorage.setItem('langType', 'EN');break;
             }
             location.reload(true);
@@ -347,7 +346,23 @@ define([
           $("#arbitrationform-wrapper .textarea-item").val("");
           $(this).parent(".dialog").addClass("hidden");
         });
-
+        $('#head').on('.goHref', 'click', function() {
+          // 清除广告缓存
+          sessionStorage.removeItem('cancelTime');
+          sessionStorage.removeItem('myTagInput');
+          sessionStorage.removeItem('clauseTextarea');
+          sessionStorage.removeItem('explainTextarea');
+          sessionStorage.removeItem('jzxe');
+          sessionStorage.removeItem('step2AccuracyTags');
+          sessionStorage.removeItem('max');
+          sessionStorage.removeItem('min');
+          sessionStorage.removeItem('tradeCoin');
+          sessionStorage.removeItem('zq');
+          sessionStorage.removeItem('step3TagsData');
+          sessionStorage.removeItem('tradeCoin001');
+          sessionStorage.removeItem('tradeType');
+          sessionStorage.removeItem('paySubType');
+        });
         $("#head .advertise .goHref").off("click").click(function () {
             if (!base.isLogin()) {
                 base.goLogin();
@@ -388,6 +403,20 @@ define([
             base.goLogin();
             return;
           }else {
+            sessionStorage.removeItem('cancelTime');
+            sessionStorage.removeItem('myTagInput');
+            sessionStorage.removeItem('clauseTextarea');
+            sessionStorage.removeItem('explainTextarea');
+            sessionStorage.removeItem('jzxe');
+            sessionStorage.removeItem('step2AccuracyTags');
+            sessionStorage.removeItem('max');
+            sessionStorage.removeItem('min');
+            sessionStorage.removeItem('tradeCoin');
+            sessionStorage.removeItem('zq');
+            sessionStorage.removeItem('step3TagsData');
+            sessionStorage.removeItem('tradeCoin001');
+            sessionStorage.removeItem('tradeType');
+            sessionStorage.removeItem('paySubType');
             base.gohref('../trade/advertise.html')
           }
         });

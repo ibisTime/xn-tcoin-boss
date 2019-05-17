@@ -5089,7 +5089,7 @@ table {
       }
       .step1-title,.step2-title,.step3-title {
         color: #327BCA;
-        font-size: 22px;
+        font-size: 20px;
         line-height: 33px;
         margin-bottom: 30px;
         display: inline-block;
@@ -5113,10 +5113,50 @@ table {
                 }
             }
         }
-        .advertise-step3-bigTitle{
-            span:nth-child(2){
-                samp{
-                    color: #2c79cd !important;
+        .nxysm{
+            text-align: left;
+            font-size: 20px;
+            margin-bottom: 60px;
+            color: #151515;
+            .step3{
+                color: #D53D3D;
+            }
+        }
+        .step1-box{
+            display: flex;
+            .advertise-step1-content{
+                width: 668px;
+                margin-right: 30px;
+            }
+            .step1-right{
+                border-left: 1px solid #D8D8D8;
+                padding-left: 30px;
+                padding-bottom: 60px;
+                height: 40%;
+                h5{
+                    font-family: PingFangSC-Semibold;
+                    font-size: 20px;
+                    color: #333333;
+                    letter-spacing: 0.17px;
+                }
+                .user-option{
+                    font-family: PingFangSC-Regular;
+                    font-size: 17px;
+                    color: #333333;
+                    letter-spacing: 0.13px;
+                    margin-bottom: 28px;
+                    margin-top: 16px;
+                    li{
+                        list-style: inside;
+                        margin-bottom: 10px;
+                        display: none;
+                    }
+                    .option-li_fee{
+                        color: #f19348;
+                    }
+                    .option-coin, .option-pay, .option-tran, .step2-xq, .op-min, .op-max, .op-tding{
+                        color: #D53D3D;
+                    }
                 }
             }
         }
@@ -5171,9 +5211,9 @@ table {
         margin-bottom: 80px;
         .tab-item {
           width: 200px;
-          height: 90px;
-          font-size: 17px;
-          line-height: 90px;
+          height: 80px;
+          font-size: 16px;
+          line-height: 80px;
           text-align: center;
           color: #333;
           border-right:1px solid #ccc;
@@ -5285,18 +5325,16 @@ table {
           }
           .step1-my-trade-coin-tips {
               color: #999;
-              font-size: 18px;
+              font-size: 15px;
               line-height: 25px;
           }
       }
       .advertise-step1-btn,.advertise-step2-btn {
         font-size: 18px;
         display: inline-block;
-        width: 286px;
-        height: 60px;
-        line-height: 60px;
+          padding: 12px 40px;
         text-align: center;
-        border-radius: 2px;
+        border-radius: 3px;
         &:hover {
           cursor: pointer;
         }
@@ -5345,10 +5383,68 @@ table {
         }
       }
       .step2-tip,.step3-tip {
-        font-size: 18px;
+        font-size: 16px;
         line-height: 25px;
         color: #666;
-        margin-top: 24px;
+      }
+        .step3-tip{
+            margin-top: 24px;
+        }
+      .step2-box{
+          display: flex;
+          .step2-content_left{
+              width: 680px;
+              margin-right: 30px;
+              .xzqds {
+                  text-align: left;
+                  font-size: 20px;
+                  margin-bottom: 60px;
+                  color: #151515;
+                  .step2{
+                      color: #D53D3D;
+                  }
+              }
+          }
+          .step2-content_right{
+              border-left: 1px solid #D8D8D8;
+              padding-left: 30px;
+              padding-bottom: 60px;
+              height: 40%;
+              h5{
+                  font-family: PingFangSC-Semibold;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 0.17px;
+              }
+              .user-step2_option{
+                  font-family: PingFangSC-Regular;
+                  font-size: 17px;
+                  color: #333333;
+                  letter-spacing: 0.13px;
+                  margin-bottom: 28px;
+                  margin-top: 16px;
+                  li{
+                      list-style: inside;
+                      margin-bottom: 10px;
+                      display: none;
+                  }
+                  .option-li_fee{
+                      color: #f19348;
+                  }
+                  .option-coin, .option-pay, .option-tran, .step2-xq, .op-min, .op-max, .op-tding{
+                      color: #D53D3D;
+                  }
+              }
+              .step2-btns{
+                  display: flex;
+                  .syb{
+                      margin-right: 30px;
+                  }
+                  .advertise-step2-btn{
+                      padding: 10px 24px;
+                  }
+              }
+          }
       }
       .advertise-step2-zq {
         margin-bottom: 24px;
@@ -5404,11 +5500,11 @@ table {
                 border-radius: 2px;
             }
             .select2-container{
-                width: 920px !important;
+                width: 600px !important;
             }
         }
         .jyxe-tips {
-          width: 670px;
+          width: 600px;
           > * {
             margin-bottom: 20px;
           }
@@ -5419,7 +5515,7 @@ table {
           margin-bottom: 30px;
         }
         .step2-cencel-transcation-tips {
-          width: 670px;
+          width: 600px;
         }
       }
       .min-price {
@@ -5462,6 +5558,56 @@ table {
           margin-right: 12px;
         }
       }
+        .step3-box{
+            display: flex;
+            .step3-content_left{
+                margin-right: 30px;
+                flex: 2;
+            }
+            .step3-content_right{
+                padding-left: 30px;
+                padding-bottom: 30px;
+                border-left: 1px solid #D8D8D8;
+                height: 40%;
+                flex: 1;
+                h5{
+                    font-family: PingFangSC-Semibold;
+                    font-size: 20px;
+                    color: #333333;
+                    letter-spacing: 0.17px;
+                }
+                .user-step3_option{
+                    font-family: PingFangSC-Regular;
+                    font-size: 17px;
+                    color: #333333;
+                    letter-spacing: 0.13px;
+                    margin-bottom: 28px;
+                    margin-top: 16px;
+                    li{
+                        list-style: inside;
+                        margin-bottom: 10px;
+                        display: none;
+                    }
+                    .option-li_fee{
+                        color: #f19348;
+                    }
+                    .option-coin, .option-pay, .option-tran, .step2-xq, .op-min, .op-max, .op-tding{
+                        color: #D53D3D;
+                    }
+                }
+                .btnWrap{
+                    display: flex;
+                    font-size: 18px;
+                    .syb{
+                        margin-right: 30px;
+                    }
+                    .advertise-step3-btn{
+                        padding: 10px 24px;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
       .advertise-step3-tags {
         .advertise-tags-content {
           .step3-tag-num {
@@ -6617,7 +6763,13 @@ table {
         display: flex;
         align-items: center;
         color: #626262;
+          .user-span{
+              width: 42px;
+              height: 42px;
+              position: relative;
+          }
         .icon-user-avatar {
+            display: block;
           width: 42px;
           height: 42px;
           border-radius: 50%;
@@ -7411,22 +7563,64 @@ table {
       img {
         max-width: 100%;
       }
+        .pic-left{
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-image: url('/static/images/zh.png');
+            width: 35px;
+            height: 35px;
+            opacity: 0;
+            z-index: 9;
+            background-size: 100%;
+            cursor: pointer;
+        }
+        .pic-right{
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-image: url('/static/images/yh.png');
+            width: 35px;
+            height: 35px;
+            opacity: 0;
+            z-index: 9;
+            background-size: 100%;
+            cursor: pointer;
+        }
       #bigPicDiv{
         text-align: center;
+          position: relative;
+          min-height: 300px;
+          span{
+              display: none;
+          }
         img{
             min-height: 300px;
-          max-height: 450px;
+            max-height: 450px;
+            width: 100%;
         }
       }
       #previewPicDiv{
         img{
-          max-height: 300px;
+          max-height: 100px;
+          max-width: 100px;
+            margin-right: 10px;
         }
       }
       .control-label {
         font-size: 14px;
         color: #484848;
       }
+        &:hover .pic-left {
+            opacity: 1;
+            transition: all 0.2s;
+        }
+        &:hover .pic-right {
+            opacity: 1;
+            transition: all 0.2s;
+        }
     }
     .file-wrap {
       position: relative;
@@ -8144,7 +8338,7 @@ html {
     font-size: 32px;
     color: #fff;
     text-align: center;
-    line-height: 62px;
+    line-height: 50px;
     cursor: pointer;
 }
 .tradeRecord-time{
@@ -8184,7 +8378,7 @@ input:checked + .slider:before {
 .fdsx{
     position: absolute;
     left: 0;
-    bottom: 5px;
+    bottom: 0px;
     width: 100%;
     height: 50px;
     text-align: center;
@@ -8192,6 +8386,7 @@ input:checked + .slider:before {
     color: #fff;
     background-color: rgba(0,0,0,.6);
     user-select: none;
+    z-index: 99;
     span{
         display: inline-block;
         width: 24px;
@@ -8205,6 +8400,18 @@ input:checked + .slider:before {
         border-radius: 100%;
         border: 1px solid #eee;
     }
+}
+
+.user_loginTime{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    margin-right: 5px;
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-100%);
 }
 
 .coin-select{

@@ -7,6 +7,7 @@ define([
 ], function(base, pagination, TradeCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
     var coin = base.getUrlParam("coin") || 'BTC'; // 币种
+  console.log(base.getUrlParam("coin"));
     //币种
     var config = {
         start: 1,
