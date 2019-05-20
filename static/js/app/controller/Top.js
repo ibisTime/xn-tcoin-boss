@@ -90,8 +90,8 @@ define([
             location.reload(true);
         });
 
-        $("#footTeTui").html(FOOT_TETUI)
-        $("#footEmail").html(FOOT_EMAIL)
+        $("#footTeTui").html(FOOT_TETUI);
+        $("#footEmail").html(FOOT_EMAIL);
         if (base.isLogin()) {
             if(localStorage.getItem("nickname")) {
                 $("#head-user-wrap .nickname").text(localStorage.getItem("nickname"))
@@ -100,7 +100,22 @@ define([
         } else {
             $("#head-button-wrap").removeClass("hidden");
         }
-
+        if($('.advertise-out-container').length === 0) {
+            sessionStorage.removeItem('cancelTime');
+            sessionStorage.removeItem('myTagInput');
+            sessionStorage.removeItem('clauseTextarea');
+            sessionStorage.removeItem('explainTextarea');
+            sessionStorage.removeItem('jzxe');
+            sessionStorage.removeItem('step2AccuracyTags');
+            sessionStorage.removeItem('max');
+            sessionStorage.removeItem('min');
+            sessionStorage.removeItem('tradeCoin');
+            sessionStorage.removeItem('zq');
+            sessionStorage.removeItem('step3TagsData');
+            sessionStorage.removeItem('tradeCoin001');
+            sessionStorage.removeItem('tradeType');
+            sessionStorage.removeItem('paySubType');
+        }
         addListener();
     }
 
@@ -346,23 +361,6 @@ define([
           $("#arbitrationform-wrapper .textarea-item").val("");
           $(this).parent(".dialog").addClass("hidden");
         });
-        $('#head').on('.goHref', 'click', function() {
-          // 清除广告缓存
-          sessionStorage.removeItem('cancelTime');
-          sessionStorage.removeItem('myTagInput');
-          sessionStorage.removeItem('clauseTextarea');
-          sessionStorage.removeItem('explainTextarea');
-          sessionStorage.removeItem('jzxe');
-          sessionStorage.removeItem('step2AccuracyTags');
-          sessionStorage.removeItem('max');
-          sessionStorage.removeItem('min');
-          sessionStorage.removeItem('tradeCoin');
-          sessionStorage.removeItem('zq');
-          sessionStorage.removeItem('step3TagsData');
-          sessionStorage.removeItem('tradeCoin001');
-          sessionStorage.removeItem('tradeType');
-          sessionStorage.removeItem('paySubType');
-        });
         $("#head .advertise .goHref").off("click").click(function () {
             if (!base.isLogin()) {
                 base.goLogin();
@@ -403,20 +401,20 @@ define([
             base.goLogin();
             return;
           }else {
-            sessionStorage.removeItem('cancelTime');
-            sessionStorage.removeItem('myTagInput');
-            sessionStorage.removeItem('clauseTextarea');
-            sessionStorage.removeItem('explainTextarea');
-            sessionStorage.removeItem('jzxe');
-            sessionStorage.removeItem('step2AccuracyTags');
-            sessionStorage.removeItem('max');
-            sessionStorage.removeItem('min');
-            sessionStorage.removeItem('tradeCoin');
-            sessionStorage.removeItem('zq');
-            sessionStorage.removeItem('step3TagsData');
-            sessionStorage.removeItem('tradeCoin001');
-            sessionStorage.removeItem('tradeType');
-            sessionStorage.removeItem('paySubType');
+              sessionStorage.removeItem('cancelTime');
+              sessionStorage.removeItem('myTagInput');
+              sessionStorage.removeItem('clauseTextarea');
+              sessionStorage.removeItem('explainTextarea');
+              sessionStorage.removeItem('jzxe');
+              sessionStorage.removeItem('step2AccuracyTags');
+              sessionStorage.removeItem('max');
+              sessionStorage.removeItem('min');
+              sessionStorage.removeItem('tradeCoin');
+              sessionStorage.removeItem('zq');
+              sessionStorage.removeItem('step3TagsData');
+              sessionStorage.removeItem('tradeCoin001');
+              sessionStorage.removeItem('tradeType');
+              sessionStorage.removeItem('paySubType');
             base.gohref('../trade/advertise.html')
           }
         });

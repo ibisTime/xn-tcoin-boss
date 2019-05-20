@@ -52,25 +52,8 @@
                 </div>
             </div>
         </div>
-
             <div class="wallet-container public-container wallet-container-sc">
                 <div class="tradeRecord-wrap mb80">
-                    <!--<div class="tradeRecord-wrap-title b_e"></div>-->
-                    <!--<div class="tradeRecord-top b_e_b">-->
-                        <!--<ul>-->
-                            <!--<li class="on wamx-en_qb"></li>-->
-                            <!--<li class="wamx-en_cb"></li>-->
-                            <!--<li class="wamx-en_tb"></li>-->
-                            <!--<li class="wamx-en_mr"></li>-->
-                            <!--<li class="wamx-en_mc"></li>-->
-                            <!--<li class="wamx-en_gm"></li>-->
-                            <!--<li class="wamx-en_cs"></li>-->
-                            <!--<li class="wamx-en_sxf"></li>-->
-                            <!--<li class="wamx-en_tx"></li>-->
-                            <!--<li class="wamx-en_fee"></li>-->
-                            <!--<li class="wamx-en_dj"></li>-->
-                        <!--</ul>-->
-                    <!--</div>-->
                     <span class="tradeRecord-export-btn"></span>
                     <div class="tradeRecord-time">
                         <div class="trade-time">
@@ -132,16 +115,9 @@
         <div class="am-modal-mask"></div>
         <div class="am-modal">
             <div class="am-modal-content">
-                <span class="out">×</span>
-                <div class="am-modal-header">
+                <span class="out" style="top: -15px;">×</span>
+                <div class="am-modal-header" style="margin-bottom: 40px;">
                     <p class="zfba"></p>
-                </div>
-                <div class="am-modal-body">
-                    <ul class="over-hide wp100 list">
-                    </ul>
-                    <div id="paginationAddress" class="wp100 pagination-wrap dialog-pagination-wrap tc">
-                        <p class="pagination"></p>
-                    </div>
                 </div>
                 <div class="am-modal-footer">
                     <div class="am-button am-button-gray mr40 addBtn"></div>
@@ -151,65 +127,6 @@
         </div>
     </div>
 
-    <!--添加地址弹窗-->
-    <div class="am-modal-wrap dialog addWAddress-dialog hidden" id="addWAddressDialog">
-        <div class="am-modal-mask"></div>
-        <div class="am-modal">
-            <div class="am-modal-content">
-                <div class="am-modal-header">
-                    <p class="tjxdz"></p>
-                </div>
-                <div class="am-modal-body">
-                    <div class="addWAddress-form-wrap">
-                        <form class="form-wrapper form-wrapper-38 wp100" id="addAddress-form">
-                            <div class="form-item-wrap">
-                                <samp class="label bq"></samp>
-                                <div class="form-item b_e">
-                                    <input type="text" class="input-item srbq" name="label" placeholder="" />
-                                </div>
-                            </div>
-                            <div class="form-item-wrap">
-                                <samp class="label tbdz"></samp>
-                                <div class="form-item b_e mr20">
-                                    <input type="text" class="input-item srdz" name="address" placeholder="" />
-                                </div>
-                            </div>
-                            <div class="form-item-wrap hidden  googleAuthFlag">
-                                <samp class="label ggyzm"></samp>
-                                <div class="form-item b_e mr20">
-                                    <input type="password" class="input-item srggyzm" name="googleCaptcha" placeholder="" />
-                                </div>
-                            </div>
-                            <div class="form-item-wrap">
-                                <samp class="label yzm"></samp>
-                                <input type="hidden" id="addWAddressMobile" />
-                                <div class="form-item-sms wp100">
-                                    <div class="form-item b_e mr20">
-                                        <input type="text" class="input-item sryzm" name="smsCaptcha" placeholder="" />
-                                    </div>
-                                    <button class="sms-button am-button am-button-red" id="getVerification"></button>
-                                </div>
-                            </div>
-                            <div class="form-item-wrap tradePwdFlag hidden">
-                                <samp class="label jymm"></samp>
-                                <div class="form-item b_e mr20">
-                                    <input type="password" class="input-item srjymm" name="tradePwd" placeholder="" />
-                                </div>
-                            </div>
-                        </form>
-                        <div class="setSecurityAccount userSelect_none">
-                            <samp class="szwrz"></samp><i class="icon icon-switch"></i>
-                        </div>
-                        <div class="remark"></div>
-                    </div>
-                </div>
-                <div class="am-modal-footer">
-                    <div class="am-button am-button-gray mr40 closeBtn"></div>
-                    <div class="am-button am-button-red  subBtn"></div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!--发送比特币弹窗-->
     <div class="am-modal-wrap dialog sendBtc-dialog hidden" id="sendBtcDialog">
         <div class="am-modal-mask"></div>

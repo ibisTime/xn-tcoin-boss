@@ -178,9 +178,11 @@ define([
     var type = '';
 
     //当前用户为买家
+      let toBuySell = '', user = '';
     if (item.buyUser == base.getUserId()) {
-      var user = item.sellUserInfo;
-
+      user = item.sellUserInfo;
+      
+      toBuySell = `/trade/buy-detail.html?code=${item.adsCode}&coin=${item.tradeCoin}`;
       type = 'buy';
       //待支付
       if (item.status == "0") {
@@ -193,8 +195,8 @@ define([
       }
       //当前用户为卖家
     } else {
-      var user = item.buyUserInfo;
-
+      user = item.buyUserInfo;
+      toBuySell = `/trade/sell-detail.html?code=${item.adsCode}&coin=${item.tradeCoin}`;
       type = 'sell';
       //待支付
       if (item.status == "1") {
@@ -217,7 +219,7 @@ define([
       operationHtml += `<div class="am-button cancelBtn"  data-ocode="${item.code}">${base.getText('取消订单')}</div>`;
       if(item.type == 'buy'){
         if(item.buyUser == base.getUserId()){
-          operationHtml += `<div class="am-button am-button-red buyBtn" style="margin-left: 10px;"  data-ocode="${item.adsCode}">${base.getText('去购买')}</div>`;
+            operationHtml += `<div class="am-button am-button-red buyBtn" style="margin-left: 10px;"  data-ocode="${item.adsCode}">${base.getText('去购买')}</div>`;
         }
       }
       if(item.type == 'sell'){
@@ -236,26 +238,21 @@ define([
 
 
       $(".orderDetail-operation-btn").html('');
-      var totalCount = data.totalCount.toFixed(8);
       return `<tr data-code="${item.code}">
-                    <td><input  type="checkbox" value="" /></td>
-					<td class="nickname" style="border-left:1px solid #eee;">
-                        <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.buyUser : item.sellUser}&adsCode=${item.code}">
-							${photoHtml}
-						</div>
-						<samp class="name k-name">${user.nickname ? user.nickname : '-'}</samp>
-					</td>
-					<td class="code">${item.code.substring(item.code.length-8)}<i>(${orderTypeList[item.type]})</i></td>
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'BTC'}</td>
-					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
 					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
-					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
+					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
+					<td>行情价格</td>
+					<td>手续费</td>
+					<td>支付方式</td>
+					<td class="nickname">
+						<samp class="name k-name goHref" style="color: #D53D3D" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.buyUser : item.sellUser}&adsCode=${item.code}">${user.nickname ? user.nickname : '-'}</samp>
+					</td>
 					<td class="status" style="color: ${colors[item.status]}">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
-                    <td class="operation">
-                        <div class="am-button am-button-red goHref" href-type="_blank" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}">${base.getText('聊天')}</div>
-                        <samp class="unread goHref fl hidden" href-type="_blank" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}"></samp>
-						<i class="icon icon-detail goHref fr" style="margin-top: 7px;" href-type="_blank" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}"> ></i>
-                    </td>
+					<td class="code">${item.code.substring(item.code.length-8)}<i>(${orderTypeList[item.type]})</i></td>
+					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
+					<td class="his_jy goHref" href-type="_blank" data-href="../order/order-detail.html?code=${item.code}&buyUser=${user.userId}&coin=${item.tradeCoin}">${item.code}</td>
+					<td class="his_cj goHref" href-type="_blank" data-href="${toBuySell}">${item.adsCode}</td>
 				</tr>`;
   }
 

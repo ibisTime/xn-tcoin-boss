@@ -113,7 +113,7 @@ define([
         $('.wall-en_cz').text(base.getText('操作', langType));
         $('.wallet-account-wrap .freez-amount').html(`${base.getText('冻结金额')}: <a></a> ${currency}`);
         $('.wallet-account-wrap .add-amount').html(`<a href="../index.html?coin=${currency}">${base.getText(`购买${coinName[currency]}`)}</a>`);
-        $('.wallet-account-wrap .crbzj').html(`${base.getText('存入')}<a class="accept-bail"></a> ${currency} ${base.getText('保证金')}`);
+        $('.wallet-account-wrap .crbzj').html(`${base.getText('存入')}<a class="accept-bail"></a> ${currency} ${base.getText('保证金')} <b class="balance_tq">提取</b>`);
         $('.wallet-account-wrap .tip').html(base.getText(`就像黄金一样，您的${coinName[currency]} US dollars价值因市场而异，这是正常的，您仍有相同${coinName[currency]}金额`));
         $('.wallet-account-wrap .send-btc').html(base.getText(`发送${coinName[currency]}`));
         $('.wallet-account-wrap .yxbtb').html(base.getText(`以下为您的${coinName[currency]}存款地址`));
@@ -125,25 +125,9 @@ define([
         $('.hisorder-btn .tradeRecord-search-btn').html(base.getText('搜索'));
         $('.hisorder-btn .tradeRecord-reset-btn').html(base.getText('重置'));
         $('.zwmx').html(base.getText('暂无明细'));
-        $('.zfba').html(`<span class="currency"></span>${base.getText('支付宝')}(<span class="zf-apliy"></span>)`);
-        $('#wAddressDialog .addBtn').html(base.getText('取消支付'));
-        $('#wAddressDialog .subBtn').html(base.getText('标记付款'));
-        $('#addWAddressDialog .tjxdz').html(`${base.getText('添加新')}<span class="currency"></span>${base.getText('地址')}`);
-        $('#addWAddressDialog .bq').html(base.getText('标签') + '：');
-        $('#addWAddressDialog .tbdz').html(base.getText('提币地址') + '：');
-        $('#addWAddressDialog .ggyzm').html(base.getText('谷歌验证码') + '：');
-        $('#addWAddressDialog .yzm').html(base.getText('验证码') + '：');
-        $('#addWAddressDialog .jymm').html(base.getText('交易密码') + '：');
-        $('#getVerification').html(base.getText('获取验证码'));
-        $('#addWAddressDialog .szwrz').html(base.getText('将该账户设置为认证账户'));
-        $('#addWAddressDialog .remark').html(base.getText('向认证账户中提现不再输入交易密码、谷歌验证码'));
-        $('#addWAddressDialog .closeBtn').html(base.getText('关闭'));
-        $('#addWAddressDialog .subBtn').html(base.getText('确认地址'));
-        $('#addWAddressDialog .srbq').attr('placeholder', base.getText('请输入标签'));
-        $('#addWAddressDialog .tbdz').attr('placeholder', base.getText('请输入提币地址'));
-        $('#addWAddressDialog .srggyzm').attr('placeholder', base.getText('请输入谷歌验证码'));
-        $('#addWAddressDialog .sryzm').attr('placeholder', base.getText('请输入验证码'));
-        $('#addWAddressDialog .srjymm').attr('placeholder', base.getText('请输入交易密码'));
+        $('.zfba').html(base.getText('确认提取保证金?'));
+        $('#wAddressDialog .addBtn').html(base.getText('取消'));
+        $('#wAddressDialog .subBtn').html(base.getText('确认'));
         
         $('#sendBtcDialog .ctwfs').html(base.getText('从T网钱包发送'));
         $('#sendBtcDialog .sendBtn').html(base.getText('继续'));
@@ -239,66 +223,6 @@ define([
             }
         }
     }
-
-    //分页查询地址
-    function getPageCoinAddress() {
-        return AccountCtr.getPageCoinAddress(configAddress, true).then((data) => {
-            var lists = data.list;
-            if (data.list.length) {
-                var html = "";
-                lists.forEach((item, i) => {
-                    html += buildHtmlAddress(item, i);
-                });
-                $("#wAddressDialog .list").html(html)
-            } else {
-                configAddress.start == 1 && $("#wAddressDialog .list").empty()
-                configAddress.start == 1 && $("#wAddressDialog .list").html("<div class='tc ptb30 fs13'> " + base.getText('暂无地址', langType) +"</div>")
-            }
-            configAddress.start == 1 && initPaginationAddress(data);
-        }, base.hideLoadingSpin)
-    }
-
-    function buildHtmlAddress(item, i) {
-        var statusHtml = '';
-        if (item.status == '0') {
-            statusHtml = base.getText('未认证', langType)
-        } else if (item.status == '1') {
-            statusHtml = base.getText('已认证', langType)
-        }
-        return `<li data-address="${item.address}" data-status="${item.status}" class="${i == '0' ? 'on' : ''} b_e_t">
-    				<div class="txt wp100">
-						<p>${base.getText('标签', langType)}: ${item.label}</p>
-						<p>${item.address}(${statusHtml})</p>
-					</div>
-    				<i class="icon deleteBtn" data-code="${item.code}"></i>
-    			</li>`
-    }
-
-    // 初始化地址分页器
-    function initPaginationAddress(data) {
-        $("#paginationAddress .pagination").pagination({
-            pageCount: data.totalPage,
-            showData: configAddress.limit,
-            jump: true,
-            coping: true,
-            prevContent: '<img src="/static/images/arrow---left.png" />',
-            nextContent: '<img src="/static/images/arrow---right.png" />',
-            keepShowPN: true,
-            totalData: data.totalCount,
-            jumpIptCls: 'pagination-ipt',
-            jumpBtnCls: 'pagination-btn',
-            jumpBtn: base.getText('确定', langType),
-            isHide: true,
-            callback: function (_this) {
-                if (_this.getCurrent() != configAddress.start) {
-                    base.showLoadingSpin();
-                    configAddress.start = _this.getCurrent();
-                    getPageCoinAddress();
-                }
-            }
-        });
-    }
-    
     // 查询是否为内部转账
   function internalTransfer () {
     let address = $('.srdfbtb').val();
@@ -344,42 +268,30 @@ define([
             withDraw(params).then(data => {
                 $(this).parents('form').reset();
             })
-        })
-        //取消支付
+        });
+        $('#wAddressDialog').on('click', function() {
+            $('#wAddressDialog').addClass('hidden');
+        });
+        $('#wAddressDialog .am-modal').on('click', function(e) {
+            e.stopPropagation();
+        });
+        //取消提取
         $("#wAddressDialog .addBtn").click(function () {
-            let config = {
-                userId: base.getUserId(),
-                code: buyOrderCode
-            };
-            TradeCtr.qxOrder(config).then(() => {
-                showMsg(base.getText('已取消支付', langType));
-                $('.con-toBuy .bz_put textarea').val('');
-                $("#wAddressDialog").addClass("hidden");
-            });
+            $('#wAddressDialog').addClass('hidden');
         });
 
-        //标记付款
+        //确认提取
         $("#wAddressDialog .subBtn").click(function () {
-            let config = {
-                userId: base.getUserId(),
-                code: buyOrderCode
-            };
-            base.showLoadingSpin();
-            TradeCtr.bjPlayfo(config).then(() => {
-
-                base.gohref('./wallet-jilu.html');
-            });
-        })
+        
+        });
 
         $('.am-modal-content .out').click(function(){
             $("#wAddressDialog").addClass("hidden");
-            base.showLoadingSpin();
-            setTimeout(() => {
-                base.gohref('./wallet-jilu.html');
-            }, 1000);
+        });
+        
+        $('.wallet-account-wrap').on('click', '.balance_tq', function() {
+            $("#wAddressDialog").removeClass("hidden");
         })
-
-        $('#wAddressDialog');
     }
 
     /**
@@ -417,8 +329,6 @@ define([
         AccountCtr.getAccount().then((accountData) => {
           GeneralCtr.getSysConfigType('trade_rule', true).then(ruleData => {
             $(".wallet-account-wrap .accept-bail").text(currency === 'BTC' ? ruleData.trade_btc_bail : ruleData.trade_usdt_bail);
-            //bailAmount: 10000000
-            // bailDatetime: "Apr 29, 2019 9:24:28 PM"
             let bail_crash_space_minutes = +ruleData.bail_crash_space_minutes * 60 * 1000;
             accountData.accountList.forEach(item => {
               if (item.currency === currency) {
@@ -427,7 +337,7 @@ define([
                 $(".wallet-account-wrap .s-bb").text(money);
                 $(".wallet-account-wrap .y-amount").text(' ≈ ' + (usdMarket * money).toFixed(2) + ' USD');
                 $('.wallet-account-wrap .freez-amount a').text(base.formatMoney(item.frozenAmount - (+item.bailAmount),'',item.currency));
-                $('.sendBtc-form-wrap .wallet-account span').text(bailTime ? base.formatMoney((item.amount - item.frozenAmount) + (+item.bailAmount),'',item.currency) : base.formatMoney((item.amount - item.frozenAmount),'',item.currency));
+                $('.sendBtc-form-wrap .wallet-account span').text(base.formatMoney((item.amount - item.frozenAmount),'',item.currency));
                 $('#address-BTC').val(item.address);
                 var  erWn =[];
                 erWn.push(item.address);
@@ -484,7 +394,7 @@ define([
         params.payCardInfo = currency;
         params.accountNumber = localStorage.getItem('accountNumber');
         params.amount = base.formatMoneyParse(params.amount, '', params.payCardInfo);
-        if(!params.tradePwd && !params.payCardNo) {
+        if(!params.tradePwd || !params.payCardNo) {
             base.showMsg(base.getText('请填写完整', langType));
             return;
         }

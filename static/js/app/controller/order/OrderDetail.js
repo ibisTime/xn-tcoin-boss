@@ -48,6 +48,7 @@ define([
   
   let isWebUser = 1;
   let setImgIndex = null;
+  let xIndexList = [];
   
   let coinName = {
     'BTC': '比特币',
@@ -99,9 +100,16 @@ define([
   // 常用语设置
   function getPhraseData() {
     GeneralCtr.getDictList({ "parentKey": "often_sentence" }).then(data => {
-      let li_html = '';
-      data.forEach(item => {
-        li_html += `<li>${item.dvalue}</li>`;
+      let li_html = `<div class="phrase-head">
+                        <div class="left">常用语</div>
+                        <div class="right">
+                            <span class="phrase-add"></span>
+                            <span class="phrase-set"></span>
+                            <span class="phrase-rem hidden">取消</span>
+                        </div>
+                    </div>`;
+      data.forEach((item, index) => {
+        li_html += `<li class="li0${index}"><p title="${item.dvalue}">${item.dvalue}</p> <span class="dele-phrase hidden"></span></li>`;
       });
       $('#phraseUL').html(li_html);
     });
@@ -1370,7 +1378,7 @@ define([
           base.showMsg('一次性上传不得超过5张');
           fileList.length = 5;
         }
-        fileList.forEach(file => {
+        fileList.forEach((file, index) => {
           let reader = new FileReader();
           let fileSize = file.size;
           //先检查图片类型和大小
@@ -1380,7 +1388,7 @@ define([
           //预览图片
           reader.onload = (function(file) {
             return function() {
-              span.innerHTML += '<img class="img-responsive" src="' + this.result + '" alt="' + file.name + '" />';
+              span.innerHTML += `<span class="x${index}"><img class="img-responsive" src="${this.result}" alt="${file.name}" /><b class="x" data-index="${index}"></b></span>`;
             };
           })(file);
           //预览图片
@@ -1404,27 +1412,29 @@ define([
         if(fileList.length > 5) {
           fileList.length = 5;
         }
-      fileList.forEach(file => {
-        let businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.GROUP_MSG;
-        //封装上传图片请求
-        let opt = {
-          'file': file, //图片对象
-          'onProgressCallBack': onProgressCallBack, //上传图片进度条回调函数
-          //'abortButton': document.getElementById('upd_abort'), //停止上传图片按钮
-          'To_Account': groupId, //接收者
-          'businessType': businessType //业务类型
-        };
-        //上传图片
-        webim.uploadPic(opt,
-          function(resp) {
-            //上传成功发送图片
-            sendPic(resp, file.name);
-            $('#upload_pic_dialog').hide();
-          },
-          function(err) {
-            console.log(err.ErrorInfo);
+      fileList.forEach((file, index) => {
+          if(!xIndexList.includes(index)) {
+              let businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.GROUP_MSG;
+              //封装上传图片请求
+              let opt = {
+                  'file': file, //图片对象
+                  'onProgressCallBack': onProgressCallBack, //上传图片进度条回调函数
+                  //'abortButton': document.getElementById('upd_abort'), //停止上传图片按钮
+                  'To_Account': groupId, //接收者
+                  'businessType': businessType //业务类型
+              };
+              //上传图片
+              webim.uploadPic(opt,
+                function(resp) {
+                    //上传成功发送图片
+                    sendPic(resp, file.name);
+                    $('#upload_pic_dialog').hide();
+                },
+                function(err) {
+                    console.log(err.ErrorInfo);
+                }
+              );
           }
-        );
       });
     }
     //发送图片消息
@@ -1539,7 +1549,30 @@ define([
     function addListener() {
       
       // 发送常用语
-      $('#phraseUL').on('click', 'li', function() {
+        $('#phraseUL').click(function(e) {
+            e.stopPropagation();
+            let target = e.target;
+            if($(target).hasClass('phrase-add')) {
+                $('#click_phrase').removeClass('hidden');
+            }
+            if($(target).hasClass('phrase-set')) {
+                $('#phraseUL .phrase-add').addClass('hidden');
+                $('#phraseUL .phrase-set').addClass('hidden');
+                $('#phraseUL .phrase-rem').removeClass('hidden');
+                $('#phraseUL .dele-phrase').removeClass('hidden');
+            }
+            if($(target).hasClass('phrase-rem')) {
+                $('#phraseUL .phrase-add').removeClass('hidden');
+                $('#phraseUL .phrase-set').removeClass('hidden');
+                $('#phraseUL .phrase-rem').addClass('hidden');
+                $('#phraseUL .dele-phrase').addClass('hidden');
+            }
+            if($(target).hasClass('dele-phrase')) {
+                let dex = $(this).index();
+                $('#phraseUL li').remove(`.li0${dex}`);
+            }
+        });
+      $('#phraseUL').on('click', 'li p', function(e) {
         let txt = $(this).text();
         onSendMsg('WE_B:' + txt);
         $('.phraseUL-warp').addClass('hidden');
@@ -1629,6 +1662,7 @@ define([
         $(document).on('click', function(e) {
           $("#msgImg").removeClass("on");
           $(".emotionUL-wrap").addClass("hidden");
+          $('.phraseUL-warp').addClass('hidden');
         });
         $('#msgImg').on('click', function() {
             event.stopPropagation();
@@ -1641,7 +1675,8 @@ define([
                 showEmotionDialog();
             }
         });
-        $('#phrase').on('click', function() {
+        $('#phrase').on('click', function(e) {
+            e.stopPropagation();
           if($('.phraseUL-warp').hasClass('hidden')) {
             $('.phraseUL-warp').removeClass('hidden')
           }else {
@@ -1996,6 +2031,9 @@ define([
           }
           $('#bigPicDiv').children().eq(setImgIndex).show(100).siblings().hide();
           $('#bigPicDiv').children().eq(setImgIndex).children('img').css('transform', 'scale(1)');
+            window.requestAnimationFrame(() => {
+                $('#bigPicDiv').css('overflow', 'hidden');
+            });
           scaleIndex = 1;
         }
         if($(target).hasClass('pic-right')) {
@@ -2006,7 +2044,15 @@ define([
           }
           $('#bigPicDiv').children().eq(setImgIndex).show(100).siblings().hide();
           $('#bigPicDiv').children().eq(setImgIndex).children('img').css('transform', 'scale(1)');
+          window.requestAnimationFrame(() => {
+              $('#bigPicDiv').css('overflow', 'hidden');
+          });
           scaleIndex = 1;
+        }
+        if($(target).hasClass('x')) {
+            let xIndex = +$(target).attr('data-index');
+            xIndexList.push(xIndex);
+            $('#previewPicDiv span').remove(`.x${xIndex}`);
         }
       });
       
@@ -2029,6 +2075,12 @@ define([
       });
       $('#click_pic_dialog').click(function() {
         $('#click_pic_dialog').hide();
+      });
+      $('#phrase_close').click(function() {
+          $('#click_phrase').addClass('hidden');
+      });
+      $('#click_phrase .close').click(function() {
+          $('#click_phrase').addClass('hidden');
       });
         // 自动刷新页面
         function auSx() {

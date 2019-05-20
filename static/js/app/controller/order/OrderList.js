@@ -58,7 +58,6 @@ define([
         $('.b_e_b  .quantity').text(base.getText('交易数量'));
         $('.createDatetime').text(base.getText('创建时间'));
         $('.status').text(base.getText('交易状态'));
-        $('.operation').text(base.getText('状态'));
         $('.fy_zwdd').text(base.getText('暂无订单'));
 
         $('#arbitrationDialog .fy_sqzc').text(base.getText('申请仲裁'));
@@ -199,26 +198,23 @@ define([
         }
          $(".orderDetail-operation-btn").html(operationHtml)
         return `<tr data-code="${item.code}">
-					<td class="nickname">
-                        <div class="photoWrap fl goHref" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.buyUser : item.sellUser}&adsCode=${item.code}&bsComment=${item.bsComment}&sellUser=${item.sellUser}">
-							${photoHtml}
-						</div>
-						<samp class="name k-name">${user.nickname ? user.nickname : '-'}</samp>
-					</td>
-					<td class="code">${item.code.substring(item.code.length-8)}</td>
+                    <td>
+                        <span class="oList-jt goHref"
+						    href-type="_blank"
+						    data-href="../order/order-detail.html?code=${item.code}&buyUser=${item.buyUser}&status=${item.status}&type=${item.type}&adsCode=${item.adsCode}&buyUserInfo=${item.buyUserInfo}&coin=${item.tradeCoin}">
+						交谈
+						</span>
+                    </td>
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'BTC'}</td>
 					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
 					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
+					<td>${item.paymentName ? item.paymentName : ''}</td>
+					<td class="nickname">
+						<samp class="goHref name k-name" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.buyUser : item.sellUser}&adsCode=${item.code}&bsComment=${item.bsComment}&sellUser=${item.sellUser}">${user.nickname ? user.nickname : '-'}</samp>
+					</td>
+					<td class="code">${item.code.substring(item.code.length-8)}</td>
 					<td class="createDatetime">${base.datetime(item.createDatetime)}</td>
-					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}
-					<samp class="unread goHref fl hidden" data-href="../order/order-detail.html?code=${item.code}"></samp>
-						<i
-						class="icon icon-detail goHref fr"
-						href-type="_blank"
-						data-href="../order/order-detail.html?code=${item.code}&buyUser=${item.buyUser}&status=${item.status}&type=${item.type}&adsCode=${item.adsCode}&buyUserInfo=${item.buyUserInfo}&coin=${item.tradeCoin}">
-						    >
-						</i>
-                    </td>
+					<td class="status">${item.status=="-1"? base.getText('交谈中') + ','+statusValueList[item.status]:statusValueList[item.status]}</td>
 				</tr>`;
     }
 

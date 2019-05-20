@@ -25,12 +25,15 @@ define([
     };
     let trade_btc_bail = '';
     let trade_usdt_bail = '';
+    let moneyBTC = '';
+    let moneyUSDT = '';
     init();
 
     function init() {
         $(".myAdvertise-container .titleStatus li." + type.toLowerCase()).addClass("on").siblings('li').removeClass('on');
         base.showLoadingSpin();
         setHtml();
+        getAmount();
         type = type.toLowerCase();
         if (type == 'buy') {
             $("#left-wrap .buy-nav-item ." + type.toLowerCase()).addClass("on");
@@ -125,13 +128,41 @@ define([
         //当前用户为买家
             //待发布
             if (adverConfig.statusList == null || adverConfig.statusList.length == 1) {
-                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
+                operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
         		 			<div class="am-button publish goHref am-button-ghost am-button-out" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('查看', langType)}</div>`
 
                 //已发布
             } else {
                 if (item.status == '0') {
-                    operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
+                    operationHtml = `<div class="am-button am-button-red publish mr20 goHref" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
+                    let isMoneyOk = '';
+                    if(item.tradeCoin === 'BTC') {
+                        isMoneyOk = +item.truePrice * moneyBTC;
+                    }else {
+                        isMoneyOk = +item.truePrice * moneyUSDT;
+                    }
+                    console.log(isMoneyOk, item.minTrade);
+                    if(!item.fixTrade && isMoneyOk < item.minTrade) {
+                        tipHtml=`<p style="
+                            position: absolute;
+                            width: 400px;
+                            font-size: 12px;
+                            color: #d83b37;
+                        "
+                        >${base.getText(`您的${item.tradeCoin}账户余额低于该广告的最小交易值，别人将不可见`)}</p>`
+                    }
+                    if(item.fixTrade) {
+                        let minFixTrade = item.fixTrade.split('||')[0];
+                        if(isMoneyOk < minFixTrade) {
+                            tipHtml=`<p style="
+                            position: absolute;
+                            width: 400px;
+                            font-size: 12px;
+                            color: #d83b37;
+                        "
+                        >${base.getText(`您的${item.tradeCoin}账户余额低于该广告的最小交易值，别人将不可见`)}</p>`
+                        }
+                    }
                 } else if (item.status == "1"){
                   operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
                   tipHtml=`<p style="
@@ -169,6 +200,22 @@ define([
 
 
 
+    }
+    
+    /**
+     * 获取当前余额
+     */
+    function getAmount() {
+        AccountCtr.getAccount().then((accountData) => {
+            accountData.accountList.forEach(item => {
+                if (item.currency === 'BTC') {
+                    moneyBTC = base.formatMoney((item.amount - item.frozenAmount),'',item.currency);
+                }
+                if(item.currency === 'USDT') {
+                    moneyUSDT = base.formatMoney((item.amount - item.frozenAmount),'',item.currency);
+                }
+            });
+        });
     }
 
     function addListener() {

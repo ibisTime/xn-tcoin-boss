@@ -414,41 +414,35 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
-        <!--评价弹窗-->
-        <!--<div class="am-modal-wrap dialog comment-dialog hidden" id="commentDialog">-->
-        <!--<div class="am-modal-mask"></div>-->
-        <!--<div class="am-modal">-->
-        <!--<div class="am-modal-content">-->
-        <!--<div class="am-modal-header">-->
-        <!--<p class="fy_jypj"></p>-->
-        <!--</div>-->
-        <!--<div class="am-modal-body">-->
-        <!--<p class="title fy_jyyx"></p>-->
-        <!--<div class="comment-Wrap">-->
-        <!--<div class="item on" data-value="2">-->
-        <!--<div class="icon icon-good"></div>-->
-        <!--<p class="fy_hp"></p>-->
-        <!--</div>-->
-        <!--<div class="item ml20" data-value="1">-->
-        <!--<div class="icon icon-middle"></div>-->
-        <!--<p class="fy_zp"></p>-->
-        <!--</div>-->
-        <!--<div class="item ml20" data-value="0">-->
-        <!--<div class="icon icon-bad"></div>-->
-        <!--<p class="fy_cp"></p>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="com-content">-->
-        <!--<textarea name="" id="pjText" placeholder=""></textarea>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="am-modal-footer">-->
-        <!--<div class="am-button am-button-red subBtn"></div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--已支付弹窗-->
+        <!-- 添加常用语 -->
+        <div class="am-modal-wrap pic-dialog hidden" id="click_phrase">
+            <div class="am-modal-mask"></div>
+            <div class="am-modal">
+                <div class="am-modal-content">
+                    <div class="am-modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="click_phrase_title">新增常用语</h4>
+                    </div>
+                    <div class="am-modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group" style="position: relative;">
+                                <div class="col-sm-12">
+                                    <div id="phraseDiv">
+                                        <textarea id="phrase_area" placeholder="添加您的常用语"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="am-modal-footer">
+                        <button type="button" class="am-button am-button-gray" id="phrase_close">取消</button>
+                        <button type="button" class="am-button am-button-red" id="phrase_Bt">提交</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
         <div class="am-modal-wrap dialog paid-dialog hidden" id="paidDialog">
             <div class="am-modal-mask"></div>
             <div class="am-modal">

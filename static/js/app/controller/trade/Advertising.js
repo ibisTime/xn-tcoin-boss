@@ -76,6 +76,7 @@ define([
         base.goLogin();
         return;
       }else {
+          $('.head-nav-wrap .advertise').addClass('active');
         if(code) {
           href = window.location.href.split('?')[1];
         }
@@ -90,8 +91,7 @@ define([
     function init() {
         setHtml();
         base.showLoadingSpin();
-      $('.head-nav-wrap .advertise').addClass('active');
-        if (code != "") {
+        if (code !== "") {
             $("#draftBtn").addClass("hidden");
         }
         $("#coin").text(coin.toUpperCase());
@@ -101,7 +101,8 @@ define([
         TradeCtr.getPayCoinList(),
         BaseCtr.getCoinList(),
         GeneralCtr.rateList(),
-        GeneralCtr.getSysConfig('trade_default_fee_rate')
+        GeneralCtr.getSysConfig('trade_default_fee_rate'),
+        getAdvertiseDetail()
       ).then((data1, data2, data3, data4, data5) => {
         defaultFee = +data5.cvalue * 100;
         rateList = data4;
@@ -167,7 +168,8 @@ define([
         }
         if(step2AccuracyTags && step2AccuracyTags !== 'null') {
           if( jzxe === '2') {
-            $('.user-option .op-tding').text(step2AccuracyTags);
+            let Tags = step2AccuracyTags.split('||').join(',');
+            $('.user-option .op-tding').text(Tags);
             $('.user-option li').eq(4).show(300);
             $('.user-option li').eq(5).hide(300);
           }
@@ -175,7 +177,7 @@ define([
       }, base.hideLoadingSpin);
         addListener();
         var type=base.getUrlParam("type");
-        if(type != "buy") {
+        if(type !== "buy") {
             $(".advertise-step1-bigbigTitle .change").removeClass('sell').addClass('buy');
             $('.advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的数字货币以获得利润`));
             $('.advertise-step1-bigbigTitle .text').html(`<p class="text">${base.getText(`想要获得数字货币吗？`)}<span class="change sell">${base.getText(`创建一个出价来购买数字货币`)}</span></p>`);
@@ -212,6 +214,13 @@ define([
     //step2 -计算每笔销售
   let timeout = null;
     $('#zqInput').keyup(function(){
+      if(+$(this).val() > 99) {
+        base.showMsg('不得超过99%，请重新输入');
+          $(this).val('');
+          sessionStorage.removeItem('zq');
+          $('.user-step2_option li').eq(3).hide(300);
+        return;
+      }
       if(timeout) {
         clearTimeout(timeout);
       }
@@ -249,7 +258,7 @@ define([
     }
   
   function accuracyTags(step2SelectedData) {
-    $("#step2AccuracyTags").select2({
+      $("#step2AccuracyTags").length && $("#step2AccuracyTags").select2({
       tags: true,                          //支持新增，默认为false
       maximumSelectionLength: 3,           //最多能够选择的个数
       multiple: true,                      //支持多选，默认为false
@@ -297,7 +306,8 @@ define([
         GeneralCtr.getSysConfig('trade_validate_min_minutes'),
         GeneralCtr.getSysConfig(tradeObj[tradeCoin001]),
         GeneralCtr.getSysConfigType('trade_rule', true),
-        GeneralCtr.getDictList({ parentKey: 'trade_price_type' })
+        GeneralCtr.getDictList({ parentKey: 'trade_price_type' }),
+        getAdvertiseDetail()
       ).then((data1, data2, data3, data4, data5) => {
         trade_btc_bail = data4.trade_btc_bail;
         trade_usdt_bail = data4.trade_usdt_bail;
@@ -317,8 +327,7 @@ define([
           item.id = item.dvalue;
         });
         step2TagInitData = data5;
-        let step2SelectedData = [];
-        accuracyTags(step2SelectedData);
+        accuracyTags(step2TagInitData);
         let feeRate = sessionStorage.getItem('feeRate');
         let tradeCoin001 = sessionStorage.getItem('tradeCoin001');
         let tradeCoin = sessionStorage.getItem('tradeCoin');
@@ -390,15 +399,13 @@ define([
           $('.user-step2_option li').eq(4).hide(300);
         }
         if(step2AccuracyTags && step2AccuracyTags !== 'null') {
-          $("#step2AccuracyTags").select2("val", [step2AccuracyTags.split(',')]);
           if( jzxe === '2') {
-            $('.user-step2_option .op-tding').text(step2AccuracyTags);
+            let Tags = step2AccuracyTags.split('||');
+            $('.user-step2_option .op-tding').text(Tags.join(','));
+              accuracyTags(Tags);
             $('.user-step2_option li').eq(4).show(300);
             $('.user-step2_option li').eq(5).hide(300);
           }
-        }
-        if (code !== "") {
-          getAdvertiseDetail();
         }
       }, base.hideLoadingSpin);
       addListener();
@@ -462,9 +469,7 @@ define([
         step3CountryListHtml += buildStep3CountryListHtml(item);
       });
       $('#targetArea').html(step3CountryListHtml);
-      if (code !== "") {
         getAdvertiseDetail();
-      }
       let optionPay = sessionStorage.getItem('optionPay');
       let feeRate = sessionStorage.getItem('feeRate');
       let step3TagsDataInit = sessionStorage.getItem('step3TagsData');
@@ -522,7 +527,9 @@ define([
       }
       if(step2AccuracyTags && step2AccuracyTags !== 'null') {
         if( jzxe === '2') {
-          $('.user-step3_option .op-tding').text(step2AccuracyTags);
+            let Tags = step2AccuracyTags.split('||');
+            accuracyTags(Tags);
+          $('.user-step3_option .op-tding').text(Tags);
           $('.user-step3_option li').eq(4).show(300);
           $('.user-step3_option li').eq(5).hide(300);
         }
@@ -596,36 +603,39 @@ define([
         config = {type: payBigType, name: paySearch, status: 1}
       }
     return TradeCtr.getPayTypeList(config).then((res) => {
-      let listHtml = '';
-      res.forEach((item, i) => {
-        listHtml += buildListHtml(item, i)
-      });
-      $(".advertise-payType-item-container").html(listHtml);
-      let paySubTypeInit = sessionStorage.getItem('paySubType');
-      if(paySubTypeInit) {
-        $('.advertise-payType-item-container .' + paySubTypeInit).addClass('on');
-        paySubType = paySubTypeInit;
-        let optionPay = $('.advertise-payType-item-container .' + paySubTypeInit).children('span').text();
-        sessionStorage.setItem('optionPay', optionPay);
-        $('.user-option .option-pay').text(optionPay);
-        let feeRateData = rateList.filter(item => item.paymentCode === paySubType);
-        let feeRate = '';
-        debugger
-        if(feeRateData.length > 0) {
-          feeRate = feeRateData[0].feeRate;
-          $('.user-option .fee').text(feeRate);
-          sessionStorage.setItem('feeRate', feeRate);
-        }else {
-          $('.user-option .fee').text(defaultFee);
-          sessionStorage.setItem('feeRate', defaultFee);
+        let listHtml = '';
+        res.forEach((item, i) => {
+          listHtml += buildListHtml(item, i)
+        });
+        $(".advertise-payType-item-container").html(listHtml);
+        let paySubTypeInit = sessionStorage.getItem('paySubType');
+        if(paySubTypeInit) {
+          $('.advertise-payType-item-container .' + paySubTypeInit).addClass('on');
+          paySubType = paySubTypeInit;
+          let optionPay = $('.advertise-payType-item-container .' + paySubTypeInit).children('span').text();
+          sessionStorage.setItem('optionPay', optionPay);
+          $('.user-option .option-pay').text(optionPay);
+          let feeRateData = rateList.filter(item => item.paymentCode === paySubType);
+          let feeRate = '';
+          if(feeRateData.length > 0) {
+            feeRate = feeRateData[0].feeRate;
+            $('.user-option .fee').text(feeRate);
+            sessionStorage.setItem('feeRate', feeRate);
+          }else {
+            $('.user-option .fee').text(defaultFee);
+            sessionStorage.setItem('feeRate', defaultFee);
+          }
+          if($(".advertise-payType-item").length > 0){
+              $(".advertise-payType-item").each(function(){
+                  if($(this).attr("data-code") === paySubType){
+                      $(this).addClass("on").siblings().removeClass("on");
+                  }
+              });
+          }
+          $('.user-option li').eq(1).show(300);
+          $('.user-option li').eq(2).show(300);
         }
-        $('.user-option li').eq(1).show(300);
-        $('.user-option li').eq(2).show(300);
-      }
-      if (code !== "") {
-        getAdvertiseDetail();
-      }
-    })
+      })
     }
 
     function setHtml() {
@@ -648,6 +658,9 @@ define([
 
     //获取广告详情
     function getAdvertiseDetail() {
+      if(!code) {
+        return;
+      }
         return TradeCtr.getAdvertiseDetail(code).then((data) => {
             pay = data.tradeCurrency;
             if(pay == 'CNY'){
@@ -657,7 +670,7 @@ define([
             }
             status = data.status;
             data.premiumRate = (data.premiumRate * 100).toFixed(2);
-            data.minTrade = data.minTrade;
+            data.minTrade = (Math.floor(parseInt(data.minTrade) * 100) / 100).toFixed(2);
             data.maxTrade = (Math.floor(parseInt(data.maxTrade) * 100) / 100).toFixed(2);
             mid = data.marketPrice;
             var tradeCoin = data.tradeCoin;
@@ -665,7 +678,7 @@ define([
               tradeCoin001 = tradeCoin;
               $(`.icon_${tradeCoin001}`).addClass('icon-step1-selected');
               //币种
-              if(data.tradeCurrency == 'CNY'){
+              if(data.tradeCurrency === 'CNY'){
                 $("#tradeCoin").val(base.getText('人民币'))
               }else{
                 $("#tradeCoin").val(base.getText('美元'))
@@ -675,7 +688,7 @@ define([
             }
             data.totalCount = base.formatMoney(data.totalCountString, '', tradeCoin);
             //广告类型
-            if (data.tradeType == '1') {
+            if (data.tradeType === '1') {
                 $(".trade-type .item").eq(0).addClass("on").siblings('.item').removeClass("on").addClass("hidden")
             } else {
                 $(".trade-type .item").eq(1).addClass("on").siblings('.item').removeClass("on").addClass("hidden")
@@ -683,20 +696,12 @@ define([
             // $(".trade-type .item.on .icon-check").click();
 
             $("#form-wrapper").setForm(data);
-            if($(".advertise-payType-item").length > 0){
-              $(".advertise-payType-item").each(function(){
-                paySubType = data.payType;
-                if($(this).attr("data-code") == data.payType){
-                  $(this).addClass("on").siblings().removeClass("on");
-                }
-              });
-            }
-
+            paySubType = sessionStorage.getItem('paySubType') ||data.payType;
+            sessionStorage.setItem('paySubType', paySubType);
             $("#coin").text($("#tradeCoin").val());
             $("#price").attr("data-coin", $("#tradeCoin").val());
             $("#price").val((Math.floor(data.truePrice * 100) / 100).toFixed(2));
-
-            var type =base.getUrlParam('type');
+            let type =base.getUrlParam('type');
             if(type == 'sell') {
                 $('.advertise-step1-bigbigTitle .text').removeClass('buy').addClass('sell');
                 $('.advertise-step1-bigbigTitle .title').html(base.getText(`卖出您的数字货币以获得利润`));
@@ -712,23 +717,64 @@ define([
             //step2
             $("#zqInput").val(data.premiumRate);
             salesCalculation();
-            if(data.fixTrade !== ''){
-                $('.jzxe').text(base.getText('使用交易金额'));
-                $('.step2-min,.step2-max').hide();
-                $('.step2-accuracy').show();
-                var fixTrade = data.fixTrade;
-                fixTrade = fixTrade.split('||');
-                $("#step2AccuracyTags").select2("val", [fixTrade]);
-                $('.jzxe').attr('data-type','2');
-            }else{
-                $('.jzxe').text(base.getText('使用精准限额'));
-                $('.step2-min,.step2-max').show();
-                $('.step2-accuracy').hide();
-                $("#minInput").val(data.minTrade);
-                $("#maxInput").val(data.maxTrade);
-                $('.jzxe').attr('data-type','1');
+            let jzxe = sessionStorage.getItem('jzxe');
+            if(jzxe) {
+              if(jzxe === '2') {
+                  $('.jzxe').text(base.getText('使用交易金额'));
+                  $('.step2-min,.step2-max').hide();
+                  $('.step2-accuracy').show();
+                  let step2AccuracyTags = sessionStorage.getItem('step2AccuracyTags') || '';
+                  let fixTrade = '';
+                  if(step2AccuracyTags) {
+                      fixTrade = step2AccuracyTags.split('||');
+                  }else {
+                      step2AccuracyTags = data.fixTrade;
+                      fixTrade = step2AccuracyTags.split('||');
+                      sessionStorage.setItem('step2AccuracyTags', data.fixTrade);
+                  }
+                  accuracyTags(fixTrade);
+                  $("#step2AccuracyTags").length && $("#step2AccuracyTags").select2("val", [fixTrade]);
+                  $('.jzxe').attr('data-type','2');
+              }else {
+                  let min = sessionStorage.getItem('min');
+                  let max = sessionStorage.getItem('max');
+                  $('.jzxe').text(base.getText('使用精准限额'));
+                  $('.step2-min,.step2-max').show();
+                  $('.step2-accuracy').hide();
+                  $("#minInput").val(min);
+                  $("#maxInput").val(max);
+                  $('.jzxe').attr('data-type','1');
+              }
+            }else {
+                if(data.fixTrade !== ''){
+                    $('.jzxe').text(base.getText('使用交易金额'));
+                    $('.step2-min,.step2-max').hide();
+                    $('.step2-accuracy').show();
+                    var fixTrade = data.fixTrade;
+                    fixTrade = fixTrade.split('||');
+                    accuracyTags(fixTrade);
+                    $("#step2AccuracyTags").length && $("#step2AccuracyTags").select2("val", [fixTrade]);
+                    $('.jzxe').attr('data-type','2');
+                    sessionStorage.setItem('jzxe', '2');
+                    sessionStorage.setItem('step2AccuracyTags', data.fixTrade);
+                }else{
+                    $('.jzxe').text(base.getText('使用精准限额'));
+                    $('.step2-min,.step2-max').show();
+                    $('.step2-accuracy').hide();
+                    $("#minInput").val(data.minTrade);
+                    $("#maxInput").val(data.maxTrade);
+                    $('.jzxe').attr('data-type','1');
+                    sessionStorage.setItem('jzxe', '1');
+                    sessionStorage.setItem('min', data.minTrade);
+                    sessionStorage.setItem('max', data.maxTrade);
+                }
             }
-            $("#cancelTimeInput").val(data.payLimit);
+            let cancelTimeInput = sessionStorage.getItem('cancelTimeInput') || '';
+            if(cancelTimeInput) {
+                $("#cancelTimeInput").val(cancelTimeInput);
+            }else {
+                $("#cancelTimeInput").val(data.payLimit);
+            }
             //step3
             var platTag = data.platTag;
             platTag=platTag.split('||');
@@ -749,7 +795,7 @@ define([
             //开放时间
             if (data.displayTime.length && data.displayTime.length > 0) { //自定义
                 $(".time-type .item").eq(1).addClass("on").siblings(".item").removeClass("on");
-                $("#timeWrap").removeClass("hide")
+                $("#timeWrap").removeClass("hide");
 
                 $("#timeWrap .time-item:nth-of-type(1) .startTime").val(data.displayTime[0].startTime);
                 $("#timeWrap .time-item:nth-of-type(1) .endTime").val(data.displayTime[0].endTime);
@@ -900,12 +946,18 @@ define([
       });
       $('#minInput').change(function() {
         if($(this).val()) {
-          sessionStorage.setItem('min', $(this).val());
+            sessionStorage.setItem('min', $(this).val());
+            $('.user-step2_option .op-min').text($(this).val());
+            $('.user-step2_option li').eq(5).show(300);
+            $('.user-step2_option li').eq(4).hide(300);
         }
       });
       $('#maxInput').change(function() {
         if($(this).val()) {
-          sessionStorage.setItem('max', $(this).val());
+            sessionStorage.setItem('max', $(this).val());
+            $('.user-step2_option .op-max').text($(this).val());
+            $('.user-step2_option li').eq(5).show(300);
+            $('.user-step2_option li').eq(4).hide(300);
         }
       });
       $("#myTagInput").change(function() {
@@ -914,9 +966,19 @@ define([
         }
       });
       $('#step2AccuracyTags').change(function() {
-        if($(this).val()) {
-          sessionStorage.setItem('step2AccuracyTags', $(this).val());
+        if(!!$(this).val()) {
+            let step2Tags = $(this).val().join('||');
+            sessionStorage.setItem('step2AccuracyTags', step2Tags);
+            let tags = step2Tags.split('||').join(',');
+            $('.user-step2_option .op-tding').text(tags);
+            $('.user-step2_option li').eq(5).hide(300);
+            $('.user-step2_option li').eq(4).show(300);
         }
+      });
+      $('#cancelTimeInput').change(function() {
+          if($(this).val()) {
+              sessionStorage.setItem('cancelTimeInput', $(this).val());
+          }
       });
       $("#clauseTextarea").change(function() {
         if($(this).val()) {
@@ -1138,7 +1200,12 @@ define([
         sessionStorage.setItem('zq', $('#zqInput').val());
         sessionStorage.setItem('min', $('#minInput').val());
         sessionStorage.setItem('max', $('#maxInput').val());
-        sessionStorage.setItem('step2AccuracyTags', $('#step2AccuracyTags').val() || '');
+        let Tags = $('#step2AccuracyTags').val();
+        if(Tags) {
+            sessionStorage.setItem('step2AccuracyTags', Tags.join('||'));
+        }else {
+            sessionStorage.setItem('step2AccuracyTags', '');
+        }
         sessionStorage.setItem('cancelTime', $('#cancelTimeInput').val());
         let type = +sessionStorage.getItem('tradeType') === 1 ? 'sell' : 'buy';
           if(code != ''){
@@ -1318,7 +1385,7 @@ define([
                 $(this).attr('data-type',2);
                 let step2AccuracyTags = $('#step2AccuracyTags').val();
                 if(step2AccuracyTags) {
-                  let tags = step2AccuracyTags.join();
+                  let tags = step2AccuracyTags.join(',');
                   $('.user-step2_option .op-tding').text(tags);
                   $('.user-step2_option li').eq(4).show(300);
                   $('.user-step2_option li').eq(5).hide(300);
@@ -1398,7 +1465,7 @@ define([
             tradeCoin:sessionStorage.getItem('tradeCoin001'),
             tradeType: Number(sessionStorage.getItem('tradeType')),
             isAllowProxy: isAllowProxy || 1
-        }).then((res) => {
+        }).then(() => {
           let tType = sessionStorage.getItem('tradeType');
           sessionStorage.removeItem('cancelTime');
           sessionStorage.removeItem('myTagInput');
