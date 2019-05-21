@@ -229,6 +229,22 @@ define([
                 userId: base.getUserId(),
                 ...params
             })
+        },
+        // 常用语列表查
+        userPhraseList() {
+            return Ajax.post('802956');
+        },
+        // 新增常用语
+        addUserPhrase(config) {
+            return Ajax.post('802950', config);
+        },
+        // 删除常用语
+        delUserPhrase(config) {
+            return Ajax.post('802951', config);
+        },
+        // 提取保证金
+        extractUserMargin(config) {
+            return Ajax.post('625230', config);
         }
     };
 })

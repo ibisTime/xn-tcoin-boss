@@ -180,7 +180,7 @@ table {
     background-color: $primary-color;
 }
 
-.no-data {
+.no-data, .no-data1 {
     width: 100%;
     padding: 80px 0 60px;
     text-align: center;
@@ -475,6 +475,9 @@ table {
                 .message-title {
                     color: #333;
                     margin-bottom: 5px;
+                }
+                .tit-gray {
+                    color: #999;
                 }
                 .message-content {
                     color: #999;
@@ -1710,6 +1713,12 @@ table {
     }
 }
 
+.wAddressDialog{
+    .zfba{
+        font-size: 18px;
+    }
+}
+
 .user-container {
     width: 1200px;
     margin: 0 auto;
@@ -1911,7 +1920,6 @@ table {
     }
     .right-wrap {
         width: 980px;
-        min-height: 225px;
         .big-title {
             height: 90px;
             display: flex;
@@ -2707,12 +2715,12 @@ table {
                 }
             }
             .balance_tq {
-                background-color: #F19348;
-                color: #fff;
+                background: rgba(241,147,72,0.20);
+                color: #F19348;
                 border-radius: 2px;
-                padding: 3px 8px;
+                padding: 4px 10px;
                 font-weight: 400;
-                font-size: 13px;
+                font-size: 12px;
                 cursor: pointer;
             }
         }
@@ -6042,6 +6050,10 @@ table {
                 display: flex;
                 .left{
                     width: 60%;
+                    .pj-all{
+                        display: inline-block;
+                        cursor: pointer;
+                    }
                 }
                 .right{
                     width: 40%;
@@ -6053,6 +6065,9 @@ table {
                 }
             }
             #content-pj{
+                tr td{
+                    border-bottom: 1px solid #ddd;
+                }
                 .trade-pj_box{
                     display: flex;
                     align-items: center;
@@ -6064,19 +6079,34 @@ table {
                         -moz-border-radius: 100%;
                         border-radius: 100%;
                         background-size: 100%;
-                        background-image: url('/static/images/banner.jpg');
                     }
                     .right{
                         font-size: 16px;
                         color: #666;
+                    }
+                    .no-photo{
+                        font-size: 19px;
+                        line-height: 44px;
+                        text-align: center;
+                        color: #fff;
+                        background-color: rgb(0, 0, 0);
                     }
                 }
                 .con-pj_top{
                     color: #333;
                     font-size: 16px;
                     margin-bottom: 4px;
-                    span{
-                        color: 'red';
+                    .lv_god{
+                        color: #4FB71A;
+                        font-size: 12px;
+                    }
+                    .lv_bad{
+                        color: #D53D3D;
+                        font-size: 12px;
+                    }
+                    .lv_zd{
+                        color: #999;
+                        font-size: 12px;
                     }
                 }
                 .con-pj_bottom{
@@ -6086,6 +6116,12 @@ table {
                 .tran-pj{
                     font-size: 15px;
                     color: #F19348;
+                    cursor: pointer;
+                    width: 100%;
+                    overflow: hidden;
+                    -ms-text-overflow: ellipsis;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
             .trade-form{
@@ -6110,6 +6146,17 @@ table {
             padding: 5px 10px;
             color: #fff;
             font-size: 14px;
+        }
+        .user-sell, .user-buy{
+            padding: 6px 0;
+            color: #fff;
+            background-color: $red-color;
+            width: 66px;
+            height: 32px;
+            text-align: center;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
         }
     }
 }
@@ -7823,6 +7870,7 @@ table {
     font-size: 14px;
     color: #666;
     letter-spacing: 0.12px;
+    overflow: hidden;
     .phrase-head{
         height: 36px;
         line-height: 36px;
@@ -7860,7 +7908,7 @@ table {
         border-bottom: 1px solid #ccc;
         p{
             display: inline-block;
-            max-width: 82%;
+            width: 82%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -8469,6 +8517,9 @@ html {
     height: 12px;
     margin-right: 3px;
 }
+#content-adver .tr-gray td {
+    color: #999;
+}
 
 .article-ul li{
     margin: 10px 0 !important;
@@ -8494,7 +8545,7 @@ input:checked + .slider:before {
 .fdsx{
     position: absolute;
     left: 0;
-    bottom: 0px;
+    bottom: 15px;
     width: 100%;
     height: 50px;
     text-align: center;
@@ -8619,6 +8670,11 @@ input:checked + .slider:before {
 }
 .user-pj_table .pj-en_sj {
     width: 23% !important;
+}
+.user-pj_table tbody .tit-gary{
+    td{
+        color: #888;
+    }
 }
 
 /* Rounded sliders */

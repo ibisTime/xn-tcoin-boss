@@ -23,10 +23,11 @@ define([
     statusValueList = {};
   var config = {
     start: 1,
-    limit: 10,
+    limit: 12,
     statusList: ["2", "3", "4", "6", "7", '8'],
     tradeCoin: coin
   };
+    let docIndex = 0;
   let colors = {
     '7': '#D53D3D',
     '6': '#f19348',
@@ -52,7 +53,7 @@ define([
       unreadMsgList = list;
       isUnreadList = true;
       addUnreadMsgNum();
-    })
+    });
     GeneralCtr.getDictList({ "parentKey": "trade_order_status" }).then((data) => {
       data.forEach(function(item) {
         statusValueList[item.dkey] = item.dvalue
@@ -110,37 +111,13 @@ define([
     `);
   }
 
-  // 初始化分页器
-  function initPagination(data) {
-    $("#pagination .pagination").pagination({
-      pageCount: data.totalPage,
-      showData: config.limit,
-      jump: true,
-      coping: true,
-      prevContent: '<img src="/static/images/arrow---left.png" />',
-      nextContent: '<img src="/static/images/arrow---right.png" />',
-      keepShowPN: true,
-      totalData: data.totalCount,
-      jumpIptCls: 'pagination-ipt',
-      jumpBtnCls: 'pagination-btn',
-      jumpBtn: base.getText('确定'),
-      isHide: true,
-      callback: function(_this) {
-        if (_this.getCurrent() != config.start) {
-          base.showLoadingSpin();
-          config.start = _this.getCurrent();
-          getPageOrder(config);
-        }
-      }
-    });
-  }
-
   //分页查询订单
   function getPageOrder(refresh) {
+    config.start = docIndex;
     return TradeCtr.getPageOrder(config, refresh).then((data) => {
-      lists = data.list;
+      lists = [...lists, ...data.list];
       if (data.list.length) {
-        var html = "";
+        let html = "";
         lists.forEach((item, i) => {
           html += buildHtml(item,data);
         });
@@ -149,11 +126,7 @@ define([
         addUnreadMsgNum();
 
         $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
-      } else {
-        config.start == 1 && $("#content-order").empty()
-        config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
       }
-      config.start == 1 && initPagination(data);
       if(langType == 'EN'){
         $('.k-order-list .am-button').css({
           'width': 'auto',
@@ -176,9 +149,8 @@ define([
     var quantity = '';
     //类型
     var type = '';
-
+    let toBuySell = '', user = '';
     //当前用户为买家
-      let toBuySell = '', user = '';
     if (item.buyUser == base.getUserId()) {
       user = item.sellUserInfo;
       
@@ -242,9 +214,9 @@ define([
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'BTC'}</td>
 					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
 					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
-					<td>行情价格</td>
-					<td>手续费</td>
-					<td>支付方式</td>
+					<td>${item.tradePrice}</td>
+					<td>${base.formatMoney(item.feeString,'',item.tradeCoin)} ${item.tradeCoin}</td>
+					<td>${item.payment}</td>
 					<td class="nickname">
 						<samp class="name k-name goHref" style="color: #D53D3D" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.buyUser : item.sellUser}&adsCode=${item.code}">${user.nickname ? user.nickname : '-'}</samp>
 					</td>
@@ -260,7 +232,6 @@ define([
   //按条件查找已结束订单
     $('.hisorder-search-btn').click(function () {
       base.showLoadingSpin();
-      var data;
       var type = $('.hisorder-wrap #payType option:selected').val();
       var createDatetimeStart = $('#createDatetimeStart input').val();
       var createDatetimeEnd = $('#createDatetimeEnd input').val();
@@ -278,7 +249,9 @@ define([
       }else {
           statusList.push(payStatic)
       }
-        data={
+        docIndex = 1;
+        lists = [];
+        config={
           start: 1,
           limit: 10,
           tradeCoin,
@@ -287,32 +260,7 @@ define([
           createDatetimeStart:createDatetimeStart || undefined,
           createDatetimeEnd:createDatetimeEnd || undefined
       };
-        return TradeCtr.getPageOrder(data, true).then((data) => {
-            lists = data.list;
-            if (data.list.length) {
-                var html = "";
-                lists.forEach((item, i) => {
-                    html += buildHtml(item,data);
-                });
-                $("#content-order").html(html);
-                isOrderList = true;
-                addUnreadMsgNum();
-
-                $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
-            } else {
-                config.start == 1 && $("#content-order").empty();
-                config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
-            }
-            config.start == 1 && initPagination(data);
-            if(langType == 'EN'){
-                $('.k-order-list .am-button').css({
-                    'width': 'auto',
-                    'padding-left': '6px',
-                    'padding-right': '6px',
-                });
-            }
-            base.hideLoadingSpin();
-        }, base.hideLoadingSpin);
+      return getPageOrder(true);
 
     })
   //条件重置
@@ -321,8 +269,9 @@ define([
         $('#createDatetimeStart input').val('');
         $('#createDatetimeEnd input').val('');
         $('.hisorder-wrap #payStatic').val('');
+        docIndex = 1;
         getPageOrder(config);
-    })
+    });
   //添加未读消息数
   function addUnreadMsgNum() {
     if (isUnreadList && isOrderList) {
@@ -500,6 +449,13 @@ define([
       config.tradeCoin = tradeCoin;
       getPageOrder(true);
     });
+    
+      $(document).scroll(function() {
+          if(Math.floor($(this).scrollTop() / 300) === (docIndex + 1)) {
+              docIndex ++;
+              getPageOrder(true);
+          }
+      });
       // 自动刷新页面
       function auSx() {
           window.location.reload();

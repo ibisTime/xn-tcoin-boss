@@ -8,7 +8,6 @@ define([
     let langType = localStorage.getItem('langType') || 'ZH';
     let userId = base.getUserId();
     let smsType = {};
-    let docTimer = null;
     let docIndex = 0;
     init();
     function init() {
@@ -48,14 +47,15 @@ define([
     
     function buildHtml(item) {
         let trHtml = '';
+        let titGary = item.status === '1' ? 'tit-gary' : '';
         if(+item.smsInfo.type !== 4) {
-            trHtml = `<tr>
+            trHtml = `<tr class="${titGary}">
 					<td class="currency">${smsType[item.smsInfo.type]}</td>
                     <td class="sms-info" data-href="../order/order-detail.html?code=${item.smsInfo.refNo}&coin=${item.smsInfo.symbol}" data-readId="${item.id}">${item.smsInfo.content}</td>
                     <td class="payType">${base.formateDatetime(item.createDatetime)}</td>
 				</tr>`;
         }else {
-          trHtml = `<tr>
+          trHtml = `<tr class="${titGary}">
 					<td class="currency">${smsType[item.smsInfo.type]}</td>
                     <td class="sms-info" data-href="../wallet/wallet.html?coin=BTC" data-readId="${item.id}">${item.smsInfo.content}</td>
                     <td class="payType">${base.formateDatetime(item.createDatetime)}</td>

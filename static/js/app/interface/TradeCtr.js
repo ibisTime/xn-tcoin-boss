@@ -10,6 +10,9 @@ define([
         getPageAdvertise(config, refresh) {
             return Ajax.get("625227", config, refresh); // new 625227 old 625228
         },
+        getListAdvertise(config) {
+            return Ajax.post("625231", config);
+        },
         /**
          * 分页查询广告 带userId,status
          * @param config: {start, limit, maxPrice, minPrice,payType,tradeType(0买、1卖),userId,status,coin}
@@ -103,6 +106,13 @@ define([
                 belongUser: base.getUserId(),
                 ...config
             }, refresh);
+        },
+        // 我的订单列表查
+        getListOrder(config) {
+            return Ajax.post("625258", {
+                belongUser: base.getUserId(),
+                ...config
+            });
         },
         //获取订单详情
         getOrderDetail(code) {

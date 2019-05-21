@@ -40,7 +40,7 @@ define([
           getPayTypeMoneyList(),
           addListener()
         ).then(() => {
-          let buySearchConfig = localStorage.getItem('buySearchConfig') || '';
+          let buySearchConfig = sessionStorage.getItem('buySearchConfig') || '';
           if(buySearchConfig) {
             config = JSON.parse(buySearchConfig);
             let payType = config.payType || '';
@@ -186,7 +186,7 @@ define([
     //分页查询广告
     function getPageAdvertise(config) {
         base.showLoadingSpin();
-        localStorage.setItem('buySearchConfig', JSON.stringify(config));
+        sessionStorage.setItem('buySearchConfig', JSON.stringify(config));
         return TradeCtr.getPageAdvertise(config, true).then((data) => {
             var lists = data.list;
             if($('#bestSearchBtn').attr('data-type') == 'bestSearch'){
@@ -372,6 +372,7 @@ define([
         
         $('.yj_buy-ul li').click(function(e) {
           e.stopPropagation();
+            sessionStorage.removeItem('buySearchConfig');
           base.gohref(`../index.html?langType=${langType}&coin=${toCoin}`);
         });
 
@@ -384,9 +385,11 @@ define([
             }
         });
         $('.buy_sell .buy').on('click', (e) => {
+            sessionStorage.removeItem('buySearchConfig');
           base.gohref(`../index.html?langType=${langType}&coin=${coin}`);
         });
         $('.buy_sell .sell').on('click', (e) => {
+            sessionStorage.removeItem('sellSearchConfig');
           base.gohref(`../trade/sell-list.html?langType=${langType}&coin=${coin}`);
         });
         $('#resetSearchBtn').click(function() {

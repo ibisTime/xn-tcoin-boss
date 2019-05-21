@@ -29,7 +29,7 @@ define([
     var newMsgHtml = '';
     var tradeType;
     var adsCode;
-    var tradeCoin = base.getUrlParam('coin') || 'BTC'; //交易币种
+    var tradeCoin = base.getUrlParam('coin') || ''; //交易币种
     var toUserId = '';
     var toUserName = '';
     var settimeout = true;
@@ -99,7 +99,7 @@ define([
     }
   // 常用语设置
   function getPhraseData() {
-    GeneralCtr.getDictList({ "parentKey": "often_sentence" }).then(data => {
+    UserCtr.userPhraseList().then(data => {
       let li_html = `<div class="phrase-head">
                         <div class="left">常用语</div>
                         <div class="right">
@@ -109,7 +109,7 @@ define([
                         </div>
                     </div>`;
       data.forEach((item, index) => {
-        li_html += `<li class="li0${index}"><p title="${item.dvalue}">${item.dvalue}</p> <span class="dele-phrase hidden"></span></li>`;
+        li_html += `<li class="li0${index}"><p title="${item.content}">${item.content}</p> <span class="dele-phrase hidden" data-id="${item.id}" data-index="${index}"></span></li>`;
       });
       $('#phraseUL').html(li_html);
     });
@@ -232,8 +232,6 @@ define([
       $('.order-detail-container .orderDetail-left-tips-content').html(base.getText('注意！这位卖家的声誉反馈较低。在分享您的礼品卡信息前，请确保卖家在线并回复了您。请确保卖家在线并回复了您。如果您已经给了他信息，而他要求您取消交易，请点击已支付完成按钮。版主将会介入来确保卖家服从规则。'));
       $('.order-detail-container .orderDetail-left-tips-button').html(base.getText('我理解'));
       $('.order-detail-container .orderDetail-left-status').html(base.getText('交易已开始'));
-      $('.order-detail-container .orderDetail-left-todo .todo').html(`${base.getText('请通过')}<span class="todo-payType"></span>${base.getText('发送')}<span class="amount"></span>`);
-      $('.order-detail-container .orderDetail-left-todo .todo-tips').html(`<span></span> ${base.getText(`将加载至您的${coinName[tradeCoin]}钱包`)}`);
       $('.order-detail-container .payBtn').html(base.getText('已支付'));
       $('.order-detail-container .cg_tips').html(base.getText(`在您完成支付后，请务必点击“我已支付”按钮。否则，交易将超时，${coinName[tradeCoin]}将退回给卖家。`));
       $('.order-detail-container .canBtn').html(base.getText('取消'));
@@ -283,7 +281,7 @@ define([
 
     function getOrderDetail() {
         return TradeCtr.getOrderDetail(code).then((data) => {
-          console.log('status:', data.status);
+            tradeCoin = data.tradeCoin;
           adsCode = data.adsCode;
           tradeOrderStatus = data.status;
           if(tradeOrderStatus === '1') {
@@ -324,6 +322,8 @@ define([
           setInterTime = setInterval(getCountDown, 1000);
           //待支付
           if(data.buyUser === userId) {
+              $('.order-detail-container .orderDetail-left-todo .todo').html(`${base.getText('请通过')}<span class="todo-payType"></span>${base.getText('发送')}<span class="amount"></span>`);
+              $('.order-detail-container .orderDetail-left-todo .todo-tips').html(`<span></span> ${base.getText(`将加载至您的${coinName[tradeCoin]}钱包`)}`);
             toUserId = data.sellUserInfo.userId;
             document.querySelector('title').innerText = data.sellUserInfo.nickname;
             let time = base.calculateDays(data.sellUserInfo.lastLogin, new Date());
@@ -358,6 +358,14 @@ define([
               $('.finished-top .finished-top-status').text(base.getText('仲裁已完成，卖家胜'));
             }
           } else {
+              console.log(data);
+              $('.order-detail-container .orderDetail-left-todo .todo').html(`
+                您正在以 <span class="fb-num">
+                ${data.tradeAmount}${data.tradeCurrency}</span>
+                出售 <span class="coin-num">
+                    ${base.formatMoney(data.countString,'',data.tradeCoin)}${data.tradeCoin}
+                </span>，支付方式为
+                <span class="pay-type">${data.payment}</span>`);
             toUserId = data.buyUserInfo.userId;
             document.querySelector('title').innerText = data.buyUserInfo.nickname;
             let time = base.calculateDays(data.buyUserInfo.lastLogin, new Date());
@@ -500,10 +508,28 @@ define([
 
           let startTime = new Date();
           let endTime = new Date(Date.parse(data.invalidDatetime));
-
+          let intervalTime = null, timeoutTime = null;
           if(endTime > startTime) {
-            $('.orderDetail-left-time .text .left-time-minute').html(Math.floor((endTime - startTime) / 1000 / 60) + base.getText('分钟'));
+              if(intervalTime) {
+                  clearInterval(intervalTime);
+              }
+              if(timeoutTime) {
+                  clearTimeout(timeoutTime);
+              }
+              let showTime = Math.floor((endTime - startTime) / 1000 / 60);
+            $('.orderDetail-left-time .text .left-time-minute').html(showTime + base.getText('分钟'));
+              let interTime = (new Date(Date.parse(data.invalidDatetime)).getTime() - new Date().getTime()) - showTime * 1000 * 60;
+              timeoutTime = setTimeout(() => {
+                  let newDate = new Date();
+                  $('.orderDetail-left-time .text .left-time-minute').html(Math.floor((endTime - newDate) / 1000 / 60) + base.getText('分钟'));
+                  intervalTime = setInterval(() => {
+                      let newDate = new Date();
+                      $('.orderDetail-left-time .text .left-time-minute').html(Math.floor((endTime - newDate) / 1000 / 60) + base.getText('分钟'));
+                  }, 60000);
+              }, interTime)
           } else {
+              clearInterval(intervalTime);
+              clearTimeout(timeoutTime);
             $('.orderDetail-left-time .text .left-time-minute').html('0' + base.getText('分钟'));
           }
           if(data.buyUser == userId) {
@@ -1568,8 +1594,19 @@ define([
                 $('#phraseUL .dele-phrase').addClass('hidden');
             }
             if($(target).hasClass('dele-phrase')) {
-                let dex = $(this).index();
-                $('#phraseUL li').remove(`.li0${dex}`);
+                let dex = $(target).attr('data-index');
+                let dID = $(target).attr('data-id');
+                UserCtr.delUserPhrase({id: dID}).then(() => {
+                    $('#phraseUL li').remove(`.li0${dex}`);
+                    if($('#phraseUL li').length === 0) {
+                        $('#phraseUL .phrase-add').removeClass('hidden');
+                        $('#phraseUL .phrase-set').removeClass('hidden');
+                        $('#phraseUL .phrase-rem').addClass('hidden');
+                        $('#phraseUL .dele-phrase').addClass('hidden');
+                    };
+                }, () => {
+                    base.showMsg('操作失败');
+                });
             }
         });
       $('#phraseUL').on('click', 'li p', function(e) {
@@ -1643,6 +1680,11 @@ define([
         });
 
         $('#msgflow').on('click', 'img', function() {
+            window.requestAnimationFrame(() => {
+                $('#bigPicDiv').children().eq(setImgIndex).children('img').css('transform', 'scale(1)');
+                $('#bigPicDiv').css('overflow', 'hidden');
+            });
+            scaleIndex = 1;
             imageClick(this);
         });
         $('#click_pic_dialog_close').on('click', function() {
@@ -1666,6 +1708,7 @@ define([
         });
         $('#msgImg').on('click', function() {
             event.stopPropagation();
+            $('.phraseUL-warp').addClass('hidden');
             if ($(this).hasClass("on")) {
                 $(".emotionUL-wrap").addClass("hidden");
                 $(this).removeClass("on");
@@ -1677,8 +1720,13 @@ define([
         });
         $('#phrase').on('click', function(e) {
             e.stopPropagation();
+            $(".emotionUL-wrap").addClass("hidden");
           if($('.phraseUL-warp').hasClass('hidden')) {
-            $('.phraseUL-warp').removeClass('hidden')
+              $('#phraseUL .phrase-add').removeClass('hidden');
+              $('#phraseUL .phrase-set').removeClass('hidden');
+              $('#phraseUL .phrase-rem').addClass('hidden');
+              $('#phraseUL .dele-phrase').addClass('hidden');
+            $('.phraseUL-warp').removeClass('hidden');
           }else {
             $('.phraseUL-warp').addClass('hidden');
           }
@@ -1907,7 +1955,7 @@ define([
         //购买 点击
         $(".goBuyDetailBtn").on("click", function() {
                 base.gohref("../trade/buy-detail.html?code=" + adsCode)
-            })
+            });
             //出售 点击
         $(".goSellDetailBtn").on("click", function() {
             base.gohref("../trade/sell-detail.html?code=" + adsCode)
@@ -2012,13 +2060,13 @@ define([
         $('#bigPicDiv img').css({
           transform: `scale(${scaleIndex})`
         });
-        $('#bigPicDiv').css('overflow', 'hidden');
+        $('#bigPicDiv').css('overflow', 'auto');
         if(outscroll) {
           clearTimeout(outscroll);
         }
         outscroll = setTimeout(() => {
           $('#bigPicDiv').css('overflow', 'scroll');
-        }, 100);
+        }, 16);
       });
       $('.am-modal-body').click(function(e) {
         e.stopPropagation();
@@ -2031,9 +2079,9 @@ define([
           }
           $('#bigPicDiv').children().eq(setImgIndex).show(100).siblings().hide();
           $('#bigPicDiv').children().eq(setImgIndex).children('img').css('transform', 'scale(1)');
-            window.requestAnimationFrame(() => {
+            setTimeout(() => {
                 $('#bigPicDiv').css('overflow', 'hidden');
-            });
+            }, 200);
           scaleIndex = 1;
         }
         if($(target).hasClass('pic-right')) {
@@ -2044,9 +2092,12 @@ define([
           }
           $('#bigPicDiv').children().eq(setImgIndex).show(100).siblings().hide();
           $('#bigPicDiv').children().eq(setImgIndex).children('img').css('transform', 'scale(1)');
-          window.requestAnimationFrame(() => {
+          setTimeout(() => {
               $('#bigPicDiv').css('overflow', 'hidden');
-          });
+          }, 200);
+          // window.requestAnimationFrame(() => {
+          //     $('#bigPicDiv').css('overflow', 'hidden');
+          // });
           scaleIndex = 1;
         }
         if($(target).hasClass('x')) {
@@ -2065,13 +2116,13 @@ define([
         $('#bigPicDiv img').css({
           transform: `scale(${scaleIndex})`
         });
-        $('#bigPicDiv').css('overflow', 'hidden');
+        $('#bigPicDiv').css('overflow', 'auto');
         if(outscroll) {
           clearTimeout(outscroll);
         }
         outscroll = setTimeout(() => {
           $('#bigPicDiv').css('overflow', 'scroll');
-        }, 100);
+        }, 16);
       });
       $('#click_pic_dialog').click(function() {
         $('#click_pic_dialog').hide();
@@ -2081,6 +2132,23 @@ define([
       });
       $('#click_phrase .close').click(function() {
           $('#click_phrase').addClass('hidden');
+      });
+      $('#phrase_Bt').click(function() {
+          let phraseArea = $('#phrase_area').val().trim();
+          if(!phraseArea) {
+              base.showMsg(base.getText('请输入常用语'));
+              return;
+          }else {
+              base.showLoadingSpin();
+              UserCtr.addUserPhrase({content: phraseArea}).then(() => {
+                  base.hideLoadingSpin();
+                  base.showMsg(base.getText('常用语添加成功'));
+                  $('#click_phrase').addClass('hidden');
+                  $('.phraseUL-warp').removeClass('hidden');
+                  $('#phrase_area').val('');
+                  getPhraseData();
+              }, base.hideLoadingSpin);
+          }
       });
         // 自动刷新页面
         function auSx() {

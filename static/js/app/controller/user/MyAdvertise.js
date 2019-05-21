@@ -13,8 +13,6 @@ define([
     var coin = base.getUrlParam("coin") || 'BTC'; // wait
     var adsStatusValueList = {}; // 广告狀態
     let adverConfig = {
-        start: 1,
-        limit: 10,
         tradeType: 1,
         statusList: [0, 1,2],
         userId: base.getUserId()
@@ -100,21 +98,14 @@ define([
     }
 
     // 获取广告列表
-    function getPageAdvertise(config, refresh) {
-        return TradeCtr.getPageAdvertiseUser(config, refresh).then((data) => {
-            var lists = data.list;
-            if (data.list.length > 0) {
-                var html = "";
-                lists.forEach((item, i) => {
-                    html += buildHtml(item);
-                });
-                $("#content-adver").html(html);
-                $(".myAdvertise-container .trade-list-wrap .no-data").addClass("hidden")
-            } else {
-              config.start == 1 && $("#content-adver").empty();
-                // config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
-            }
-          config.start == 1 && initPagination(data);
+    function getPageAdvertise(config) {
+        return TradeCtr.getListAdvertise(config).then((data) => {
+            let html = '';
+            data.forEach((item, i) => {
+                html += buildHtml(item);
+            });
+            $("#content-adver").html(html);
+            $(".myAdvertise-container .trade-list-wrap .no-data").addClass("hidden");
             base.hideLoadingSpin();
         }, base.hideLoadingSpin);
 
@@ -130,7 +121,6 @@ define([
             if (adverConfig.statusList == null || adverConfig.statusList.length == 1) {
                 operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>
         		 			<div class="am-button publish goHref am-button-ghost am-button-out" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('查看', langType)}</div>`
-
                 //已发布
             } else {
                 if (item.status == '0') {
@@ -141,19 +131,8 @@ define([
                     }else {
                         isMoneyOk = +item.truePrice * moneyUSDT;
                     }
-                    console.log(isMoneyOk, item.minTrade);
-                    if(!item.fixTrade && isMoneyOk < item.minTrade) {
-                        tipHtml=`<p style="
-                            position: absolute;
-                            width: 400px;
-                            font-size: 12px;
-                            color: #d83b37;
-                        "
-                        >${base.getText(`您的${item.tradeCoin}账户余额低于该广告的最小交易值，别人将不可见`)}</p>`
-                    }
-                    if(item.fixTrade) {
-                        let minFixTrade = item.fixTrade.split('||')[0];
-                        if(isMoneyOk < minFixTrade) {
+                    if(item.tradeType !== '0') {
+                        if(!item.fixTrade && isMoneyOk < item.minTrade) {
                             tipHtml=`<p style="
                             position: absolute;
                             width: 400px;
@@ -161,6 +140,18 @@ define([
                             color: #d83b37;
                         "
                         >${base.getText(`您的${item.tradeCoin}账户余额低于该广告的最小交易值，别人将不可见`)}</p>`
+                        }
+                        if(item.fixTrade) {
+                            let minFixTrade = item.fixTrade.split('||')[0];
+                            if(isMoneyOk < minFixTrade) {
+                                tipHtml=`<p style="
+                            position: absolute;
+                            width: 400px;
+                            font-size: 12px;
+                            color: #d83b37;
+                        "
+                        >${base.getText(`您的${item.tradeCoin}账户余额低于该广告的最小交易值，别人将不可见`)}</p>`
+                            }
                         }
                     }
                 } else if (item.status == "1"){
@@ -183,7 +174,8 @@ define([
         }
         setTimeout(() => {
           if(item.status === "2") {
-            $(`#buyitem${item.code.substring(item.code.length-8)}`).prop('checked', false);
+              $(`#buyitem${item.code.substring(item.code.length-8)}`).prop('checked', false);
+              $(`#buyitem${item.code.substring(item.code.length-8)}`).parents('tr').addClass('tr-gray')
           }
         }, 200);
         return `<tr>
@@ -232,44 +224,49 @@ define([
             base.showLoadingSpin();
             getPageAdvertise(adverConfig, true);
         });
-
+        let adverTime = null;
         $(document).on("click", "#content-adver input", function() {
-            if ($(this).prop('checked') === false){
-                var adsCode = $(this).attr("data-code");
-                var adsStatus = $(this).attr("data-status");
-                if(+adsStatus !== 2) {
-                  TradeCtr.downAdvertise(adsCode).then(() => {
-                    base.hideLoadingSpin();
-                    base.showMsg(base.getText('操作成功'));
-                    setTimeout(function() {
-                      base.showLoadingSpin();
-                      adverConfig.start = 1;
-                      getPageAdvertise(adverConfig, true)
-                    }, 1000)
-                  }, () => {
-                    $(this).prop('checked', false);
-                    base.hideLoadingSpin();
-                  })
-                }
-            }else {
-              var adsCode = $(this).attr("data-code");
-              var adsStatus = $(this).attr("data-status");
-              if(+adsStatus === 2) {
-                base.showLoadingSpin();
-                TradeCtr.upAdvertise(adsCode).then(() => {
-                  base.hideLoadingSpin();
-                  base.showMsg(base.getText('操作成功'));
-                  setTimeout(function() {
-                    base.showLoadingSpin();
-                    adverConfig.start = 1;
-                    getPageAdvertise(adverConfig, true)
-                  }, 1000)
-                }, () => {
-                  $(this).prop('checked', true);
-                  base.hideLoadingSpin();
-                })
-              }
+            if(adverTime) {
+                clearTimeout(adverTime);
             }
+            adverTime = setTimeout(() => {
+                if ($(this).prop('checked') === false){
+                    var adsCode = $(this).attr("data-code");
+                    var adsStatus = $(this).attr("data-status");
+                    if(+adsStatus !== 2) {
+                        TradeCtr.downAdvertise(adsCode).then(() => {
+                            base.hideLoadingSpin();
+                            base.showMsg(base.getText('操作成功'));
+                            setTimeout(function() {
+                                base.showLoadingSpin();
+                                adverConfig.start = 1;
+                                getPageAdvertise(adverConfig, true)
+                            }, 500)
+                        }, () => {
+                            $(this).prop('checked', false);
+                            base.hideLoadingSpin();
+                        })
+                    }
+                }else {
+                    let adsCode = $(this).attr("data-code");
+                    let adsStatus = $(this).attr("data-status");
+                    if(+adsStatus === 2) {
+                        base.showLoadingSpin();
+                        TradeCtr.upAdvertise(adsCode).then(() => {
+                            base.hideLoadingSpin();
+                            base.showMsg(base.getText('操作成功'));
+                            setTimeout(function() {
+                                base.showLoadingSpin();
+                                adverConfig.start = 1;
+                                getPageAdvertise(adverConfig, true)
+                            }, 500)
+                        }, () => {
+                            $(this).prop('checked', true);
+                            base.hideLoadingSpin();
+                        })
+                    }
+                }
+            }, 500);
         });
         $('.adver-select span').click(function() {
           $(this).addClass('set_sp').siblings().removeClass('set_sp');

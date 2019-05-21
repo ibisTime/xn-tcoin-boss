@@ -18,13 +18,10 @@ define([
         },
         statusValueList = {};
     let config = {
-        start: 1,
-        limit: 10,
         statusList: ["-1", "0", "1", "5"],
         tradeCoin: ''
     };
-    let unreadMsgList = {},
-        lists = [];
+    let unreadMsgList = {}
     let isUnreadList = false,
         isOrderList = false;
     init();
@@ -42,7 +39,7 @@ define([
                 data.forEach(function(item) {
                     statusValueList[item.dkey] = item.dvalue
                 });
-                getPageOrder();
+                getListOrder();
             }, base.hideLoadingSpin);
         addListener();
     }
@@ -76,48 +73,16 @@ define([
         $('.user-order-list .zwjl').html(base.getText('暂无记录'));
     }
 
-    // 初始化分页器
-    function initPagination(data) {
-        $(".tradeDetail-container #trade-pagination .pagination").pagination({
-            pageCount: data.totalPage,
-            showData: config.limit,
-            jump: true,
-            coping: true,
-            prevContent: '<img src="/static/images/arrow---left.png" />',
-            nextContent: '<img src="/static/images/arrow---right.png" />',
-            keepShowPN: true,
-            totalData: data.totalCount,
-            jumpIptCls: 'pagination-ipt',
-            jumpBtnCls: 'pagination-btn',
-            jumpBtn: base.getText('确定'),
-            isHide: true,
-            callback: function(_this) {
-                if (_this.getCurrent() != config.start) {
-                    base.showLoadingSpin();
-                    config.start = _this.getCurrent();
-                    getPageOrder(config);
-                }
-            }
-        });
-    }
-
     //分页查询订单
-    function getPageOrder(refresh) {
-        return TradeCtr.getPageOrder(config, refresh).then((data) => {
-            lists = data.list;
-            if (data.list.length > 0) {
-                var html = "";
-                lists.forEach((item, i) => {
-                    html += buildHtml(item,data);
-                });
-                $("#content-order").html(html);
-                isOrderList = true;
-                $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
-            } else {
-                config.start == 1 && $("#content-order").empty();
-                // config.start == 1 && $(".trade-list-wrap .no-data").removeClass("hidden")
-            }
-            config.start == 1 && initPagination(data);
+    function getListOrder() {
+        return TradeCtr.getListOrder(config).then((data) => {
+            let html = "";
+            data.forEach((item, i) => {
+                html += buildHtml(item,data);
+            });
+            $("#content-order").html(html);
+            isOrderList = true;
+            $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
             if(langType == 'EN'){
                 $('.k-order-list .am-button').css({
                     'width': 'auto',
@@ -189,13 +154,7 @@ define([
                 }
             }
         }
-
-        if (user.photo) {
-            photoHtml = `<div class="photo" style="background-image:url('${base.getAvatar(user.photo)}')"></div>`
-        } else {
-            var tmpl = user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '-';
-            photoHtml = `<div class="photo"><div class="noPhoto">${tmpl}</div></div>`
-        }
+        
          $(".orderDetail-operation-btn").html(operationHtml)
         return `<tr data-code="${item.code}">
                     <td>
@@ -208,7 +167,7 @@ define([
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'BTC'}</td>
 					<td class="quantity">${item.tradeAmount} ${item.tradeCurrency}</td>
 					<td>${base.formatMoney(item.countString,'',item.tradeCoin)} ${item.tradeCoin}</td>
-					<td>${item.paymentName ? item.paymentName : ''}</td>
+					<td>${item.payment ? item.payment : '-'}</td>
 					<td class="nickname">
 						<samp class="goHref name k-name" data-href="../user/user-detail.html?coin=${item.tradeCoin}&userId=${type == 'sell' ? item.buyUser : item.sellUser}&adsCode=${item.code}&bsComment=${item.bsComment}&sellUser=${item.sellUser}">${user.nickname ? user.nickname : '-'}</samp>
 					</td>
@@ -263,7 +222,7 @@ define([
                     base.showMsg(base.getText('操作成功'));
                     setTimeout(function() {
                         base.showLoadingSpin();
-                        getPageOrder(true)
+                        getListOrder(true)
                     }, 1500)
                 }, base.hideLoadingSpin)
             }, base.emptyFun)
@@ -282,7 +241,7 @@ define([
                     base.showMsg(base.getText('操作成功'));
                     setTimeout(function() {
                         base.showLoadingSpin();
-                        getPageOrder(true)
+                        getListOrder(true)
                     }, 2000)
                 }, base.hideLoadingSpin)
             }, base.emptyFun)
@@ -328,7 +287,7 @@ define([
                     setTimeout(function() {
                         base.showLoadingSpin();
                         $("#form-wrapper .textarea-item").val("");
-                        getPageOrder(true)
+                        getListOrder(true)
                     }, 1500)
                 }, base.hideLoadingSpin)
             }
@@ -353,7 +312,7 @@ define([
                     base.showMsg(base.getText('操作成功'));
                     setTimeout(function() {
                         base.showLoadingSpin();
-                        getPageOrder(true)
+                        getListOrder(true)
                     }, 1500)
                 }, base.hideLoadingSpin)
             }, base.emptyFun)
@@ -367,7 +326,7 @@ define([
         $('.order_list-select span').click(function() {
             $(this).addClass('set_sp').siblings().removeClass('set_sp');
             config.tradeCoin = $(this).attr('data-coin') || '';
-          getPageOrder(true);
+          getListOrder(true);
         });
     }
 });

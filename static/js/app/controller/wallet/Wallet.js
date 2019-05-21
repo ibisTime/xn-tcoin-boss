@@ -11,22 +11,9 @@ define([
     'app/controller/foo'
 ], function (base, pagination, Validate, smsCaptcha, AccountCtr, GeneralCtr, TradeCtr, UserCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var currency = base.getUrlParam("coin") || 'BTC'; //币种
-
-    let moneyHS = 0;
+    let currency = base.getUrlParam("coin") || 'BTC'; //币种
     let gmType = {}; // 去出售支付方式
-
-    let acceptRule = {};
-
     let isInternal = false;
-
-    let buyOrderCode = ''; // 去购买订单号
-
-    var configAddress = {
-            start: 1,
-            limit: 10,
-            currency: currency
-        };
     let changeCoinText = {
         'BTC': 'USDT',
         'USDT': 'BTC'
@@ -39,8 +26,10 @@ define([
     let toCurrencyMoney = '';
     
     let usdMarket = 0;
+    
+    let accountNumberTB = '';
 
-    var addAddressWrapperRules = {
+    let addAddressWrapperRules = {
             "label": {
                 required: true,
             },
@@ -151,78 +140,6 @@ define([
         });
     }
 
-    function qhMoneyType(pType, m_type, isw) { //m_cyn
-        let toType = '';
-        acceptRule.min_cny = parseFloat(acceptRule.accept_order_min_cny_amount);
-        acceptRule.max_cny = parseFloat(acceptRule.accept_order_max_cny_amount);
-        acceptRule.min_usd = parseFloat(acceptRule.accept_order_min_usd_amount);
-        acceptRule.max_usd = parseFloat(acceptRule.accept_order_max_usd_amount);
-        // 购买
-        if (isw == '0') {
-            if (m_type == 'CNY') {
-                $('.con-toBuy .x-p_money').text('USD');
-                if($('.con-toBuy .sel-p').text() === base.getText('数量', langType)){
-                    // $('.con-toBuy .m_bb').text('FMVP');
-                }
-                $('.con-toBuy .m_cyn').text('USD');
-            } else {
-                $('.con-toBuy .x-p_money').text('CNY');
-                if($('.con-toBuy .sel-p').text() === base.getText('数量', langType)){
-                    // $('.con-toBuy .m_bb').text('FMVP');
-                }
-                $('.con-toBuy .m_cyn').text('CNY');
-            }
-        }
-        // 出售
-        if (isw == '1') {
-            if (m_type == 'CNY') {
-                $('.con-toSell .x-p_money').text('USD');
-                if($('.con-toSell .sel-p').text() === base.getText('数量', langType)){
-                    // $('.con-toSell .m_bb').text('FMVP');
-                }
-                $('.con-toSell .m_cyn').text('USD');
-            } else {
-                $('.con-toSell .x-p_money').text('CNY');
-                if($('.con-toSell .sel-p').text() === base.getText('数量', langType)){
-                    // $('.con-toSell .m_bb').text('FMVP');
-                }
-                $('.con-toSell .m_cyn').text('CNY');
-            }
-        }
-        toType = $(pType + ' .x-p_money').eq(0).text();
-        if (toType == 'CNY') {
-            moneyHS = parseFloat(acceptRule.accept_cny_price);
-        } else {
-            moneyHS = parseFloat(acceptRule.accept_usd_price);
-        }
-        if (!isw) {
-            $('.x-mon').text((Math.floor(moneyHS * 100) / 100).toFixed(2));
-        } else {
-            $(pType + ' .x-mon').text((Math.floor(moneyHS * 100) / 100).toFixed(2));
-        }
-
-        if (toType == 'CNY') {
-            $(pType + ' .currency_type').text('￥');
-            $(pType + ' .x-p_money').text('CNY');
-            if($(pType + ' .sel-p').text() === base.getText('数量', langType)){
-                // $(pType + ' .m_bb').text('FMVP');
-            } else {
-                // $(pType + ' .m_cyn').text('FMVP');
-            }
-            $(pType + ' .min-money').text(acceptRule.accept_order_min_cny_amount);
-            $(pType + ' .max-money').text(acceptRule.accept_order_max_cny_amount);
-        } else {
-            $(pType + ' .currency_type').text('$');
-            $(pType + ' .min-money').text(acceptRule.accept_order_min_usd_amount);
-            $(pType + ' .max-money').text(acceptRule.accept_order_max_usd_amount);
-            $(pType + ' .x-p_money').text('USD');
-            if($(pType + ' .sel-p').text() === base.getText('数量', langType)){
-                // $(pType + ' .m_bb').text('FMVP');
-            }  else {
-                // $(pType + ' .m_cyn').text('FMVP');
-            }
-        }
-    }
     // 查询是否为内部转账
   function internalTransfer () {
     let address = $('.srdfbtb').val();
@@ -260,7 +177,7 @@ define([
             let formData = $(this).parents('form').serializeArray();
             formData.forEach(item => {
                 params[item.name] = item.value;
-            })
+            });
             params.applyUser = base.getUserId();
             params.payCardInfo = $(this).parents('.con-tb').siblings('.tr-mx').children('li').eq(0).text();
             params.accountNumber = $(this).prev().attr('data-accountNumber');
@@ -282,7 +199,17 @@ define([
 
         //确认提取
         $("#wAddressDialog .subBtn").click(function () {
-        
+            base.showLoadingSpin();
+            UserCtr.extractUserMargin({
+                accountNumber: accountNumberTB
+            }).then(() => {
+                base.hideLoadingSpin();
+                base.showMsg(base.getText('提取保证金成功'));
+                $('#wAddressDialog').addClass('hidden');
+            }, () => {
+                base.hideLoadingSpin();
+                $('#wAddressDialog').addClass('hidden');
+            });
         });
 
         $('.am-modal-content .out').click(function(){
@@ -329,22 +256,19 @@ define([
         AccountCtr.getAccount().then((accountData) => {
           GeneralCtr.getSysConfigType('trade_rule', true).then(ruleData => {
             $(".wallet-account-wrap .accept-bail").text(currency === 'BTC' ? ruleData.trade_btc_bail : ruleData.trade_usdt_bail);
-            let bail_crash_space_minutes = +ruleData.bail_crash_space_minutes * 60 * 1000;
+            // let bail_crash_space_minutes = +ruleData.bail_crash_space_minutes * 60 * 1000;
             accountData.accountList.forEach(item => {
               if (item.currency === currency) {
+                  accountNumberTB = item.accountNumber;
                   let money = base.formatMoney((item.amount - item.frozenAmount),'',item.currency);
-                  let bailTime = !!item.bailDatetimeStr && !!(new Date().getTime() - new Date(item.bailDatetimeStr).getTime() > bail_crash_space_minutes);
+                  // let bailTime = !!item.bailDatetimeStr && !!(new Date().getTime() - new Date(item.bailDatetimeStr).getTime() > bail_crash_space_minutes);
                 $(".wallet-account-wrap .s-bb").text(money);
                 $(".wallet-account-wrap .y-amount").text(' ≈ ' + (usdMarket * money).toFixed(2) + ' USD');
                 $('.wallet-account-wrap .freez-amount a').text(base.formatMoney(item.frozenAmount - (+item.bailAmount),'',item.currency));
                 $('.sendBtc-form-wrap .wallet-account span').text(base.formatMoney((item.amount - item.frozenAmount),'',item.currency));
                 $('#address-BTC').val(item.address);
-                var  erWn =[];
-                erWn.push(item.address);
-                erWn.forEach((item, i) => {
-                  var qrcode = new QRCode(`qrcode2`, item);
-                  qrcode.makeCode(item);
-                });
+                let qrcode = new QRCode(`qrcode2`, item.address);
+                qrcode.makeCode(item.address);
                 getRate();
                 localStorage.setItem('accountNumber', item.accountNumber);
               }else {
@@ -400,6 +324,8 @@ define([
         }
         return AccountCtr.withDraw(params).then((data) => {
             base.showMsg(base.getText('操作成功', langType));
+            $('#qrcode2').empty();
+            getAmount();
             $("#sendBtcDialog").addClass("hidden");
         }, function () {
         })

@@ -40,7 +40,7 @@ define([
         getPayTypeMoneyList(),
         addListener(),
       ).then(() => {
-        let sellSearchConfig = localStorage.getItem('sellSearchConfig') || '';
+        let sellSearchConfig = sessionStorage.getItem('sellSearchConfig') || '';
         if(sellSearchConfig) {
           config = JSON.parse(sellSearchConfig);
           let payType = config.payType || '';
@@ -195,7 +195,7 @@ define([
     //分页查询广告
     function getPageAdvertise(config) {
       base.showLoadingSpin();
-      localStorage.setItem('sellSearchConfig', JSON.stringify(config));
+      sessionStorage.setItem('sellSearchConfig', JSON.stringify(config));
       return TradeCtr.getPageAdvertise(config, true).then((data) => {
             var lists = data.list;
             if (data.list.length) {
@@ -385,12 +385,15 @@ define([
       // 切换购买比特币/出售比特币
       $('.yj_sell-ul li').click(function(e) {
         e.stopPropagation();
+          sessionStorage.removeItem('sellSearchConfig');
         base.gohref(`../trade/sell-list.html?langType=${langType}&coin=${toCoin}`);
       });
       $('.buy_sell .buy').on('click', (e) => {
+          sessionStorage.removeItem('buySearchConfig');
         base.gohref(`../index.html?langType=${langType}&coin=${coin}`);
       });
       $('.buy_sell .sell').on('click', (e) => {
+          sessionStorage.removeItem('sellSearchConfig');
         base.gohref(`../trade/sell-list.html?langType=${langType}&coin=${coin}`);
       });
       $('#resetSearchBtn').click(function() {

@@ -11,11 +11,11 @@ define([
     'app/controller/foo'
 ], function(base, pagination, Validate, smsCaptcha, AccountCtr, GeneralCtr, UserCtr, TradeCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var userId = base.getUrlParam('userId');
-    var tradeType = base.getUrlParam('tradeType') || 0; // 买卖类型
-    var currency = base.getUrlParam('coin') || 'BTC';
-    var nickname = '';
-    var coinList = {},
+    let userId = base.getUrlParam('userId');
+    let tradeType = base.getUrlParam('tradeType') || 0; // 买卖类型
+    let currency = base.getUrlParam('coin') || 'BTC';
+    let nickname = '';
+    let coinList = {},
         payType = {};
     let payTypeList = [];
     let platTagList = [];
@@ -27,17 +27,29 @@ define([
         'BTC': '比特币',
         'USDT': 'USDT'
     };
-    var config = {
+    let config = {
         start: 1,
         limit: 10,
         tradeType: tradeType,
         status: '0',
         userId: userId,
         coin: currency // 测试
-    }
-    var relationConfig = {
+    };
+    let relationConfig = {
         toUser: userId
-    }
+    };
+    let evaluateConfig = {
+        objectUserId: userId,
+        limit: 100,
+        start: 0
+    };
+    let starLevelObj = {
+        '0': 'lv_bad',
+        '1': 'lv_zd',
+        '2': 'lv_god'
+    };
+    let starLevelGod = 0, starLevelZd = 0, starLevelBad = 0;
+    let evaluateData = [];
     init();
 
     function init() {
@@ -75,6 +87,7 @@ define([
         $.when(
             GeneralCtr.getDictList({ "parentKey": "coin" }),
             GeneralCtr.getDictList({ "parentKey": "pay_type" }),
+            getUserEvaluate(evaluateConfig),
             getUserRelation(), // 正式
             getUserDetail(),
             getPayTypeList(),
@@ -82,13 +95,71 @@ define([
         ).then((data1, data2) => {
             data1.forEach(function(item) {
                 coinList[item.dkey] = item.dvalue;
-            })
+            });
             data2.forEach(function(item) {
                 payType[item.dkey] = item.dvalue;
             });
           getPageAdvertise();
         });
         addListener();
+    }
+    
+    function getUserEvaluate(config) {
+        base.showLoadingSpin();
+        TradeCtr.userEvaluate(config).then(data => {
+            if(data.list.length > 0) {
+                evaluateData = data.list.map(item => {
+                    return {
+                        photo: item.fromUserInfo.photo ? base.getAvatar(item.fromUserInfo.photo) : item.fromUserInfo.nickname.substr(0, 1),
+                        isPhoto: !!item.fromUserInfo.photo,
+                        nickName: item.fromUserInfo.nickname,
+                        createDatetime: base.formatDate(item.createDatetime),
+                        content: item.content,
+                        tradeOrderCode: item.tradeOrderCode,
+                        starLevel: item.starLevel,
+                        buyUser: item.fromUser
+                    }
+                });
+                let contentPj = '';
+                evaluateData.forEach(item => {
+                    let lvStyle = starLevelObj[item.starLevel] || '';
+                    contentPj += `<tr>
+                                <td>
+                                    <div class="trade-pj_box">
+                                        ${item.isPhoto ?
+                      `<div class="left" style="background-image: url('${item.photo}');">
+                                        </div>` :
+                      `<div class="left no-photo" >
+                                            ${item.photo}
+                                        </div>`}
+                                        <div class="right">
+                                            <p>${item.nickName}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <div class="con-pj_top">
+                                            ${item.content} <span class="${lvStyle}">+1</span>
+                                        </div>
+                                        <div class="con-pj_bottom">
+                                            ${item.createDatetime}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tran-pj goHref" href-type="_blank" data-href="../order/order-detail.html?code=${item.tradeOrderCode}&buyUser=${item.buyUser}">
+                                        ${item.tradeOrderCode}
+                                    </div>
+                                </td>
+                            </tr>`
+                });
+                $('#content-pj').html(contentPj);
+            }else {
+                $('#content-pj').html('');
+            }
+            base.hideLoadingSpin();
+        }, base.hideLoadingSpin);
     }
     // 支付方式
     function getPayTypeList() {
@@ -168,13 +239,19 @@ define([
             $('#beiChaPingCount').html(data.userStatistics.beiChaPingCount);
             $('#userStatistics .tradeCounBtc').html(currency === 'BTC' ? data.userStatistics.tradeCountBtc : data.userStatistics.tradeCountUsdt);
             $('#introduce').html(data.introduce);
+            starLevelGod = +data.userStatistics.beiHaoPingCount;
+            starLevelZd = +data.userStatistics.beiZhongPingCount;
+            starLevelBad = +data.userStatistics.beiChaPingCount;
+            $('.title-wrap_pj .pj-num').text(starLevelGod + starLevelZd + starLevelBad);
+            $('.title-wrap_pj .god-num').text(starLevelGod);
+            $('.title-wrap_pj .zd-num').text(starLevelZd);
+            $('.title-wrap_pj .bad-num').text(starLevelBad);
             base.hideLoadingSpin();
         }, () => {});
     }
 
     // 分页查广告
     function getPageAdvertise() {
-        console.log('config', config);
         TradeCtr.getPageAdvertiseUser(config, true).then((data) => {
             var lists = data.list;
             if (data.list.length) {
@@ -208,9 +285,9 @@ define([
         var operationHtml = '';
 
         if (item.tradeType == '1') {
-            operationHtml = `<div class="goHref" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买')}</div>`
+            operationHtml = `<div class="goHref user-buy" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买')}</div>`
         } else {
-            operationHtml = `<div class="goHref" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`
+            operationHtml = `<div class="goHref user-sell" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`
         }
 
         let hpCount = 0;
@@ -368,7 +445,36 @@ define([
                     location.reload();
                 }, base.hideLoadingSpin)
             }
-        })
+        });
+        
+        // 查看全部评价
+        $('.title-wrap_pj .pj-all').click(function() {
+            return getUserEvaluate(evaluateConfig);
+        });
+        
+        // 查看好评
+        $('.title-wrap_pj .pj-god').click(function() {
+            return getUserEvaluate({
+                starLevel: '2',
+                ...evaluateConfig
+            });
+        });
+        
+        // 查看中评
+        $('.title-wrap_pj .pj-zd').click(function() {
+            return getUserEvaluate({
+                starLevel: '1',
+                ...evaluateConfig
+            });
+        });
+    
+        // 查看差评
+        $('.title-wrap_pj .pj-bad').click(function() {
+            return getUserEvaluate({
+                starLevel: '0',
+                ...evaluateConfig
+            });
+        });
 
         // 查看评价
         $('.userDetail-container').on('click', '.topj', function(){
