@@ -104,9 +104,9 @@ define([
         addListener();
     }
     
-    function getUserEvaluate(config) {
+    function getUserEvaluate(getUserEvaluate) {
         base.showLoadingSpin();
-        TradeCtr.userEvaluate(config).then(data => {
+        TradeCtr.userEvaluate(getUserEvaluate).then(data => {
             if(data.list.length > 0) {
                 evaluateData = data.list.map(item => {
                     return {
@@ -115,17 +115,19 @@ define([
                         nickName: item.fromUserInfo.nickname,
                         createDatetime: base.formatDate(item.createDatetime),
                         content: item.content,
-                        tradeOrderCode: item.tradeOrderCode,
+                        paymentName: item.paymentName,
+                        paymentCode: item.paymentCode,
                         starLevel: item.starLevel,
                         buyUser: item.fromUser
                     }
                 });
                 let contentPj = '';
+                console.log(data);
                 evaluateData.forEach(item => {
                     let lvStyle = starLevelObj[item.starLevel] || '';
                     contentPj += `<tr>
                                 <td>
-                                    <div class="trade-pj_box">
+                                    <div class="trade-pj_box goHref" data-href="../user/user-detail.html?userId=${item.buyUser}">
                                         ${item.isPhoto ?
                       `<div class="left" style="background-image: url('${item.photo}');">
                                         </div>` :
@@ -137,7 +139,7 @@ define([
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="goHref" href-type="_blank" data-href="../order/order-detail.html?code=${item.tradeOrderCode}&buyUser=${item.buyUser}">
                                     <div>
                                         <div class="con-pj_top">
                                             ${item.content} <span class="${lvStyle}">+1</span>
@@ -148,8 +150,8 @@ define([
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="tran-pj goHref" href-type="_blank" data-href="../order/order-detail.html?code=${item.tradeOrderCode}&buyUser=${item.buyUser}">
-                                        ${item.tradeOrderCode}
+                                    <div class="tran-pj goHref" data-href="../index.html?payment=${item.paymentCode}">
+                                        ${item.paymentName}
                                     </div>
                                 </td>
                             </tr>`
@@ -419,6 +421,10 @@ define([
             })
             // 屏蔽按钮的点击事件
         $('.k-userbtn .black').click(function() {
+            if(!base.isLogin()) {
+                base.showMsg(base.getText('请登录后操作', langType));
+                return;
+            }
             relationConfig.type = '0';
             var _this = $(this);
             base.showLoadingSpin();

@@ -69,8 +69,7 @@ define([
     
     let trade_btc_bail = '',
       trade_usdt_bail = '',
-      defaultFee = ''
-    ;
+      defaultFee = '';
 
       if(!base.isLogin()){
         base.goLogin();
@@ -88,9 +87,27 @@ define([
           init();
         }
       }
+      function removeSession() {
+          sessionStorage.removeItem('cancelTime');
+          sessionStorage.removeItem('myTagInput');
+          sessionStorage.removeItem('clauseTextarea');
+          sessionStorage.removeItem('explainTextarea');
+          sessionStorage.removeItem('jzxe');
+          sessionStorage.removeItem('step2AccuracyTags');
+          sessionStorage.removeItem('max');
+          sessionStorage.removeItem('min');
+          sessionStorage.removeItem('tradeCoin');
+          sessionStorage.removeItem('zq');
+          sessionStorage.removeItem('step3TagsData');
+          sessionStorage.removeItem('tradeCoin001');
+          sessionStorage.removeItem('tradeType');
+          sessionStorage.removeItem('paySubType');
+          sessionStorage.removeItem('payBigType');
+          sessionStorage.removeItem('optionPay');
+      }
     function init() {
-        setHtml();
         base.showLoadingSpin();
+        setHtml();
         if (code !== "") {
             $("#draftBtn").addClass("hidden");
         }
@@ -111,7 +128,11 @@ define([
           tabHtml += buildTabHtml(item, i)
         });
         $(".advertise-step1-tabs").append(tabHtml);
-        getPayTypeList(data1[0].dkey);
+          window.requestAnimationFrame(() => {
+              let payBigType = +sessionStorage.getItem('payBigType') || '0';
+              $('.advertise-step1-tabs .tab-item').eq(payBigType).addClass('active').siblings().removeClass('active');
+              getPayTypeList(payBigType);
+          });
         tradeCoin = data2[0].simpleName;
         let step1SelectHtml = '';
         data2.forEach((item, i) => {
@@ -296,6 +317,7 @@ define([
     $('.xyb').html(base.getText('下一步'));
     if(!tradeCoin001) {
       base.showMsg(base.getText('请先进行第一步'));
+        removeSession();
       setTimeout(() => {
         base.gohref('../trade/advertise.html');
       }, 1000);
@@ -670,6 +692,10 @@ define([
         return;
       }
         return TradeCtr.getAdvertiseDetail(code).then((data) => {
+            TradeCtr.getPayTypeDetail(data.payType).then(data => {
+                let type = data.type;
+                sessionStorage.setItem('payBigType', type);
+            });
             pay = data.tradeCurrency;
             if(pay == 'CNY'){
                 $('.m-type').text('CNY');
@@ -950,20 +976,7 @@ define([
           isAllowProxy: isAllowProxy || 1
         }).then((res) => {
           base.showMsg(base.getText('操作成功'));
-          sessionStorage.removeItem('cancelTime');
-          sessionStorage.removeItem('myTagInput');
-          sessionStorage.removeItem('clauseTextarea');
-          sessionStorage.removeItem('explainTextarea');
-          sessionStorage.removeItem('jzxe');
-          sessionStorage.removeItem('step2AccuracyTags');
-          sessionStorage.removeItem('max');
-          sessionStorage.removeItem('min');
-          sessionStorage.removeItem('tradeCoin');
-          sessionStorage.removeItem('zq');
-          sessionStorage.removeItem('step3TagsData');
-          sessionStorage.removeItem('tradeCoin001');
-          sessionStorage.removeItem('tradeType');
-          sessionStorage.removeItem('paySubType');
+            removeSession();
           if (parseInt(sessionStorage.getItem('tradeType')) === 0) {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
           } else {
@@ -983,7 +996,7 @@ define([
       $('#minInput').change(function() {
         if($(this).val()) {
             sessionStorage.setItem('min', $(this).val());
-            $('.user-step2_option .op-min').text($(this).val());
+            $('.user-step2_option .op-min').text($(this).val() + tradeCoin);
             $('.user-step2_option li').eq(5).show(300);
             $('.user-step2_option li').eq(4).hide(300);
         }
@@ -991,7 +1004,7 @@ define([
       $('#maxInput').change(function() {
         if($(this).val()) {
             sessionStorage.setItem('max', $(this).val());
-            $('.user-step2_option .op-max').text($(this).val());
+            $('.user-step2_option .op-max').text($(this).val() + tradeCoin);
             $('.user-step2_option li').eq(5).show(300);
             $('.user-step2_option li').eq(4).hide(300);
         }
@@ -1175,10 +1188,12 @@ define([
             $('.num-go').css({
                 left: (50 + leftValue - ccWidth) + '%'
             });
-        })
+        });
 
       // step1 - 下一步按钮点击事件
       $('.advertise-step1-btn').on('click', () => {
+          tradeCoin001 = sessionStorage.getItem('tradeCoin001');
+          paySubType = sessionStorage.getItem('paySubType');
         if(!tradeCoin001) {
           base.showMsg(base.getText('请选择币种'));
           return;
@@ -1292,6 +1307,9 @@ define([
         let target = e.target;
         $(target).addClass('active').siblings().removeClass('active');
         payBigType = $(target).attr('data-dkey');
+        sessionStorage.setItem('payBigType', payBigType);
+        $('.user-option li').eq(1).hide(300);
+        sessionStorage.removeItem('paySubType');
         getPayTypeList($(target).attr('data-dkey'));
       });
 
@@ -1305,13 +1323,17 @@ define([
         $('.user-option li').eq(1).show(300);
         $('.user-option li').eq(2).show(300);
         $('.user-option .option-pay').text($(target).children('span').text());
-          $(target).addClass('on').siblings().removeClass('on');
-        });
-        $('.advertise-payType-item-container').on('click', '.icon-step1-unselected,.on', (e) => {
+        $(target).addClass('on').siblings().removeClass('on');
+      });
+        $('.advertise-payType-item-container').on('click', '.icon-step1-unselected', (e) => {
           e.stopPropagation();
             let target = e.target;
             paySubType = $(target).parent().attr('data-code');
             sessionStorage.setItem('paySubType', paySubType);
+            feeFunction();
+            $('.user-option li').eq(1).show(300);
+            $('.user-option li').eq(2).show(300);
+            $('.user-option .option-pay').text($(target).siblings('span').text());
             $(target).parents('.advertise-payType-item').addClass('on').siblings('.advertise-payType-item').removeClass('on');
         });
       // step1-select点击事件
@@ -1495,20 +1517,7 @@ define([
             isAllowProxy: isAllowProxy || 1
         }).then(() => {
           let tType = sessionStorage.getItem('tradeType');
-          sessionStorage.removeItem('cancelTime');
-          sessionStorage.removeItem('myTagInput');
-          sessionStorage.removeItem('clauseTextarea');
-          sessionStorage.removeItem('explainTextarea');
-          sessionStorage.removeItem('jzxe');
-          sessionStorage.removeItem('step2AccuracyTags');
-          sessionStorage.removeItem('max');
-          sessionStorage.removeItem('min');
-          sessionStorage.removeItem('tradeCoin');
-          sessionStorage.removeItem('zq');
-          sessionStorage.removeItem('step3TagsData');
-          sessionStorage.removeItem('tradeCoin001');
-          sessionStorage.removeItem('tradeType');
-          sessionStorage.removeItem('paySubType');
+            removeSession();
           base.showMsg(base.getText('操作成功'));
           if (Number(tType) === 0) {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');

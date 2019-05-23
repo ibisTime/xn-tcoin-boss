@@ -11,8 +11,8 @@ define([
   'app/controller/public/DealLeft'
 ], function(base, pagination, Validate, GeneralCtr, UserCtr, TradeCtr, TencentCloudLogin, Top, Foo, DealLeft) {
   let langType = localStorage.getItem('langType') || 'ZH';
-  var coin = base.getUrlParam("coin") || '';
-  var typeList = {
+  let coin = base.getUrlParam("coin") || '';
+  let typeList = {
       "buy": base.getText('购买'),
       "sell": base.getText('出售')
     },
@@ -21,7 +21,7 @@ define([
       "sell": base.getText('卖出')
     },
     statusValueList = {};
-  var config = {
+  let config = {
     start: 1,
     limit: 12,
     statusList: ["2", "3", "4", "6", "7", '8'],
@@ -38,11 +38,11 @@ define([
     '8': '#999',
     '10': '#999'
   };
-  var unreadMsgList = {},
+  let unreadMsgList = {},
     lists = [];
-  var isUnreadList = false,
+  let isUnreadList = false,
     isOrderList = false;
-  var tradeCoin = '';
+  let tradeCoin = '';
   init();
 
   function init() {
@@ -105,28 +105,29 @@ define([
       <option value="2">${base.getText('已解冻待评价')}</option>
       <option value="3">${base.getText('已完成')}</option>
       <option value="4">${base.getText('已取消')}</option>
-      <option value="8">${base.getText('超时取消')}</option>
       <option value="6">${base.getText('仲裁买家胜')}</option>
       <option value="7">${base.getText('仲裁卖家胜')}</option>
+      <option value="8">${base.getText('超时取消')}</option>
+      <option value="9">${base.getText('已申诉')}</option>
+      <option value="10">${base.getText('投诉已处理')}</option>
     `);
   }
 
   //分页查询订单
   function getPageOrder(refresh) {
     config.start = docIndex;
+    base.showLoadingSpin();
     return TradeCtr.getPageOrder(config, refresh).then((data) => {
       lists = [...lists, ...data.list];
-      if (data.list.length) {
         let html = "";
         lists.forEach((item, i) => {
-          html += buildHtml(item,data);
+            html += buildHtml(item,data);
         });
         $("#content-order").html(html);
         isOrderList = true;
         addUnreadMsgNum();
-
+    
         $(".tradeDetail-container .trade-list-wrap .no-data").addClass("hidden")
-      }
       if(langType == 'EN'){
         $('.k-order-list .am-button').css({
           'width': 'auto',
@@ -140,15 +141,15 @@ define([
 
   function buildHtml(item,data) {
     //头像
-    var photoHtml = "";
+    let photoHtml = "";
     //操作按钮
-    var operationHtml = '';
+    let operationHtml = '';
     //未读消息
-    var unreadHtml = '';
+    let unreadHtml = '';
     //交易数量
-    var quantity = '';
+    let quantity = '';
     //类型
-    var type = '';
+    let type = '';
     let toBuySell = '', user = '';
     //当前用户为买家
     if (item.buyUser == base.getUserId()) {
@@ -156,59 +157,13 @@ define([
       
       toBuySell = `/trade/buy-detail.html?code=${item.adsCode}&coin=${item.tradeCoin}`;
       type = 'buy';
-      //待支付
-      if (item.status == "0") {
-        operationHtml = `<div class="am-button am-button-red payBtn" data-ocode="${item.code}">${base.getText('标记付款')}</div>
-								<div class="am-button am-button-out ml5 cancelBtn" data-ocode="${item.code}">${base.getText('取消交易')}</div>`;
-      } else if (item.status == "2") {
-        if (!item.bsComment) {
-          operationHtml = `<div class="am-button am-button-red commentBtn"  data-ocode="${item.code}">${base.getText('交易评价')}</div>`
-        }
-      }
       //当前用户为卖家
     } else {
       user = item.buyUserInfo;
       toBuySell = `/trade/sell-detail.html?code=${item.adsCode}&coin=${item.tradeCoin}`;
       type = 'sell';
-      //待支付
-      if (item.status == "1") {
-        operationHtml = `<div class="am-button am-button-red releaseBtn mr10" data-ocode="${item.code}">${base.getText('解冻货币')}</div>`;
-      } else if (item.status == "2") {
-        if (!item.sbComment) {
-          operationHtml = `<div class="am-button am-button-red commentBtn"  data-ocode="${item.code}">${base.getText('交易评价')}</div>`
-        }
-      }
     }
-
-    //操作按鈕
-    //已支付，待解冻
-    /*if (item.status == "1") {
-      operationHtml += `<div class="am-button arbitrationBtn"  data-ocode="${item.code}">${base.getText('申请仲裁')}</div>`
-    }*/
-
-    //待下单
-    if (item.status == "-1") {
-      operationHtml += `<div class="am-button cancelBtn"  data-ocode="${item.code}">${base.getText('取消订单')}</div>`;
-      if(item.type == 'buy'){
-        if(item.buyUser == base.getUserId()){
-            operationHtml += `<div class="am-button am-button-red buyBtn" style="margin-left: 10px;"  data-ocode="${item.adsCode}">${base.getText('去购买')}</div>`;
-        }
-      }
-      if(item.type == 'sell'){
-        if(item.sellUser == base.getUserId()){
-          operationHtml += `<div class="am-button am-button-red sellBtn" style="margin-left: 10px;"  data-ocode="${item.adsCode}">${base.getText('去出售')}</div>`;
-        }
-      }
-    }
-
-    if (user.photo) {
-      photoHtml = `<div class="photo" style="background-image:url('${base.getAvatar(user.photo)}')"></div>`
-    } else {
-      var tmpl = user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '-';
-      photoHtml = `<div class="photo"><div class="noPhoto">${tmpl}</div></div>`
-    }
-
-
+    
       $(".orderDetail-operation-btn").html('');
       return `<tr data-code="${item.code}">
 					<td class="type">${typeList[type]}${item.tradeCoin?item.tradeCoin:'BTC'}</td>
@@ -232,9 +187,9 @@ define([
   //按条件查找已结束订单
     $('.hisorder-search-btn').click(function () {
       base.showLoadingSpin();
-      var type = $('.hisorder-wrap #payType option:selected').val();
-      var createDatetimeStart = $('#createDatetimeStart input').val();
-      var createDatetimeEnd = $('#createDatetimeEnd input').val();
+      let type = $('.hisorder-wrap #payType option:selected').val();
+      let createDatetimeStart = $('#createDatetimeStart input').val();
+      let createDatetimeEnd = $('#createDatetimeEnd input').val();
       if( createDatetimeStart === '' || createDatetimeEnd === ''){
           createDatetimeStart = '';
           createDatetimeEnd =''
@@ -242,8 +197,8 @@ define([
           createDatetimeStart = base.formateDatetime(createDatetimeStart);
           createDatetimeEnd = base.formateDatetime(createDatetimeEnd);
       }
-      var statusList = [];
-      var payStatic =  $('.hisorder-wrap #payStatic option:selected').val();
+      let statusList = [];
+      let payStatic =  $('.hisorder-wrap #payStatic option:selected').val();
       if(payStatic === ""){
           statusList = ['2','3','4','6','7','8'];
       }else {
@@ -262,7 +217,7 @@ define([
       };
       return getPageOrder(true);
 
-    })
+    });
   //条件重置
     $('.hisorder-reset-btn').click(function () {
         $('.hisorder-wrap #payType').val('');
@@ -270,14 +225,21 @@ define([
         $('#createDatetimeEnd input').val('');
         $('.hisorder-wrap #payStatic').val('');
         docIndex = 1;
-        getPageOrder(config);
+        lists = [];
+        config = {
+            start: 1,
+            limit: 12,
+            statusList: ["2", "3", "4", "6", "7", '8'],
+            tradeCoin: coin
+        };
+        getPageOrder(true);
     });
   //添加未读消息数
   function addUnreadMsgNum() {
     if (isUnreadList && isOrderList) {
       $("#content-order tr").each(function() {
-        var _this = $(this);
-        var oCode = _this.attr("data-code");
+        let _this = $(this);
+        let oCode = _this.attr("data-code");
         if (unreadMsgList[oCode] && unreadMsgList[oCode] != '0') {
           if (unreadMsgList[oCode] >= 100) {
             _this.find(".unread").html(base.getText('未读') + '(99+)')
@@ -290,154 +252,15 @@ define([
   }
 
   function addListener() {
-    //购买 点击
-    $("#content-order").on("click", ".operation .buyBtn", function() {
-      var orderCode = $(this).attr("data-ocode");
-      base.gohref("../trade/buy-detail.html?code=" + orderCode)
-    })
-    //出售 点击
-    $("#content-order").on("click", ".operation .sellBtn", function() {
-      var orderCode = $(this).attr("data-ocode");
-      base.gohref("../trade/sell-detail.html?code=" + orderCode)
-    })
-    // 已结束
-    $('.tradeDetail-container .titleStatus .progress').click(function() {
-      if($(this).text() === base.getText('进行中')) {
-        base.gohref("../order/order-list.html");
-      }
-    });
 
-    //取消订单按钮 点击
-    $("#content-order").on("click", ".operation .cancelBtn", function() {
-      var orderCode = $(this).attr("data-ocode");
-      base.confirm(base.getText('确认取消交易？'), base.getText('取消'), base.getText('确定')).then(() => {
-        base.showLoadingSpin()
-        TradeCtr.cancelOrder(orderCode).then(() => {
-          base.hideLoadingSpin();
-          base.showMsg(base.getText('操作成功'));
-          setTimeout(function() {
-            base.showLoadingSpin();
-            getPageOrder(true)
-          }, 1500)
-        }, base.hideLoadingSpin)
-      }, base.emptyFun)
-    })
-
-    //標記打款按钮 点击
-    $("#content-order").on("click", ".operation .payBtn", function() {
-      var orderCode = $(this).attr("data-ocode");
-      base.confirm(base.getText('确认标记打款？'), base.getText('取消'), base.getText('确定')).then(() => {
-        base.showLoadingSpin();
-        TradeCtr.payOrder(orderCode).then(() => {
-          base.hideLoadingSpin();
-          base.showMsg(base.getText('操作成功'));
-          setTimeout(function() {
-            base.showLoadingSpin();
-            getPageOrder(true)
-          }, 1500)
-        }, base.hideLoadingSpin)
-      }, base.emptyFun)
-    })
-
-    //申請仲裁按钮 点击
-    $("#content-order").on("click", ".operation .arbitrationBtn", function() {
-      var orderCode = $(this).attr("data-ocode");
-
-      $("#arbitrationDialog .subBtn").attr("data-ocode", orderCode);
-      $("#arbitrationDialog").removeClass("hidden")
-
-    })
-
-    //彈窗-放棄
-    $("#arbitrationDialog .closeBtn").click(function() {
-      $("#arbitrationDialog").addClass("hidden");
-      $("#form-wrapper .textarea-item").val("")
-    })
-
-    var _formWrapper = $("#form-wrapper");
+    let _formWrapper = $("#form-wrapper");
     _formWrapper.validate({
       'rules': {
         'reason': {
           required: true
         },
       }
-    })
-
-    //彈窗-申請仲裁
-    $("#arbitrationDialog .subBtn").click(function() {
-      var orderCode = $(this).attr("data-ocode");
-      var params = _formWrapper.serializeObject();
-      if (_formWrapper.valid() ) {
-        base.showLoadingSpin();
-        TradeCtr.arbitrationlOrder({
-          code: orderCode,
-          reason: params.reason
-        }).then(() => {
-          base.hideLoadingSpin();
-          base.showMsg(base.getText('操作成功'));
-          $("#arbitrationDialog").addClass("hidden");
-          setTimeout(function() {
-            base.showLoadingSpin();
-            $("#form-wrapper .textarea-item").val("");
-            getPageOrder(true)
-          }, 1500)
-        }, base.hideLoadingSpin)
-      }
     });
-
-    //交易评价按钮 点击
-    $("#content-order").on("click", ".operation .commentBtn", function() {
-      var orderCode = $(this).attr("data-ocode");
-      $('#pjText').val('');
-      $("#commentDialog .subBtn").attr("data-ocode", orderCode);
-      $("#commentDialog").removeClass("hidden");
-    })
-
-    //解冻货币按钮 点击
-    $("#content-order").on("click", ".operation .releaseBtn", function() {
-      var orderCode = $(this).attr("data-ocode");
-      base.confirm(base.getText('确认解冻货币？'), base.getText('取消'), base.getText('确定')).then(() => {
-        base.showLoadingSpin();
-        TradeCtr.releaseOrder(orderCode).then(() => {
-          base.hideLoadingSpin();
-
-          base.showMsg(base.getText('操作成功'));
-          setTimeout(function() {
-            base.showLoadingSpin();
-            getPageOrder(true)
-          }, 1500)
-        }, base.hideLoadingSpin)
-      }, base.emptyFun)
-    });
-
-    //评价
-    $("#commentDialog .comment-Wrap .item").click(function() {
-      $(this).addClass("on").siblings(".item").removeClass("on")
-    })
-
-      $("#commentDialog .subBtn").click(function() {
-          base.showLoadingSpin();
-          var comment = $("#commentDialog .comment-Wrap .item.on").attr("data-value");
-          var content = $('#pjText').val();
-          var code = base.getUrlParam("code");
-          var config={
-              updater: base.getUserId(),
-              code:code,
-              starLevel:comment,
-              content:content
-          };
-          TradeCtr.commentOrder(config).then((data) => {
-              base.hideLoadingSpin();
-              if(data.filterFlag == '2'){
-                  base.showMsg(base.getText('操作成功, 其中含有关键字，需平台进行审核'));
-              }else{
-                  base.showMsg(base.getText('操作成功'));
-              }
-              auSx();
-              $("#commentDialog").addClass("hidden");
-              $("#commentDialog .comment-Wrap .item").eq(0).addClass("on").siblings(".item").removeClass("on");
-          }, base.hideLoadingSpin)
-      });
     $('.coin-select span').click(function() {
       base.showLoadingSpin();
       $('.hisorder-wrap #payType').val('');
@@ -446,7 +269,13 @@ define([
       $('.hisorder-wrap #payStatic').val('');
       $(this).addClass('set_sp').siblings().removeClass('set_sp');
       tradeCoin = $(this).attr('data-coin') || '';
-      config.tradeCoin = tradeCoin;
+        config = {
+            start: 1,
+            limit: 12,
+            statusList: ["2", "3", "4", "6", "7", '8'],
+            tradeCoin
+        };
+        lists = [];
       getPageOrder(true);
     });
     
@@ -456,9 +285,5 @@ define([
               getPageOrder(true);
           }
       });
-      // 自动刷新页面
-      function auSx() {
-          window.location.reload();
-      }
   }
 });

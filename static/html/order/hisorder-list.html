@@ -184,7 +184,7 @@
               $('#createDatetimeStart').data("DateTimePicker").maxDate(e.date);
             });
             $(".hisorder-export-btn").click(function () {
-              $("#content-order").table2excel({
+              $("#content-table").table2excel({
                 exclude  : ".noExl", //过滤位置的 css 类名
                 filename : `${getText('已结束订单')}-` + new Date().getTime() + ".xls" //文件名称
               });

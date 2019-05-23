@@ -469,6 +469,9 @@ table {
             ul{
                 display: none;
                 overflow-x: hidden;
+                .back-gray {
+                    background-color: #f5f5f5;
+                }
             }
             .message-text {
                 font-size: 12px;
@@ -553,6 +556,9 @@ table {
                             font-size: 14px;
                             color: #333;
                         }
+                        .icon-grzx {
+                            background-image: url('/static/images/grzx.png');
+                        }
                         .icon-downUser {
                             background-image: url('../images/yhzxhs.png');
                         }
@@ -567,7 +573,10 @@ table {
                         }
                         &:hover {
                             samp {
-                                color: $primary-color;
+                                color: #d53d3d;
+                            }
+                            .icon-grzx {
+                                background-image: url('/static/images/grzx_h.png');
                             }
                             .icon-downUser {
                                 background-image: url('../images/yhzxdjhs.png');
@@ -6626,6 +6635,18 @@ table {
                       border-radius: 3px;
                       user-select: none;
                   }
+                  .qx_btn {
+                      padding: 10px 30px;
+                      color: #fff;
+                      background-color: #aaa;
+                      font-size: 16px;
+                      cursor: pointer;
+                      -webkit-border-radius: 3px;
+                      -moz-border-radius: 3px;
+                      border-radius: 3px;
+                      user-select: none;
+                      margin-right: 50px;
+                  }
               }
           }
           .jyycs{
@@ -7069,6 +7090,10 @@ table {
           cursor: pointer;
         }
       }
+        .fhBtn{
+            width: 100px;
+            margin-right: 50px;
+        }
     }
   }
   .comment-Wrap {
@@ -7669,7 +7694,7 @@ table {
         img{
             max-height: 100px;
             max-width: 100px;
-            margin-right: 20px;
+            margin-right: 10px;
             vertical-align: top;
             margin-top: 20px
         }
@@ -7877,9 +7902,9 @@ table {
         color: #fff;
         background: #999797;
         display: flex;
-        padding-left: 12px;
         .left{
             width: 75%;
+            padding-left: 12px;
         }
         .right{
             text-align: center;
@@ -7900,27 +7925,32 @@ table {
             }
         }
     }
-    li{
-        padding-top: 8px;
-        padding-bottom: 8px;
-        margin: 0 !important;
-        background: #F0F0F0;
-        border-bottom: 1px solid #ccc;
-        p{
-            display: inline-block;
-            width: 82%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+    #phrase-list {
+        max-height: 220px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        li{
+            padding-top: 8px;
+            padding-bottom: 8px;
+            margin: 0 !important;
+            background: #F0F0F0;
+            border-bottom: 1px solid #ccc;
+            p{
+                display: inline-block;
+                width: 82%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
         }
-    }
-    .dele-phrase{
-        margin-right: 10px;
-        float: right;
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        background-image: url('/static/images/pDele.png');
+        .dele-phrase{
+            margin-right: 10px;
+            float: right;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-image: url('/static/images/pDele.png');
+        }
     }
 }
 

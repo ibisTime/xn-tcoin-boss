@@ -8,36 +8,36 @@ define([
     'app/controller/foo'
 ], function(base, Validate, GeneralCtr, UserCtr, TradeCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var code = base.getUrlParam("code");
-    var loginInfo = {};
-    var userId = base.getUserId();
+    let code = base.getUrlParam("code");
+    let loginInfo = {};
+    let userId = base.getUserId();
     const selType = webim.SESSION_TYPE.GROUP;
     const subType = webim.GROUP_MSG_SUB_TYPE.COMMON;
     const groupId = code;
     const groupName = 'groupName';
     const reqMsgCount = 10;
-    var selSess;
-    var getPrePageGroupHistroyMsgInfoMap = {};
-    var emotionFlag = false;
-    var tradePhoto = '';
-    var tradePhotoMy = '';
-    var userName = '',
+    let selSess;
+    let getPrePageGroupHistroyMsgInfoMap = {};
+    let emotionFlag = false;
+    let tradePhoto = '';
+    let tradePhotoMy = '';
+    let userName = '',
         myName = '';
-    var payType = {};
-    var tradeOrderStatusObj = {};
-    var firstLoad = false;
-    var newMsgHtml = '';
-    var tradeType;
-    var adsCode;
-    var tradeCoin = base.getUrlParam('coin') || ''; //交易币种
-    var toUserId = '';
-    var toUserName = '';
-    var settimeout = true;
-    var showTimeName = '';
-    var isNewMsg = false;
-    var mj_time = 0;
-    var setInterTime = null;
-    var isFqzc = false;
+    let payType = {};
+    let tradeOrderStatusObj = {};
+    let firstLoad = false;
+    let newMsgHtml = '';
+    let tradeType;
+    let adsCode;
+    let tradeCoin = base.getUrlParam('coin') || ''; //交易币种
+    let toUserId = '';
+    let toUserName = '';
+    let settimeout = true;
+    let showTimeName = '';
+    let isNewMsg = false;
+    let mj_time = 0;
+    let setInterTime = null;
+    let isFqzc = false;
     let loginStatus = '';
     let getPicData = [];
 
@@ -54,6 +54,7 @@ define([
     'BTC': '比特币',
     'USDT': 'USDT'
   };
+  let isSendOk = true;
 
     init();
     window.onfocus = function () {
@@ -100,18 +101,11 @@ define([
   // 常用语设置
   function getPhraseData() {
     UserCtr.userPhraseList().then(data => {
-      let li_html = `<div class="phrase-head">
-                        <div class="left">常用语</div>
-                        <div class="right">
-                            <span class="phrase-add"></span>
-                            <span class="phrase-set"></span>
-                            <span class="phrase-rem hidden">取消</span>
-                        </div>
-                    </div>`;
+      let li_html = ``;
       data.forEach((item, index) => {
         li_html += `<li class="li0${index}"><p title="${item.content}">${item.content}</p> <span class="dele-phrase hidden" data-id="${item.id}" data-index="${index}"></span></li>`;
       });
-      $('#phraseUL').html(li_html);
+      $('#phrase-list').html(li_html);
     });
   }
     function timeout() {
@@ -127,7 +121,7 @@ define([
     }
     //判断用户风险提醒
     function getUserTips() {
-        var chapingCount;
+        let chapingCount;
         UserCtr.getUser().then((item) => {
             chapingCount = item.userStatistics.beiChaPingCount;
             GeneralCtr.getUserTip({
@@ -294,10 +288,10 @@ define([
           }
           localStorage.setItem('orderDetailStatus',data.status);
           getAdvertiseDetail();
-          var maxtime = data.surplusSeconds; //一个小时，按秒计算，自己调整!
-          var minutes;
-          var seconds;
-          var msg;
+          let maxtime = data.surplusSeconds; //一个小时，按秒计算，自己调整!
+          let minutes;
+          let seconds;
+          let msg;
           getCountDown();
           function getCountDown() {
             if (maxtime > 0) {
@@ -319,9 +313,10 @@ define([
               });
             }
           }
-          setInterTime = setInterval(getCountDown, 1000);
+          // setInterTime = setInterval(getCountDown, 1000);
           //待支付
           if(data.buyUser === userId) {
+              console.log('买家：---------------------------------------------------------------------', data.status);
               $('.order-detail-container .orderDetail-left-todo .todo').html(`${base.getText('请通过')}<span class="todo-payType"></span>${base.getText('发送')}<span class="amount"></span>`);
               $('.order-detail-container .orderDetail-left-todo .todo-tips').html(`<span></span> ${base.getText(`将加载至您的${coinName[tradeCoin]}钱包`)}`);
             toUserId = data.sellUserInfo.userId;
@@ -337,20 +332,20 @@ define([
             $('.user_loginTime').addClass(loginStatus);
             let interval = base.fun(Date.parse(data.sellUserInfo.lastLogin), new Date());
             $('.orderDetail-right-user-info .user-info .time .interval').html(interval);
-            if(data.status == '0') {
+            if(data.status === '0') {
               $('.orderDetail-container .wait').removeClass('hidden');
               $('.orderDetail-container .finished').addClass('hidden');
-            } else if(data.status == '1') {
+            } else if(data.status === '1') {
               $('.orderDetail-container .wait-release-btc').removeClass('hidden');
             }else if(data.status === '5'){
                 $('.orderDetail-container .wait-release-btc').removeClass('hidden');
                 $('.orderDetail-arbitration-befer').hide();
                 $('.orderDetail-arbitration-after').show();
-            }else if(data.status == '6'){
+            }else if(data.status === '6'){
               //仲裁状态
               $('.orderDetail-container .finished').removeClass('hidden').siblings().addClass('hidden');
               $('.finished-top .finished-top-status').text(base.getText('仲裁已完成'));
-            }else if(data.status == '7') {
+            }else if(data.status === '7') {
               //仲裁状态
               $('.orderDetail-container .finished .failure-top-icon').removeClass('hidden');
               $('.orderDetail-container .finished .finished-top-icon').addClass('hidden');
@@ -358,7 +353,7 @@ define([
               $('.finished-top .finished-top-status').text(base.getText('仲裁已完成，卖家胜'));
             }
           } else {
-              console.log(data);
+              console.log('卖家：---------------------------------------------------------------------', data.status);
               $('.order-detail-container .orderDetail-left-todo .todo').html(`
                 您正在以 <span class="fb-num">
                 ${data.tradeAmount}${data.tradeCurrency}</span>
@@ -508,7 +503,7 @@ define([
 
           let startTime = new Date();
           let endTime = new Date(Date.parse(data.invalidDatetime));
-          let intervalTime = null, timeoutTime = null;
+          let intervalTime = null, timeoutTime = null, user = '', myInfo;
           if(endTime > startTime) {
               if(intervalTime) {
                   clearInterval(intervalTime);
@@ -620,8 +615,8 @@ define([
             //当前用户为买家，显示卖家信息
             if (data.buyUser == userId) {
                 tradeType = '0';
-                var user = data.sellUserInfo;
-                var myInfo = data.buyUserInfo;
+                user = data.sellUserInfo;
+                myInfo = data.buyUserInfo;
                 $("#user").html(base.getText('卖家信息'));
 
                 //待支付
@@ -639,8 +634,8 @@ define([
                 //当前用户为卖家，显示买家信息
             } else {
                 tradeType = '1';
-                var user = data.buyUserInfo;
-                var myInfo = data.sellUserInfo;
+                user = data.buyUserInfo;
+                myInfo = data.sellUserInfo;
                 $("#user").html(base.getText('买家信息'));
 
                 //待支付
@@ -680,13 +675,13 @@ define([
             if (user.photo) {
                 tradePhoto = `<div class="photo goHref" data-href="../user/user-detail.html?coin=${tradeCoin}&userId=${user.userId}"   style="background-image:url('${base.getAvatar(user.photo)}')"></div>`;
             } else {
-                var tmpl = user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '-';
+                let tmpl = user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '-';
                 tradePhoto = '<div class="photo goHref" data-href="../user/user-detail.html?coin=' + tradeCoin + '&userId=' + user.userId + '" ><div class="noPhoto">' + tmpl + '</div></div>'
             }
             if (myInfo.photo) {
                 tradePhotoMy = `<div class="photo" style="background-image:url('${base.getAvatar(myInfo.photo)}')"></div>`;
             } else {
-                var tmpl = myInfo.nickname ? myInfo.nickname.substring(0, 1).toUpperCase() : '-';
+                let tmpl = myInfo.nickname ? myInfo.nickname.substring(0, 1).toUpperCase() : '-';
                 tradePhotoMy = '<div class="photo"><div class="noPhoto">' + tmpl + '</div></div>'
             }
 
@@ -719,7 +714,7 @@ define([
     //获取详情
     function getAdvertiseDetail() {
         return TradeCtr.getAdvertiseDetail(adsCode).then((data) => {
-          var limit = data.minTrade + '-' + data.maxTrade;
+          let limit = data.minTrade + '-' + data.maxTrade;
           $("#truePrice").html(Math.floor(data.truePrice * 100) / 100 + '&nbsp;CNY/' + tradeCoin);
           $("#limit").html(limit);
           $(".info-wrap1").removeClass("hidden");
@@ -754,10 +749,10 @@ define([
             getLastGroupHistoryMsgs(function(msgList) {
                 getHistoryMsgCallback(msgList);
 
-                var msgflow = document.getElementById("msgflow");
+                let msgflow = document.getElementById("msgflow");
 
                 //向上翻页，获取更早的群历史消息
-                var bindScrollHistoryEvent = {
+                let bindScrollHistoryEvent = {
                     init: function() {
                         msgflow.onscroll = function() {
                             if (msgflow.scrollTop == 0) {
@@ -794,7 +789,7 @@ define([
     //获取我的群组
     function getMyGroup() {
 
-        var options = {
+        let options = {
             'Member_Account': loginInfo.identifier,
             //'GroupType':'',
             'GroupBaseInfoFilter': [],
@@ -808,9 +803,9 @@ define([
                 if (!resp.GroupIdList || resp.GroupIdList.length == 0) {
                     return;
                 }
-                var unreadMsgFlag = false;
-                for (var i = 0; i < resp.GroupIdList.length; i++) {
-                    var unreadMsgNum = resp.GroupIdList[i].SelfInfo.UnreadMsgNum;
+                let unreadMsgFlag = false;
+                for (let i = 0; i < resp.GroupIdList.length; i++) {
+                    let unreadMsgNum = resp.GroupIdList[i].SelfInfo.UnreadMsgNum;
 
                     if (unreadMsgNum > 1) {
                         unreadMsgFlag = true
@@ -841,8 +836,8 @@ define([
         }
         emotionFlag = true;
 
-        for (var index in webim.Emotions) {
-            var emotions = $('<img>').attr({
+        for (let index in webim.Emotions) {
+            let emotions = $('<img>').attr({
                 "id": webim.Emotions[index][0],
                 "src": webim.Emotions[index][1],
                 "style": "cursor:pointer;"
@@ -857,7 +852,7 @@ define([
     };
 
     function selectEmotionImg(selImg) {
-        var txt = document.getElementById("msgedit");
+        let txt = document.getElementById("msgedit");
         txt.value = txt.value + selImg.id;
         txt.focus();
     };
@@ -868,7 +863,7 @@ define([
     }
 
     function onConnNotify(resp) {
-        var info;
+        let info;
         switch (resp.ErrorCode) {
             case webim.CONNECTION_STATUS.ON:
                 webim.Log.warn(base.getText('建立连接成功') + ': ' + resp.ErrorInfo);
@@ -895,10 +890,10 @@ define([
     // newMsgList 为新消息数组，结构为[Msg]
     function onMsgNotify(newMsgList) {
       isNewMsg = true;
-        var sess, newMsg;
+        let sess, newMsg;
         //获取所有聊天会话
-        var sessMap = webim.MsgStore.sessMap();
-        for (var j in newMsgList) { //遍历新消息
+        let sessMap = webim.MsgStore.sessMap();
+        for (let j in newMsgList) { //遍历新消息
             newMsg = newMsgList[j];
             if (!selSess) { // 没有聊天对象
                 selSess = newMsg.getSession();
@@ -912,8 +907,8 @@ define([
 
         //消息已读上报，以及设置会话自动已读标记
         webim.setAutoRead(selSess, true, true);
-        var otherNew = false;
-        for (var i in sessMap) {
+        let otherNew = false;
+        for (let i in sessMap) {
             sess = sessMap[i];
             if (groupId != sess.id()) { //更新其他聊天对象的未读消息数
                 if (sess.unread() >= 1) {
@@ -936,8 +931,8 @@ define([
     }
   
   function onBigGroupMsgNotify(msgList) {
-    for (var i = msgList.length - 1; i >= 0; i--) {//遍历消息，按照时间从后往前
-      var msg = msgList[i];
+    for (let i = msgList.length - 1; i >= 0; i--) {//遍历消息，按照时间从后往前
+      let msg = msgList[i];
       webim.Log.error('receive a new group msg: ' + msg.getFromAccountNick());
       //显示收到的消息
     }
@@ -945,7 +940,7 @@ define([
 
     //读取群组基本资料-高级接口
     function getGroupInfo(group_id, cbOK, cbErr) {
-        var options = {
+        let options = {
             'GroupIdList': [
                 group_id
             ],
@@ -992,7 +987,7 @@ define([
     function getLastGroupHistoryMsgs(cbOk) {
         getGroupInfo(groupId, function(resp) {
             //拉取最新的群历史消息
-            var options = {
+            let options = {
                 'GroupId': groupId,
                 'ReqMsgSeq': resp.GroupInfo[0].NextMsgSeq - 1,
                 'ReqMsgNumber': reqMsgCount
@@ -1013,7 +1008,7 @@ define([
                   webim.Log.warn(base.getText('该群还没有历史消息') + ":options=" + JSON.stringify(options));
                   return;
                 }
-                var msgSeq = msgList[0].seq - 1;
+                let msgSeq = msgList[0].seq - 1;
                 getPrePageGroupHistroyMsgInfoMap[groupId] = {
                   "ReqMsgSeq": msgSeq
                 };
@@ -1030,8 +1025,8 @@ define([
     }
     //向上翻页，获取更早的群历史消息
     function getPrePageGroupHistoryMsgs(cbOk) {
-        var tempInfo = getPrePageGroupHistroyMsgInfoMap[groupId]; //获取下一次拉取的群消息seq
-        var reqMsgSeq;
+        let tempInfo = getPrePageGroupHistroyMsgInfoMap[groupId]; //获取下一次拉取的群消息seq
+        let reqMsgSeq;
         if (tempInfo) {
             reqMsgSeq = tempInfo.ReqMsgSeq;
             if (reqMsgSeq <= 0) {
@@ -1042,7 +1037,7 @@ define([
             webim.Log.error(base.getText('获取下一次拉取的群消息seq为空'));
             return;
         }
-        var options = {
+        let options = {
             'GroupId': groupId,
             'ReqMsgSeq': reqMsgSeq,
             'ReqMsgNumber': reqMsgCount
@@ -1055,7 +1050,7 @@ define([
                     webim.Log.warn(base.getText('该群还没有历史消息') + ":options=" + JSON.stringify(options));
                     return;
                 }
-                var msgSeq = msgList[0].seq - 1;
+                let msgSeq = msgList[0].seq - 1;
                 getPrePageGroupHistroyMsgInfoMap[groupId] = {
                     "ReqMsgSeq": msgSeq
                 };
@@ -1074,7 +1069,7 @@ define([
     //获取历史消息(c2c或者group)成功回调函数
     //msgList 为消息数组，结构为[Msg]
     function getHistoryMsgCallback(msgList, prepage) {
-        var msg;
+        let msg;
         prepage = prepage || false;
 
         //如果是加载前几页的消息，消息体需要prepend，所以先倒排一下
@@ -1082,7 +1077,7 @@ define([
             msgList.reverse();
         }
         //		console.log('History', msgList);
-        for (var j in msgList) { //遍历新消息
+        for (let j in msgList) { //遍历新消息
             msg = msgList[j];
             if (msg.getSession().id() == groupId) { //为当前聊天对象的消息
                 selSess = msg.getSession();
@@ -1119,7 +1114,7 @@ define([
 
     // 发送-解析发送
     function handleMsgSend(msgContent, suc) {
-        var sess = webim.MsgStore.sessByTypeId(webim.SESSION_TYPE.GROUP, groupId);
+        let sess = webim.MsgStore.sessByTypeId(webim.SESSION_TYPE.GROUP, groupId);
         if (!sess) {
             sess = new webim.Session(selType, groupId, groupName, '' /*, groupPhoto*/ , Math.round(new Date().getTime() / 1000));
         }
@@ -1168,7 +1163,7 @@ define([
 
     //聊天页面增加一条消息
     function addMsg(msg, prepend, isNew) {
-        var isSelfSend, fromAccount, fromAccountNick, fromAccountImage, sessType, subType;
+        let isSelfSend, fromAccount, fromAccountNick, fromAccountImage, sessType, subType;
         //获取会话类型，目前只支持群聊
         //webim.SESSION_TYPE.GROUP-群聊，
         //webim.SESSION_TYPE.C2C-私聊，
@@ -1184,12 +1179,12 @@ define([
         if (fromAccount == 'admin') {
             fromAccountNick = base.getText('系统消息');
         }
-        var onemsg = document.createElement("div");
+        let onemsg = document.createElement("div");
 
         onemsg.className = "onemsg";
-        var msghead = document.createElement("div");
-        var msgbody = document.createElement("div");
-        var msgPre = document.createElement("div");
+        let msghead = document.createElement("div");
+        let msgbody = document.createElement("div");
+        let msgPre = document.createElement("div");
         msghead.className = "msghead";
         msgPre.className = "msgcon";
 
@@ -1198,12 +1193,12 @@ define([
         //获取消息子类型
         //会话类型为群聊时，子类型为：webim.GROUP_MSG_SUB_TYPE
         //会话类型为私聊时，子类型为：webim.C2C_MSG_SUB_TYPE
-        var adminMsg = '';
+        let adminMsg = '';
         subType = msg.getSubType();
 
         switch (subType) {
             case webim.GROUP_MSG_SUB_TYPE.COMMON: //群普通消息
-                var tmpl = convertMsgtoHtml(msg);
+                let tmpl = convertMsgtoHtml(msg);
                 if (tmpl.sta) {
                     return;
                 }
@@ -1263,11 +1258,11 @@ define([
             if (isNew) {
                 setTimeout(function() {
                     getOrderDetail();
-                }, 100)
+                }, 1000)
             }
         }
         //消息列表
-        var msgflow = document.getElementById("msgflow");
+        let msgflow = document.getElementById("msgflow");
         if (prepend) {
             //300ms后,等待图片加载完，滚动条自动滚动到底部
             msgflow.insertBefore(onemsg, msgflow.firstChild);
@@ -1287,18 +1282,18 @@ define([
     }
     //把消息转换成Html
     function convertMsgtoHtml(msg) {
-        var html = "",
+        let html = "",
             elems, elem, type, content;
         elems = msg.getElems(); //获取消息包含的元素数组
-        var count = elems.length;
-        var sta = 0;
-        for (var i = 0; i < count; i++) {
+        let count = elems.length;
+        let sta = 0;
+        for (let i = 0; i < count; i++) {
             elem = elems[i];
             type = elem.getType(); //获取元素类型
             content = elem.getContent(); //获取元素对象
             switch (type) {
                 case webim.MSG_ELEMENT_TYPE.TEXT:
-                    var eleHtml = convertTextMsgToHtml(content);
+                    let eleHtml = convertTextMsgToHtml(content);
                     //转义，防XSS
                     html += webim.Tool.formatText2Html(eleHtml);
                     break;
@@ -1310,8 +1305,8 @@ define([
                     break;
                 case webim.MSG_ELEMENT_TYPE.IMAGE:
                     if (i <= count - 2) {
-                        var customMsgElem = elems[i + 1]; // 获取保存图片名称的自定义消息elem
-                        var imgName = customMsgElem.getContent().getData(); // 业务可以自定义保存字段，demo中采用data字段保存图片文件名
+                        let customMsgElem = elems[i + 1]; // 获取保存图片名称的自定义消息elem
+                        let imgName = customMsgElem.getContent().getData(); // 业务可以自定义保存字段，demo中采用data字段保存图片文件名
                         html += convertImageMsgToHtml(content, imgName);
                         i++; //下标向后移一位
                     } else {
@@ -1341,11 +1336,11 @@ define([
     //解析表情消息元素
     function convertFaceMsgToHtml(content) {
         isWebUser = 1;
-        var faceUrl = null;
-        var data = content.getData();
-        var index = webim.EmotionDataIndexs[data];
+        let faceUrl = null;
+        let data = content.getData();
+        let index = webim.EmotionDataIndexs[data];
 
-        var emotion = webim.Emotions[index];
+        let emotion = webim.Emotions[index];
         if (emotion && emotion[1]) {
             faceUrl = emotion[1];
         }
@@ -1360,9 +1355,9 @@ define([
     function convertImageMsgToHtml(content, imageName) {
         let UUID = content.UUID;
         isWebUser = 1;
-        var smallImage = content.getImage(webim.IMAGE_TYPE.SMALL); // 小图
-        var bigImage = content.getImage(webim.IMAGE_TYPE.LARGE); // 大图
-        var oriImage = content.getImage(webim.IMAGE_TYPE.ORIGIN); // 原图
+        let smallImage = content.getImage(webim.IMAGE_TYPE.SMALL); // 小图
+        let bigImage = content.getImage(webim.IMAGE_TYPE.LARGE); // 大图
+        let oriImage = content.getImage(webim.IMAGE_TYPE.ORIGIN); // 原图
         if (!bigImage) {
             bigImage = smallImage;
         }
@@ -1403,6 +1398,7 @@ define([
         if(fileList.length > 5) {
           base.showMsg('一次性上传不得超过5张');
           fileList.length = 5;
+          isSendOk = false;
         }
         fileList.forEach((file, index) => {
           let reader = new FileReader();
@@ -1427,7 +1423,7 @@ define([
     //loadedSize-已上传字节数
     //totalSize-图片总字节数
     function onProgressCallBack(loadedSize, totalSize) {
-        var progress = document.getElementById('upd_progress'); //上传图片进度条
+        let progress = document.getElementById('upd_progress'); //上传图片进度条
         progress.value = (loadedSize / totalSize) * 100;
     }
 
@@ -1455,6 +1451,7 @@ define([
                     //上传成功发送图片
                     sendPic(resp, file.name);
                     $('#upload_pic_dialog').hide();
+                    isSendOk = true;
                 },
                 function(err) {
                     console.log(err.ErrorInfo);
@@ -1469,16 +1466,16 @@ define([
             alert(base.getText('您还没有好友，暂不能聊天'));
             return;
         }
-        var sess = webim.MsgStore.sessByTypeId(webim.SESSION_TYPE.GROUP, groupId);
+        let sess = webim.MsgStore.sessByTypeId(webim.SESSION_TYPE.GROUP, groupId);
         if (!sess) {
             sess = new webim.Session(selType, groupId, groupName, '' /*, groupPhoto*/ , Math.round(new Date().getTime() / 1000));
         }
-        var msg = new webim.Msg(sess, true, -1, -1, -1, userId, 0, 'nickname');
-        var images_obj = new webim.Msg.Elem.Images(images.File_UUID);
-        for (var i in images.URL_INFO) {
-            var img = images.URL_INFO[i];
-            var newImg;
-            var type;
+        let msg = new webim.Msg(sess, true, -1, -1, -1, userId, 0, 'nickname');
+        let images_obj = new webim.Msg.Elem.Images(images.File_UUID);
+        for (let i in images.URL_INFO) {
+            let img = images.URL_INFO[i];
+            let newImg;
+            let type;
             switch (img.PIC_TYPE) {
                 case 1: //原图
                     type = 1; //原图
@@ -1505,16 +1502,16 @@ define([
     }
     //上传图片(用于低版本IE)
     function uploadPicLowIE() {
-        var uploadFile = $('#updli_file')[0];
-        var file = uploadFile.files[0];
-        var fileSize = 50;
+        let uploadFile = $('#updli_file')[0];
+        let file = uploadFile.files[0];
+        let fileSize = 50;
         //先检查图片类型和大小
         if (!checkPic(uploadFile, fileSize)) {
             return;
         }
-        var businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.GROUP_MSG;
+        let businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.GROUP_MSG;
         //封装上传图片请求
-        var opt = {
+        let opt = {
             'formId': 'updli_form', //上传图片表单id
             'fileId': 'updli_file', //file控件id
             'To_Account': groupId, //接收者
@@ -1534,9 +1531,9 @@ define([
     }
     //检查文件类型和大小
     function checkPic(obj, fileSize) {
-        var picExts = 'jpg|jpeg|png|bmp|gif|webp';
-        var photoExt = obj.value.substr(obj.value.lastIndexOf(".") + 1).toLowerCase(); //获得文件后缀名
-        var pos = picExts.indexOf(photoExt);
+        let picExts = 'jpg|jpeg|png|bmp|gif|webp';
+        let photoExt = obj.value.substr(obj.value.lastIndexOf(".") + 1).toLowerCase(); //获得文件后缀名
+        let pos = picExts.indexOf(photoExt);
         if (pos < 0) {
             alert(base.getText('您选中的文件不是图片，请重新选择'));
             return false;
@@ -1565,9 +1562,9 @@ define([
             $('#upload_pic_low_ie_dialog').show();
         } else {
             $('#upd_form')[0].reset();
-            var preDiv = document.getElementById('previewPicDiv');
+            let preDiv = document.getElementById('previewPicDiv');
             preDiv.innerHTML = '';
-            var progress = document.getElementById('upd_progress'); //上传图片进度条
+            let progress = document.getElementById('upd_progress'); //上传图片进度条
             progress.value = 0;
             $('#upload_pic_dialog').show();
         }
@@ -1617,7 +1614,7 @@ define([
 
         //立即下单点击
         $(".orderDetail-middle .title .item").click(function() {
-                var _this = $(this)
+                let _this = $(this)
                 if (!_this.hasClass("on")) {
                     _this.addClass("on").siblings(".item").removeClass("on");
                     $(".orderDetail-middle .content-wrap .wrap").eq(_this.index())
@@ -1652,11 +1649,15 @@ define([
         // 图片上传 star
         $('#openPic').on('click', selectPicClick);
         $('#upd_pic').on('change', function() {
-            fileOnChange(this);
+            if(isSendOk) {
+                fileOnChange(this);
+            }
         });
         $('#upd_send').on('click', function() {
-            if ($('#upd_pic').val() != "" && $('#upd_pic').val()) {
+            if ($('#upd_pic').val() !== "" && $('#upd_pic').val()) {
                 uploadPic();
+            }else {
+                base.showMsg(base.getText('请选择图片后操作'));
             }
         });
         $('#upd_close').on('click', function() {
@@ -1795,7 +1796,7 @@ define([
           $("#arbitrationDialog").removeClass("hidden");
       });
 
-        var _arbitrationformWrapper = $("#arbitrationform-wrapper");
+        let _arbitrationformWrapper = $("#arbitrationform-wrapper");
         _arbitrationformWrapper.validate({
             'rules': {
                 'reason': {
@@ -1806,7 +1807,7 @@ define([
 
         //彈窗-申請仲裁
         $(".arbitration-subBtn").click(function() {
-            var params = _arbitrationformWrapper.serializeObject();
+            let params = _arbitrationformWrapper.serializeObject();
             if (_arbitrationformWrapper.valid()) {
                 base.showLoadingSpin();
                 TradeCtr.arbitrationlOrder({
@@ -1836,7 +1837,7 @@ define([
             $("#arbitrationDialog").addClass("hidden");
         });
 
-        var _formWrapper = $("#form-wrapper");
+        let _formWrapper = $("#form-wrapper");
         _formWrapper.validate({
             'rules': {
                 'reason': {
@@ -1847,7 +1848,7 @@ define([
 
         //彈窗-申請仲裁
         $("#arbitrationDialog .subBtn").click(function() {
-            var params = _formWrapper.serializeObject();
+            let params = _formWrapper.serializeObject();
             if (_formWrapper.valid()) {
                 base.showLoadingSpin();
                 TradeCtr.arbitrationlOrder({
@@ -1876,7 +1877,7 @@ define([
 
         //交易评价按钮 点击
         // $(".commentBtn").on("click", function() {
-        //     var orderCode = $(this).attr("data-ocode");
+        //     let orderCode = $(this).attr("data-ocode");
         //     $('#pjText').val('');
         //     $("#commentDialog .subBtn").attr("data-ocode", orderCode)
         //     $("#commentDialog").removeClass("hidden")
@@ -1905,7 +1906,7 @@ define([
           base.showMsg(base.getText('请填写投诉理由'));
           return;
         }
-        var config={
+        let config={
           updater: userId,
           code:code,
           reason
@@ -1917,13 +1918,23 @@ define([
           $('.comment_yhts').addClass('hidden');
         });
       });
+        $('.comment_yhts .qx_btn').click(function() {
+            $('.commentDialog').addClass('hidden');
+            $('.comment_pjts').removeClass('hidden');
+            $('.comment_yhts').addClass('hidden');
+        });
+        $('.commentDialog .fhBtn').click(function() {
+            $('.commentDialog').addClass('hidden');
+            $('.comment_pjts').removeClass('hidden');
+            $('.comment_yhts').addClass('hidden');
+        });
 
         $(".commentDialog .subBtn").click(function() {
             base.showLoadingSpin();
-            var comment = $(".commentDialog .comment-Wrap .item.on").attr("data-value");
-            var content = $('#pjText').val();
-            var code = base.getUrlParam("code");
-            var config={
+            let comment = $(".commentDialog .comment-Wrap .item.on").attr("data-value");
+            let content = $('#pjText').val();
+            let code = base.getUrlParam("code");
+            let config={
                 updater: userId,
                 code:code,
                 starLevel:comment,
@@ -2032,7 +2043,7 @@ define([
 
         //跳转卖家信息
         $('.more-info').click(() => {
-            var userId = $('.more-info').attr('userId')
+            let userId = $('.more-info').attr('userId');
             if(base.getUrlParam('adsCode') == '' || base.getUrlParam('adsCode') == undefined){
                 base.gohref("../user/user-detail.html?userId="+userId+"&adsCode="+base.getUrlParam('code'));
             }else {

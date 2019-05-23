@@ -25,6 +25,12 @@ define([
     let trade_usdt_bail = '';
     let moneyBTC = '';
     let moneyUSDT = '';
+    let truePriceList = {
+        btcUsd: 0,
+        btcCny: 0,
+        usdtUsd: 0,
+        usdtCny: 0
+    };
     init();
 
     function init() {
@@ -61,7 +67,7 @@ define([
 
     function setHtml() {
         base.getDealLeftText();
-        $('.code').text(base.getText('编号', langType));
+        $('.adverCode').text(base.getText('编号', langType));
         $('.myAdvertise-container .titleStatus .sell').text(base.getText('出售广告', langType));
         $('.myAdvertise-container .titleStatus .buy').text(base.getText('购买广告', langType));
         $('.fy_type').text(base.getText('广告类型', langType));
@@ -89,7 +95,6 @@ define([
             isHide: true,
             callback: function(_this) {
                 if (_this.getCurrent() != adverConfig.start) {
-                    base.showLoadingSpin();
                   adverConfig.start = _this.getCurrent();
                     getPageAdvertise(adverConfig);
                 }
@@ -99,12 +104,15 @@ define([
 
     // 获取广告列表
     function getPageAdvertise(config) {
+        base.showLoadingSpin();
         return TradeCtr.getListAdvertise(config).then((data) => {
             let html = '';
             data.forEach((item, i) => {
                 html += buildHtml(item);
             });
             $("#content-adver").html(html);
+            $(`.iup-gray`).prop('checked', false);
+            $(`.iup-gray`).parents('tr').addClass('tr-gray');
             $(".myAdvertise-container .trade-list-wrap .no-data").addClass("hidden");
             base.hideLoadingSpin();
         }, base.hideLoadingSpin);
@@ -112,9 +120,8 @@ define([
     }
 
     function buildHtml(item) {
-        var operationHtml = '';
-        var tipHtml = '';
-        var goHrefHtml = '';
+        let operationHtml = '';
+        let tipHtml = '';
 
         //当前用户为买家
             //待发布
@@ -162,7 +169,7 @@ define([
                     font-size: 12px;
                     color: #d83b37;
                     "
-                  >${base.getText('您的出价当前未公开显示,请存入')}<span class="goHref" style="color: #E9967A;" data-href="../wallet/wallet.html">${base.getText('保证金')}(${item.tradeCoin === 'BTC' ? trade_btc_bail : trade_usdt_bail})</span></p>`
+                  >${base.getText('您的出价当前未公开显示,请存入')}<span class="goHref" style="color: #E9967A;" data-href="../wallet/wallet.html?coin=${item.tradeCoin}">${base.getText('保证金')}(${item.tradeCoin === 'BTC' ? trade_btc_bail : trade_usdt_bail})</span></p>`
                 }else if (item.status == "2") {//已下架
                   operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`
                 }
@@ -172,14 +179,19 @@ define([
         } else if (type == 'sell') {
             operationHtml += `<div class="goHref  am-button am-button-red" data-href="../trade/sell-detail.html?code=${item.code}&isD=1&statusList=${adverConfig.statusList}&status=${item.status}&coin=${item.tradeCoin}&type=${type}">${base.getText('查看')}</div>`
         }
-        setTimeout(() => {
-          if(item.status === "2") {
-              $(`#buyitem${item.code.substring(item.code.length-8)}`).prop('checked', false);
-              $(`#buyitem${item.code.substring(item.code.length-8)}`).parents('tr').addClass('tr-gray')
-          }
-        }, 200);
+        let sInput = '';
+        if(item.status === "2") {
+            sInput = `<input class="iup-gray" type="checkbox" id="buyitem${item.code.substring(item.code.length-8)}" checked="${item.status !== '2' ? true : false}" data-status="${item.status}" data-code="${item.code}">`;
+        }else {
+            sInput = `<input type="checkbox" id="buyitem${item.code.substring(item.code.length-8)}" checked="${item.status !== '2' ? true : false}" data-status="${item.status}" data-code="${item.code}">`;
+        }
         return `<tr>
-        <td><label class="switch"><input type="checkbox" id="buyitem${item.code.substring(item.code.length-8)}" checked="${item.status !== '2' ? true : false}" data-status="${item.status}" data-code="${item.code}"><div class="slider round"></div></label></td>
+        <td>
+            <label class="switch">
+                ${sInput}
+                <div class="slider round"></div>
+            </label>
+        </td>
         <td class="code">${item.code.substring(item.code.length-8)} ${tipHtml}</td>
         <td class="type">${typeList[type.toLowerCase()]}${item.tradeCoin?item.tradeCoin:'ETH'}</td>
         <td>${item.user.country ? `<img src='${base.getPic(item.user.country.pic)}' /><span>${item.user.country.interSimpleCode}</span>` : '-'} </td>
@@ -221,7 +233,6 @@ define([
               adverConfig.statusList = ['1', '2', '3'];
             }
           adverConfig.start = 1;
-            base.showLoadingSpin();
             getPageAdvertise(adverConfig, true);
         });
         let adverTime = null;
@@ -238,7 +249,6 @@ define([
                             base.hideLoadingSpin();
                             base.showMsg(base.getText('操作成功'));
                             setTimeout(function() {
-                                base.showLoadingSpin();
                                 adverConfig.start = 1;
                                 getPageAdvertise(adverConfig, true)
                             }, 500)
@@ -256,7 +266,6 @@ define([
                             base.hideLoadingSpin();
                             base.showMsg(base.getText('操作成功'));
                             setTimeout(function() {
-                                base.showLoadingSpin();
                                 adverConfig.start = 1;
                                 getPageAdvertise(adverConfig, true)
                             }, 500)

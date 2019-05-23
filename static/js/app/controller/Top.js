@@ -51,6 +51,7 @@ define([
         $('#head-user-wrap .fy_top_cwjydd').text(base.getText('场外交易订单'));
         $('#head-user-wrap .fy_top_bbjydd').text(base.getText('币币交易订单'));
         $('#head-user-wrap .fy_top_yyzx').text(base.getText('用户中心'));
+        $('#head-user-wrap .fy_top_grzx').text(base.getText('个人中心'));
         $('#head-user-wrap .fy_top_yqhy').text(base.getText('邀请好友'));
         $('#head-user-wrap .fy_top_tcdl').text(base.getText('退出登录'));
         $('.en_yqhy').text(base.getText('邀请好友'));
@@ -138,8 +139,9 @@ define([
             let messageHtml = '';
             item.forEach((data, itemIndex) => {
                 let titGray = data.status === '1' ? 'tit-gray' : '';
+                let backGray = data.status === '1' ? 'back-gray' : '';
               if(+data.smsInfo.type !== 4) {
-                messageHtml = `<li class="goMessageHref" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}&coin=${data.smsInfo.symbol}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
+                messageHtml = `<li class="goMessageHref ${backGray}" data-href="../order/order-detail.html?code=${data.smsInfo.refNo}&coin=${data.smsInfo.symbol}" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
                     <img src="${data.smsInfo.type === 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                     <div class="message-text">
                         <p class="message-title ${titGray}">${data.smsInfo.title}</p>
@@ -147,7 +149,7 @@ define([
                     </div>
                 </li>`;
               }else {
-                messageHtml = `<li class="goMessageHref" data-href="../wallet/wallet.html" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
+                messageHtml = `<li class="goMessageHref ${backGray}" data-href="../wallet/wallet.html" data-refNo="${data.smsInfo.refNo}" data-readId="${data.id}">
                     <img src="${data.smsInfo.type === 2 ? '/static/images/system-msg.png' : '/static/images/order-msg.png'}" alt="">
                     <div class="message-text">
                         <p class="message-title ${titGray}">${data.smsInfo.title}</p>
@@ -168,8 +170,8 @@ define([
      */
     function initSocket() {
         // var ws = new WebSocket('wss://www.tychely.com/ws?userId='+ localStorage.getItem('userId')); // 线上
-        // var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
-        var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 测试
+        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
+        // var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 测试
         ws.onopen = function (event) {
             // ws.send('你好啊')
         }
@@ -352,7 +354,10 @@ define([
         });
     }
     function addListener() {
-
+        $('#head-user-wrap .fy_top_grzx').click(function() {
+            let href = $(this).attr('data-href');
+            base.gohref(`${href}?userId=${base.getUserId()}`);
+        });
         $("#headLogout").click(function () {
             base.logout()
         });

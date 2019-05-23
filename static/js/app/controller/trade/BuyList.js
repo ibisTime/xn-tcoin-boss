@@ -6,17 +6,17 @@ define([
     'app/controller/foo'
 ], function(base, pagination, TradeCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
-    var coin = base.getUrlParam("coin") || 'BTC'; // 币种
-  console.log(base.getUrlParam("coin"));
+    let coin = base.getUrlParam("coin") || 'BTC'; // 币种
+    let paymentCode = base.getUrlParam("payment") || '';
     //币种
-    var config = {
+    let config = {
         start: 1,
         limit: 10,
         tradeType: 1,
         coin: coin.toUpperCase()
     };
     // 货币下拉
-    var payTypeMoneyList = [];
+    let payTypeMoneyList = [];
   let payTypeList = [];
   let platTagList = [];
   let coinName = {
@@ -49,6 +49,9 @@ define([
             if(payType) {
               $(`#left-wrap .${config.payType}`).addClass('pay-active');
               $('#searchConWrap .payType').val(config.payType);
+            }else if (paymentCode) {
+                $(`#left-wrap .${paymentCode}`).addClass('pay-active');
+                $('#searchConWrap .payType').val(paymentCode);
             }
             if(price) {
               $('#payTypeMoney').val(price);
@@ -190,7 +193,7 @@ define([
         return TradeCtr.getPageAdvertise(config, true).then((data) => {
             var lists = data.list;
             if($('#bestSearchBtn').attr('data-type') == 'bestSearch'){
-                base.gohref('../trade/sell-detail.html?code='+lists[0].code+'&coin='+coin);
+                base.gohref('../trade/buy-detail.html?code='+lists[0].code+'&coin='+coin);
             }
             if (data.list.length) {
                 var html = "";
@@ -233,7 +236,7 @@ define([
         var operationHtml = '';
 
         if (item.userId == base.getUserId()) {
-            operationHtml = `<div class="am-button am-button-ghost goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
+            operationHtml = `<div class="am-button am-button-ghost goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&coin=${item.tradeCoin}&type=sell">${base.getText('编辑', langType)}</div>`;
         } else {
             operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买', langType)}</div>`;
         }

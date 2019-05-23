@@ -240,7 +240,7 @@ define([
         var operationHtml = '';
 
         if (item.userId == base.getUserId()) {
-            operationHtml = `<div class="am-button am-button-ghost goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
+            operationHtml = `<div class="am-button am-button-ghost goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&coin=${item.tradeCoin}&type=buy">${base.getText('编辑', langType)}</div>`;
         } else {
             operationHtml = `<div class="am-button am-button-ghost goHref" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`;
         }

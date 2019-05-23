@@ -255,6 +255,10 @@ define([
         },
       openOrder(config) {
           return Ajax.post('625254', config);
-      }
+      },
+        // 支付方式详情
+        getPayTypeDetail(code) {
+            return Ajax.post('625352', {code});
+        }
     };
 })
