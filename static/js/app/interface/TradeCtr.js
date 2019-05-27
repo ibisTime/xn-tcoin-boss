@@ -20,6 +20,9 @@ define([
         getPageAdvertiseUser(config, refresh) {
             return Ajax.post("625225", config, refresh);
         },
+        getUserPageAdvertise(config, refresh) {
+            return Ajax.post("625232", config, refresh);
+        },
         getUserPageAdvertiseUser(config, refresh) {
             return Ajax.get("625228", config, refresh);
         },
@@ -211,6 +214,10 @@ define([
       getPayTypeList(data) {
         return Ajax.post("625350", data, true);
       },
+        // 发布广告-列表查付款方式
+        adverPayTypeList(data) {
+            return Ajax.post("625353", data, true);
+        },
       // 列表查交易货币
       getPayCoinList(name) {
         return Ajax.post("625370", name, true);

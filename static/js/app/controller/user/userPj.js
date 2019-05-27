@@ -8,7 +8,7 @@ define([
     let langType = localStorage.getItem('langType') || 'ZH';
     let userId = base.getUserId();
     let smsType = {};
-    let docIndex = 0;
+    let docIndex = 1;
     init();
     function init() {
         $('.pj-en_pr').text(base.getText('类型', langType));

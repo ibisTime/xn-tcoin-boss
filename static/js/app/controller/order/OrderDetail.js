@@ -1366,7 +1366,7 @@ define([
         }
       let len = getPicData.length;
       getPicData.push({
-        imgUrls: smallImage.getUrl(),
+        imgUrls: oriImage.getUrl(),
         uuid: UUID
       });
         if(picTime) {
@@ -1550,7 +1550,7 @@ define([
         let imgId = imgObj.id;
         let imgIndex = $(imgObj).attr('data-index');
         let imgClass = '.' + imgId + imgIndex;
-        setImgIndex = imgIndex;
+        setImgIndex = +imgIndex;
         $(imgClass).show(300).siblings().hide(200);
         $('#click_pic_dialog').show();
     }

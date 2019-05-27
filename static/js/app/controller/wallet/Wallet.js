@@ -28,6 +28,8 @@ define([
     let usdMarket = 0;
     
     let accountNumberTB = '';
+    
+    let isBailAmount = '';
 
     let addAddressWrapperRules = {
             "label": {
@@ -102,7 +104,6 @@ define([
         $('.wall-en_cz').text(base.getText('操作', langType));
         $('.wallet-account-wrap .freez-amount').html(`${base.getText('冻结金额')}: <a></a> ${currency}`);
         $('.wallet-account-wrap .add-amount').html(`<a href="../index.html?coin=${currency}">${base.getText(`购买${coinName[currency]}`)}</a>`);
-        $('.wallet-account-wrap .crbzj').html(`${base.getText('存入')}<a class="accept-bail"></a> ${currency} ${base.getText('保证金')} <b class="balance_tq">提取</b>`);
         $('.wallet-account-wrap .tip').html(base.getText(`就像黄金一样，您的${coinName[currency]} US dollars价值因市场而异，这是正常的，您仍有相同${coinName[currency]}金额`));
         $('.wallet-account-wrap .send-btc').html(base.getText(`发送${coinName[currency]}`));
         $('.wallet-account-wrap .yxbtb').html(base.getText(`以下为您的${coinName[currency]}存款地址`));
@@ -205,7 +206,9 @@ define([
             }).then(() => {
                 base.hideLoadingSpin();
                 base.showMsg(base.getText('提取保证金成功'));
-                $('#wAddressDialog').addClass('hidden');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }, () => {
                 base.hideLoadingSpin();
                 $('#wAddressDialog').addClass('hidden');
@@ -255,10 +258,9 @@ define([
     function getAmount() {
         AccountCtr.getAccount().then((accountData) => {
           GeneralCtr.getSysConfigType('trade_rule', true).then(ruleData => {
-            $(".wallet-account-wrap .accept-bail").text(currency === 'BTC' ? ruleData.trade_btc_bail : ruleData.trade_usdt_bail);
-            // let bail_crash_space_minutes = +ruleData.bail_crash_space_minutes * 60 * 1000;
             accountData.accountList.forEach(item => {
               if (item.currency === currency) {
+                  isBailAmount = !!item.bailAmount;
                   accountNumberTB = item.accountNumber;
                   let money = base.formatMoney((item.amount - item.frozenAmount),'',item.currency);
                   // let bailTime = !!item.bailDatetimeStr && !!(new Date().getTime() - new Date(item.bailDatetimeStr).getTime() > bail_crash_space_minutes);
@@ -275,6 +277,12 @@ define([
                 toCurrencyMoney = base.formatMoney((item.amount - item.frozenAmount),'',item.currency);
                 $('.change_coin .coin-ye').html(`${base.getText('余额')}${toCurrencyMoney}` + changeCoinText[currency]);
               }
+                if(isBailAmount) {
+                    $('.wallet-account-wrap .crbzj').html(`${base.getText('已存')}<a class="accept-bail">${base.formatMoney((item.bailAmount).toString(), '', currency)}</a> ${currency} ${base.getText('保证金')} <b class="balance_tq">提取</b>`);
+                }else {
+                  let cry = currency === 'BTC' ? ruleData.trade_btc_bail : ruleData.trade_usdt_bail;
+                    $('.wallet-account-wrap .crbzj').html(`${base.getText('存入')}<a class="accept-bail">${cry}</a> ${currency} ${base.getText('保证金')} <b class="balance">提取</b>`);
+                }
             });
           });
           addListener();

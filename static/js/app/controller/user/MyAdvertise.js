@@ -161,7 +161,7 @@ define([
                             }
                         }
                     }
-                } else if (item.status == "1"){
+                } else if (item.status === "1"){
                   operationHtml = `<div class="am-button am-button-red publish mr20 goHref" href-type="_blank" data-href="../trade/advertise.html?code=${item.code}&type=${type}&coin=${item.tradeCoin}">${base.getText('编辑', langType)}</div>`;
                   tipHtml=`<p style="
                     position: absolute;

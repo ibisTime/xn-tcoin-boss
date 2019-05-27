@@ -252,6 +252,12 @@ define([
   }
 
   function addListener() {
+    
+    $('.tradeDetail-container .titleStatus .progress').click(function() {
+        if($(this).text() === base.getText('进行中')) {
+            base.gohref("../order/order-list.html");
+        }
+    });
 
     let _formWrapper = $("#form-wrapper");
     _formWrapper.validate({

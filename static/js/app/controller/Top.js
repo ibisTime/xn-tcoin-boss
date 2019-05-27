@@ -114,6 +114,8 @@ define([
             sessionStorage.removeItem('tradeCoin001');
             sessionStorage.removeItem('tradeType');
             sessionStorage.removeItem('paySubType');
+            sessionStorage.removeItem('payBigType');
+            sessionStorage.removeItem('optionPay');
         }
         addListener();
     }
@@ -169,8 +171,8 @@ define([
      * 初始化Socket链接
      */
     function initSocket() {
-        // var ws = new WebSocket('wss://www.tychely.com/ws?userId='+ localStorage.getItem('userId')); // 线上
-        var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
+        var ws = new WebSocket('wss://www.tychely.com/ws?userId='+ localStorage.getItem('userId')); // 线上
+        // var ws = new WebSocket('ws://120.26.6.213:5802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 研发
         // var ws = new WebSocket('ws://120.26.6.213:6802/ogc-standard/webSocketServer?userId='+ localStorage.getItem('userId')); // 测试
         ws.onopen = function (event) {
             // ws.send('你好啊')
@@ -358,6 +360,10 @@ define([
             let href = $(this).attr('data-href');
             base.gohref(`${href}?userId=${base.getUserId()}`);
         });
+        $('#head-user-wrap .fy_top_nickname').click(function() {
+            let href = $(this).attr('data-href');
+            base.gohref(`${href}?userId=${base.getUserId()}`);
+        });
         $("#headLogout").click(function () {
             base.logout()
         });
@@ -383,6 +389,12 @@ define([
                 var thishref = $(this).attr("data-href");
                 base.gohref(thishref)
             }
+        });
+        
+        $('#head .goHref').click(function() {
+            sessionStorage.removeItem('sellSearchConfig');
+            sessionStorage.removeItem('buySearchConfig');
+            sessionStorage.removeItem('payment');
         });
 
         $("#head .head-nav-wrap .invitation").off("click").click(function () {
@@ -419,6 +431,8 @@ define([
               sessionStorage.removeItem('tradeCoin001');
               sessionStorage.removeItem('tradeType');
               sessionStorage.removeItem('paySubType');
+              sessionStorage.removeItem('payBigType');
+              sessionStorage.removeItem('optionPay');
             base.gohref('../trade/advertise.html')
           }
         });
@@ -481,7 +495,7 @@ define([
             }
         });
         $(document).on('click','.left-item',function () {
-            var i = $(this).index();
+            let i = $(this).index();
             $(this).addClass('pay-active');
             $(this).siblings().removeClass('pay-active');
         });

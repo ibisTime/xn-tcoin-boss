@@ -128,11 +128,12 @@ define([
           tabHtml += buildTabHtml(item, i)
         });
         $(".advertise-step1-tabs").append(tabHtml);
-          window.requestAnimationFrame(() => {
-              let payBigType = +sessionStorage.getItem('payBigType') || '0';
+          setTimeout(() => {
+              let payBigType = +sessionStorage.getItem('payBigType') || 0;
               $('.advertise-step1-tabs .tab-item').eq(payBigType).addClass('active').siblings().removeClass('active');
+              console.log(payBigType);
               getPayTypeList(payBigType);
-          });
+          }, 300);
         tradeCoin = data2[0].simpleName;
         let step1SelectHtml = '';
         data2.forEach((item, i) => {
@@ -181,10 +182,10 @@ define([
           $('.user-option li').eq(3).hide(300);
         }
         if(min && max && jzxe === '1') {
-          let t_min = min + tradeCoin;
-          let t_max = max + tradeCoin;
-          $('.user-option .op-min').text(t_min);
-          $('.user-option .op-max').text(t_max);
+            let t_min = min;
+            let t_max = max;
+            $('.user-option .op-min').html(`${t_min} <span class="op-tding_fb">${tradeCoin}</span>`);
+            $('.user-option .op-max').html(`${t_max} <span class="op-tding_fb">${tradeCoin}</span>`);
           $('.user-option li').eq(5).show(300);
           $('.user-option li').eq(4).hide(300);
         }
@@ -192,6 +193,7 @@ define([
           if( jzxe === '2') {
             let Tags = step2AccuracyTags.split('||').join(',');
             $('.user-option .op-tding').text(Tags);
+            $('.user-option .op-tding_fb').text(tradeCoin);
             $('.user-option li').eq(4).show(300);
             $('.user-option li').eq(5).hide(300);
           }
@@ -414,10 +416,10 @@ define([
           $('#maxInput').val(max)
         }
         if(min && max && jzxe === '1') {
-          let t_min = min + tradeCoin;
-          let t_max = max + tradeCoin;
-          $('.user-step2_option .op-min').text(t_min);
-          $('.user-step2_option .op-max').text(t_max);
+            let t_min = min;
+            let t_max = max;
+            $('.user-step2_option .op-min').html(`${t_min} <span class="op-tding_fb">${tradeCoin}</span>`);
+            $('.user-step2_option .op-max').html(`${t_max} <span class="op-tding_fb">${tradeCoin}</span>`);
           $('.user-step2_option li').eq(5).show(300);
           $('.user-step2_option li').eq(4).hide(300);
         }
@@ -425,6 +427,7 @@ define([
           if( jzxe === '2') {
             let Tags = step2AccuracyTags.split('||');
             $('.user-step2_option .op-tding').text(Tags.join(','));
+              $('.user-step2_option .op-tding_fb').text(tradeCoin);
               accuracyTags(Tags);
             $('.user-step2_option li').eq(4).show(300);
             $('.user-step2_option li').eq(5).hide(300);
@@ -541,10 +544,10 @@ define([
         $('.user-step3_option li').eq(3).hide(300);
       }
       if(min && max && jzxe === '1') {
-        let t_min = min + tradeCoin;
-        let t_max = max + tradeCoin;
-        $('.user-step3_option .op-min').text(t_min);
-        $('.user-step3_option .op-max').text(t_max);
+          let t_min = min;
+          let t_max = max;
+          $('.user-step3_option .op-min').html(`${t_min} <span class="op-tding_fb">${tradeCoin}</span>`);
+          $('.user-step3_option .op-max').html(`${t_max} <span class="op-tding_fb">${tradeCoin}</span>`);
         $('.user-step3_option li').eq(5).show(300);
         $('.user-step3_option li').eq(4).hide(300);
       }
@@ -553,6 +556,7 @@ define([
             let Tags = step2AccuracyTags.split('||');
             accuracyTags(Tags);
           $('.user-step3_option .op-tding').text(Tags);
+            $('.user-step3_option .op-tding_fb').text(tradeCoin);
           $('.user-step3_option li').eq(4).show(300);
           $('.user-step3_option li').eq(5).hide(300);
         }
@@ -636,12 +640,12 @@ define([
     // 列表查付款方式
     function getPayTypeList(dkey) {
       let config;
-      if(dkey) {
+      if(dkey || dkey === 0) {
         config = {type: dkey, status: 1};
       } else {
         config = {type: payBigType, name: paySearch, status: 1}
       }
-    return TradeCtr.getPayTypeList(config).then((res) => {
+    return TradeCtr.adverPayTypeList(config).then((res) => {
         let listHtml = '';
         res.forEach((item, i) => {
           listHtml += buildListHtml(item, i)
@@ -681,8 +685,8 @@ define([
         $('.advertise-out-container #tradeCurrency').attr('placeHolder', base.getText('在所有支付方式中搜索'));
         $('.advertise-out-container .advertise-step1-title').html(base.getText('支付方式'));
         $('.advertise-out-container .advertise-payType-title').html(base.getText('选择下面的支付方式'));
-        $('.advertise-out-container .advertise-step1-title').html(base.getText('我将以如下数字货币交易'));
-        $('.advertise-out-container .step1-my-trade-coin-tips').html(base.getText(`您的出价将以选定数字货币${adverTypeObj[adverType]}。例如，如果您选择美元，则您的出价将对希望以美元购买的所有人可见。`));
+        $('.advertise-out-container .advertise-step1-title').html(base.getText('我将以如下法币交易'));
+        $('.advertise-out-container .step1-my-trade-coin-tips').html(base.getText(`您的出价将以选定法币${adverTypeObj[adverType]}。例如，如果您选择美元，则您的出价将对希望以美元购买的所有人可见。`));
         $('.advertise-out-container .advertise-step1-btn').html(base.getText('下一步'));
     }
 
@@ -733,7 +737,7 @@ define([
             // $(".trade-type .item.on .icon-check").click();
 
             $("#form-wrapper").setForm(data);
-            paySubType = sessionStorage.getItem('paySubType') ||data.payType;
+            paySubType = sessionStorage.getItem('paySubType') || data.payType;
             sessionStorage.setItem('paySubType', paySubType);
             $("#coin").text($("#tradeCoin").val());
             $("#price").attr("data-coin", $("#tradeCoin").val());
@@ -974,10 +978,11 @@ define([
           tradeType: Number(sessionStorage.getItem('tradeType')),
           tradeCoin: sessionStorage.getItem('tradeCoin001'),
           isAllowProxy: isAllowProxy || 1
-        }).then((res) => {
+        }).then(() => {
           base.showMsg(base.getText('操作成功'));
+            let tType = sessionStorage.getItem('tradeType');
             removeSession();
-          if (parseInt(sessionStorage.getItem('tradeType')) === 0) {
+          if (tType === '0') {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
           } else {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');
@@ -996,7 +1001,7 @@ define([
       $('#minInput').change(function() {
         if($(this).val()) {
             sessionStorage.setItem('min', $(this).val());
-            $('.user-step2_option .op-min').text($(this).val() + tradeCoin);
+            $('.user-step2_option .op-min').html(`${$(this).val()} <span class="op-tding_fb">${tradeCoin}</span>`);
             $('.user-step2_option li').eq(5).show(300);
             $('.user-step2_option li').eq(4).hide(300);
         }
@@ -1004,7 +1009,7 @@ define([
       $('#maxInput').change(function() {
         if($(this).val()) {
             sessionStorage.setItem('max', $(this).val());
-            $('.user-step2_option .op-max').text($(this).val() + tradeCoin);
+            $('.user-step2_option .op-max').html(`${$(this).val()} <span class="op-tding_fb">${tradeCoin}</span>`);
             $('.user-step2_option li').eq(5).show(300);
             $('.user-step2_option li').eq(4).hide(300);
         }
@@ -1020,6 +1025,7 @@ define([
             sessionStorage.setItem('step2AccuracyTags', step2Tags);
             let tags = step2Tags.split('||').join(',');
             $('.user-step2_option .op-tding').text(tags);
+            $('.user-step2_option .op-tding_fb').text(tradeCoin);
             $('.user-step2_option li').eq(5).hide(300);
             $('.user-step2_option li').eq(4).show(300);
         }
@@ -1339,6 +1345,7 @@ define([
       // step1-select点击事件
       $('#tradeCoin').on('change', (e) => {
         tradeCoin = $('#tradeCoin').find('option:selected').attr('data-code');
+          $('.user-option .op-tding_fb').text(tradeCoin);
         $('.user-option .option-tran').text(tradeCoin);
         sessionStorage.setItem('tradeCoin', tradeCoin);
       });
@@ -1437,6 +1444,7 @@ define([
                 if(step2AccuracyTags) {
                   let tags = step2AccuracyTags.join(',');
                   $('.user-step2_option .op-tding').text(tags);
+                    $('.user-step2_option .op-tding_fb').text(tradeCoin);
                   $('.user-step2_option li').eq(4).show(300);
                   $('.user-step2_option li').eq(5).hide(300);
                 }
@@ -1450,10 +1458,10 @@ define([
                 let min = $('#minInput').val();
                 let max = $('#maxInput').val();
                 if(min && max) {
-                  let t_min = min + tradeCoin;
-                  let t_max = max + tradeCoin;
-                  $('.user-step2_option .op-min').text(t_min);
-                  $('.user-step2_option .op-max').text(t_max);
+                  let t_min = min;
+                  let t_max = max;
+                  $('.user-step2_option .op-min').html(`${t_min} <span class="op-tding_fb">${tradeCoin}</span>`);
+                  $('.user-step2_option .op-max').html(`${t_max} <span class="op-tding_fb">${tradeCoin}</span>`);
                   $('.user-step2_option li').eq(5).show(300);
                   $('.user-step2_option li').eq(4).hide(300);
                 }
@@ -1519,7 +1527,7 @@ define([
           let tType = sessionStorage.getItem('tradeType');
             removeSession();
           base.showMsg(base.getText('操作成功'));
-          if (Number(tType) === 0) {
+          if (tType === '0') {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=BUY&mod=gg');
           } else {
               base.gohref('../order/order-list.html?coin=' + coin + '&adverType=SELL&mod=gg');

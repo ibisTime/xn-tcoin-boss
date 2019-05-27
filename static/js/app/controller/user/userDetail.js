@@ -29,7 +29,7 @@ define([
     };
     let config = {
         start: 1,
-        limit: 10,
+        limit: 100,
         tradeType: tradeType,
         status: '0',
         userId: userId,
@@ -53,7 +53,7 @@ define([
     init();
 
     function init() {
-        $('title').text(base.getText('个人主页') + '-' +base.getText('区块链技术应用实验平台'));
+        $('title').text(base.getText('个人中心') + '-' +base.getText('区块链技术应用实验平台'));
         $('.udet-en_jy').text(base.getText('交易次数', langType));
         $('.udet-en_xr').text(base.getText('信任人数', langType));
         $('.udet-en_hp').text(base.getText('好评度', langType));
@@ -118,28 +118,40 @@ define([
                         paymentName: item.paymentName,
                         paymentCode: item.paymentCode,
                         starLevel: item.starLevel,
-                        buyUser: item.fromUser
+                        buyUser: item.fromUser,
+                        lastLogin: item.fromUserInfo.lastLogin
                     }
                 });
                 let contentPj = '';
                 console.log(data);
                 evaluateData.forEach(item => {
                     let lvStyle = starLevelObj[item.starLevel] || '';
+                    let loginStatus = '';
+                    let time = base.calculateDays(item.lastLogin, new Date());
+                    if (time <= 10) {
+                        loginStatus = 'green'
+                    } else if (time <= 30) {
+                        loginStatus = 'yellow'
+                    } else {
+                        loginStatus = 'gray'
+                    }
                     contentPj += `<tr>
                                 <td>
                                     <div class="trade-pj_box goHref" data-href="../user/user-detail.html?userId=${item.buyUser}">
                                         ${item.isPhoto ?
-                      `<div class="left" style="background-image: url('${item.photo}');">
+                                    `<div class="left" style="background-image: url('${item.photo}');">
+                                            <span class="user_loginTime ${loginStatus}"></span>
                                         </div>` :
-                      `<div class="left no-photo" >
+                                    `<div class="left no-photo" >
                                             ${item.photo}
+                                            <span class="user_loginTime ${loginStatus}"></span>
                                         </div>`}
                                         <div class="right">
                                             <p>${item.nickName}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="goHref" href-type="_blank" data-href="../order/order-detail.html?code=${item.tradeOrderCode}&buyUser=${item.buyUser}">
+                                <td class="pj-buy_list"  data-payment="${item.paymentCode}">
                                     <div>
                                         <div class="con-pj_top">
                                             ${item.content} <span class="${lvStyle}">+1</span>
@@ -150,7 +162,7 @@ define([
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="tran-pj goHref" data-href="../index.html?payment=${item.paymentCode}">
+                                    <div class="tran-pj pj-buy_list" data-payment="${item.paymentCode}">
                                         ${item.paymentName}
                                     </div>
                                 </td>
@@ -254,7 +266,7 @@ define([
 
     // 分页查广告
     function getPageAdvertise() {
-        TradeCtr.getPageAdvertiseUser(config, true).then((data) => {
+        TradeCtr.getUserPageAdvertise(config, true).then((data) => {
             var lists = data.list;
             if (data.list.length) {
                 var html = "";
@@ -275,8 +287,8 @@ define([
 
     function buildHtml(item) {
         // 登录状态
-        var loginStatus = '';
-        var time = base.calculateDays(item.user.lastLogin, new Date())
+        let loginStatus = '';
+        let time = base.calculateDays(item.user.lastLogin, new Date())
         if (time <= 10) {
             loginStatus = 'green'
         } else if (time <= 30) {
@@ -284,18 +296,20 @@ define([
         } else {
             loginStatus = 'gray'
         }
-        var operationHtml = '';
-
-        if (item.tradeType == '1') {
-            operationHtml = `<div class="goHref user-buy" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买')}</div>`
-        } else {
-            operationHtml = `<div class="goHref user-sell" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`
+        let operationHtml = '';
+        
+        if(userId === base.getUserId()) {
+            let adverType = item.tradeType === '1' ? 'buy' : 'sell';
+            operationHtml = `<div class="goHref user-buy" data-href="../trade/advertise.html?code=${item.code}&type=${adverType}&coin=${item.tradeCoin}">${base.getText('编辑')}</div>`
+        }else {
+            if (item.tradeType === '1') {
+                operationHtml = `<div class="goHref user-buy" data-href="../trade/buy-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('购买')}</div>`
+            } else {
+                operationHtml = `<div class="goHref user-sell" data-href="../trade/sell-detail.html?code=${item.code}&coin=${item.tradeCoin}">${base.getText('出售', langType)}</div>`
+            }
         }
 
         let hpCount = 0;
-        if (item.userStatistics.beiPingJiaCount != 0) {
-            hpCount = base.getPercentum(item.userStatistics.beiHaoPingCount, item.userStatistics.beiPingJiaCount);
-        }
 
         let payTypeHtml = ``;
         if(item.payType) {
@@ -311,11 +325,13 @@ define([
               paySecondHtml += `${platTagList[it] ? `<span>${platTagList[it]}</span>` : ''}`;
             });
         }
-        let country = '/static/images/China.png';
-        let countryHtml = ``;
-        countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
-
-        let interval = base.fun(Date.parse(item.user.lastLogin), new Date());
+        let customHTML = ``;
+        if(item.customTag){
+            item.customTag.split('||').map((item) => {
+                customHTML += `<span>${item}</span>`;
+            });
+        }
+        
 
         let speenHtml = '';
         if (item.releaseTime) {
@@ -335,7 +351,7 @@ define([
                             ${payTypeHtml}
                         </p>
                         <p class="payType_psecond">
-                            ${paySecondHtml}
+                            ${paySecondHtml} ${customHTML}
                         </p>
                     </td>
                     <td class="speed">
@@ -371,6 +387,12 @@ define([
 
 
     function addListener() {
+        $('#content-pj').on('click', '.pj-buy_list', function() {
+            let payment = $(this).attr('data-payment');
+            sessionStorage.setItem('payment', payment);
+            sessionStorage.removeItem('buySearchConfig');
+            base.gohref('../index.html');
+        });
         // 切换在线购买和在线出售
         $('.titleStatus li').click(function() {
             var _this = $(this)

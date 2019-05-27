@@ -108,13 +108,27 @@ define([
     }
 
     function buildHtml(item) {
-        var photoHtml = "";
+        let photoHtml = "";
         if (item.toUserInfo) {
-            if (item.toUserInfo.photo) {
-                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.toUserInfo.photo)}'); line-height: 40px;" data-href="../user/user-detail.html?userId=${item.toUserInfo.userId}"></div>`
+            let loginStatus = '';
+            let time = base.calculateDays(item.toUserInfo.lastLogin, new Date());
+            if (time <= 10) {
+                loginStatus = 'green'
+            } else if (time <= 30) {
+                loginStatus = 'yellow'
             } else {
-                var tmpl = item.toUserInfo.nickname.substring(0, 1).toUpperCase();
-                photoHtml = `<div class="photo"><div class="noPhoto goHref" style="line-height: 40px;" data-href="../user/user-detail.html?userId=${item.toUserInfo.userId}">${tmpl}</div></div>`
+                loginStatus = 'gray'
+            }
+            if (item.toUserInfo.photo) {
+                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.toUserInfo.photo)}'); line-height: 40px;" data-href="../user/user-detail.html?userId=${item.toUserInfo.userId}">
+                    <span class="user_loginTime ${loginStatus}"></span>
+                </div>`
+            } else {
+                let tmpl = item.toUserInfo.nickname.substring(0, 1).toUpperCase();
+                photoHtml = `<div class="photo">
+                    <div class="noPhoto goHref" style="line-height: 40px;" data-href="../user/user-detail.html?userId=${item.toUserInfo.userId}">${tmpl}</div>
+                    <span class="user_loginTime ${loginStatus}"></span>
+                </div>`
             }
             return `<tr>
 					<td>
@@ -140,11 +154,25 @@ define([
         }
 
         if (item.fromUserInfo) {
+            let loginStatus = '';
+            let time = base.calculateDays(item.fromUserInfo.lastLogin, new Date());
+            if (time <= 10) {
+                loginStatus = 'green'
+            } else if (time <= 30) {
+                loginStatus = 'yellow'
+            } else {
+                loginStatus = 'gray'
+            }
             if (item.fromUserInfo.photo) {
-                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.fromUserInfo.photo)}');line-height: 40px;" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}"></div>`
+                photoHtml = `<div class="photo goHref" style="background-image:url('${base.getAvatar(item.fromUserInfo.photo)}');line-height: 40px;" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}">
+                        <span class="user_loginTime ${loginStatus}"></span>
+                    </div>`
             } else {
                 var tmpl = item.fromUserInfo.nickname.substring(0, 1).toUpperCase();
-                photoHtml = `<div class="photo"><div class="noPhoto goHref" style="line-height: 40px;" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}">${tmpl}</div></div>`
+                photoHtml = `<div class="photo">
+                    <div class="noPhoto goHref" style="line-height: 40px;" data-href="../user/user-detail.html?userId=${item.fromUserInfo.userId}">${tmpl}</div>
+                    <span class="user_loginTime ${loginStatus}"></span>
+                </div>`
             }
             return `<tr>
 					<td>

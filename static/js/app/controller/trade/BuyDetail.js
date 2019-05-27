@@ -176,7 +176,7 @@ define([
                 $('.item-buyAmount').removeClass('hidden');
                 $('.item-selectAmount').addClass('hidden');
                 $('.buy-info .min').html(data.minTrade + '' + data.tradeCurrency);
-                $('.buy-info .max').html(data.maxTrade + '' + data.tradeCurrency);
+                $('.buy-info .max').html(data.availableValueMarketString + '' + data.tradeCurrency);
                 if(amountAll < +data.minTrade ) {
                   $('#buyBtn').css({
                     'background-color': '#aaa',

@@ -7,7 +7,7 @@ define([
 ], function(base, pagination, TradeCtr, Top, Foo) {
     let langType = localStorage.getItem('langType') || 'ZH';
     let coin = base.getUrlParam("coin") || 'BTC'; // 币种
-    let paymentCode = base.getUrlParam("payment") || '';
+    let paymentCode = sessionStorage.getItem("payment") || '';
     //币种
     let config = {
         start: 1,
@@ -32,6 +32,9 @@ define([
         $('title').text(base.getText(`购买${coinName[coin]}`));
       $('.jybuy-list').attr('data-href', `../index.html?langType=${langType}&coin=${coin}`);
       $('.yj_buy-ul').html(`<li class="nav-cwjy">${base.getText(`购买${coinName[toCoin]}`)}</li>`);
+      if(paymentCode) {
+          config.payType = paymentCode;
+      }
         $.when(
           getCoinList(),
           setHtml(),
@@ -41,25 +44,20 @@ define([
           addListener()
         ).then(() => {
           let buySearchConfig = sessionStorage.getItem('buySearchConfig') || '';
-          if(buySearchConfig) {
-            config = JSON.parse(buySearchConfig);
+            config = buySearchConfig && JSON.parse(buySearchConfig) || config;
             let payType = config.payType || '';
             let price = config.price || '';
             let tradeCurrency = config.tradeCurrency || '';
             if(payType) {
-              $(`#left-wrap .${config.payType}`).addClass('pay-active');
-              $('#searchConWrap .payType').val(config.payType);
-            }else if (paymentCode) {
-                $(`#left-wrap .${paymentCode}`).addClass('pay-active');
-                $('#searchConWrap .payType').val(paymentCode);
+                $(`#left-wrap .${config.payType}`).addClass('pay-active');
+                $('#searchConWrap .payType').val(config.payType);
             }
             if(price) {
-              $('#payTypeMoney').val(price);
+                $('#payTypeMoney').val(price);
             }
             if(tradeCurrency) {
-              $('#searchConWrap .payTypeMoney').val(tradeCurrency);
+                $('#searchConWrap .payTypeMoney').val(tradeCurrency);
             }
-          }
           getPageAdvertise(config);
           var tipHtml=`<p class="tip">${base.getText('来自未经验证用户的挂单的使用风险由您自己承担。请阅读我们的')}<span class="goHref" data-href="../public/help.html">“${base.getText(`如何提取（购买）${coinName[coin]}指南`)}”</span>，${base.getText('了解有关如何保持安全的提示')}。</p>`
           $("#content").before(tipHtml);
@@ -269,7 +267,7 @@ define([
         if(item.pic != undefined){
             countryHtml = `<i class="icon country" style="background-image: url('${country}')"></i>`;
         }
-        let interval = base.fun(Date.parse(item.user.lastLogin), new Date());
+        let interval = base.fun(Date.parse(item.user.lastLogin), new Date()) || `1${base.getText('分钟')}`;
         return `<tr>
 					<td class="nickname" style="padding-left: 20px;">
                         <p class="pfirst goHref" data-href="../user/user-detail.html?userId=${item.user.userId}&tradeType=1&coin=${item.tradeCoin}">
@@ -313,6 +311,7 @@ define([
         })
 
         $("#searchBtn,#bestSearchBtn").click(function() {
+            sessionStorage.removeItem('payment');
             if($(this).children('span').text() == base.getText('请给我最好的')){
                 $('#bestSearchBtn').attr('data-type','bestSearch');
             }
@@ -350,6 +349,7 @@ define([
 
         // 点击付款方式筛选数据
         $('.left-item-group').on('click', '.left-item', (function(ev) {
+            sessionStorage.removeItem('payment');
             let payType = $(this).attr('data-value');
             let price = $('#payTypeMoney').val();
             let tradeCurrency = $('#searchConWrap .payTypeMoney').val();
@@ -376,6 +376,8 @@ define([
         $('.yj_buy-ul li').click(function(e) {
           e.stopPropagation();
             sessionStorage.removeItem('buySearchConfig');
+            sessionStorage.removeItem('sellSearchConfig');
+            sessionStorage.removeItem('payment');
           base.gohref(`../index.html?langType=${langType}&coin=${toCoin}`);
         });
 

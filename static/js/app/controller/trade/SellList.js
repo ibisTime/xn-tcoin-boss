@@ -385,6 +385,8 @@ define([
       // 切换购买比特币/出售比特币
       $('.yj_sell-ul li').click(function(e) {
         e.stopPropagation();
+          sessionStorage.removeItem('payment');
+          sessionStorage.removeItem('buySearchConfig');
           sessionStorage.removeItem('sellSearchConfig');
         base.gohref(`../trade/sell-list.html?langType=${langType}&coin=${toCoin}`);
       });

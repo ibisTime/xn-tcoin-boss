@@ -2732,6 +2732,14 @@ table {
                 font-size: 12px;
                 cursor: pointer;
             }
+            .balance{
+                background: #ccc;
+                color: #fff;
+                border-radius: 2px;
+                padding: 4px 10px;
+                font-weight: 400;
+                font-size: 12px;
+            }
         }
         .account {
             margin-top: 20px;
@@ -6088,6 +6096,10 @@ table {
                         -moz-border-radius: 100%;
                         border-radius: 100%;
                         background-size: 100%;
+                        position: relative;
+                        .user_loginTime{
+                            left: 85%;
+                        }
                     }
                     .right{
                         font-size: 16px;
@@ -6910,6 +6922,7 @@ table {
             .photo {
               width: 60px;
               height: 60px;
+                position: relative;
             }
             .noPhoto {
               font-size: 24px;
@@ -7903,18 +7916,22 @@ table {
         background: #999797;
         display: flex;
         .left{
-            width: 75%;
+            width: 70%;
             padding-left: 12px;
         }
         .right{
             text-align: center;
-            width: 20%;
+            width: 30%;
             cursor: pointer;
             span{
                 display: inline-block;
                 width: 16px;
                 height: 16px;
                 background-size: 100%;
+            }
+            .phrase-rem{
+                display: inline-block;
+                width: 50px;
             }
             .phrase-add{
                 background-image: url('/static/images/phraseAdd.png');
@@ -8606,8 +8623,8 @@ input:checked + .slider:before {
     border: 1px solid #fff;
     margin-right: 5px;
     position: absolute;
-    bottom: -3px;
-    left: 50%;
+    bottom: 0px;
+    left: 60%;
     transform: translateX(-100%);
 }
 
